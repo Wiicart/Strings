@@ -56,28 +56,27 @@ public class User {
         if(displayName == null){
             return player.getDisplayName();
         }
-        return displayName;
+        return ChatColor.translateAlternateColorCodes('&',displayName);
     }
     public String getPrefix(){
         Bukkit.getLogger().info("Prefix:" + this.prefix);
         if(strings.useVault()){
-            return strings.getVaultChat().getPlayerPrefix(player);
+            return ChatColor.translateAlternateColorCodes('&', strings.getVaultChat().getPlayerPrefix(player));
         }else{
             if(prefix == null){
                 return "";
             }
-            return prefix;
+            return ChatColor.translateAlternateColorCodes('&', prefix);
         }
     }
     public String getSuffix(){
-        Bukkit.getLogger().info("Suffix:" + this.suffix);
         if(strings.useVault()){
-            return strings.getVaultChat().getPlayerSuffix(player);
+            return ChatColor.translateAlternateColorCodes('&', strings.getVaultChat().getPlayerSuffix(player));
         }else{
             if(suffix == null){
                 return "";
             }
-            return suffix;
+            return ChatColor.translateAlternateColorCodes('&', suffix);
         }
     }
 
@@ -103,4 +102,3 @@ public class User {
         this.displayName = playerDisplayName;
         UserUtil.saveUser(this);
     }
-}
