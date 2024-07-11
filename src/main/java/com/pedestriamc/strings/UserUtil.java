@@ -1,5 +1,6 @@
 package com.pedestriamc.strings;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
@@ -15,20 +16,23 @@ public final class UserUtil {
     public static void saveUser(User user){
         UUID uuid = user.getUuid();
         HashMap<String, String> infoMap = user.getUserInfoMap();
-        config.set("players." + uuid, null);
         for(Map.Entry<String, String> element : infoMap.entrySet()){
-            config.set("players." + uuid + "." + element.getKey(), element.getValue());
+            if(element.getValue() != null){
+                config.set("players." + uuid + "." + element.getKey(), element.getValue());
+            }
         }
         strings.saveUsersFile();
     }
 
     public static User loadUser(UUID uuid){
-        if(!config.contains("players." + uuid)){ return null; }
         String userPath = "players." + uuid;
-        String suffix = config.getString(userPath + "suffix", "");
-        String prefix = config.getString(userPath + "prefix", "");
-        String displayName = config.getString(userPath + "display-name", null);
-        String chatColor = config.getString(userPath + "chat-color", null);
+        if(!config.contains(userPath)){
+            return null;
+        }
+        String suffix = config.getString(userPath + "suffix");
+        String prefix = config.getString(userPath + "prefix");
+        String displayName = config.getString(userPath + "display-name");
+        String chatColor = config.getString(userPath + "chat-color");
         return new User(uuid,chatColor,prefix,suffix,displayName);
     }
 
@@ -40,7 +44,9 @@ public final class UserUtil {
             return userHashMap.get(uuid);
         }
         public static void addUser(User user){
-            removeUser(user.getUuid());
+            if(userHashMap.containsKey(user.getUuid())){
+                removeUser(user.getUuid());
+            }
             userHashMap.put(user.getUuid(), user);
         }
         public static void removeUser(UUID uuid){
