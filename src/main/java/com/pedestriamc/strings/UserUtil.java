@@ -1,6 +1,5 @@
 package com.pedestriamc.strings;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
@@ -29,10 +28,10 @@ public final class UserUtil {
         if(!config.contains(userPath)){
             return null;
         }
-        String suffix = config.getString(userPath + "suffix");
-        String prefix = config.getString(userPath + "prefix");
-        String displayName = config.getString(userPath + "display-name");
-        String chatColor = config.getString(userPath + "chat-color");
+        String suffix = config.getString(userPath + ".suffix");
+        String prefix = config.getString(userPath + ".prefix");
+        String displayName = config.getString(userPath + ".display-name");
+        String chatColor = config.getString(userPath + ".chat-color");
         return new User(uuid,chatColor,prefix,suffix,displayName);
     }
 
