@@ -7,6 +7,7 @@ import com.tchristofferson.configupdater.ConfigUpdater;
 import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -27,6 +28,7 @@ public final class Strings extends JavaPlugin {
     private String messageFormat;
     private String defaultColor;
     private final FileConfiguration config = this.getConfig();
+    private Broadcasts broadcasts;
     private File broadcastsFile;
     private File messagesFile;
     private File usersFile;
@@ -78,7 +80,7 @@ public final class Strings extends JavaPlugin {
         if(!messageFormat.contains("{displayname}") || !messageFormat.contains("{message}")){
             this.messageFormat = "{prefix} {displayname} {suffix} &7» {message}";
         }
-        this.defaultColor = config.getString("default-color", "&f");
+        this.defaultColor = ChatColor.translateAlternateColorCodes('&', config.getString("default-color", "&f"));
         this.processPlayerMessageColors = config.getBoolean("process-in-chat-colors", true);
         this.processPlayerMessagePlaceholders = config.getBoolean("process-in-chat-placeholders", false);
         if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
@@ -118,6 +120,7 @@ public final class Strings extends JavaPlugin {
     }
     private void instantiateObjects(){
         chatManager = new ChatManager(this);
+        broadcasts = new Broadcasts(this);
     }
     private void setupVault(){
         if(getServer().getPluginManager().getPlugin("Vault") == null){
@@ -158,6 +161,8 @@ public final class Strings extends JavaPlugin {
     public ChatManager getChatManager(){ return chatManager; }
     public Chat getVaultChat(){ return chat; }
     public FileConfiguration getUsersFileConfig(){ return usersFileConfig; }
+    public FileConfiguration getBroadcastsFileConfig(){ return broadcastsFileConfig; }
+    public FileConfiguration getMessagesFileConfig(){ return messagesFileConfig; }
     public boolean usePlaceholderAPI(){ return usingPlaceholderAPI; }
     public boolean processMessageColors(){ return processPlayerMessageColors; }
     public boolean processMessagePlaceholders(){ return processPlayerMessagePlaceholders; }
