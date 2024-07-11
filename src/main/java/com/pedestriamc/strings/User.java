@@ -1,6 +1,7 @@
 package com.pedestriamc.strings;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -34,10 +35,10 @@ public class User {
 
     public HashMap<String, String> getUserInfoMap(){
         HashMap<String, String> infoMap = new HashMap<>();
-        infoMap.put("chat-color", this.chatColor != null ? this.chatColor : "");
-        infoMap.put("prefix", this.prefix != null ? this.prefix : "");
-        infoMap.put("suffix", this.suffix != null ? this.suffix : "");
-        infoMap.put("display-name", this.displayName != null ? this.displayName : "");
+        infoMap.put("chat-color", this.chatColor);
+        infoMap.put("prefix", this.prefix);
+        infoMap.put("suffix", this.suffix);
+        infoMap.put("display-name", this.displayName);
         return infoMap;
     }
 
@@ -45,10 +46,11 @@ public class User {
         return uuid;
     }
     public String getChatColor(){
+        Bukkit.getLogger().info("ChatColor:" + this.chatColor);
         if(chatColor == null){
             return strings.getDefaultColor();
         }
-        return chatColor;
+        return ChatColor.translateAlternateColorCodes('&',chatColor);
     }
     public String getDisplayName(){
         if(displayName == null){
@@ -57,6 +59,7 @@ public class User {
         return displayName;
     }
     public String getPrefix(){
+        Bukkit.getLogger().info("Prefix:" + this.prefix);
         if(strings.useVault()){
             return strings.getVaultChat().getPlayerPrefix(player);
         }else{
@@ -67,6 +70,7 @@ public class User {
         }
     }
     public String getSuffix(){
+        Bukkit.getLogger().info("Suffix:" + this.suffix);
         if(strings.useVault()){
             return strings.getVaultChat().getPlayerSuffix(player);
         }else{
