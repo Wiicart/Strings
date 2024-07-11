@@ -8,7 +8,20 @@ enabled: false
 sequence: ordered
 
 # How often should broadcasts be posted?
+# Type a number, followed by units
+# s - seconds, m - minutes
+# Example: 3m is 3 minutes
 delay: 3m
+
+# Broadcasts:
+# The "website" broadcast is an example of the format.
+# You can use as many lines as you want.
 
 broadcasts:
   website:
+    - '&a&lCheck out our website!'
+    - '&o&7&nhttps://www.minecraft.net'
+  discord:
+    - '&9Check out our Discord'
+    - '&7Chat with our community!'
+    - '&o&ndiscord.com'
