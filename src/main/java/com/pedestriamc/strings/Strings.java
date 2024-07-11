@@ -2,17 +2,20 @@ package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.commands.ClearChatCommand;
 import com.pedestriamc.strings.listeners.ChatListener;
+import com.pedestriamc.strings.listeners.JoinListener;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public final class Strings extends JavaPlugin {
@@ -54,7 +57,7 @@ public final class Strings extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        logger.info("[Strings] Disabled");
     }
 
     /*
@@ -65,6 +68,7 @@ public final class Strings extends JavaPlugin {
         this.getCommand("clearchat").setExecutor(new ClearChatCommand());
         this.getCommand("chatclear").setExecutor(new ClearChatCommand());
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
+        this.getServer().getPluginManager().registerEvents(new JoinListener(),this);
 
     }
     //Load options from the config
@@ -183,4 +187,22 @@ public final class Strings extends JavaPlugin {
             e.printStackTrace();
         }
     }
+    /**
+     * Returns a User object that contains info Strings uses.
+     * @param uuid The uuid of the player to get the User of.
+     * @return User object of the player matching the UUID.
+     */
+    public User getUser(UUID uuid){
+        return UserUtil.UserMap.getUser(uuid);
+    }
+
+    /**
+     * Returns a User object that contains info Strings uses.
+     * @param player the player to get the User of.
+     * @return User object of the player.
+     */
+    public User getUser(Player player){
+        return UserUtil.UserMap.getUser(player.getUniqueId());
+    }
 }
+
