@@ -27,8 +27,11 @@ public final class Strings extends JavaPlugin {
     private final String distributor = "spigot";
     private String messageFormat;
     private String defaultColor;
+    private String joinMessageFormat;
+    private String leaveMessageFormat;
     private final FileConfiguration config = this.getConfig();
     private Broadcasts broadcasts;
+    private JoinLeaveMessage joinLeaveMessage;
     private File broadcastsFile;
     private File messagesFile;
     private File usersFile;
@@ -40,6 +43,7 @@ public final class Strings extends JavaPlugin {
     private boolean processPlayerMessageColors;
     private boolean processPlayerMessagePlaceholders;
     private boolean usingVault;
+    private boolean useCustomJoinLeave;
 
     @Override
     public void onEnable() {
@@ -83,6 +87,9 @@ public final class Strings extends JavaPlugin {
         this.defaultColor = ChatColor.translateAlternateColorCodes('&', config.getString("default-color", "&f"));
         this.processPlayerMessageColors = config.getBoolean("process-in-chat-colors", true);
         this.processPlayerMessagePlaceholders = config.getBoolean("process-in-chat-placeholders", false);
+        this.useCustomJoinLeave = config.getBoolean("custom-join-leave-message");
+        this.joinMessageFormat = config.getString("join-message");
+        this.leaveMessageFormat = config.getString("leave-message");
         if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             this.usingPlaceholderAPI = true;
         }
@@ -121,6 +128,8 @@ public final class Strings extends JavaPlugin {
     private void instantiateObjects(){
         chatManager = new ChatManager(this);
         broadcasts = new Broadcasts(this);
+        joinLeaveMessage = new JoinLeaveMessage(this);
+
     }
     private void setupVault(){
         if(getServer().getPluginManager().getPlugin("Vault") == null){
@@ -158,7 +167,10 @@ public final class Strings extends JavaPlugin {
     public String getVersion(){ return version; }
     public String getMessageFormat() { return messageFormat; }
     public String getDefaultColor(){ return defaultColor; }
+    public String getJoinMessageFormat(){ return joinMessageFormat; }
+    public String getLeaveMessageFormat(){ return leaveMessageFormat; }
     public ChatManager getChatManager(){ return chatManager; }
+    public JoinLeaveMessage getJoinLeaveMessage(){ return joinLeaveMessage; }
     public Chat getVaultChat(){ return chat; }
     public FileConfiguration getUsersFileConfig(){ return usersFileConfig; }
     public FileConfiguration getBroadcastsFileConfig(){ return broadcastsFileConfig; }
@@ -167,6 +179,7 @@ public final class Strings extends JavaPlugin {
     public boolean processMessageColors(){ return processPlayerMessageColors; }
     public boolean processMessagePlaceholders(){ return processPlayerMessagePlaceholders; }
     public boolean useVault(){ return usingVault; }
+    public boolean modifyJoinLeaveMessages(){ return useCustomJoinLeave; }
     public static Strings getInstance(){ return instance; }
     /*
     Other methods
