@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class User {
@@ -18,13 +17,7 @@ public class User {
     private String displayName;
 
     public User(UUID playerUuid){
-        this.uuid = playerUuid;
-        this.chatColor = null;
-        this.prefix = null;
-        this.suffix = null;
-        this.displayName = null;
-        this.player = Bukkit.getPlayer(playerUuid);
-        UserUtil.saveUser(this);
+        this(playerUuid, null, null, null, null);
     }
 
     public User(UUID playerUuid, String playerChatColor, String playerPrefix, String playerSuffix, String playerDisplayName){
@@ -35,25 +28,41 @@ public class User {
         this.displayName = playerDisplayName;
         this.player = Bukkit.getPlayer(playerUuid);
         UserUtil.saveUser(this);
+        UserUtil.UserMap.addUser(this);
     }
 
+
     public HashMap<String, String> getUserInfoMap(){
-        return new HashMap<>(Map.of("chatColor", this.chatColor, "prefix", this.prefix, "suffix", this.suffix, "display-name", this.displayName));
+        HashMap<String, String> infoMap = new HashMap<>();
+        infoMap.put("chat-color", this.chatColor != null ? this.chatColor : "");
+        infoMap.put("prefix", this.prefix != null ? this.prefix : "");
+        infoMap.put("suffix", this.suffix != null ? this.suffix : "");
+        infoMap.put("display-name", this.displayName != null ? this.displayName : "");
+        return infoMap;
     }
 
     public UUID getUuid(){
         return uuid;
     }
     public String getChatColor(){
+        if(chatColor == null){
+            return strings.getDefaultColor();
+        }
         return chatColor;
     }
     public String getDisplayName(){
+        if(displayName == null){
+            return player.getDisplayName();
+        }
         return displayName;
     }
     public String getPrefix(){
         if(strings.useVault()){
             return strings.getVaultChat().getPlayerPrefix(player);
         }else{
+            if(prefix == null){
+                return "";
+            }
             return prefix;
         }
     }
@@ -61,6 +70,9 @@ public class User {
         if(strings.useVault()){
             return strings.getVaultChat().getPlayerSuffix(player);
         }else{
+            if(suffix == null){
+                return "";
+            }
             return suffix;
         }
     }
