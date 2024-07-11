@@ -3,9 +3,12 @@ package com.pedestriamc.strings;
 import com.pedestriamc.strings.commands.ClearChatCommand;
 import com.pedestriamc.strings.listeners.ChatListener;
 import com.tchristofferson.configupdater.ConfigUpdater;
+import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -15,23 +18,35 @@ import java.util.logging.Logger;
 public final class Strings extends JavaPlugin {
     private static Strings instance;
     private final Logger logger = Bukkit.getLogger();
+    private static Chat chat = null;
     private final String version = "1.0";
     private final String distributor = "spigot";
     private String messageFormat;
     private String defaultColor;
     private final FileConfiguration config = this.getConfig();
+    private File broadcastsFile;
+    private File messagesFile;
+    private File usersFile;
+    private FileConfiguration broadcastsFileConfig;
+    private FileConfiguration messagesFileConfig;
+    private FileConfiguration usersFileConfig;
     private ChatManager chatManager;
     private boolean usingPlaceholderAPI = false;
+    private boolean processPlayerMessageColors;
+    private boolean processPlayerMessagePlaceholders;
+    private boolean usingVault;
 
     @Override
     public void onEnable() {
         instance = this;
         logger.info("[Strings] Loading...");
         this.saveDefaultConfig();
+        this.setupCustomConfigs();
         this.updateConfigs();
         this.loadConfigOptions();
         this.instantiateObjects();
         this.registerClasses();
+        this.setupVault();
         int pluginId = 22597;
         Metrics metrics = new Metrics(this, pluginId);
         logger.info("[Strings] Enabled!");
@@ -55,8 +70,16 @@ public final class Strings extends JavaPlugin {
     //Load options from the config
     private void loadConfigOptions(){
         FileConfiguration config = this.getConfig();
-        this.messageFormat = config.getString("message-format", "%prefix% %displayname% %suffix% &7» %message%");
+        this.messageFormat = config.getString("message-format", "{prefix} {displayname} {suffix} &7» {message}");
+        if(!messageFormat.contains("{displayname}") || !messageFormat.contains("{message}")){
+            this.messageFormat = "{prefix} {displayname} {suffix} &7» {message}";
+        }
         this.defaultColor = config.getString("default-color", "&f");
+        this.processPlayerMessageColors = config.getBoolean("process-in-chat-colors", true);
+        this.processPlayerMessagePlaceholders = config.getBoolean("process-in-chat-placeholders", false);
+        if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
+            this.usingPlaceholderAPI = true;
+        }
     }
     //Update yml files
     private void updateConfigs(){
@@ -91,10 +114,36 @@ public final class Strings extends JavaPlugin {
     }
     private void instantiateObjects(){
         chatManager = new ChatManager(this);
-        //Placeholder API
-        if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
-            this.usingPlaceholderAPI = true;
+    }
+    private void setupVault(){
+        if(getServer().getPluginManager().getPlugin("Vault") == null){
+            getLogger().info("[Strings] Vault not found, using built in methods.");
+            usingVault = false;
+        }else{
+            RegisteredServiceProvider<Chat> serviceProvider = getServer().getServicesManager().getRegistration(Chat.class);
+            chat = serviceProvider.getProvider();
+            usingVault = true;
         }
+    }
+    private void setupCustomConfigs(){
+        broadcastsFile = new File(getDataFolder(), "broadcasts.yml");
+        messagesFile = new File(getDataFolder(), "messages.yml");
+        usersFile = new File(getDataFolder(), "users.yml");
+        if(!broadcastsFile.exists()){
+            broadcastsFile.getParentFile().mkdirs();
+            saveResource("broadcasts.yml", false);
+        }
+        if(!messagesFile.exists()){
+            messagesFile.getParentFile().mkdirs();
+            saveResource("messages.yml", false);
+        }
+        if(!usersFile.exists()){
+            usersFile.getParentFile().mkdirs();
+            saveResource("users.yml", false);
+        }
+        broadcastsFileConfig = YamlConfiguration.loadConfiguration(broadcastsFile);
+        messagesFileConfig = YamlConfiguration.loadConfiguration(messagesFile);
+        usersFileConfig = YamlConfiguration.loadConfiguration(usersFile);
     }
     /*
     Public getter and setter methods
@@ -103,6 +152,35 @@ public final class Strings extends JavaPlugin {
     public String getMessageFormat() { return messageFormat; }
     public String getDefaultColor(){ return defaultColor; }
     public ChatManager getChatManager(){ return chatManager; }
-    public boolean usePlaceholderAPI(){ return this.usingPlaceholderAPI; }
+    public Chat getVaultChat(){ return chat; }
+    public FileConfiguration getUsersFileConfig(){ return usersFileConfig; }
+    public boolean usePlaceholderAPI(){ return usingPlaceholderAPI; }
+    public boolean processMessageColors(){ return processPlayerMessageColors; }
+    public boolean processMessagePlaceholders(){ return processPlayerMessagePlaceholders; }
+    public boolean useVault(){ return usingVault; }
     public static Strings getInstance(){ return instance; }
+    /*
+    Other methods
+     */
+    public void saveUsersFile(){
+        try{
+            usersFileConfig.save(usersFile);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+    public void saveMessagesFile(){
+        try{
+            messagesFileConfig.save(messagesFile);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+    public void saveBroadcastsFile(){
+        try{
+            broadcastsFileConfig.save(broadcastsFile);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
 }
