@@ -1,8 +1,11 @@
 package com.pedestriamc.strings;
 
+import com.pedestriamc.strings.commands.BroadcastCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
 import com.pedestriamc.strings.listeners.ChatListener;
 import com.pedestriamc.strings.listeners.JoinListener;
+import com.pedestriamc.strings.listeners.LeaveListener;
+import com.pedestriamc.strings.message.Messenger;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
@@ -29,9 +32,10 @@ public final class Strings extends JavaPlugin {
     private String defaultColor;
     private String joinMessageFormat;
     private String leaveMessageFormat;
+    private String broadcastFormat;
     private final FileConfiguration config = this.getConfig();
-    private Broadcasts broadcasts;
-    private JoinLeaveMessage joinLeaveMessage;
+    private AutoBroadcasts autoBroadcasts;
+    private ServerMessages serverMessages;
     private File broadcastsFile;
     private File messagesFile;
     private File usersFile;
@@ -44,6 +48,7 @@ public final class Strings extends JavaPlugin {
     private boolean processPlayerMessagePlaceholders;
     private boolean usingVault;
     private boolean useCustomJoinLeave;
+    private boolean doCoolDown;
 
     @Override
     public void onEnable() {
@@ -56,6 +61,7 @@ public final class Strings extends JavaPlugin {
         this.instantiateObjects();
         this.registerClasses();
         this.setupVault();
+        Messenger.initialize();
         int pluginId = 22597;
         Metrics metrics = new Metrics(this, pluginId);
         logger.info("[Strings] Enabled!");
@@ -71,10 +77,13 @@ public final class Strings extends JavaPlugin {
      */
     //Register commands and listeners
     private void registerClasses(){
+        this.getCommand("broadcast").setExecutor(new BroadcastCommand());
+        this.getCommand("announce").setExecutor(new BroadcastCommand());
         this.getCommand("clearchat").setExecutor(new ClearChatCommand());
         this.getCommand("chatclear").setExecutor(new ClearChatCommand());
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
         this.getServer().getPluginManager().registerEvents(new JoinListener(),this);
+        this.getServer().getPluginManager().registerEvents(new LeaveListener(), this);
 
     }
     //Load options from the config
@@ -84,12 +93,14 @@ public final class Strings extends JavaPlugin {
         if(!messageFormat.contains("{displayname}") || !messageFormat.contains("{message}")){
             this.messageFormat = "{prefix} {displayname} {suffix} &7» {message}";
         }
+        this.doCoolDown = config.getBoolean("cooldown", false);
         this.defaultColor = ChatColor.translateAlternateColorCodes('&', config.getString("default-color", "&f"));
         this.processPlayerMessageColors = config.getBoolean("process-in-chat-colors", true);
         this.processPlayerMessagePlaceholders = config.getBoolean("process-in-chat-placeholders", false);
         this.useCustomJoinLeave = config.getBoolean("custom-join-leave-message");
         this.joinMessageFormat = config.getString("join-message");
         this.leaveMessageFormat = config.getString("leave-message");
+        this.broadcastFormat = config.getString("broadcast-format");
         if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             this.usingPlaceholderAPI = true;
         }
@@ -127,8 +138,8 @@ public final class Strings extends JavaPlugin {
     }
     private void instantiateObjects(){
         chatManager = new ChatManager(this);
-        broadcasts = new Broadcasts(this);
-        joinLeaveMessage = new JoinLeaveMessage(this);
+        autoBroadcasts = new AutoBroadcasts(this);
+        serverMessages = new ServerMessages(this);
 
     }
     private void setupVault(){
@@ -165,12 +176,13 @@ public final class Strings extends JavaPlugin {
     Public getter and setter methods
      */
     public String getVersion(){ return version; }
+    public String getBroadcastFormat(){ return broadcastFormat; }
     public String getMessageFormat() { return messageFormat; }
     public String getDefaultColor(){ return defaultColor; }
     public String getJoinMessageFormat(){ return joinMessageFormat; }
     public String getLeaveMessageFormat(){ return leaveMessageFormat; }
     public ChatManager getChatManager(){ return chatManager; }
-    public JoinLeaveMessage getJoinLeaveMessage(){ return joinLeaveMessage; }
+    public ServerMessages getJoinLeaveMessage(){ return serverMessages; }
     public Chat getVaultChat(){ return chat; }
     public FileConfiguration getUsersFileConfig(){ return usersFileConfig; }
     public FileConfiguration getBroadcastsFileConfig(){ return broadcastsFileConfig; }
@@ -180,6 +192,7 @@ public final class Strings extends JavaPlugin {
     public boolean processMessagePlaceholders(){ return processPlayerMessagePlaceholders; }
     public boolean useVault(){ return usingVault; }
     public boolean modifyJoinLeaveMessages(){ return useCustomJoinLeave; }
+    public boolean isDoCoolDown(){ return doCoolDown; }
     public static Strings getInstance(){ return instance; }
     /*
     Other methods
@@ -223,4 +236,3 @@ public final class Strings extends JavaPlugin {
         return UserUtil.UserMap.getUser(player.getUniqueId());
     }
 }
-
