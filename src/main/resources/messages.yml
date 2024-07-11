@@ -1,0 +1,7 @@
+# Strings - Messages.yml
+# Bukkit chat colors may be used
+# Unless noted otherwise, the prefix from
+# config.yml is used before the message.
+
+# No perms message:
+no-perms: "&fYou don''t have permission!"
