@@ -1,31 +1,32 @@
 package com.pedestriamc.strings;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Broadcasts {
 
     private final Strings strings;
     private final FileConfiguration config;
-    private final boolean enabled;
     private final BukkitScheduler scheduler = Bukkit.getScheduler();
     private final ArrayList<String[]> broadcastList = new ArrayList<>();
     private int pos;
-    private final long interval;
-    private final String regex = "^[0-9]+[sm]$";
+    private long interval;
+    private final String order;
 
     public Broadcasts(Strings strings){
         this.strings = strings;
         this.config = strings.getBroadcastsFileConfig();
-        this.enabled = config.getBoolean("enabled", false);
-        this.interval = calculateDelay(config.getString("delay"));
-        this.loadBroadcastList();
-        if(enabled){
+        this.order = config.getString("sequence");
+        if(config.getBoolean("enabled", false)){
+            this.interval = calculateDelay(config.getString("delay"));
+            this.loadBroadcastList();
             messageScheduler();
         }
     }
@@ -35,6 +36,7 @@ public class Broadcasts {
     }
 
     public long calculateDelay(String delay){
+        String regex = "^[0-9]+[sm]$";
         if(delay == null || !delay.matches(regex)){
             Bukkit.getLogger().info("[Strings] Invalid broadcast delay in config.  Defaulting to 3m.");
             return 3600L;
@@ -55,6 +57,9 @@ public class Broadcasts {
     public void broadcastMessage(){
         if(pos == broadcastList.size()){
             pos = 0;
+            if(order.equalsIgnoreCase("random")){
+                Collections.shuffle(broadcastList);
+            }
         }
         for(int i=0; i<broadcastList.get(pos).length; i++){
             Bukkit.broadcastMessage(broadcastList.get(pos)[i]);
@@ -65,13 +70,21 @@ public class Broadcasts {
     public void loadBroadcastList(){
         ConfigurationSection section = config.getConfigurationSection("broadcasts");
         if(section != null){
-            
-        }
-        List<?> list = config.getList("broadcasts");
-        if(list != null){
-            for(Object item : list){
-                broadcastList.add((String[]) item);
+            for(String key : section.getKeys(false)){
+                List<String> messages = new ArrayList<>();
+                List<?> messageList = section.getList(key);
+                if(messageList != null){
+                    for(Object obj : messageList){
+                        if(obj instanceof String){
+                            messages.add(ChatColor.translateAlternateColorCodes('&', (String) obj));
+                        }
+                    }
+                }
+                broadcastList.add(messages.toArray(new String[0]));
             }
+        }
+        if(broadcastList.isEmpty()){
+            Bukkit.getLogger().warning("[Strings] No broadcasts found in broadcasts.yml");
         }
     }
 }
