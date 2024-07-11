@@ -33,9 +33,13 @@ public final class Strings extends JavaPlugin {
     private String joinMessageFormat;
     private String leaveMessageFormat;
     private String broadcastFormat;
+    private String coolDownLength;
+    private String directMessageFormatSender;
+    private String directMessageFormatRecipient;
     private final FileConfiguration config = this.getConfig();
     private AutoBroadcasts autoBroadcasts;
     private ServerMessages serverMessages;
+    private PlayerDirectMessenger playerDirectMessenger;
     private File broadcastsFile;
     private File messagesFile;
     private File usersFile;
@@ -49,6 +53,7 @@ public final class Strings extends JavaPlugin {
     private boolean usingVault;
     private boolean useCustomJoinLeave;
     private boolean doCoolDown;
+    private boolean directMessengerUsed;
 
     @Override
     public void onEnable() {
@@ -93,6 +98,7 @@ public final class Strings extends JavaPlugin {
         if(!messageFormat.contains("{displayname}") || !messageFormat.contains("{message}")){
             this.messageFormat = "{prefix} {displayname} {suffix} &7» {message}";
         }
+        this.directMessengerUsed = config.getBoolean("enable-msg", false);
         this.doCoolDown = config.getBoolean("cooldown", false);
         this.defaultColor = ChatColor.translateAlternateColorCodes('&', config.getString("default-color", "&f"));
         this.processPlayerMessageColors = config.getBoolean("process-in-chat-colors", true);
@@ -101,6 +107,9 @@ public final class Strings extends JavaPlugin {
         this.joinMessageFormat = config.getString("join-message");
         this.leaveMessageFormat = config.getString("leave-message");
         this.broadcastFormat = config.getString("broadcast-format");
+        this.coolDownLength = config.getString("cooldown-time", "30s");
+        this.directMessageFormatSender = config.getString("msg-format-sender");
+        this.directMessageFormatRecipient = config.getString("msg-format-recipient");
         if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             this.usingPlaceholderAPI = true;
         }
@@ -140,6 +149,7 @@ public final class Strings extends JavaPlugin {
         chatManager = new ChatManager(this);
         autoBroadcasts = new AutoBroadcasts(this);
         serverMessages = new ServerMessages(this);
+        playerDirectMessenger = new PlayerDirectMessenger(this);
 
     }
     private void setupVault(){
@@ -176,17 +186,22 @@ public final class Strings extends JavaPlugin {
     Public getter and setter methods
      */
     public String getVersion(){ return version; }
+    public String getDirectMessageFormatSender(){ return directMessageFormatSender; }
+    public String getDirectMessageFormatRecipient(){ return directMessageFormatRecipient; }
     public String getBroadcastFormat(){ return broadcastFormat; }
     public String getMessageFormat() { return messageFormat; }
     public String getDefaultColor(){ return defaultColor; }
     public String getJoinMessageFormat(){ return joinMessageFormat; }
     public String getLeaveMessageFormat(){ return leaveMessageFormat; }
+    public String getCoolDownLength(){ return coolDownLength; }
     public ChatManager getChatManager(){ return chatManager; }
     public ServerMessages getJoinLeaveMessage(){ return serverMessages; }
+    public PlayerDirectMessenger getPlayerDirectMessenger(){ return playerDirectMessenger; }
     public Chat getVaultChat(){ return chat; }
     public FileConfiguration getUsersFileConfig(){ return usersFileConfig; }
     public FileConfiguration getBroadcastsFileConfig(){ return broadcastsFileConfig; }
     public FileConfiguration getMessagesFileConfig(){ return messagesFileConfig; }
+    public boolean managePlayerDirectMessages(){ return directMessengerUsed; }
     public boolean usePlaceholderAPI(){ return usingPlaceholderAPI; }
     public boolean processMessageColors(){ return processPlayerMessageColors; }
     public boolean processMessagePlaceholders(){ return processPlayerMessagePlaceholders; }
