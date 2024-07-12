@@ -12,33 +12,36 @@ public class User {
     private final Strings strings = Strings.getInstance();
     private final UUID uuid;
     private final Player player;
+    private Boolean socialSpy;
     private String chatColor;
     private String prefix;
     private String suffix;
     private String displayName;
 
     public User(UUID playerUuid){
-        this(playerUuid, null, null, null, null);
+        this(playerUuid, null, null, null, null, false);
     }
 
-    public User(UUID playerUuid, String playerChatColor, String playerPrefix, String playerSuffix, String playerDisplayName){
+    public User(UUID playerUuid, String playerChatColor, String playerPrefix, String playerSuffix, String playerDisplayName, boolean socialSpy){
         this.uuid = playerUuid;
         this.chatColor = playerChatColor;
         this.prefix = playerPrefix;
         this.suffix = playerSuffix;
         this.displayName = playerDisplayName;
+        this.socialSpy = socialSpy;
         this.player = Bukkit.getPlayer(playerUuid);
         UserUtil.saveUser(this);
         UserUtil.UserMap.addUser(this);
     }
 
 
-    public HashMap<String, String> getUserInfoMap(){
-        HashMap<String, String> infoMap = new HashMap<>();
+    public HashMap<String, Object> getUserInfoMap(){
+        HashMap<String, Object> infoMap = new HashMap<>();
         infoMap.put("chat-color", this.chatColor);
         infoMap.put("prefix", this.prefix);
         infoMap.put("suffix", this.suffix);
         infoMap.put("display-name", this.displayName);
+        infoMap.put("social-spy", this.socialSpy);
         return infoMap;
     }
 
@@ -46,7 +49,6 @@ public class User {
         return uuid;
     }
     public String getChatColor(){
-        Bukkit.getLogger().info("ChatColor:" + this.chatColor);
         if(chatColor == null){
             return strings.getDefaultColor();
         }
@@ -59,7 +61,6 @@ public class User {
         return ChatColor.translateAlternateColorCodes('&',displayName);
     }
     public String getPrefix(){
-        Bukkit.getLogger().info("Prefix:" + this.prefix);
         if(strings.useVault()){
             return ChatColor.translateAlternateColorCodes('&', strings.getVaultChat().getPlayerPrefix(player));
         }else{
@@ -78,6 +79,13 @@ public class User {
             }
             return ChatColor.translateAlternateColorCodes('&', suffix);
         }
+    }
+
+    public Player getPlayer(){
+        return player;
+    }
+    public boolean isSocialSpy(){
+        return this.socialSpy;
     }
 
     public void setChatColor(String playerChatColor){
@@ -102,3 +110,9 @@ public class User {
         this.displayName = playerDisplayName;
         UserUtil.saveUser(this);
     }
+
+    public void setSocialSpy(boolean socialSpy){
+        this.socialSpy = socialSpy;
+        UserUtil.saveUser(this);
+    }
+}
