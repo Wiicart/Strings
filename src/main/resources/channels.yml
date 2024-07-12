@@ -7,5 +7,11 @@
 # The primary use of this file is formatting the chat in each channel.
 # Note: a user can be a member of and receive messages from multiple channels, but messages will
 # only be sent to the player's active channel.
-global:
-  format:
+# The default channel is "global"
+channels:
+  global:
+    format: "{prefix}{displayname}{suffix} &7» {message}"
+    default-color: "&f"
+  staff:
+    format: "&8[&cStaff&8] &f{prefix}{displayname}{suffix} &7» {message}"
+    default-color: "&c"
