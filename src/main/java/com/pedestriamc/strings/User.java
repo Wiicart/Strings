@@ -1,10 +1,13 @@
 package com.pedestriamc.strings;
 
+import com.pedestriamc.strings.channels.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 
 public class User {
@@ -17,12 +20,14 @@ public class User {
     private String prefix;
     private String suffix;
     private String displayName;
+    private Channel activeChannel;
+    private Set<Channel> channels;
 
     public User(UUID playerUuid){
-        this(playerUuid, null, null, null, null, false);
+        this(playerUuid, null, null, null, null, false, null);
     }
 
-    public User(UUID playerUuid, String playerChatColor, String playerPrefix, String playerSuffix, String playerDisplayName, boolean socialSpy){
+    public User(UUID playerUuid, String playerChatColor, String playerPrefix, String playerSuffix, String playerDisplayName, boolean socialSpy, Set<Channel> channels){
         this.uuid = playerUuid;
         this.chatColor = playerChatColor;
         this.prefix = playerPrefix;
@@ -30,6 +35,13 @@ public class User {
         this.displayName = playerDisplayName;
         this.socialSpy = socialSpy;
         this.player = Bukkit.getPlayer(playerUuid);
+        this.activeChannel = strings.getChannel("global");
+        this.channels = channels;
+        if(channels != null){
+            for(Channel channel : channels){
+                channel.addPlayer(this.getPlayer());
+            }
+        }
         UserUtil.saveUser(this);
         UserUtil.UserMap.addUser(this);
     }
@@ -114,5 +126,25 @@ public class User {
     public void setSocialSpy(boolean socialSpy){
         this.socialSpy = socialSpy;
         UserUtil.saveUser(this);
+    }
+
+    public Channel getActiveChannel(){
+        return activeChannel;
+    }
+
+    public void setActiveChannel(Channel activeChannel){
+        this.activeChannel = activeChannel;
+    }
+
+    public Set<Channel> getChannels(){
+        return channels;
+    }
+
+    public ArrayList<String> getChannelNames(){
+        ArrayList<String> names = new ArrayList<>();
+        for(Channel channel : channels){
+            names.add(channel.getName());
+        }
+        return names;
     }
 }
