@@ -1,0 +1,11 @@
+# Strings - Channels
+# All channels are defined in this channel, and information about them is stored here
+# No matter what, a "global" channel will be present, even if this file is empty.
+# Permission to join a channel is given by the permission strings.channel.<channel-name>
+# The channels a player is a member of is stored in users.yml, if none of those channels exist,
+# the player will join the default "global" channel.
+# The primary use of this file is formatting the chat in each channel.
+# Note: a user can be a member of and receive messages from multiple channels, but messages will
+# only be sent to the player's active channel.
+global:
+  format:
