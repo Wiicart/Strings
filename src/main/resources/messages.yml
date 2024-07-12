@@ -31,3 +31,12 @@ player-offline: "&fThat player is offline!"
 
 # No one to reply to:
 no-reply: "&fYou have no one to reply to!"
+
+# Player can't message them self
+self-message: "&fYou can''t message yourself!"
+
+# Social Spy enabled:
+social-spy-on: "&fSocial Spy &aenabled&f!"
+
+# Social Spy disabled:
+social-spy-off: "&fSocial Spy &4disabled&f!"
