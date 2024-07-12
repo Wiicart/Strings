@@ -1,7 +1,9 @@
 package com.pedestriamc.strings;
 
+import com.pedestriamc.strings.channels.Channel;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -14,12 +16,14 @@ public final class UserUtil {
     //Saving and loading users
     public static void saveUser(User user){
         UUID uuid = user.getUuid();
+        ArrayList<String> channelNames = user.getChannelNames();
         HashMap<String, Object> infoMap = user.getUserInfoMap();
         for(Map.Entry<String, Object> element : infoMap.entrySet()){
             if(element.getValue() != null){
                 config.set("players." + uuid + "." + element.getKey(), element.getValue());
             }
         }
+        config.set("players." + uuid + ".channels", channelNames);
         strings.saveUsersFile();
     }
 
@@ -33,7 +37,7 @@ public final class UserUtil {
         String displayName = config.getString(userPath + ".display-name");
         String chatColor = config.getString(userPath + ".chat-color");
         boolean socialSpy = config.getBoolean(userPath + ".social-spy");
-        User user = new User(uuid, chatColor, prefix, suffix, displayName, socialSpy);
+        User user = new User(uuid, chatColor, prefix, suffix, displayName, socialSpy, null);
         if(socialSpy){
             strings.getSocialSpy().addSpy(user.getPlayer());
         }
