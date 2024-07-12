@@ -2,6 +2,9 @@ package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.commands.BroadcastCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
+import com.pedestriamc.strings.commands.DirectMessageCommand;
+import com.pedestriamc.strings.commands.ReplyCommand;
+import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.listeners.ChatListener;
 import com.pedestriamc.strings.listeners.JoinListener;
 import com.pedestriamc.strings.listeners.LeaveListener;
@@ -86,6 +89,12 @@ public final class Strings extends JavaPlugin {
         this.getCommand("announce").setExecutor(new BroadcastCommand());
         this.getCommand("clearchat").setExecutor(new ClearChatCommand());
         this.getCommand("chatclear").setExecutor(new ClearChatCommand());
+        if(managePlayerDirectMessages()){
+            this.getCommand("msg").setExecutor(new DirectMessageCommand());
+            this.getCommand("message").setExecutor(new DirectMessageCommand());
+            this.getCommand("reply").setExecutor(new ReplyCommand());
+            this.getCommand("r").setExecutor(new ReplyCommand());
+        }
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
         this.getServer().getPluginManager().registerEvents(new JoinListener(),this);
         this.getServer().getPluginManager().registerEvents(new LeaveListener(), this);
