@@ -14,8 +14,8 @@ public final class UserUtil {
     //Saving and loading users
     public static void saveUser(User user){
         UUID uuid = user.getUuid();
-        HashMap<String, String> infoMap = user.getUserInfoMap();
-        for(Map.Entry<String, String> element : infoMap.entrySet()){
+        HashMap<String, Object> infoMap = user.getUserInfoMap();
+        for(Map.Entry<String, Object> element : infoMap.entrySet()){
             if(element.getValue() != null){
                 config.set("players." + uuid + "." + element.getKey(), element.getValue());
             }
@@ -32,7 +32,12 @@ public final class UserUtil {
         String prefix = config.getString(userPath + ".prefix");
         String displayName = config.getString(userPath + ".display-name");
         String chatColor = config.getString(userPath + ".chat-color");
-        return new User(uuid,chatColor,prefix,suffix,displayName);
+        boolean socialSpy = config.getBoolean(userPath + ".social-spy");
+        User user = new User(uuid, chatColor, prefix, suffix, displayName, socialSpy);
+        if(socialSpy){
+            strings.getSocialSpy().addSpy(user.getPlayer());
+        }
+        return user;
     }
 
     //User hash map
