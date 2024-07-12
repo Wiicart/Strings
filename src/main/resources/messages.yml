@@ -6,19 +6,19 @@
 # other messages may be found in other config files.
 
 # No perms message:
-no-perms: "&fYou don''t have permission!"
+no-perms: "&fYou don't have permission!"
 
 # Cleared own chat message:
 chat-cleared: "&fChat cleared."
 
 # Cleared all player's chat message:
-chat-cleared-all: "&fAll player''s chats cleared"
+chat-cleared-all: "&fAll player's chats cleared"
 
 # Too many args in command:
 too-many-args: "&fToo many arguments!"
 
 # Insufficient args:
-insufficient-args: "&fYou don''t have enough arguments!"
+insufficient-args: "&fYou don't have enough arguments!"
 
 # Player on cool-down:
 cool-down: "&fYou''re sending messages too quickly!  Try again later."
@@ -33,10 +33,10 @@ player-offline: "&fThat player is offline!"
 no-reply: "&fYou have no one to reply to!"
 
 # Player can't message them self
-self-message: "&fYou can''t message yourself!"
+self-message: "&fYou can't message yourself!"
 
 # Social Spy enabled:
 social-spy-on: "&fSocial Spy &aenabled&f!"
 
 # Social Spy disabled:
-social-spy-off: "&fSocial Spy &4disabled&f!"
+social-spy-off: "&fSocial Spy &cdisabled&f!"
