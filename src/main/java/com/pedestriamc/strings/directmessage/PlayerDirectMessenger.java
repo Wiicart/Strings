@@ -65,6 +65,9 @@ public class PlayerDirectMessenger {
     }
 
     public String processPlaceholders(Player sender, Player recipient, String message){
+        if(message == null){
+            return null;
+        }
         User senderUser = strings.getUser(sender);
         User recipientUser = strings.getUser(recipient);
         message = message.replace("{sender_username}", sender.getName());
