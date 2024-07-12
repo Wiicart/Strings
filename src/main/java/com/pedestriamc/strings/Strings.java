@@ -1,9 +1,6 @@
 package com.pedestriamc.strings;
 
-import com.pedestriamc.strings.commands.BroadcastCommand;
-import com.pedestriamc.strings.commands.ClearChatCommand;
-import com.pedestriamc.strings.commands.DirectMessageCommand;
-import com.pedestriamc.strings.commands.ReplyCommand;
+import com.pedestriamc.strings.commands.*;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.listeners.ChatListener;
 import com.pedestriamc.strings.listeners.JoinListener;
@@ -19,6 +16,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,9 +37,11 @@ public final class Strings extends JavaPlugin {
     private String coolDownLength;
     private String directMessageFormatSender;
     private String directMessageFormatRecipient;
+    private String socialSpyFormat;
     private final FileConfiguration config = this.getConfig();
     private AutoBroadcasts autoBroadcasts;
     private ServerMessages serverMessages;
+    private SocialSpy socialSpy;
     private PlayerDirectMessenger playerDirectMessenger;
     private File broadcastsFile;
     private File messagesFile;
@@ -89,6 +89,7 @@ public final class Strings extends JavaPlugin {
         this.getCommand("announce").setExecutor(new BroadcastCommand());
         this.getCommand("clearchat").setExecutor(new ClearChatCommand());
         this.getCommand("chatclear").setExecutor(new ClearChatCommand());
+        this.getCommand("socialspy").setExecutor(new SocialSpyCommand());
         if(managePlayerDirectMessages()){
             this.getCommand("msg").setExecutor(new DirectMessageCommand());
             this.getCommand("message").setExecutor(new DirectMessageCommand());
@@ -107,6 +108,7 @@ public final class Strings extends JavaPlugin {
         if(!messageFormat.contains("{displayname}") || !messageFormat.contains("{message}")){
             this.messageFormat = "{prefix} {displayname} {suffix} &7» {message}";
         }
+        this.socialSpyFormat = config.getString("social-spy-format");
         this.directMessengerUsed = config.getBoolean("enable-msg", false);
         this.doCoolDown = config.getBoolean("cooldown", false);
         this.defaultColor = ChatColor.translateAlternateColorCodes('&', config.getString("default-color", "&f"));
@@ -159,6 +161,7 @@ public final class Strings extends JavaPlugin {
         autoBroadcasts = new AutoBroadcasts(this);
         serverMessages = new ServerMessages(this);
         playerDirectMessenger = new PlayerDirectMessenger(this);
+        socialSpy = new SocialSpy(this);
 
     }
     private void setupVault(){
@@ -195,6 +198,7 @@ public final class Strings extends JavaPlugin {
     Public getter and setter methods
      */
     public String getVersion(){ return version; }
+    public String getSocialSpyFormat(){ return socialSpyFormat; }
     public String getDirectMessageFormatSender(){ return directMessageFormatSender; }
     public String getDirectMessageFormatRecipient(){ return directMessageFormatRecipient; }
     public String getBroadcastFormat(){ return broadcastFormat; }
@@ -205,6 +209,7 @@ public final class Strings extends JavaPlugin {
     public String getCoolDownLength(){ return coolDownLength; }
     public ChatManager getChatManager(){ return chatManager; }
     public ServerMessages getJoinLeaveMessage(){ return serverMessages; }
+    public SocialSpy getSocialSpy(){ return socialSpy; }
     public PlayerDirectMessenger getPlayerDirectMessenger(){ return playerDirectMessenger; }
     public Chat getVaultChat(){ return chat; }
     public FileConfiguration getUsersFileConfig(){ return usersFileConfig; }
@@ -247,7 +252,7 @@ public final class Strings extends JavaPlugin {
      * @param uuid The uuid of the player to get the User of.
      * @return User object of the player matching the UUID.
      */
-    public User getUser(UUID uuid){
+    public User getUser(@NotNull UUID uuid){
         return UserUtil.UserMap.getUser(uuid);
     }
 
@@ -256,7 +261,7 @@ public final class Strings extends JavaPlugin {
      * @param player the player to get the User of.
      * @return User object of the player.
      */
-    public User getUser(Player player){
+    public User getUser(@NotNull Player player){
         return UserUtil.UserMap.getUser(player.getUniqueId());
     }
 }
