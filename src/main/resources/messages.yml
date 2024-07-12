@@ -17,5 +17,17 @@ chat-cleared-all: "&fAll player''s chats cleared"
 # Too many args in command:
 too-many-args: "&fToo many arguments!"
 
+# Insufficient args:
+insufficient-args: "&fYou don''t have enough arguments!"
+
 # Player on cool-down:
-cool-down: "&fYou're sending messages too quickly!  Try again later."
+cool-down: "&fYou''re sending messages too quickly!  Try again later."
+
+# Unknown player message:
+unknown-player: "&fUnknown player!"
+
+# Player is offline:
+player-offline: "&fThat player is offline!"
+
+# No one to reply to:
+no-reply: "&fYou have no one to reply to!"
