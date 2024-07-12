@@ -1,5 +1,6 @@
 package com.pedestriamc.strings;
 
+import com.pedestriamc.strings.channels.Channel;
 import com.pedestriamc.strings.channels.ChannelManager;
 import com.pedestriamc.strings.commands.*;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
@@ -90,7 +91,7 @@ public final class Strings extends JavaPlugin {
     Private methods
      */
     private void setupChannels(){
-        
+
     }
     //Register commands and listeners
     private void registerClasses(){
@@ -250,6 +251,13 @@ public final class Strings extends JavaPlugin {
             e.printStackTrace();
         }
     }
+    public void saveChannelsFile(){
+        try{
+            channelsFileConfig.save(usersFile);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
     public void saveMessagesFile(){
         try{
             messagesFileConfig.save(messagesFile);
@@ -280,5 +288,9 @@ public final class Strings extends JavaPlugin {
      */
     public User getUser(@NotNull Player player){
         return UserUtil.UserMap.getUser(player.getUniqueId());
+    }
+
+    public Channel getChannel(String channel){
+        return channelManager.getChannel(channel);
     }
 }
