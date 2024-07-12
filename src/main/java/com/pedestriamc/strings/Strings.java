@@ -1,8 +1,10 @@
 package com.pedestriamc.strings;
 
+import com.pedestriamc.strings.channels.ChannelManager;
 import com.pedestriamc.strings.commands.*;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.listeners.ChatListener;
+import com.pedestriamc.strings.listeners.DirectMessageListener;
 import com.pedestriamc.strings.listeners.JoinListener;
 import com.pedestriamc.strings.listeners.LeaveListener;
 import com.pedestriamc.strings.message.Messenger;
@@ -46,10 +48,13 @@ public final class Strings extends JavaPlugin {
     private File broadcastsFile;
     private File messagesFile;
     private File usersFile;
+    private File channelsFile;
     private FileConfiguration broadcastsFileConfig;
     private FileConfiguration messagesFileConfig;
     private FileConfiguration usersFileConfig;
+    private FileConfiguration channelsFileConfig;
     private ChatManager chatManager;
+    private ChannelManager channelManager;
     private boolean usingPlaceholderAPI = false;
     private boolean processPlayerMessageColors;
     private boolean processPlayerMessagePlaceholders;
@@ -70,6 +75,7 @@ public final class Strings extends JavaPlugin {
         this.registerClasses();
         this.setupVault();
         Messenger.initialize();
+        setupChannels();
         int pluginId = 22597;
         Metrics metrics = new Metrics(this, pluginId);
         logger.info("[Strings] Enabled!");
@@ -83,6 +89,9 @@ public final class Strings extends JavaPlugin {
     /*
     Private methods
      */
+    private void setupChannels(){
+        
+    }
     //Register commands and listeners
     private void registerClasses(){
         this.getCommand("broadcast").setExecutor(new BroadcastCommand());
@@ -90,15 +99,14 @@ public final class Strings extends JavaPlugin {
         this.getCommand("clearchat").setExecutor(new ClearChatCommand());
         this.getCommand("chatclear").setExecutor(new ClearChatCommand());
         this.getCommand("socialspy").setExecutor(new SocialSpyCommand());
-        if(managePlayerDirectMessages()){
-            this.getCommand("msg").setExecutor(new DirectMessageCommand());
-            this.getCommand("message").setExecutor(new DirectMessageCommand());
-            this.getCommand("reply").setExecutor(new ReplyCommand());
-            this.getCommand("r").setExecutor(new ReplyCommand());
-        }
+        this.getCommand("msg").setExecutor(new DirectMessageCommand());
+        this.getCommand("message").setExecutor(new DirectMessageCommand());
+        this.getCommand("reply").setExecutor(new ReplyCommand());
+        this.getCommand("r").setExecutor(new ReplyCommand());
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
         this.getServer().getPluginManager().registerEvents(new JoinListener(),this);
         this.getServer().getPluginManager().registerEvents(new LeaveListener(), this);
+        this.getServer().getPluginManager().registerEvents(new DirectMessageListener(), this);
 
     }
     //Load options from the config
@@ -119,8 +127,8 @@ public final class Strings extends JavaPlugin {
         this.leaveMessageFormat = config.getString("leave-message");
         this.broadcastFormat = config.getString("broadcast-format");
         this.coolDownLength = config.getString("cooldown-time", "30s");
-        this.directMessageFormatSender = config.getString("msg-format-sender");
-        this.directMessageFormatRecipient = config.getString("msg-format-recipient");
+        this.directMessageFormatSender = config.getString("msg-format-outgoing");
+        this.directMessageFormatRecipient = config.getString("msg-format-receiving");
         if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             this.usingPlaceholderAPI = true;
         }
@@ -157,6 +165,7 @@ public final class Strings extends JavaPlugin {
         }
     }
     private void instantiateObjects(){
+        channelManager = new ChannelManager(this);
         chatManager = new ChatManager(this);
         autoBroadcasts = new AutoBroadcasts(this);
         serverMessages = new ServerMessages(this);
@@ -178,6 +187,7 @@ public final class Strings extends JavaPlugin {
         broadcastsFile = new File(getDataFolder(), "broadcasts.yml");
         messagesFile = new File(getDataFolder(), "messages.yml");
         usersFile = new File(getDataFolder(), "users.yml");
+        channelsFile = new File(getDataFolder(), "channels.yml");
         if(!broadcastsFile.exists()){
             broadcastsFile.getParentFile().mkdirs();
             saveResource("broadcasts.yml", false);
@@ -190,9 +200,14 @@ public final class Strings extends JavaPlugin {
             usersFile.getParentFile().mkdirs();
             saveResource("users.yml", false);
         }
+        if(!channelsFile.exists()){
+            channelsFile.getParentFile().mkdirs();
+            saveResource("channels.yml", false);
+        }
         broadcastsFileConfig = YamlConfiguration.loadConfiguration(broadcastsFile);
         messagesFileConfig = YamlConfiguration.loadConfiguration(messagesFile);
         usersFileConfig = YamlConfiguration.loadConfiguration(usersFile);
+        channelsFileConfig = YamlConfiguration.loadConfiguration(channelsFile);
     }
     /*
     Public getter and setter methods
@@ -208,6 +223,7 @@ public final class Strings extends JavaPlugin {
     public String getLeaveMessageFormat(){ return leaveMessageFormat; }
     public String getCoolDownLength(){ return coolDownLength; }
     public ChatManager getChatManager(){ return chatManager; }
+    public ChannelManager getChannelManager(){ return channelManager; }
     public ServerMessages getJoinLeaveMessage(){ return serverMessages; }
     public SocialSpy getSocialSpy(){ return socialSpy; }
     public PlayerDirectMessenger getPlayerDirectMessenger(){ return playerDirectMessenger; }
@@ -215,6 +231,7 @@ public final class Strings extends JavaPlugin {
     public FileConfiguration getUsersFileConfig(){ return usersFileConfig; }
     public FileConfiguration getBroadcastsFileConfig(){ return broadcastsFileConfig; }
     public FileConfiguration getMessagesFileConfig(){ return messagesFileConfig; }
+    public FileConfiguration getChannelsFileConfig(){ return channelsFileConfig; }
     public boolean managePlayerDirectMessages(){ return directMessengerUsed; }
     public boolean usePlaceholderAPI(){ return usingPlaceholderAPI; }
     public boolean processMessageColors(){ return processPlayerMessageColors; }
