@@ -12,6 +12,7 @@ import java.util.Set;
 
 public class Channel {
 
+    private final Strings strings;
     private String name;
     private String format;
     private String defaultColor;
@@ -20,6 +21,7 @@ public class Channel {
     private boolean active;
 
     public Channel(Strings strings, String name, String format, String defaultColor, ChannelManager channelManager){
+        this.strings = strings;
         this.name = name;
         this.members = new HashSet<>();
         this.format = "" + ChatColor.AQUA + ChatColor.AQUA + ChatColor.RESET + format;
@@ -30,15 +32,19 @@ public class Channel {
     }
 
     public void sendMessage(Player player, String message){
-        Bukkit.getLogger().info("sendMessage triggered");
-        message = "hitherehihihihihihi";
         if(active){
-            Bukkit.getLogger().info("channel active, proceeding");
             String format = chatManager.formatMessage(player, this);
             message = chatManager.processMessage(player, message);
-            AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(false, player, message, members);
-            event.setFormat(format);
-            Bukkit.getPluginManager().callEvent(event);
+            String finalMessage = message;
+            Bukkit.getScheduler().runTask(strings, () ->{
+                AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(false, player, finalMessage, members);
+                event.setFormat(format);
+                Bukkit.getPluginManager().callEvent(event);
+                if(!event.isCancelled()){
+                    String formattedMessage = String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage());
+                    Bukkit.broadcastMessage(formattedMessage);
+                }
+            });
         }
     }
 
