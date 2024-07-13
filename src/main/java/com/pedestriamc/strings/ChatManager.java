@@ -1,5 +1,6 @@
 package com.pedestriamc.strings;
 
+import com.pedestriamc.strings.channels.Channel;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -7,32 +8,36 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class ChatManager {
     private final Strings strings;
-    private final String messageFormat;
     private final boolean usePAPI;
     private final boolean messagePlaceholders;
     private final boolean parseChatColors;
     private final boolean doCoolDown;
-    private final ArrayList<Player> coolDownList = new ArrayList<>();
+    private final Set<Player> coolDownList = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private BukkitScheduler scheduler;
+    private long coolDownLength;
 
     public ChatManager(@NotNull Strings strings){
         this.strings = strings;
-        this.messageFormat = ChatColor.translateAlternateColorCodes('&', strings.getMessageFormat());
         this.usePAPI = strings.usePlaceholderAPI();
         this.parseChatColors = strings.processMessageColors();
         this.messagePlaceholders = strings.processMessagePlaceholders();
         this.doCoolDown = strings.isDoCoolDown();
         if(doCoolDown){
             this.scheduler = Bukkit.getScheduler();
+            this.coolDownLength = calcTicks(strings.getCoolDownLength());
+
         }
     }
 
-    public @NotNull String formatMessage(Player sender){
-        String newMessageFormat = messageFormat;
+    public @NotNull String formatMessage(Player sender, Channel channel){
+        Bukkit.getLogger().info("message format:" + channel.getFormat());
+        String newMessageFormat = channel.getFormat();
         User user = strings.getUser(sender.getUniqueId());
         if(usePAPI){
             newMessageFormat = PlaceholderAPI.setPlaceholders(sender,newMessageFormat);
@@ -45,6 +50,7 @@ public final class ChatManager {
         return newMessageFormat;
     }
     public String processMessage(Player sender, String message){
+        Bukkit.getLogger().info(message);
         User user = strings.getUser(sender.getUniqueId());
         message = user.getChatColor() + message;
         if(parseChatColors && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.colormsg"))){
@@ -59,12 +65,36 @@ public final class ChatManager {
         return null;
     }
     public boolean isOnCoolDown(Player player){
-        return coolDownList.contains(player);
+        if(doCoolDown){
+            return coolDownList.contains(player);
+        }
+        return false;
     }
 
     public void startCoolDown(Player player){
-        coolDownList.add(player);
-        scheduler.runTaskLater(strings,() -> coolDownList.remove(player), 20L);
+        if(doCoolDown){
+            coolDownList.add(player);
+            scheduler.runTaskLater(strings,() -> coolDownList.remove(player), coolDownLength);
+        }
 
+    }
+
+    public long calcTicks(String string){
+        String regex = "^[0-9]+[sm]$";
+        if(string == null || !string.matches(regex)){
+            Bukkit.getLogger().info("[Strings] Invalid chat cool down in config.  Defaulting to 30s.");
+            return 600L;
+        }
+        //Get units
+        char units = string.charAt(string.length() - 1);
+        //Get number as int
+        string = string.substring(0, string.length() - 1);
+        int delayNum = Integer.parseInt(string);
+        //Convert into seconds if in minutes
+        if(units == 'm'){
+            delayNum *= 60;
+        }
+        // One tick = 0.05 seconds
+        return delayNum * 20L;
     }
 }
