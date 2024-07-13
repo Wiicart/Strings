@@ -5,10 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class User {
 
@@ -21,13 +18,13 @@ public class User {
     private String suffix;
     private String displayName;
     private Channel activeChannel;
-    private Set<Channel> channels;
+    private final HashSet<Channel> channels;
 
     public User(UUID playerUuid){
         this(playerUuid, null, null, null, null, false, null);
     }
 
-    public User(UUID playerUuid, String playerChatColor, String playerPrefix, String playerSuffix, String playerDisplayName, boolean socialSpy, Set<Channel> channels){
+    public User(UUID playerUuid, String playerChatColor, String playerPrefix, String playerSuffix, String playerDisplayName, boolean socialSpy, HashSet<Channel> channels){
         this.uuid = playerUuid;
         this.chatColor = playerChatColor;
         this.prefix = playerPrefix;
@@ -36,11 +33,13 @@ public class User {
         this.socialSpy = socialSpy;
         this.player = Bukkit.getPlayer(playerUuid);
         this.activeChannel = strings.getChannel("global");
-        this.channels = channels;
+        this.channels = Objects.requireNonNullElseGet(channels, HashSet::new);
         if(channels != null){
             for(Channel channel : channels){
                 channel.addPlayer(this.getPlayer());
             }
+        }else{
+            this.joinChannel(strings.getChannel("global"));
         }
         UserUtil.saveUser(this);
         UserUtil.UserMap.addUser(this);
@@ -134,10 +133,22 @@ public class User {
 
     public void setActiveChannel(Channel activeChannel){
         this.activeChannel = activeChannel;
+        channels.add(activeChannel);
+        UserUtil.saveUser(this);
     }
 
     public Set<Channel> getChannels(){
         return channels;
+    }
+
+    public void joinChannel(Channel channel){
+        channels.add(channel);
+        channel.addPlayer(this.getPlayer());
+    }
+
+    public void leaveChannel(Channel channel){
+        channels.remove(channel);
+        channel.removePlayer(this.getPlayer());
     }
 
     public ArrayList<String> getChannelNames(){
