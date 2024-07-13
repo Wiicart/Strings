@@ -6,7 +6,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class ChannelManager {
 
@@ -34,7 +33,7 @@ public class ChannelManager {
                         Bukkit.getLogger().info("[Strings] Loaded channel " + channelName);
                         Bukkit.getLogger().info("[Strings] Format: " + format);
                         Bukkit.getLogger().info("[Strings] Default color: " + defaultColor);
-                        new Channel(strings, channelName, format, defaultColor);
+                        new Channel(strings, channelName, format, defaultColor, this);
                         if(channelName.equalsIgnoreCase("global")){
                             globalExists = true;
                         }
@@ -44,7 +43,7 @@ public class ChannelManager {
         }
         if(!globalExists){
             Bukkit.getLogger().info("[Strings] Creating global channel");
-            new Channel(strings,"global","{prefix}{displayname}{suffix} &7» {message}", "&f");
+            new Channel(strings,"global","{prefix}{displayname}{suffix} &7» {message}", "&f", this);
         }
 
     }
@@ -59,9 +58,5 @@ public class ChannelManager {
 
     public Channel getChannel(String channel){
         return channels.get(channel);
-    }
-
-    public HashSet<Channel> getChannels(){
-        return null;
     }
 }
