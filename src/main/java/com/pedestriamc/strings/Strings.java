@@ -166,8 +166,8 @@ public final class Strings extends JavaPlugin {
         }
     }
     private void instantiateObjects(){
-        channelManager = new ChannelManager(this);
         chatManager = new ChatManager(this);
+        channelManager = new ChannelManager(this);
         autoBroadcasts = new AutoBroadcasts(this);
         serverMessages = new ServerMessages(this);
         playerDirectMessenger = new PlayerDirectMessenger(this);
