@@ -3,10 +3,7 @@ package com.pedestriamc.strings;
 import com.pedestriamc.strings.channels.Channel;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public final class UserUtil {
 
@@ -23,12 +20,15 @@ public final class UserUtil {
                 config.set("players." + uuid + "." + element.getKey(), element.getValue());
             }
         }
-        config.set("players." + uuid + ".channels", channelNames);
+        if(!channelNames.isEmpty()){
+            config.set("players." + uuid + ".channels", channelNames);
+        }
         strings.saveUsersFile();
     }
 
     public static User loadUser(UUID uuid){
         String userPath = "players." + uuid;
+        HashSet<Channel> channels = new HashSet<>();
         if(!config.contains(userPath)){
             return null;
         }
@@ -37,7 +37,15 @@ public final class UserUtil {
         String displayName = config.getString(userPath + ".display-name");
         String chatColor = config.getString(userPath + ".chat-color");
         boolean socialSpy = config.getBoolean(userPath + ".social-spy");
-        User user = new User(uuid, chatColor, prefix, suffix, displayName, socialSpy, null);
+        List<?> channelNames = config.getList(userPath + ".channels");
+        if(channelNames != null){
+            for(Object item : channelNames){
+                if(item instanceof String && strings.getChannel((String) item) != null){
+                    channels.add(strings.getChannel((String) item));
+                }
+            }
+        }
+        User user = new User(uuid, chatColor, prefix, suffix, displayName, socialSpy, channels);
         if(socialSpy){
             strings.getSocialSpy().addSpy(user.getPlayer());
         }
