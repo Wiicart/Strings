@@ -104,6 +104,7 @@ public final class Strings extends JavaPlugin {
         this.getCommand("message").setExecutor(new DirectMessageCommand());
         this.getCommand("reply").setExecutor(new ReplyCommand());
         this.getCommand("r").setExecutor(new ReplyCommand());
+        this.getCommand("channel").setExecutor(new ChannelCommand());
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
         this.getServer().getPluginManager().registerEvents(new JoinListener(),this);
         this.getServer().getPluginManager().registerEvents(new LeaveListener(), this);
