@@ -2,6 +2,7 @@ package com.pedestriamc.strings.channels;
 
 import com.pedestriamc.strings.ChatManager;
 import com.pedestriamc.strings.Strings;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -18,19 +19,22 @@ public class Channel {
     private final ChatManager chatManager;
     private boolean active;
 
-    public Channel(Strings strings, String name, String format, String defaultColor){
+    public Channel(Strings strings, String name, String format, String defaultColor, ChannelManager channelManager){
         this.name = name;
         this.members = new HashSet<>();
-        this.format = format;
+        this.format = "" + ChatColor.AQUA + ChatColor.AQUA + ChatColor.RESET + format;
         this.defaultColor = defaultColor;
         this.chatManager = strings.getChatManager();
         this.active = true;
-        strings.getChannelManager().registerChannel(this);
+        channelManager.registerChannel(this);
     }
 
     public void sendMessage(Player player, String message){
+        Bukkit.getLogger().info("sendMessage triggered");
+        message = "hitherehihihihihihi";
         if(active){
-            String format = chatManager.formatMessage(player);
+            Bukkit.getLogger().info("channel active, proceeding");
+            String format = chatManager.formatMessage(player, this);
             message = chatManager.processMessage(player, message);
             AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(false, player, message, members);
             event.setFormat(format);
@@ -54,6 +58,10 @@ public class Channel {
         this.name = name;
     }
 
+    public void setDefaultColor(String defaultColor){
+        this.defaultColor = defaultColor;
+    }
+
     public void addPlayer(Player player){
         members.add(player);
     }
@@ -64,5 +72,6 @@ public class Channel {
 
     public void closeChannel(){
         Strings.getInstance().getChannelManager().unregisterChannel(this);
+        active = false;
     }
 }
