@@ -1,21 +1,25 @@
 package com.pedestriamc.strings.listeners;
 
-import com.pedestriamc.strings.JoinLeaveMessage;
+import com.pedestriamc.strings.ServerMessages;
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.UserUtil;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class LeaveListener {
+public class LeaveListener implements Listener {
 
     private final boolean modifyLeaveMessage = Strings.getInstance().modifyJoinLeaveMessages();
-    private final JoinLeaveMessage joinLeaveMessage = Strings.getInstance().getJoinLeaveMessage();
+    private final ServerMessages serverMessages = Strings.getInstance().getJoinLeaveMessage();
 
     @EventHandler
     public void onPlayerQuitEvent(PlayerQuitEvent event){
-        UserUtil.UserMap.removeUser(event.getPlayer().getUniqueId());
+        User user = Strings.getInstance().getUser(event.getPlayer());
         if(modifyLeaveMessage){
-            event.setQuitMessage(joinLeaveMessage.leaveMessage(event.getPlayer()));
+            event.setQuitMessage(serverMessages.leaveMessage(event.getPlayer()));
         }
+        UserUtil.UserMap.removeUser(event.getPlayer().getUniqueId());
+        user.leaveChannelsLogOff();
     }
 }
