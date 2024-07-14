@@ -134,6 +134,7 @@ public class User {
     public void setActiveChannel(Channel activeChannel){
         this.activeChannel = activeChannel;
         channels.add(activeChannel);
+        activeChannel.addPlayer(this.getPlayer());
         UserUtil.saveUser(this);
     }
 
@@ -144,11 +145,14 @@ public class User {
     public void joinChannel(Channel channel){
         channels.add(channel);
         channel.addPlayer(this.getPlayer());
+        UserUtil.saveUser(this);
+
     }
 
     public void leaveChannel(Channel channel){
         channels.remove(channel);
         channel.removePlayer(this.getPlayer());
+        UserUtil.saveUser(this);
     }
 
     public ArrayList<String> getChannelNames(){
@@ -157,5 +161,11 @@ public class User {
             names.add(channel.getName());
         }
         return names;
+    }
+
+    public void leaveChannelsLogOff(){
+        for(Channel channel : channels){
+            channel.removePlayer(this.getPlayer());
+        }
     }
 }
