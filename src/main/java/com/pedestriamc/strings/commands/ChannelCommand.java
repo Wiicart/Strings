@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.channels.Channel;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,10 +26,23 @@ public class ChannelCommand implements CommandExecutor {
                 return true;
             }
             case 1 -> {
+                if(args[0].equalsIgnoreCase("help")){
+                    //help message
+                    return true;
+                }
                 setActiveChannel(sender, args[0]);
                 return true;
             }
             case 2 -> {
+                //check if channel is valid -> check if player is valid
+                Player p = Bukkit.getPlayer(args[1]);
+                if(p == null){
+
+                }
+                Messenger.sendMessage(Message.INVALID_USE_CHANNEL, sender);
+                return true;
+            }
+            case 3 -> {
                 return true;
             }
             default -> {
@@ -53,3 +67,4 @@ public class ChannelCommand implements CommandExecutor {
     }
 
 }
+
