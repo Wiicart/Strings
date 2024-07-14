@@ -41,11 +41,37 @@ social-spy-on: "&fSocial Spy &aenabled&f!"
 # Social Spy disabled:
 social-spy-off: "&fSocial Spy &cdisabled&f!"
 
-# Channel active:
-channel-active: "&fChannel set to active"
-
-# Channel joined:
-channel-joined: "&fChannel joined."
-
 # Invalid use of channels command:
 invalid-use-channel: "&fInvalid usage of command! Type &7/channels help &ffor info."
+
+# Channel active:
+# Placeholder: {channel}
+channel-active: "&fChannel &7{channel} &fset to your active channel."
+
+# Channel joined:
+# Placeholder: {channel}
+channel-joined: "&fJoined channel &7{channel}&f."
+
+# Other player joined channel:
+# Placeholders: {player}, {channel}
+other-user-joined-channel: "&7{player} &fjoined the channel &7{channel}&f."
+
+# Channel left:
+# Placeholder: {channel}
+left-channel: "&fLeft channel &7{channel}&f."
+
+# Other player left channel:
+# Placeholders {player}, {channel}
+other-user-left-channel: "&7{player} &fleft the channel &7{channel}&f."
+
+# Invalid player:
+# Placeholder {player} will be replaced with the offending player name
+invalid-player: "&fCannot find player &7{player}&f!"
+
+# Channel does not exist:
+# Placeholder {channel} will be replaced with the offending channel name
+channel-does-not-exist: "&fChannel &7{channel} &fdoes not exist!"
+
+# Other player doesn't have perms to join channel:
+# Placeholders: {player}, {channel}
+other-player-no-perms: "&fPlayer &7{player} &fdoesn't have permission to join channel &7{channel}&f!"
