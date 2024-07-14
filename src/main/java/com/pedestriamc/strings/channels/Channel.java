@@ -7,8 +7,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Channel {
 
@@ -18,12 +18,12 @@ public class Channel {
     private String defaultColor;
     private final Set<Player> members;
     private final ChatManager chatManager;
-    private boolean active;
+    private volatile boolean active;
 
     public Channel(Strings strings, String name, String format, String defaultColor, ChannelManager channelManager){
         this.strings = strings;
         this.name = name;
-        this.members = new HashSet<>();
+        this.members = ConcurrentHashMap.newKeySet();
         this.format = "" + ChatColor.AQUA + ChatColor.AQUA + ChatColor.RESET + format;
         this.defaultColor = defaultColor;
         this.chatManager = strings.getChatManager();
