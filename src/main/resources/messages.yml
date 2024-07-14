@@ -40,3 +40,12 @@ social-spy-on: "&fSocial Spy &aenabled&f!"
 
 # Social Spy disabled:
 social-spy-off: "&fSocial Spy &cdisabled&f!"
+
+# Channel active:
+channel-active: "&fChannel set to active"
+
+# Channel joined:
+channel-joined: "&fChannel joined."
+
+# Invalid use of channels command:
+invalid-use-channel: "&fInvalid usage of command! Type &7/channels help &ffor info."
