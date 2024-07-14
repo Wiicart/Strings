@@ -4,18 +4,19 @@ import com.pedestriamc.strings.Strings;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ChannelManager {
 
     private final Strings strings;
-    private final HashMap<String, Channel> channels;
+    private final ConcurrentHashMap<String, Channel> channels;
     private final FileConfiguration config;
 
-    public ChannelManager(Strings strings){
+    public ChannelManager(@NotNull Strings strings){
         this.strings = strings;
-        this.channels = new HashMap<>();
+        this.channels = new ConcurrentHashMap<String, Channel>();
         this.config = strings.getChannelsFileConfig();
         loadChannelsFromConfig();
     }
