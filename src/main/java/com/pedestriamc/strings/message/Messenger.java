@@ -1,5 +1,6 @@
-package com.pedestriamc.strings;
+package com.pedestriamc.strings.message;
 
+import com.pedestriamc.strings.Strings;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -39,3 +40,23 @@ public class Messenger {
         }else{
             Bukkit.getLogger().info("[Strings] Unknown object type or value not found for message " + message.toString());
         }
+    }
+
+    public static void channelCmdMessage(Message message, CommandSender sender, String playerName, String channelName){
+        Object msg = enumMap.get(message);
+        if(msg instanceof String[]){
+            for(String str : (String[]) msg){
+                str = str.replace("{player}", playerName);
+                str = str.replace("{channel}", channelName);
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', str));
+            }
+            return;
+        }
+        if(msg instanceof String str){
+            str = str.replace("{player}", playerName);
+            str = str.replace("{channel}", channelName);
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + str));
+        }
+
+    }
+}
