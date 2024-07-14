@@ -42,7 +42,10 @@ public class Channel {
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()){
                     String formattedMessage = String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage());
-                    Bukkit.broadcastMessage(formattedMessage);
+                    for(Player p : members){
+                        p.sendMessage(formattedMessage);
+                    }
+                    Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
                 }
             });
         }
@@ -81,3 +84,4 @@ public class Channel {
         active = false;
     }
 }
+
