@@ -49,7 +49,7 @@ public class ChannelCommand implements CommandExecutor {
                             return true;
                         }
                         //joining channel
-                        joinChannel(sender, args[0], (Player) sender);
+                        joinChannel(sender, args[1].toLowerCase(), (Player) sender);
                         return true;
                     }
                     case "LEAVE" -> {
@@ -58,18 +58,17 @@ public class ChannelCommand implements CommandExecutor {
                             return true;
                         }
                         //leaving channel
-                        leaveChannel(sender, args[0], (Player) sender);
+                        leaveChannel(sender, args[1].toLowerCase(), (Player) sender);
                         return true;
                     }
                     default -> {
                         Player p = Bukkit.getPlayer(args[1]);
                         if(p == null){
                             Messenger.channelCmdMessage(Message.INVALID_PLAYER, sender, args[1], null);
-                            return true;
                         }else{
                             setActiveChannel(sender, args[0], p);
-                            return true;
                         }
+                        return true;
                     }
                 }
             }
@@ -110,14 +109,13 @@ public class ChannelCommand implements CommandExecutor {
             Messenger.channelCmdMessage(Message.CHANNEL_DOES_NOT_EXIST, sender, target.getName(), channelName);
             return;
         }
-        if(modifyingOther && !target.hasPermission("strings.channels." + c.getName())){
-            Messenger.channelCmdMessage(Message.OTHER_PLAYER_NO_PERMS, sender, target.getName(), channelName);
-            return;
-        }
-        if((!target.hasPermission("strings.channels.channel" + channelName) && !target.hasPermission("strings.channels.*") && !target.hasPermission("strings.*") && !target.hasPermission("strings.channels.channel.*"))){
-            if(modifyingOther){
+        if (!target.hasPermission("strings.channels." + c.getName()) &&
+                !target.hasPermission("strings.channels.*") &&
+                !target.hasPermission("strings.*") &&
+                !target.hasPermission("strings.channels.channel.*")) {
+            if (modifyingOther) {
                 Messenger.channelCmdMessage(Message.OTHER_PLAYER_NO_PERMS, sender, target.getName(), channelName);
-            }else{
+            } else {
                 Messenger.channelCmdMessage(Message.NO_PERMS_CHANNEL, sender, sender.getName(), channelName);
             }
             return;
@@ -144,8 +142,15 @@ public class ChannelCommand implements CommandExecutor {
             Messenger.channelCmdMessage(Message.CHANNEL_DOES_NOT_EXIST, sender, target.getName(), channel);
             return;
         }
-        if(modifyingOther && !target.hasPermission("strings.channels." + c.getName())){
-            Messenger.channelCmdMessage(Message.OTHER_PLAYER_NO_PERMS, sender, target.getName(), channel);
+        if (!target.hasPermission("strings.channels." + c.getName()) &&
+                !target.hasPermission("strings.channels.*") &&
+                !target.hasPermission("strings.*") &&
+                !target.hasPermission("strings.channels.channel.*")) {
+            if (modifyingOther) {
+                Messenger.channelCmdMessage(Message.OTHER_PLAYER_NO_PERMS, sender, target.getName(), channel);
+            } else {
+                Messenger.channelCmdMessage(Message.NO_PERMS_CHANNEL, sender, sender.getName(), channel);
+            }
             return;
         }
         User user = strings.getUser(target);
@@ -170,6 +175,13 @@ public class ChannelCommand implements CommandExecutor {
             return;
         }
         User user = strings.getUser(target);
+        if(!user.getChannels().contains(c)){
+            if(modifyingOther){
+                Messenger.channelCmdMessage(Message.NOT_CHANNEL_MEMBER_OTHER, sender, channel, target.getName());
+            }
+            Messenger.channelCmdMessage(Message.NOT_CHANNEL_MEMBER, target, channel, target.getName());
+            return;
+        }
         user.leaveChannel(c);
         if(modifyingOther){
             Messenger.channelCmdMessage(Message.OTHER_USER_LEFT_CHANNEL, sender, target.getName(), channel);
