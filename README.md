@@ -1,5 +1,5 @@
 # Strings - Minecraft Chat Plugin
-[https://www.wiicart.net]
+https://www.wiicart.net
 
 ##Features:  
 * Customizable Channels
