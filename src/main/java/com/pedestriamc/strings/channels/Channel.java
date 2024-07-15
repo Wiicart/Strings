@@ -16,6 +16,7 @@ public class Channel {
     private String name;
     private String format;
     private String defaultColor;
+    private boolean callEvent;
     private final Set<Player> members;
     private final ChatManager chatManager;
     private volatile boolean active;
@@ -25,19 +26,23 @@ public class Channel {
         this.name = name;
         this.members = ConcurrentHashMap.newKeySet();
         this.format = "" + ChatColor.AQUA + ChatColor.AQUA + ChatColor.RESET + format;
-        this.defaultColor = defaultColor;
+        this.defaultColor = defaultColor != null ? defaultColor : "&f";
         this.chatManager = strings.getChatManager();
         this.active = true;
         channelManager.registerChannel(this);
     }
 
+    //Send player messages in the channel.
+    //The message will be sent to all players that are a member of the channel,
+    //which includes players that don't have this channel as active.
+    //Also calls a AsyncPlayerChatEvent so that other plugins can handle this message
     public void sendMessage(Player player, String message){
         if(active){
             String format = chatManager.formatMessage(player, this);
             message = chatManager.processMessage(player, message);
             String finalMessage = message;
             Bukkit.getScheduler().runTask(strings, () ->{
-                AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(false, player, finalMessage, members);
+                AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(true, player, finalMessage, members);
                 event.setFormat(format);
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()){
@@ -49,6 +54,23 @@ public class Channel {
                 }
             });
         }
+    }
+
+    //Broadcasts a message to members of this channel. (Auto Broadcasts)
+    public void broadcastMessage(String message){
+        for(Player p : members){
+            p.sendMessage(message);
+        }
+    }
+
+    // Closes this channel, updates players to reflect this channel closing, and unregisters channel
+    // TODO: remove this channel from the config when this method is called
+    public void closeChannel(){
+        for(Player p : members){
+            strings.getUser(p).leaveChannel(this);
+        }
+        Strings.getInstance().getChannelManager().unregisterChannel(this);
+        active = false;
     }
 
     public String getFormat(){
@@ -71,6 +93,8 @@ public class Channel {
         this.defaultColor = defaultColor;
     }
 
+    private void setFormat(String format){ this.format = format; }
+
     public void addPlayer(Player player){
         members.add(player);
     }
@@ -79,9 +103,5 @@ public class Channel {
         members.remove(player);
     }
 
-    public void closeChannel(){
-        Strings.getInstance().getChannelManager().unregisterChannel(this);
-        active = false;
-    }
 }
 
