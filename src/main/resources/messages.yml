@@ -18,10 +18,13 @@ chat-cleared-all: "&fAll player's chats cleared"
 too-many-args: "&fToo many arguments!"
 
 # Insufficient args:
-insufficient-args: "&fYou don't have enough arguments!"
+insufficient-args: "&fInsufficient arguments!"
 
 # Player on cool-down:
 cool-down: "&fYou''re sending messages too quickly!  Try again later."
+
+# Messanging Messages
+# This section includes messages for the /msg, /r and /socialspy commands
 
 # Unknown player message:
 unknown-player: "&fUnknown player!"
@@ -40,6 +43,10 @@ social-spy-on: "&fSocial Spy &aenabled&f!"
 
 # Social Spy disabled:
 social-spy-off: "&fSocial Spy &cdisabled&f!"
+
+# Channels Messages
+# All messages under this section will check for placeholders {player} and {channel}
+# however, for some messages the values of either of these placeholders may be null.
 
 # Invalid use of channels command:
 invalid-use-channel: "&fInvalid usage of command! Type &7/channels help &ffor info."
@@ -91,3 +98,12 @@ not-channel-member: "&fYou're not a member of the channel &7{channel}&f."
 # Not a member of channel:
 # Placeholders: {player}, {channel}
 not-channel-member-other: "&7{player} &fis not a member of &7{channel}&f."
+
+# /channel help message:
+channel-help:
+  - "&8[&3Strings&8] &7| Help"
+  - "&f/channels usage"
+  - "&f/channel <active-channel> &7- Sets your active channel"
+  - "&f/channel join <channel>  &7- Lets you join a channel"
+  - "&f/channel leave <channel> &7- Lets you leave a channel"
+  - "&7* Add a player name at the end to modify another player"
