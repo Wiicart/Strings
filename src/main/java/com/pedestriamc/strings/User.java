@@ -61,7 +61,7 @@ public class User {
     }
     public String getChatColor(){
         if(chatColor == null){
-            return strings.getDefaultColor();
+            return activeChannel.getDefaultColor();
         }
         return ChatColor.translateAlternateColorCodes('&',chatColor);
     }
