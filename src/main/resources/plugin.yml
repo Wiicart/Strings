@@ -35,6 +35,12 @@ commands:
   socialspy:
     description: "See all player's direct messages"
     usage: "/socialspy"
+  channel:
+    description: "Join, leave and set active channels"
+    usage: "/channel"
+  c:
+    description: "Join, leave and set active channels"
+    usage: "/c"
 permissions:
   strings.*:
     description: "All Strings permissions"
@@ -73,4 +79,10 @@ permissions:
     default: true
   strings.socialspy:
     description: "Allows use of the /socialspy command"
+    default: false
+  strings.channels.<channel>:
+    description: "Allows a player to join specified channel"
+    default: false
+  stings.channel.modifyplayers:
+    description: "Allows a player to manipulate another player's channels"
     default: false
