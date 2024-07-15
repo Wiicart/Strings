@@ -72,6 +72,22 @@ invalid-player: "&fCannot find player &7{player}&f!"
 # Placeholder {channel} will be replaced with the offending channel name
 channel-does-not-exist: "&fChannel &7{channel} &fdoes not exist!"
 
+# No perms to join channel:
+# Placeholder: {channel}
+no-perms-channel: "&fYou don't have permission to join channel &7{channel}&f."
+
 # Other player doesn't have perms to join channel:
 # Placeholders: {player}, {channel}
 other-player-no-perms: "&fPlayer &7{player} &fdoesn't have permission to join channel &7{channel}&f!"
+
+# Other player's active channel set:
+# Placeholders: {player}, {channel}
+other-player-channel-active: "&7{player}&f's active channel set to &7{channel}&f."
+
+# Other player not a member of channel:
+# Placeholder: {channel}
+not-channel-member: "&fYou're not a member of the channel &7{channel}&f."
+
+# Not a member of channel:
+# Placeholders: {player}, {channel}
+not-channel-member-other: "&7{player} &fis not a member of &7{channel}&f."
