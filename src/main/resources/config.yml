@@ -54,9 +54,6 @@ cooldown: false
 # (Cool down must be enabled for this to do anything)
 cooldown-time: 1m
 
-# Enable this plugin's /msg command?
-enable-msg: true
-
 # Message format for /msg
 # This is for outgoing messages
 # Valid placeholders:
@@ -143,3 +140,23 @@ placeholder-api: true
 # Enable LuckPerms support?
 # It is advised to keep this enabled
 luckperms: true
+
+# Chat Filter Config
+# All settings for the chat filter.
+# Filter can be bypassed with the permission strings.filter.bypass
+
+# Block urls in chat?
+# If enabled, the url will be removed from messages, and the sender
+# will receive a message that tells them that links aren't allowed.
+block-urls: false
+
+# URL whitelist
+# Allow these urls to bypass chat filtering
+url-whitelist:
+  - "minecraft.net"
+  - "www.minecraft.net"
+  - "https://minecraft.net"
+  - "http://minecraft.net"
+
+# Filter profanity?
+filter-profanity: false
