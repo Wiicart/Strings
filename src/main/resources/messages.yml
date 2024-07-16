@@ -107,3 +107,8 @@ channel-help:
   - "&f/channel join <channel>  &7- Lets you join a channel"
   - "&f/channel leave <channel> &7- Lets you leave a channel"
   - "&7* Add a player name at the end to modify another player"
+
+# Chat Filter Messages:
+
+# Links aren't allowed message:
+links-prohibited: "&fYou're not allowed to send links in your messages!"
