@@ -18,6 +18,7 @@ public final class ChatManager {
     private final boolean messagePlaceholders;
     private final boolean parseChatColors;
     private final boolean doCoolDown;
+    private final ChatFilter chatFilter;
     private final Set<Player> coolDownList = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private BukkitScheduler scheduler;
     private long coolDownLength;
@@ -28,6 +29,7 @@ public final class ChatManager {
         this.parseChatColors = strings.processMessageColors();
         this.messagePlaceholders = strings.processMessagePlaceholders();
         this.doCoolDown = strings.isDoCoolDown();
+        this.chatFilter = strings.getChatFilter();
         if(doCoolDown){
             this.scheduler = Bukkit.getScheduler();
             this.coolDownLength = calcTicks(strings.getCoolDownLength());
@@ -36,7 +38,6 @@ public final class ChatManager {
     }
 
     public @NotNull String formatMessage(Player sender, Channel channel){
-        Bukkit.getLogger().info("message format:" + channel.getFormat());
         String newMessageFormat = channel.getFormat();
         User user = strings.getUser(sender.getUniqueId());
         if(usePAPI){
@@ -46,11 +47,11 @@ public final class ChatManager {
         newMessageFormat = newMessageFormat.replace("{suffix}", user.getSuffix());
         newMessageFormat = newMessageFormat.replace("{displayname}", "%s");
         newMessageFormat = newMessageFormat.replace("{message}", "%s");
+        newMessageFormat = ChatColor.translateAlternateColorCodes('&', newMessageFormat);
 
         return newMessageFormat;
     }
     public String processMessage(Player sender, String message){
-        Bukkit.getLogger().info(message);
         User user = strings.getUser(sender.getUniqueId());
         message = user.getChatColor() + message;
         if(parseChatColors && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.colormsg"))){
@@ -59,11 +60,10 @@ public final class ChatManager {
         if(usePAPI && messagePlaceholders && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.placeholdermsg"))){
             message = PlaceholderAPI.setPlaceholders(sender,message);
         }
+        message = chatFilter.filter(message, sender);
         return message;
     }
-    public String chatFilter(Player sender, String message){
-        return null;
-    }
+
     public boolean isOnCoolDown(Player player){
         if(doCoolDown){
             return coolDownList.contains(player);
@@ -98,3 +98,4 @@ public final class ChatManager {
         return delayNum * 20L;
     }
 }
+
