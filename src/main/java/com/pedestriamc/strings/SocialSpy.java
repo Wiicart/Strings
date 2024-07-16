@@ -14,7 +14,7 @@ public class SocialSpy {
     private final HashSet<CommandSender> spiesList = new HashSet<>();
 
     public SocialSpy(Strings strings){
-        this.socialSpyFormat =  strings.getSocialSpyFormat();
+        this. socialSpyFormat = strings.getConfig().getString("social-spy-format");
         this.playerDirectMessenger = strings.getPlayerDirectMessenger();
     }
 
