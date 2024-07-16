@@ -56,6 +56,7 @@ public final class Strings extends JavaPlugin {
     private FileConfiguration channelsFileConfig;
     private ChatManager chatManager;
     private ChannelManager channelManager;
+    private ChatFilter chatFilter;
     private boolean usingPlaceholderAPI = false;
     private boolean processPlayerMessageColors;
     private boolean processPlayerMessagePlaceholders;
@@ -63,6 +64,8 @@ public final class Strings extends JavaPlugin {
     private boolean useCustomJoinLeave;
     private boolean doCoolDown;
     private boolean directMessengerUsed;
+    private boolean blockUrls;
+    private boolean blockProfanity;
 
     @Override
     public void onEnable() {
@@ -105,6 +108,7 @@ public final class Strings extends JavaPlugin {
         this.getCommand("reply").setExecutor(new ReplyCommand());
         this.getCommand("r").setExecutor(new ReplyCommand());
         this.getCommand("channel").setExecutor(new ChannelCommand());
+        this.getCommand("c").setExecutor(new ChannelCommand());
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
         this.getServer().getPluginManager().registerEvents(new JoinListener(),this);
         this.getServer().getPluginManager().registerEvents(new LeaveListener(), this);
@@ -131,6 +135,8 @@ public final class Strings extends JavaPlugin {
         this.coolDownLength = config.getString("cooldown-time", "30s");
         this.directMessageFormatSender = config.getString("msg-format-outgoing");
         this.directMessageFormatRecipient = config.getString("msg-format-receiving");
+        this.blockUrls = config.getBoolean("block-urls", false);
+        this.blockProfanity = config.getBoolean("filter-profanity", false);
         if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             this.usingPlaceholderAPI = true;
         }
@@ -173,6 +179,7 @@ public final class Strings extends JavaPlugin {
         serverMessages = new ServerMessages(this);
         playerDirectMessenger = new PlayerDirectMessenger(this);
         socialSpy = new SocialSpy(this);
+        chatFilter = new ChatFilter(this);
 
     }
     private void setupVault(){
@@ -229,6 +236,7 @@ public final class Strings extends JavaPlugin {
     public ServerMessages getJoinLeaveMessage(){ return serverMessages; }
     public SocialSpy getSocialSpy(){ return socialSpy; }
     public PlayerDirectMessenger getPlayerDirectMessenger(){ return playerDirectMessenger; }
+    public ChatFilter getChatFilter(){ return chatFilter; }
     public Chat getVaultChat(){ return chat; }
     public FileConfiguration getUsersFileConfig(){ return usersFileConfig; }
     public FileConfiguration getBroadcastsFileConfig(){ return broadcastsFileConfig; }
@@ -241,6 +249,8 @@ public final class Strings extends JavaPlugin {
     public boolean useVault(){ return usingVault; }
     public boolean modifyJoinLeaveMessages(){ return useCustomJoinLeave; }
     public boolean isDoCoolDown(){ return doCoolDown; }
+    public boolean isBlockUrls(){ return blockUrls; }
+    public boolean isBlockProfanity(){ return blockProfanity; }
     public static Strings getInstance(){ return instance; }
     /*
     Other methods
