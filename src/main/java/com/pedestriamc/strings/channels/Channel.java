@@ -6,6 +6,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,12 +17,12 @@ public class Channel {
     private String name;
     private String format;
     private String defaultColor;
-    private boolean callEvent;
+    private final boolean callEvent;
     private final Set<Player> members;
     private final ChatManager chatManager;
     private volatile boolean active;
 
-    public Channel(Strings strings, String name, String format, String defaultColor, ChannelManager channelManager){
+    public Channel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent){
         this.strings = strings;
         this.name = name;
         this.members = ConcurrentHashMap.newKeySet();
@@ -29,6 +30,7 @@ public class Channel {
         this.defaultColor = defaultColor != null ? defaultColor : "&f";
         this.chatManager = strings.getChatManager();
         this.active = true;
+        this.callEvent = callEvent;
         channelManager.registerChannel(this);
     }
 
@@ -41,18 +43,26 @@ public class Channel {
             String format = chatManager.formatMessage(player, this);
             message = chatManager.processMessage(player, message);
             String finalMessage = message;
-            Bukkit.getScheduler().runTask(strings, () ->{
-                AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(true, player, finalMessage, members);
-                event.setFormat(format);
-                Bukkit.getPluginManager().callEvent(event);
-                if(!event.isCancelled()){
-                    String formattedMessage = String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage());
-                    for(Player p : members){
-                        p.sendMessage(formattedMessage);
+            if(callEvent){
+                Bukkit.getScheduler().runTask(strings, () ->{
+                    AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(false, player, finalMessage, members);
+                    event.setFormat(format);
+                    Bukkit.getPluginManager().callEvent(event);
+                    if(!event.isCancelled()){
+                        String formattedMessage = String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage());
+                        for(Player p : members){
+                            p.sendMessage(formattedMessage);
+                        }
+                        Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
                     }
-                    Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
+                });
+            }else{
+                String formattedMessage = String.format(format, player.getDisplayName(), message);
+                for(Player p : members){
+                    p.sendMessage(formattedMessage);
                 }
-            });
+                Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
+            }
         }
     }
 
