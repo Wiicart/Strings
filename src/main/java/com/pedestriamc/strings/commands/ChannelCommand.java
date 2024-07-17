@@ -28,8 +28,16 @@ public class ChannelCommand implements CommandExecutor {
                 return true;
             }
             case 1 -> {
+                if(args[0].equalsIgnoreCase("join")){
+                    Messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+                    return true;
+                }
+                if(args[0].equalsIgnoreCase("leave")){
+                    Messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+                    return true;
+                }
                 if(args[0].equalsIgnoreCase("help")){
-                    //help message
+                    Messenger.sendMessage(Message.CHANNEL_HELP, sender);
                     return true;
                 }
                 if(sender instanceof Server){
