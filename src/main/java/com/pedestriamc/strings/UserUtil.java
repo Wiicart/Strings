@@ -37,6 +37,7 @@ public final class UserUtil {
         String displayName = config.getString(userPath + ".display-name");
         String chatColor = config.getString(userPath + ".chat-color");
         boolean socialSpy = config.getBoolean(userPath + ".social-spy");
+        Channel activeChannel = strings.getChannel(config.getString(userPath + ".active-channel"));
         List<?> channelNames = config.getList(userPath + ".channels");
         if(channelNames != null){
             for(Object item : channelNames){
@@ -45,7 +46,7 @@ public final class UserUtil {
                 }
             }
         }
-        User user = new User(uuid, chatColor, prefix, suffix, displayName, socialSpy, channels);
+        User user = new User(uuid, chatColor, prefix, suffix, displayName, socialSpy, channels, activeChannel);
         if(socialSpy){
             strings.getSocialSpy().addSpy(user.getPlayer());
         }
@@ -68,5 +69,9 @@ public final class UserUtil {
         public static void removeUser(UUID uuid){
             userHashMap.remove(uuid);
         }
+        public static Collection<User> getUserSet(){
+            return userHashMap.values();
+        }
     }
 }
+
