@@ -1,7 +1,7 @@
 # Strings - Minecraft Chat Plugin
 https://www.wiicart.net
 
-##Features:  
+Features:  
 * Customizable Channels
 * Broadcasts
 * Auto Broadcasts
