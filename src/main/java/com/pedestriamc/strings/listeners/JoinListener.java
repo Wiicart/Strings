@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.listeners;
 
-import com.pedestriamc.strings.JoinLeaveMessage;
+import com.pedestriamc.stringscustoms.ServerMessages;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.UserUtil;
@@ -9,9 +9,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class JoinListener implements Listener {
-
-    private final boolean modifyJoinMessage = Strings.getInstance().modifyJoinLeaveMessages();
-    private final JoinLeaveMessage joinLeaveMessage = Strings.getInstance().getJoinLeaveMessage();
+    
+    private final Strings strings = Strings.getInstance();
+    private final boolean modifyJoinMessage = strings.modifyJoinLeaveMessages();
+    private final ServerMessages serverMessages = strings.getJoinLeaveMessage();
+    private final boolean doMOTD = strings.getConfig().getBoolean("enable-motd", false);
 
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event){
@@ -19,7 +21,10 @@ public class JoinListener implements Listener {
             new User(event.getPlayer().getUniqueId());
         }
         if(modifyJoinMessage){
-            event.setJoinMessage(joinLeaveMessage.joinMessage(event.getPlayer()));
+            event.setJoinMessage(serverMessages.joinMessage(event.getPlayer()));
+        }
+        if(doMOTD){
+            serverMessages.sendMOTD(event.getPlayer());
         }
     }
 }
