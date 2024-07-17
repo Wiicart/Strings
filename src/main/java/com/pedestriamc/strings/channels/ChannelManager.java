@@ -9,6 +9,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ChannelManager {
@@ -37,10 +39,10 @@ public class ChannelManager {
                         String defaultColor = channel.getString("default-color", "&f");
                         boolean callEvent = channel.getBoolean("call-event", true);
                         if(channelName.equalsIgnoreCase("help")){
-                            new HelpOPChannel(strings,channelName,format,defaultColor,this,callEvent);
+                            new HelpOPStringChannel(strings,channelName,format,defaultColor,this,callEvent);
                             helpOpExists = true;
                         }
-                        new Channel(strings, channelName, format, defaultColor, this, callEvent);
+                        new StringChannel(strings, channelName, format, defaultColor, this, callEvent);
                         Bukkit.getLogger().info("[Strings] Loaded channel " + channelName);
                         if(channelName.equalsIgnoreCase("global")){
                             globalExists = true;
@@ -51,11 +53,11 @@ public class ChannelManager {
         }
         if(!globalExists){
             Bukkit.getLogger().info("[Strings] Creating global channel");
-            new Channel(strings,"global","{prefix}{displayname}{suffix} &7» {message}", "&f", this, true);
+            new StringChannel(strings,"global","{prefix}{displayname}{suffix} &7» {message}", "&f", this, true);
         }
         if(!helpOpExists){
             Bukkit.getLogger().info("[Strings] Creating help op channel");
-            new HelpOPChannel(strings,"helpop","&8[&4HelpOP&8] &f{displayname} &7» {message}", "&7",this, false);
+            new HelpOPStringChannel(strings,"helpop","&8[&4HelpOP&8] &f{displayname} &7» {message}", "&7",this, false);
         }
 
     }
@@ -85,5 +87,9 @@ public class ChannelManager {
 
     public Channel getChannel(String channel){
         return channels.get(channel);
+    }
+
+    public List<String> getChannelNames(){
+        return Collections.list( channels.keys());
     }
 }
