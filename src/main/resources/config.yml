@@ -109,6 +109,20 @@ join-message: "&8[&a+&8] &f{username} &7has joined the server."
 # Any PlaceholderAPI placeholders
 leave-message: "&8[&4-&8] &f{username} &7has left the server."
 
+# Send users a MOTD when they join the server?
+enable-motd: false
+
+# The MOTD that is sent out if enable-motd is true.
+# Placeholder list:
+# {displayname}
+# {username}
+# {prefix}
+# {suffix}
+# Any PlaceholderAPI placeholders
+motd:
+  - "&fWelcome to the server, {username}!"
+  - "&fHave fun!"
+
 # Broadcast prefix:
 # Prefix for messages sent using the /broadcast command
 broadcast-format: "&8[&3Broadcast&8] &f"
@@ -151,4 +165,3 @@ filter-profanity: false
 
 # Enable Help OP?
 help-op: true;
-
