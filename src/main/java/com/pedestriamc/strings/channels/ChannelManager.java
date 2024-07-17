@@ -31,7 +31,8 @@ public class ChannelManager {
                     if(channel != null){
                         String format = channel.getString("format", "{prefix}{displayname}{suffix} &7» {message}");
                         String defaultColor = channel.getString("default-color", "&f");
-                        new Channel(strings, channelName, format, defaultColor, this);
+                        boolean callEvent = channel.getBoolean("call-event", true);
+                        new Channel(strings, channelName, format, defaultColor, this, callEvent);
                         Bukkit.getLogger().info("[Strings] Loaded channel " + channelName);
                         if(channelName.equalsIgnoreCase("global")){
                             globalExists = true;
@@ -42,7 +43,7 @@ public class ChannelManager {
         }
         if(!globalExists){
             Bukkit.getLogger().info("[Strings] Creating global channel");
-            new Channel(strings,"global","{prefix}{displayname}{suffix} &7» {message}", "&f", this);
+            new Channel(strings,"global","{prefix}{displayname}{suffix} &7» {message}", "&f", this, true);
         }
 
     }
