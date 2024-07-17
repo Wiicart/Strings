@@ -21,10 +21,10 @@ public class User {
     private final HashSet<Channel> channels;
 
     public User(UUID playerUuid){
-        this(playerUuid, null, null, null, null, false, null);
+        this(playerUuid, null, null, null, null, false, null, null);
     }
 
-    public User(UUID playerUuid, String playerChatColor, String playerPrefix, String playerSuffix, String playerDisplayName, boolean socialSpy, HashSet<Channel> channels){
+    public User(UUID playerUuid, String playerChatColor, String playerPrefix, String playerSuffix, String playerDisplayName, boolean socialSpy, HashSet<Channel> channels, Channel activeChannel){
         this.uuid = playerUuid;
         this.chatColor = playerChatColor;
         this.prefix = playerPrefix;
@@ -32,7 +32,7 @@ public class User {
         this.displayName = playerDisplayName;
         this.socialSpy = socialSpy;
         this.player = Bukkit.getPlayer(playerUuid);
-        this.activeChannel = strings.getChannel("global");
+        this.activeChannel = activeChannel != null ? activeChannel : strings.getChannel("global");
         this.channels = Objects.requireNonNullElseGet(channels, HashSet::new);
         if(channels != null){
             for(Channel channel : channels){
@@ -53,6 +53,7 @@ public class User {
         infoMap.put("suffix", this.suffix);
         infoMap.put("display-name", this.displayName);
         infoMap.put("social-spy", this.socialSpy);
+        infoMap.put("active-channel", this.activeChannel.getName());
         return infoMap;
     }
 
@@ -132,6 +133,9 @@ public class User {
     }
 
     public void setActiveChannel(Channel activeChannel){
+        if(activeChannel.getName().equals("helpop")){
+            return;
+        }
         this.activeChannel = activeChannel;
         channels.add(activeChannel);
         activeChannel.addPlayer(this.getPlayer());
@@ -152,6 +156,9 @@ public class User {
     public void leaveChannel(Channel channel){
         channels.remove(channel);
         channel.removePlayer(this.getPlayer());
+        if(activeChannel.equals(channel)){
+            activeChannel = strings.getChannel("global");
+        }
         UserUtil.saveUser(this);
     }
 
