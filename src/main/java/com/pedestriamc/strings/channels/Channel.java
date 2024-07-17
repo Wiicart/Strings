@@ -76,9 +76,6 @@ public class Channel {
     // Closes this channel, updates players to reflect this channel closing, and unregisters channel
     // TODO: remove this channel from the config when this method is called
     public void closeChannel(){
-        for(Player p : members){
-            strings.getUser(p).leaveChannel(this);
-        }
         Strings.getInstance().getChannelManager().unregisterChannel(this);
         active = false;
     }
@@ -113,5 +110,8 @@ public class Channel {
         members.remove(player);
     }
 
-}
+    public Set<Player> getMembers(){
+        return members;
+    }
 
+}
