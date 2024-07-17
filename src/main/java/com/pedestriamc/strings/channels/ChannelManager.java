@@ -1,11 +1,14 @@
 package com.pedestriamc.strings.channels;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ChannelManager {
@@ -23,6 +26,7 @@ public class ChannelManager {
 
     private void loadChannelsFromConfig(){
         boolean globalExists = false;
+        boolean helpOpExists = false;
         if(config.contains("channels")){
             ConfigurationSection channels = config.getConfigurationSection("channels");
             if(channels != null){
@@ -32,6 +36,10 @@ public class ChannelManager {
                         String format = channel.getString("format", "{prefix}{displayname}{suffix} &7» {message}");
                         String defaultColor = channel.getString("default-color", "&f");
                         boolean callEvent = channel.getBoolean("call-event", true);
+                        if(channelName.equalsIgnoreCase("help")){
+                            new HelpOPChannel(strings,channelName,format,defaultColor,this,callEvent);
+                            helpOpExists = true;
+                        }
                         new Channel(strings, channelName, format, defaultColor, this, callEvent);
                         Bukkit.getLogger().info("[Strings] Loaded channel " + channelName);
                         if(channelName.equalsIgnoreCase("global")){
@@ -45,6 +53,10 @@ public class ChannelManager {
             Bukkit.getLogger().info("[Strings] Creating global channel");
             new Channel(strings,"global","{prefix}{displayname}{suffix} &7» {message}", "&f", this, true);
         }
+        if(!helpOpExists){
+            Bukkit.getLogger().info("[Strings] Creating help op channel");
+            new HelpOPChannel(strings,"helpop","&8[&4HelpOP&8] &f{displayname} &7» {message}", "&7",this, false);
+        }
 
     }
 
@@ -53,6 +65,21 @@ public class ChannelManager {
     }
 
     public void unregisterChannel(Channel channel){
+        if(channel.getName().equalsIgnoreCase("global")){
+            Bukkit.getLogger().info("[Strings] Channel 'global' cannot be closed.");
+            return;
+        }
+        Collection<User> users = UserUtil.UserMap.getUserSet();
+        Channel global = strings.getChannel("global");
+        for(User user : users){
+            if(user.getActiveChannel().equals(channel)){
+                user.setActiveChannel(global);
+                user.leaveChannel(channel);
+            }
+        }
+        Bukkit.getLogger().info("[Strings] Channel " + channel.getName() + " unregistered and removed from config.");
+        config.set("channels." + channel.getName(), null);
+        strings.saveChannelsFile();
         channels.remove(channel.getName());
     }
 
