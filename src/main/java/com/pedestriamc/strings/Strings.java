@@ -9,6 +9,11 @@ import com.pedestriamc.strings.listeners.DirectMessageListener;
 import com.pedestriamc.strings.listeners.JoinListener;
 import com.pedestriamc.strings.listeners.LeaveListener;
 import com.pedestriamc.strings.message.Messenger;
+import com.pedestriamc.stringscustoms.AutoBroadcasts;
+import com.pedestriamc.stringscustoms.ChatFilter;
+import com.pedestriamc.stringscustoms.ServerMessages;
+import com.pedestriamc.stringscustoms.commands.BroadcastCommand;
+import com.pedestriamc.stringscustoms.commands.ClearChatCommand;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
@@ -157,13 +162,13 @@ public final class Strings extends JavaPlugin {
         }
     }
     private void instantiateObjects(){
+        chatFilter = new ChatFilter(this);
         chatManager = new ChatManager(this);
         channelManager = new ChannelManager(this);
         autoBroadcasts = new AutoBroadcasts(this);
         serverMessages = new ServerMessages(this);
         playerDirectMessenger = new PlayerDirectMessenger(this);
         socialSpy = new SocialSpy(this);
-        chatFilter = new ChatFilter(this);
 
     }
     private void setupVault(){
@@ -201,6 +206,9 @@ public final class Strings extends JavaPlugin {
         messagesFileConfig = YamlConfiguration.loadConfiguration(messagesFile);
         usersFileConfig = YamlConfiguration.loadConfiguration(usersFile);
         channelsFileConfig = YamlConfiguration.loadConfiguration(channelsFile);
+    }
+    private void setupCustoms(){
+
     }
     /*
     Public getter and setter methods
