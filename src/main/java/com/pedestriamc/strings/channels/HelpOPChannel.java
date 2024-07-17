@@ -59,8 +59,4 @@ public class HelpOPChannel extends Channel{
         }
 
     }
-
-    public void disable(){
-        Strings.getInstance().getChannelManager().unregisterChannel(this);
-    }
 }
