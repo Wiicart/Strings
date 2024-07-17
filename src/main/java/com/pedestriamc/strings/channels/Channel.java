@@ -26,7 +26,7 @@ public class Channel {
         this.strings = strings;
         this.name = name;
         this.members = ConcurrentHashMap.newKeySet();
-        this.format = "" + ChatColor.AQUA + ChatColor.AQUA + ChatColor.RESET + format;
+        this.format = format;
         this.defaultColor = defaultColor != null ? defaultColor : "&f";
         this.chatManager = strings.getChatManager();
         this.active = true;
@@ -45,7 +45,7 @@ public class Channel {
             String finalMessage = message;
             if(callEvent){
                 Bukkit.getScheduler().runTask(strings, () ->{
-                    AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(false, player, finalMessage, members);
+                    AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this);
                     event.setFormat(format);
                     Bukkit.getPluginManager().callEvent(event);
                     if(!event.isCancelled()){
