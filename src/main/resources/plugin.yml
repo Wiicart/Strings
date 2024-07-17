@@ -41,6 +41,9 @@ commands:
   c:
     description: "Join, leave and set active channels"
     usage: "/c"
+  helpop:
+    description: "Send a message to server operators"
+    usage: "/helpop <message>"
 permissions:
   strings.*:
     description: "All Strings permissions"
@@ -85,4 +88,7 @@ permissions:
     default: false
   stings.channel.modifyplayers:
     description: "Allows a player to manipulate another player's channels"
+    default: false
+  strings.helpop:
+    description: "Allows receiving HelpOP messages (Still has to be manually enabled)"
     default: false
