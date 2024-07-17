@@ -4,9 +4,9 @@ import com.pedestriamc.strings.ChatManager;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.channels.Channel;
+import com.pedestriamc.strings.channels.ChannelChatEvent;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,7 +22,7 @@ public class ChatListener implements Listener {
         String playerMessage = event.getMessage();
 
         //this signifies that this event came from a Channel, and has been processed
-        if(event.getFormat().contains("" + ChatColor.AQUA + ChatColor.AQUA + ChatColor.RESET)){
+        if(event instanceof ChannelChatEvent){
             return;
         }
         User user = Strings.getInstance().getUser(playerSender);
@@ -49,3 +49,4 @@ public class ChatListener implements Listener {
         event.setCancelled(true);
     }
 }
+
