@@ -39,7 +39,7 @@ public class HelpOPChannel extends Channel{
         String finalMessage = message;
         if(callEvent){
             Bukkit.getScheduler().runTask(strings, () ->{
-                AsyncPlayerChatEvent event = new AsyncPlayerChatEvent(false, player, finalMessage, members);
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this);
                 event.setFormat(format);
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()){
