@@ -18,15 +18,7 @@
 # Plugin prefix:
 prefix: "&8[&3Strings&8] &f"
 
-# Proper message format
-# Valid placeholders:
-# {displayname} - player display name
-# {prefix} - player prefix
-# {suffix} - player suffix
-# {message} - the player's message
-# ** Compatible with PlaceholderAPI placeholders
-# **IMPORTANT: You MUST use the {displayname} and {message} placeholders!
-message-format: "{prefix}{displayname}{suffix} &7» {message}"
+# Chat message formats are found in channels.yml
 
 # Default chat color (Bukkit color codes)
 default-color: "&f"
@@ -40,10 +32,6 @@ process-in-chat-colors: true
 # (Players with proper permissions can use
 #  placeholders in their messages)
 process-in-chat-placeholders: true
-
-# Ban players from sending urls in chat
-# this can be bypassed with the permission strings.chat.bypasslinks
-ban-links: false
 
 # Enable chat cool down:
 cooldown: false
@@ -160,3 +148,7 @@ url-whitelist:
 
 # Filter profanity?
 filter-profanity: false
+
+# Enable Help OP?
+help-op: true;
+
