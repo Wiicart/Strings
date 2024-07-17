@@ -97,6 +97,7 @@ public final class Strings extends JavaPlugin {
     }
     //Register commands and listeners
     private void registerClasses(){
+        this.getCommand("helpop").setExecutor(new HelpOPCommand());
         this.getCommand("broadcast").setExecutor(new BroadcastCommand());
         this.getCommand("announce").setExecutor(new BroadcastCommand());
         this.getCommand("clearchat").setExecutor(new ClearChatCommand());
@@ -292,3 +293,4 @@ public final class Strings extends JavaPlugin {
         return channelManager.getChannel(channel);
     }
 }
+
