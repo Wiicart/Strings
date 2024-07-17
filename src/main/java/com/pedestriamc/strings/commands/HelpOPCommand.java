@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.channels.Channel;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import org.bukkit.Server;
@@ -14,22 +13,33 @@ import org.jetbrains.annotations.NotNull;
 public class HelpOPCommand implements CommandExecutor {
 
     private final Strings strings = Strings.getInstance();
-    private final Channel channel = strings.getChannel("helpop");
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(channel == null){
+        if(strings.getChannel("helpop") == null){
             Messenger.sendMessage(Message.HELPOP_DISABLED, sender);
             return true;
         }
         if(sender instanceof Server){
-            sender.sendMessage("[Strings] This command can only be used by players");
+            sender.sendMessage("[Strings] This command can only be used by players.");
             return true;
         }
         if(args.length == 1 && args[0].equalsIgnoreCase("ON") && (sender.hasPermission("strings.*") || sender.hasPermission("strings.helpop"))){
-            strings.getUser((Player) sender).joinChannel(channel);
-
+            strings.getUser((Player) sender).joinChannel(strings.getChannel("helpop"));
+            Messenger.sendMessage(Message.HELPOP_ON, sender);
+            return true;
         }
+        if(args.length == 0){
+            Messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+            return true;
+        }
+        StringBuilder builder = new StringBuilder();
+        for(String arg : args){
+            builder.append(arg);
+            builder.append(" ");
+        }
+        strings.getChannel("helpop").sendMessage((Player) sender,builder.toString());
+
 
         return true;
     }
