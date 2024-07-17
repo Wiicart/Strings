@@ -17,6 +17,7 @@ public class ChannelCommand implements CommandExecutor {
 
     private final Strings strings = Strings.getInstance();
 
+    @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args){
         if(args.length > 3){
             Messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
@@ -99,6 +100,10 @@ public class ChannelCommand implements CommandExecutor {
         }
     }
     private void setActiveChannel(CommandSender sender, String channelName, Player target){
+        if(channelName.equals("helpop")){
+            Messenger.sendMessage(Message.HELPOP_ACTIVE_PROHIBITED, sender);
+            return;
+        }
         boolean modifyingOther = !sender.equals(target);
         if(modifyingOther && !sender.hasPermission("strings.channel.modifyplayers")){
             Messenger.sendMessage(Message.NO_PERMS, sender);
@@ -132,7 +137,7 @@ public class ChannelCommand implements CommandExecutor {
     private void joinChannel(@NotNull CommandSender sender, String channel, Player target){
         boolean modifyingOther = !sender.equals(target);
         //Check if sender has permission to modify other players:
-        if(modifyingOther && !sender.hasPermission("strings.channel.modifyplayers")){
+        if(modifyingOther && !sender.hasPermission("strings.channels.modifyplayers")){
             Messenger.sendMessage(Message.NO_PERMS, sender);
             return;
         }
@@ -144,8 +149,7 @@ public class ChannelCommand implements CommandExecutor {
         }
         if (!target.hasPermission("strings.channels." + c.getName()) &&
                 !target.hasPermission("strings.channels.*") &&
-                !target.hasPermission("strings.*") &&
-                !target.hasPermission("strings.channels.channel.*")) {
+                !target.hasPermission("strings.*")) {
             if (modifyingOther) {
                 Messenger.channelCmdMessage(Message.OTHER_PLAYER_NO_PERMS, sender, target.getName(), channel);
             } else {
@@ -189,4 +193,3 @@ public class ChannelCommand implements CommandExecutor {
         Messenger.channelCmdMessage(Message.LEFT_CHANNEL, target, target.getName(), channel);
     }
 }
-
