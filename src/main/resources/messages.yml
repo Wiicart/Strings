@@ -49,7 +49,7 @@ social-spy-off: "&fSocial Spy &cdisabled&f!"
 # however, for some messages the values of either of these placeholders may be null.
 
 # Invalid use of channels command:
-invalid-use-channel: "&fInvalid usage of command! Type &7/channels help &ffor info."
+invalid-use-channel: "&fInvalid usage of command! Type &7/channel help &ffor info."
 
 # Channel active:
 # Placeholder: {channel}
@@ -102,13 +102,34 @@ not-channel-member-other: "&7{player} &fis not a member of &7{channel}&f."
 # /channel help message:
 channel-help:
   - "&8[&3Strings&8] &7| Help"
-  - "&f/channels usage"
+  - "&f/channel usage"
   - "&f/channel <active-channel> &7- Sets your active channel"
   - "&f/channel join <channel>  &7- Lets you join a channel"
   - "&f/channel leave <channel> &7- Lets you leave a channel"
   - "&7* Add a player name at the end to modify another player"
+# Message that says that you can't leave the global channel
+cant-leave-global: "&fYou can't leave the global channel!"
+
 
 # Chat Filter Messages:
 
 # Links aren't allowed message:
 links-prohibited: "&fYou're not allowed to send links in your messages!"
+
+# Help OP Messages
+
+
+# Help OP disabled
+helpop-disabled: "&fHelp OP is disabled."
+
+# Joined Help OP channel
+helpop-on: "&fNow receiving messages from the Help OP channel."
+
+# Message that explains that Help OP cannot be a player's active channel.
+helpop-active-prohibited: "&fHelpOP cannot be your active channel."
+
+# Help OP message sent:
+helpop-sent: "&fYour Help OP message has been sent."
+
+# Message if player attempts to use /channel command with helpop
+helpop-not-channel: "&fThat command cant be used with HelpOP."
