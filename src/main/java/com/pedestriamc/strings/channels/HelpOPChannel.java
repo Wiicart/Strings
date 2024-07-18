@@ -30,11 +30,12 @@ public class HelpOPChannel implements Channel{
         this.name = name;
         this.defaultColor = defaultColor;
         this.channelManager = channelManager;
+        channelManager.registerChannel(this);
     }
 
     @Override
     public void sendMessage(Player player, String message){
-        Set<Player> members = new HashSet<>();
+        HashSet<Player> members = new HashSet<>();
         for(OfflinePlayer op : Bukkit.getOperators()){
             if(op.getName() != null){
                 Player p = Bukkit.getPlayer(op.getName());
@@ -43,11 +44,12 @@ public class HelpOPChannel implements Channel{
                 }
             }
         }
-        for(Player p : Bukkit.getOnlinePlayers()){
-            if(p.hasPermission("strings.helpop.receive") || p.hasPermission("strings.helpop.*") || p.hasPermission("strings.*")){
-                members.add(p);
+        for(Player onlinePlayer : Bukkit.getOnlinePlayers()){
+            if(onlinePlayer.hasPermission("strings.helpop.receive") || onlinePlayer.hasPermission("strings.helpop.*") || onlinePlayer.hasPermission("strings.*")){
+                members.add(onlinePlayer);
             }
         }
+        Bukkit.getLogger().info("Players this will be sent to: " + members.toString());
         String format = chatManager.formatMessage(player, this);
         message = chatManager.processMessage(player, message);
         String finalMessage = message;
