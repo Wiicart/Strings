@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +41,7 @@ public class ChannelManager {
                         boolean callEvent = channel.getBoolean("call-event", true);
                         boolean urlFilter = channel.getBoolean("block-urls", false);
                         boolean profanityFilter = channel.getBoolean("filter-profanity", false);
-                        if(channelName.equalsIgnoreCase("help")){
+                        if(channelName.equalsIgnoreCase("helpop")){
                             new HelpOPChannel(strings,channelName,format,defaultColor,this, callEvent, urlFilter, profanityFilter);
                             helpOpExists = true;
                         }
@@ -96,4 +97,17 @@ public class ChannelManager {
     public List<String> getChannelNames(){
         return Collections.list( channels.keys());
     }
+
+    public ArrayList<Channel> getChannelList(){ return new ArrayList<Channel>(channels.values()); }
+
+    public ArrayList<Channel> getNonProtectedChannels(){
+        ArrayList<Channel> list = new ArrayList<>();
+        for(Channel c : getChannelList()){
+            if(c.getType() != Type.PROTECTED){
+                list.add(c);
+            }
+        }
+        return list;
+    }
 }
+
