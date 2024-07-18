@@ -12,7 +12,6 @@ public class User {
     private final Strings strings = Strings.getInstance();
     private final UUID uuid;
     private final Player player;
-    private Boolean socialSpy;
     private String chatColor;
     private String prefix;
     private String suffix;
@@ -21,16 +20,15 @@ public class User {
     private final HashSet<Channel> channels;
 
     public User(UUID playerUuid){
-        this(playerUuid, null, null, null, null, false, null, null);
+        this(playerUuid, null, null, null, null, null, null);
     }
 
-    public User(UUID playerUuid, String playerChatColor, String playerPrefix, String playerSuffix, String playerDisplayName, boolean socialSpy, HashSet<Channel> channels, Channel activeChannel){
+    public User(UUID playerUuid, String playerChatColor, String playerPrefix, String playerSuffix, String playerDisplayName, HashSet<Channel> channels, Channel activeChannel){
         this.uuid = playerUuid;
         this.chatColor = playerChatColor;
         this.prefix = playerPrefix;
         this.suffix = playerSuffix;
         this.displayName = playerDisplayName;
-        this.socialSpy = socialSpy;
         this.player = Bukkit.getPlayer(playerUuid);
         this.activeChannel = activeChannel != null ? activeChannel : strings.getChannel("global");
         this.channels = Objects.requireNonNullElseGet(channels, HashSet::new);
@@ -52,7 +50,6 @@ public class User {
         infoMap.put("prefix", this.prefix);
         infoMap.put("suffix", this.suffix);
         infoMap.put("display-name", this.displayName);
-        infoMap.put("social-spy", this.socialSpy);
         infoMap.put("active-channel", this.activeChannel.getName());
         return infoMap;
     }
@@ -96,9 +93,6 @@ public class User {
     public Player getPlayer(){
         return player;
     }
-    public boolean isSocialSpy(){
-        return this.socialSpy;
-    }
 
     public void setChatColor(String playerChatColor){
         this.chatColor = playerChatColor;
@@ -120,11 +114,6 @@ public class User {
     }
     public void setDisplayName(String playerDisplayName){
         this.displayName = playerDisplayName;
-        UserUtil.saveUser(this);
-    }
-
-    public void setSocialSpy(boolean socialSpy){
-        this.socialSpy = socialSpy;
         UserUtil.saveUser(this);
     }
 
@@ -154,6 +143,10 @@ public class User {
     }
 
     public void leaveChannel(Channel channel){
+        if(channel.equals(strings.getChannel("global"))){
+            Bukkit.getLogger().info("[Strings] Player " + player.getName() + " just tried to leave channel global!  Cancelled leaving channel.");
+            return;
+        }
         channels.remove(channel);
         channel.removePlayer(this.getPlayer());
         if(activeChannel.equals(channel)){
@@ -176,3 +169,4 @@ public class User {
         }
     }
 }
+
