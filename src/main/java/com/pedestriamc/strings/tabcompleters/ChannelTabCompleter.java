@@ -19,16 +19,19 @@ public class ChannelTabCompleter implements TabCompleter {
 
     @Nullable
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
         if(args.length <= 1){
             List<String> list = channelManager.getChannelNames();
             list.add("join");
             list.add("leave");
+            list.remove("helpop");
             return list;
         }
         if(args.length == 2){
             if(args[0].equalsIgnoreCase("join") || args[0].equalsIgnoreCase("leave")){
-                return channelManager.getChannelNames();
+                List<String> list = channelManager.getChannelNames();
+                list.remove("helpop");
+                return list;
             }
             ArrayList<String> list = new ArrayList<>();
             for(Player p : Bukkit.getOnlinePlayers()){
