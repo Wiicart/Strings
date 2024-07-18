@@ -45,8 +45,8 @@ public class ChannelManager {
                             new HelpOPChannel(strings,channelName,format,defaultColor,this, callEvent, urlFilter, profanityFilter);
                             helpOpExists = true;
                         }
+                        Bukkit.getLogger().info("[Strings] Loading channel '" + channelName + "'..");
                         new StringChannel(strings, channelName, format, defaultColor, this, callEvent, urlFilter, profanityFilter);
-                        Bukkit.getLogger().info("[Strings] Loaded channel " + channelName);
                         if(channelName.equalsIgnoreCase("global")){
                             globalExists = true;
                         }
@@ -63,6 +63,7 @@ public class ChannelManager {
             new HelpOPChannel(strings,"helpop","&8[&4HelpOP&8] &f{displayname} &7» {message}", "&7",this, false, false, false);
         }
         String socialSpyFormat = strings.getConfig().getString("social-spy-format");
+        Bukkit.getLogger().info("[Strings] Loading channel 'socialspy'..");
         new SocialSpyChannel(this, strings.getPlayerDirectMessenger(), socialSpyFormat);
 
     }
@@ -98,7 +99,16 @@ public class ChannelManager {
         return Collections.list( channels.keys());
     }
 
-    public ArrayList<Channel> getChannelList(){ return new ArrayList<Channel>(channels.values()); }
+    public List<String> getNonProtectedChannelNames(){
+        List<Channel> list = getNonProtectedChannels();
+        ArrayList<String> nonProtected = new ArrayList<>();
+        for(Channel c : list){
+            nonProtected.add(c.getName());
+        }
+        return nonProtected;
+    }
+
+    public ArrayList<Channel> getChannelList(){ return new ArrayList<>(channels.values()); }
 
     public ArrayList<Channel> getNonProtectedChannels(){
         ArrayList<Channel> list = new ArrayList<>();
@@ -119,5 +129,4 @@ public class ChannelManager {
         return list;
     }
 }
-
 
