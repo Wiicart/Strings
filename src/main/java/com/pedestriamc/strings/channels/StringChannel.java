@@ -21,8 +21,10 @@ public class StringChannel implements Channel{
     private final Set<Player> members;
     private final ChatManager chatManager;
     private volatile boolean active;
+    private final boolean urlFilter;
+    private final boolean profanityFilter;
 
-    public StringChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent){
+    public StringChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter){
         this.strings = strings;
         this.name = name;
         this.members = ConcurrentHashMap.newKeySet();
@@ -31,6 +33,8 @@ public class StringChannel implements Channel{
         this.chatManager = strings.getChatManager();
         this.active = true;
         this.callEvent = callEvent;
+        this.urlFilter = doURLFilter;
+        this.profanityFilter = doProfanityFilter;
         channelManager.registerChannel(this);
     }
 
@@ -124,6 +128,16 @@ public class StringChannel implements Channel{
     @Override
     public Set<Player> getMembers(){
         return members;
+    }
+
+    @Override
+    public boolean doURLFilter() {
+        return urlFilter;
+    }
+
+    @Override
+    public boolean doProfanityFilter() {
+        return profanityFilter;
     }
 
 }
