@@ -24,9 +24,8 @@ public class HelpOPCommand implements CommandExecutor {
             sender.sendMessage("[Strings] This command can only be used by players.");
             return true;
         }
-        if(args.length == 1 && args[0].equalsIgnoreCase("ON") && (sender.hasPermission("strings.*") || sender.hasPermission("strings.helpop"))){
-            strings.getUser((Player) sender).joinChannel(strings.getChannel("helpop"));
-            Messenger.sendMessage(Message.HELPOP_ON, sender);
+        if(!sender.hasPermission("strings.helpop.use")){
+            Messenger.sendMessage(Message.NO_PERMS, sender);
             return true;
         }
         if(args.length == 0){
@@ -39,8 +38,7 @@ public class HelpOPCommand implements CommandExecutor {
             builder.append(" ");
         }
         strings.getChannel("helpop").sendMessage((Player) sender,builder.toString());
-
-
+        Messenger.sendMessage(Message.HELPOP_SENT, sender);
         return true;
     }
 }
