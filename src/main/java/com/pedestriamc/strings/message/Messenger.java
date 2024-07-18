@@ -44,6 +44,12 @@ public class Messenger {
 
     public static void channelCmdMessage(Message message, CommandSender sender, String playerName, String channelName){
         Object msg = enumMap.get(message);
+        if(playerName == null){
+            playerName = "null";
+        }
+        if(channelName == null){
+            channelName = "null";
+        }
         if(msg instanceof String[]){
             for(String str : (String[]) msg){
                 str = str.replace("{player}", playerName);
