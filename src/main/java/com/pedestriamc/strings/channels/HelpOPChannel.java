@@ -12,25 +12,39 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
-public class HelpOPChannel extends Channel{
+public class HelpOPChannel implements Channel{
 
-    private Strings strings;
+    private final Strings strings;
+    private String name;
     private final ChatManager chatManager;
     private final boolean callEvent;
+    private String format;
+    private String defaultColor;
+    private final ChannelManager channelManager;
 
     public HelpOPChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent) {
-        super(strings, name, format, defaultColor, channelManager, callEvent);
         this.strings = strings;
         this.chatManager = strings.getChatManager();
         this.callEvent = callEvent;
+        this.format = format;
+        this.name = name;
+        this.defaultColor = defaultColor;
+        this.channelManager = channelManager;
     }
 
     @Override
     public void sendMessage(Player player, String message){
-        Set<Player> members = new HashSet<>(super.getMembers());
+        Set<Player> members = new HashSet<>();
         for(OfflinePlayer op : Bukkit.getOperators()){
-            Player p = Bukkit.getPlayer(op.getName());
-            if(p != null){
+            if(op.getName() != null){
+                Player p = Bukkit.getPlayer(op.getName());
+                if(p != null){
+                    members.add(p);
+                }
+            }
+        }
+        for(Player p : Bukkit.getOnlinePlayers()){
+            if(p.hasPermission("strings.helpop.receive") || p.hasPermission("strings.helpop.*") || p.hasPermission("strings.*")){
                 members.add(p);
             }
         }
@@ -43,7 +57,7 @@ public class HelpOPChannel extends Channel{
                 event.setFormat(format);
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()){
-                    String formattedMessage = String.format(event.getFormat(), event.getPlayer().getDisplayName(), event.getMessage());
+                    String formattedMessage = String.format(event.getFormat(), strings.getUser(player).getDisplayName(), event.getMessage());
                     for(Player p : members){
                         p.sendMessage(formattedMessage);
                     }
@@ -58,5 +72,60 @@ public class HelpOPChannel extends Channel{
             Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
         }
 
+    }
+
+    @Override
+    public void broadcastMessage(String message) {
+
+    }
+
+    @Override
+    public void closeChannel() {
+        channelManager.unregisterChannel(this);
+    }
+
+    @Override
+    public String getFormat() {
+        return format;
+    }
+
+    @Override
+    public String getDefaultColor() {
+        return defaultColor;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void setDefaultColor(String defaultColor) {
+        this.defaultColor = defaultColor;
+    }
+
+    @Override
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    @Override
+    public void addPlayer(Player player) {
+
+    }
+
+    @Override
+    public void removePlayer(Player player) {
+
+    }
+
+    @Override
+    public Set<Player> getMembers() {
+        return null;
     }
 }
