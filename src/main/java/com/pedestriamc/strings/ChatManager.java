@@ -1,6 +1,7 @@
 package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.channels.Channel;
+import com.pedestriamc.stringscustoms.ChatFilter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,7 +34,6 @@ public final class ChatManager {
         if(doCoolDown){
             this.scheduler = Bukkit.getScheduler();
             this.coolDownLength = calcTicks(strings.getCoolDownLength());
-
         }
     }
 
@@ -53,6 +53,15 @@ public final class ChatManager {
     }
     public String processMessage(Player sender, String message){
         User user = strings.getUser(sender.getUniqueId());
+        Channel channel = user.getActiveChannel();
+        if(!(sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("*") || sender.hasPermission("strings.chat.filterbypass"))){
+            if(channel.doURLFilter()){
+                message = chatFilter.urlFilter(message, sender);
+            }
+            if(channel.doProfanityFilter()){
+                message = chatFilter.profanityFilter(message, sender);
+            }
+        }
         message = user.getChatColor() + message;
         if(parseChatColors && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.colormsg"))){
             message = ChatColor.translateAlternateColorCodes('&',message);
@@ -60,13 +69,12 @@ public final class ChatManager {
         if(usePAPI && messagePlaceholders && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.placeholdermsg"))){
             message = PlaceholderAPI.setPlaceholders(sender,message);
         }
-        message = chatFilter.filter(message, sender);
         return message;
     }
 
     public boolean isOnCoolDown(Player player){
         if(doCoolDown){
-            return coolDownList.contains(player);
+            return coolDownList.contains(player) && !(player.hasPermission("strings.*") || player.hasPermission("strings.chat.*") || player.hasPermission("strings.chat.bypasscooldown") || player.hasPermission("*"));
         }
         return false;
     }
