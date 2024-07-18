@@ -1,14 +1,14 @@
 package com.pedestriamc.strings.listeners;
 
-import com.pedestriamc.strings.SocialSpy;
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.channels.SocialSpyChannel;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessageEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class DirectMessageListener implements Listener {
 
-    private final SocialSpy socialSpy = Strings.getInstance().getSocialSpy();
+    private final SocialSpyChannel socialSpy = (SocialSpyChannel) Strings.getInstance().getChannel("socialspy");
 
     @EventHandler
     public void onPlayerDirectMessageEvent(PlayerDirectMessageEvent event){
