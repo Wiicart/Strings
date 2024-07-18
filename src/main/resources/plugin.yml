@@ -95,3 +95,4 @@ permissions:
   strings.helpop.use:
     description: "Allows sending Help OP messages"
     default: true
+
