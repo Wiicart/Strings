@@ -3,6 +3,7 @@ package com.pedestriamc.strings.commands;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.channels.Channel;
+import com.pedestriamc.strings.channels.ChannelManager;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class ChannelCommand implements CommandExecutor {
 
     private final Strings strings = Strings.getInstance();
+    private final ChannelManager channelManager = strings.getChannelManager();
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args){
@@ -108,10 +110,6 @@ public class ChannelCommand implements CommandExecutor {
         }
     }
     private void setActiveChannel(CommandSender sender, @NotNull String channelName, Player target){
-        if(channelName.equals("helpop")){
-            Messenger.sendMessage(Message.HELPOP_ACTIVE_PROHIBITED, sender);
-            return;
-        }
         boolean modifyingOther = !sender.equals(target);
         if(modifyingOther && !sender.hasPermission("strings.channel.modifyplayers")){
             Messenger.sendMessage(Message.NO_PERMS, sender);
@@ -120,6 +118,10 @@ public class ChannelCommand implements CommandExecutor {
         Channel c = strings.getChannel(channelName);
         if(c == null){
             Messenger.channelCmdMessage(Message.CHANNEL_DOES_NOT_EXIST, sender, target.getName(), channelName);
+            return;
+        }
+        if(channelManager.getProtectedChannels().contains(c)){
+            Messenger.sendMessage(Message.PROTECTED_CHANNEL, sender);
             return;
         }
         if (!target.hasPermission("strings.channels." + c.getName()) &&
@@ -159,6 +161,10 @@ public class ChannelCommand implements CommandExecutor {
             Messenger.sendMessage(Message.HELPOP_NOT_CHANNEL, sender);
             return;
         }
+        if(channelManager.getProtectedChannels().contains(c)){
+            Messenger.sendMessage(Message.PROTECTED_CHANNEL, sender);
+            return;
+        }
         if (!target.hasPermission("strings.channels." + c.getName()) &&
                 !target.hasPermission("strings.channels.*") &&
                 !target.hasPermission("strings.*")) {
@@ -190,8 +196,12 @@ public class ChannelCommand implements CommandExecutor {
             Messenger.channelCmdMessage(Message.CHANNEL_DOES_NOT_EXIST, sender, target.getName(), channel);
             return;
         }
-        if(c.getName().equals("helpop")){
-            Messenger.sendMessage(Message.HELPOP_NOT_CHANNEL, sender);
+        if(channelManager.getProtectedChannels().contains(c)){
+            Messenger.sendMessage(Message.PROTECTED_CHANNEL, sender);
+            return;
+        }
+        if(c.getName().equals("global")){
+            Messenger.sendMessage(Message.CANT_LEAVE_GLOBAL, sender);
             return;
         }
         User user = strings.getUser(target);
@@ -209,3 +219,4 @@ public class ChannelCommand implements CommandExecutor {
         Messenger.channelCmdMessage(Message.LEFT_CHANNEL, target, target.getName(), channel);
     }
 }
+
