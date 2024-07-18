@@ -36,7 +36,6 @@ public final class UserUtil {
         String prefix = config.getString(userPath + ".prefix");
         String displayName = config.getString(userPath + ".display-name");
         String chatColor = config.getString(userPath + ".chat-color");
-        boolean socialSpy = config.getBoolean(userPath + ".social-spy");
         Channel activeChannel = strings.getChannel(config.getString(userPath + ".active-channel"));
         List<?> channelNames = config.getList(userPath + ".channels");
         if(channelNames != null){
@@ -46,11 +45,7 @@ public final class UserUtil {
                 }
             }
         }
-        User user = new User(uuid, chatColor, prefix, suffix, displayName, socialSpy, channels, activeChannel);
-        if(socialSpy){
-            strings.getSocialSpy().addSpy(user.getPlayer());
-        }
-        return user;
+        return new User(uuid, chatColor, prefix, suffix, displayName, channels, activeChannel);
     }
 
     //User hash map
@@ -74,4 +69,3 @@ public final class UserUtil {
         }
     }
 }
-
