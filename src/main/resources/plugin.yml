@@ -86,9 +86,12 @@ permissions:
   strings.channels.<channel>:
     description: "Allows a player to join specified channel"
     default: false
-  stings.channel.modifyplayers:
+  strings.channel.modifyplayers:
     description: "Allows a player to manipulate another player's channels"
     default: false
-  strings.helpop:
-    description: "Allows receiving HelpOP messages (Still has to be manually enabled)"
+  strings.helpop.receive:
+    description: "Allows receiving HelpOP messages"
     default: false
+  strings.helpop.use:
+    description: "Allows sending Help OP messages"
+    default: true
