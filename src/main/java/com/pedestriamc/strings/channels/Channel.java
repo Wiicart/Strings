@@ -17,5 +17,7 @@ public interface Channel {
     void addPlayer(Player player);
     void removePlayer(Player player);
     Set<Player> getMembers();
+    boolean doURLFilter();
+    boolean doProfanityFilter();
 
 }
