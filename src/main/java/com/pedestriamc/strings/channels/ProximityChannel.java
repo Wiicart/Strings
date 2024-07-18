@@ -4,17 +4,19 @@ import com.pedestriamc.strings.Strings;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public class ProximityChannel implements Channel{
-    
+
     public ProximityChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent){
-        
+        channelManager.registerChannel(this);
     }
-    
+
     @Override
     public void sendMessage(Player player, String message) {
-        
+        ArrayList<Player> receivers = new ArrayList<>();
+
     }
 
     @Override
