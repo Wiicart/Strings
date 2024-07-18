@@ -21,7 +21,7 @@ public class ChannelManager {
 
     public ChannelManager(@NotNull Strings strings){
         this.strings = strings;
-        this.channels = new ConcurrentHashMap<String, Channel>();
+        this.channels = new ConcurrentHashMap<>();
         this.config = strings.getChannelsFileConfig();
         loadChannelsFromConfig();
     }
@@ -38,11 +38,13 @@ public class ChannelManager {
                         String format = channel.getString("format", "{prefix}{displayname}{suffix} &7» {message}");
                         String defaultColor = channel.getString("default-color", "&f");
                         boolean callEvent = channel.getBoolean("call-event", true);
+                        boolean urlFilter = channel.getBoolean("block-urls", false);
+                        boolean profanityFilter = channel.getBoolean("filter-profanity", false);
                         if(channelName.equalsIgnoreCase("help")){
-                            new HelpOPStringChannel(strings,channelName,format,defaultColor,this,callEvent);
+                            new HelpOPChannel(strings,channelName,format,defaultColor,this, callEvent, urlFilter, profanityFilter);
                             helpOpExists = true;
                         }
-                        new StringChannel(strings, channelName, format, defaultColor, this, callEvent);
+                        new StringChannel(strings, channelName, format, defaultColor, this, callEvent, urlFilter, profanityFilter);
                         Bukkit.getLogger().info("[Strings] Loaded channel " + channelName);
                         if(channelName.equalsIgnoreCase("global")){
                             globalExists = true;
@@ -53,11 +55,11 @@ public class ChannelManager {
         }
         if(!globalExists){
             Bukkit.getLogger().info("[Strings] Creating global channel");
-            new StringChannel(strings,"global","{prefix}{displayname}{suffix} &7» {message}", "&f", this, true);
+            new StringChannel(strings,"global","{prefix}{displayname}{suffix} &7» {message}", "&f", this, true, false, false);
         }
         if(!helpOpExists){
             Bukkit.getLogger().info("[Strings] Creating help op channel");
-            new HelpOPStringChannel(strings,"helpop","&8[&4HelpOP&8] &f{displayname} &7» {message}", "&7",this, false);
+            new HelpOPChannel(strings,"helpop","&8[&4HelpOP&8] &f{displayname} &7» {message}", "&7",this, false, false, false);
         }
 
     }
