@@ -23,30 +23,23 @@ public class ChatListener implements Listener {
 
         //this signifies that this event came from a Channel, and has been processed
         if(event instanceof ChannelChatEvent){
+            chatManager.startCoolDown(playerSender);
             return;
         }
         User user = Strings.getInstance().getUser(playerSender);
         if(chatManager.isOnCoolDown(playerSender)){
-            cancelEvent(event);
-            Messenger.sendMessage(Message.COOL_DOWN, event.getPlayer());
-        }else{
-            //cancel event, as it is being replaced by this plugin
-            Channel c = user.getActiveChannel();
-            if(c != null){
-                user.getActiveChannel().sendMessage(playerSender,playerMessage);
-            }else{
-                Strings.getInstance().getChannel("global").sendMessage(playerSender,playerMessage);
-                user.leaveChannel(user.getActiveChannel());
-            }
-            cancelEvent(event);
-            if(!event.isCancelled()){
-                chatManager.startCoolDown(playerSender);
-            }
+            event.setCancelled(true);
+            Messenger.sendMessage(Message.COOL_DOWN, playerSender);
+            return;
         }
-    }
-
-    public void cancelEvent(AsyncPlayerChatEvent event){
+        Channel c = user.getActiveChannel();
+        if(c != null){
+            user.getActiveChannel().sendMessage(playerSender,playerMessage);
+        }else{
+            Strings.getInstance().getChannel("global").sendMessage(playerSender,playerMessage);
+            user.leaveChannel(user.getActiveChannel());
+        }
         event.setCancelled(true);
     }
-}
 
+}
