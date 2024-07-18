@@ -18,7 +18,7 @@ public class ChannelCommand implements CommandExecutor {
     private final Strings strings = Strings.getInstance();
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args){
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args){
         if(args.length > 3){
             Messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
         }
@@ -107,7 +107,7 @@ public class ChannelCommand implements CommandExecutor {
             }
         }
     }
-    private void setActiveChannel(CommandSender sender, String channelName, Player target){
+    private void setActiveChannel(CommandSender sender, @NotNull String channelName, Player target){
         if(channelName.equals("helpop")){
             Messenger.sendMessage(Message.HELPOP_ACTIVE_PROHIBITED, sender);
             return;
@@ -155,6 +155,10 @@ public class ChannelCommand implements CommandExecutor {
             Messenger.channelCmdMessage(Message.CHANNEL_DOES_NOT_EXIST, sender, target.getName(), channel);
             return;
         }
+        if(c.getName().equals("helpop")){
+            Messenger.sendMessage(Message.HELPOP_NOT_CHANNEL, sender);
+            return;
+        }
         if (!target.hasPermission("strings.channels." + c.getName()) &&
                 !target.hasPermission("strings.channels.*") &&
                 !target.hasPermission("strings.*")) {
@@ -184,6 +188,10 @@ public class ChannelCommand implements CommandExecutor {
         Channel c = strings.getChannel(channel);
         if(c == null){
             Messenger.channelCmdMessage(Message.CHANNEL_DOES_NOT_EXIST, sender, target.getName(), channel);
+            return;
+        }
+        if(c.getName().equals("helpop")){
+            Messenger.sendMessage(Message.HELPOP_NOT_CHANNEL, sender);
             return;
         }
         User user = strings.getUser(target);
