@@ -109,5 +109,15 @@ public class ChannelManager {
         }
         return list;
     }
+    public ArrayList<Channel> getProtectedChannels(){
+        ArrayList<Channel> list = new ArrayList<>();
+        for(Channel c : getChannelList()){
+            if(c.getType() == Type.PROTECTED){
+                list.add(c);
+            }
+        }
+        return list;
+    }
 }
+
 
