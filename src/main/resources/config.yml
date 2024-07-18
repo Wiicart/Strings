@@ -20,9 +20,6 @@ prefix: "&8[&3Strings&8] &f"
 
 # Chat message formats are found in channels.yml
 
-# Default chat color (Bukkit color codes)
-default-color: "&f"
-
 # Process chat colors in player chat messages?
 # (Players with proper permissions can use chat colors
 # i.e. &4 in their messages and the plugin with color them)
@@ -127,21 +124,9 @@ motd:
 # Prefix for messages sent using the /broadcast command
 broadcast-format: "&8[&3Broadcast&8] &f"
 
-# Enable the /chatcolor command?
-enable-chatcolor: true
-
-# Enable name colors and nicknames?
-# (This is only for this plugin, this will not
-# prevent other plugins from modifying these)
-enable-displayname-mod: true
-
 # Enable PlaceholderAPI support?
 # It is advised to keep this enabled
 placeholder-api: true
-
-# Enable LuckPerms support?
-# It is advised to keep this enabled
-luckperms: true
 
 # Chat Filter Config
 # All settings for the chat filter.
@@ -162,6 +147,3 @@ url-whitelist:
 
 # Filter profanity?
 filter-profanity: false
-
-# Enable Help OP?
-help-op: true;
