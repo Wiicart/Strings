@@ -21,8 +21,10 @@ public class HelpOPChannel implements Channel{
     private String format;
     private String defaultColor;
     private final ChannelManager channelManager;
+    private final boolean urlFilter;
+    private final boolean profanityFilter;
 
-    public HelpOPChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent) {
+    public HelpOPChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean urlFilter, boolean profanityFilter) {
         this.strings = strings;
         this.chatManager = strings.getChatManager();
         this.callEvent = callEvent;
@@ -30,6 +32,8 @@ public class HelpOPChannel implements Channel{
         this.name = name;
         this.defaultColor = defaultColor;
         this.channelManager = channelManager;
+        this.urlFilter = urlFilter;
+        this.profanityFilter = profanityFilter;
         channelManager.registerChannel(this);
     }
 
@@ -49,7 +53,6 @@ public class HelpOPChannel implements Channel{
                 members.add(onlinePlayer);
             }
         }
-        Bukkit.getLogger().info("Players this will be sent to: " + members.toString());
         String format = chatManager.formatMessage(player, this);
         message = chatManager.processMessage(player, message);
         String finalMessage = message;
@@ -129,5 +132,15 @@ public class HelpOPChannel implements Channel{
     @Override
     public Set<Player> getMembers() {
         return null;
+    }
+
+    @Override
+    public boolean doURLFilter() {
+        return urlFilter;
+    }
+
+    @Override
+    public boolean doProfanityFilter() {
+        return profanityFilter;
     }
 }
