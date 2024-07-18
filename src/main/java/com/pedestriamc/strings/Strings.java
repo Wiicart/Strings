@@ -174,10 +174,10 @@ public final class Strings extends JavaPlugin {
     private void instantiateObjects(){
         chatFilter = new ChatFilter(this);
         chatManager = new ChatManager(this);
+        playerDirectMessenger = new PlayerDirectMessenger(this);
         channelManager = new ChannelManager(this);
         autoBroadcasts = new AutoBroadcasts(this);
         serverMessages = new ServerMessages(this);
-        playerDirectMessenger = new PlayerDirectMessenger(this);
         socialSpy = new SocialSpy(this);
 
     }
