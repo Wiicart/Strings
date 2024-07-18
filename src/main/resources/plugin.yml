@@ -86,6 +86,9 @@ permissions:
   strings.channels.<channel>:
     description: "Allows a player to join specified channel"
     default: false
+  strings.channels.global:
+    description: "Allows use of the /channel commands with the global channel"
+    default: true
   strings.channel.modifyplayers:
     description: "Allows a player to manipulate another player's channels"
     default: false
@@ -95,4 +98,8 @@ permissions:
   strings.helpop.use:
     description: "Allows sending Help OP messages"
     default: true
+  strings.chat.bypasscooldown:
+    description: "Allows bypassing the chat cooldown"
+    default: false
+
 
