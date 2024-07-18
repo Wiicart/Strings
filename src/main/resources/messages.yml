@@ -21,9 +21,9 @@ too-many-args: "&fToo many arguments!"
 insufficient-args: "&fInsufficient arguments!"
 
 # Player on cool-down:
-cool-down: "&fYou''re sending messages too quickly!  Try again later."
+cool-down: "&fYou're sending messages too quickly!  Try again later."
 
-# Messanging Messages
+# Messaging
 # This section includes messages for the /msg, /r and /socialspy commands
 
 # Unknown player message:
@@ -107,8 +107,14 @@ channel-help:
   - "&f/channel join <channel>  &7- Lets you join a channel"
   - "&f/channel leave <channel> &7- Lets you leave a channel"
   - "&7* Add a player name at the end to modify another player"
+
 # Message that says that you can't leave the global channel
 cant-leave-global: "&fYou can't leave the global channel!"
+
+# Message to tell players that they can't use the /channel command with protected channels.
+# Protected channels include special channels like social spy, which have their own commands to access.
+# As they don't function like typical channels, these channels are accessed in different ways.
+protected-channel: "&fYou can't use this command with that channel!"
 
 
 # Chat Filter Messages:
@@ -133,3 +139,5 @@ helpop-sent: "&fYour Help OP message has been sent."
 
 # Message if player attempts to use /channel command with helpop
 helpop-not-channel: "&fThat command cant be used with HelpOP."
+
+
