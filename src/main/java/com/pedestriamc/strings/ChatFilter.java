@@ -5,26 +5,22 @@ import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChatFilter{
     private final Strings strings;
-    private final boolean doLinkFilter;
-    private final boolean doProfanityFilter;
     private final String regex = "(?i)\\b((?:https?|ftp):\\/\\/|www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)";
     private final Pattern pattern = Pattern.compile(regex);
     private final List<String> urlWhitelist;
     private List<String> bannedWords;
 
-    public ChatFilter(Strings strings){
+    public ChatFilter(@NotNull Strings strings){
         this.strings = strings;
-        this.doLinkFilter = strings.getConfig().getBoolean("block-urls", false);
-        this.doProfanityFilter = strings.getConfig().getBoolean("filter-profanity", false);
         this.urlWhitelist = new ArrayList<>();
         List<?> tempList = strings.getConfig().getList("url-whitelist");
         if(tempList != null)
@@ -46,10 +42,7 @@ public class ChatFilter{
         return url.toLowerCase();
     }
 
-    public String filter(String msg, Player player){
-        if(!doLinkFilter){
-            return msg;
-        }
+    public String urlFilter(String msg, Player player){
         boolean urlReplaced = false;
         Bukkit.getLogger().info(urlWhitelist.toString());
         Matcher matcher = pattern.matcher(msg);
@@ -64,6 +57,10 @@ public class ChatFilter{
         if(urlReplaced){
             Messenger.sendMessage(Message.LINKS_PROHIBITED, player);
         }
+        return msg;
+    }
+
+    public String profanityFilter(String msg, Player player){
         return msg;
     }
 }
