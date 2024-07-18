@@ -61,6 +61,8 @@ public class ChannelManager {
             Bukkit.getLogger().info("[Strings] Creating help op channel");
             new HelpOPChannel(strings,"helpop","&8[&4HelpOP&8] &f{displayname} &7» {message}", "&7",this, false, false, false);
         }
+        String socialSpyFormat = strings.getConfig().getString("social-spy-format");
+        new SocialSpyChannel(this, strings.getPlayerDirectMessenger(), socialSpyFormat);
 
     }
 
@@ -95,4 +97,3 @@ public class ChannelManager {
         return Collections.list( channels.keys());
     }
 }
-
