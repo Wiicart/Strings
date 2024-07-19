@@ -30,10 +30,8 @@ process-in-chat-colors: true
 #  placeholders in their messages)
 process-in-chat-placeholders: true
 
-# Enable chat cool down:
-cooldown: false
-
 # Chat cool down length
+# Cool downs are enabled per channel in channels.yml
 # (Units are m and s, standing for minutes and seconds)
 # Example: 1m is one minute
 # (Cool down must be enabled for this to do anything)
@@ -139,4 +137,3 @@ url-whitelist:
   - "minecraft.net"
   - "apple.com"
   - "wiicart.net"
-
