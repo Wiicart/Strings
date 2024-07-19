@@ -1,6 +1,5 @@
 package com.pedestriamc.strings.channels;
 
-
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -14,14 +13,12 @@ public class SocialSpyChannel implements Channel{
     private String format;
     private final PlayerDirectMessenger playerDirectMessenger;
     private final HashSet<Player> spiesList;
-    private String defaultColor;
 
 
-    public SocialSpyChannel(ChannelManager channelmanager, PlayerDirectMessenger messenger, String format, String defaultColor){
+    public SocialSpyChannel(ChannelManager channelmanager, PlayerDirectMessenger messenger, String format){
         this.format = format;
         this.playerDirectMessenger = messenger;
         this.spiesList = new HashSet<>();
-        this.defaultColor = defaultColor;
         channelmanager.registerChannel(this);
     }
 
@@ -51,7 +48,7 @@ public class SocialSpyChannel implements Channel{
 
     @Override
     public void closeChannel() {
-        
+
     }
 
     @Override
@@ -61,7 +58,7 @@ public class SocialSpyChannel implements Channel{
 
     @Override
     public String getDefaultColor() {
-        return defaultColor;
+        return "&f";
     }
 
     @Override
@@ -71,12 +68,11 @@ public class SocialSpyChannel implements Channel{
 
     @Override
     public void setName(String name) {
-        
+
     }
 
     @Override
     public void setDefaultColor(String defaultColor) {
-        this.defaultColor = defaultColor;
     }
 
     @Override
@@ -106,6 +102,11 @@ public class SocialSpyChannel implements Channel{
 
     @Override
     public boolean doProfanityFilter() {
+        return false;
+    }
+
+    @Override
+    public boolean doCooldown() {
         return false;
     }
 
