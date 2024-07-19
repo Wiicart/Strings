@@ -39,14 +39,10 @@ public final class Strings extends JavaPlugin {
     private static Chat chat = null;
     private final String version = "1.0";
     private final String distributor = "spigot";
-    private String broadcastFormat;
     private String coolDownLength;
-    private String directMessageFormatSender;
-    private String directMessageFormatRecipient;
     private final FileConfiguration config = this.getConfig();
     private AutoBroadcasts autoBroadcasts;
     private ServerMessages serverMessages;
-    private SocialSpy socialSpy;
     private PlayerDirectMessenger playerDirectMessenger;
     private File broadcastsFile;
     private File messagesFile;
@@ -64,10 +60,6 @@ public final class Strings extends JavaPlugin {
     private boolean processPlayerMessagePlaceholders;
     private boolean usingVault;
     private boolean useCustomJoinLeave;
-    private boolean doCoolDown;
-    private boolean directMessengerUsed;
-    private boolean blockUrls;
-    private boolean blockProfanity;
 
     @Override
     public void onEnable() {
@@ -127,15 +119,10 @@ public final class Strings extends JavaPlugin {
     //Load options from the config
     private void loadConfigOptions(){
         FileConfiguration config = this.getConfig();
-        this.directMessengerUsed = config.getBoolean("enable-msg", false);
-        this.doCoolDown = config.getBoolean("cooldown", false);
         this.processPlayerMessageColors = config.getBoolean("process-in-chat-colors", true);
         this.processPlayerMessagePlaceholders = config.getBoolean("process-in-chat-placeholders", false);
         this.useCustomJoinLeave = config.getBoolean("custom-join-leave-message");
-        this.broadcastFormat = config.getString("broadcast-format");
         this.coolDownLength = config.getString("cooldown-time", "30s");
-        this.directMessageFormatSender = config.getString("msg-format-outgoing");
-        this.directMessageFormatRecipient = config.getString("msg-format-receiving");
         if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             this.usingPlaceholderAPI = true;
         }
@@ -178,7 +165,6 @@ public final class Strings extends JavaPlugin {
         channelManager = new ChannelManager(this);
         autoBroadcasts = new AutoBroadcasts(this);
         serverMessages = new ServerMessages(this);
-        socialSpy = new SocialSpy(this);
 
     }
     private void setupVault(){
@@ -217,21 +203,14 @@ public final class Strings extends JavaPlugin {
         usersFileConfig = YamlConfiguration.loadConfiguration(usersFile);
         channelsFileConfig = YamlConfiguration.loadConfiguration(channelsFile);
     }
-    private void setupCustoms(){
-
-    }
     /*
     Public getter and setter methods
      */
     public String getVersion(){ return version; }
-    public String getDirectMessageFormatSender(){ return directMessageFormatSender; }
-    public String getDirectMessageFormatRecipient(){ return directMessageFormatRecipient; }
-    public String getBroadcastFormat(){ return broadcastFormat; }
     public String getCoolDownLength(){ return coolDownLength; }
     public ChatManager getChatManager(){ return chatManager; }
     public ChannelManager getChannelManager(){ return channelManager; }
     public ServerMessages getJoinLeaveMessage(){ return serverMessages; }
-    public SocialSpy getSocialSpy(){ return socialSpy; }
     public PlayerDirectMessenger getPlayerDirectMessenger(){ return playerDirectMessenger; }
     public ChatFilter getChatFilter(){ return chatFilter; }
     public Chat getVaultChat(){ return chat; }
@@ -239,15 +218,11 @@ public final class Strings extends JavaPlugin {
     public FileConfiguration getBroadcastsFileConfig(){ return broadcastsFileConfig; }
     public FileConfiguration getMessagesFileConfig(){ return messagesFileConfig; }
     public FileConfiguration getChannelsFileConfig(){ return channelsFileConfig; }
-    public boolean managePlayerDirectMessages(){ return directMessengerUsed; }
     public boolean usePlaceholderAPI(){ return usingPlaceholderAPI; }
     public boolean processMessageColors(){ return processPlayerMessageColors; }
     public boolean processMessagePlaceholders(){ return processPlayerMessagePlaceholders; }
     public boolean useVault(){ return usingVault; }
     public boolean modifyJoinLeaveMessages(){ return useCustomJoinLeave; }
-    public boolean isDoCoolDown(){ return doCoolDown; }
-    public boolean isBlockUrls(){ return blockUrls; }
-    public boolean isBlockProfanity(){ return blockProfanity; }
     public static Strings getInstance(){ return instance; }
     /*
     Other methods
