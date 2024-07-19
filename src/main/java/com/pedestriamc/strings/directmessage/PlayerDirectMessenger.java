@@ -21,7 +21,7 @@ public class PlayerDirectMessenger {
     private final String messageFormatRecipient;
     private final boolean usePAPI;
 
-    public PlayerDirectMessenger(Strings strings){
+    public PlayerDirectMessenger(@NotNull Strings strings){
         this.strings = strings;
         this.messageFormatSender = strings.getConfig().getString("msg-format-outgoing");
         this.messageFormatRecipient = strings.getConfig().getString("msg-format-receiving");
@@ -81,4 +81,3 @@ public class PlayerDirectMessenger {
         return message;
     }
 }
-
