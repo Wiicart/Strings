@@ -23,8 +23,9 @@ public class StringChannel implements Channel{
     private volatile boolean active;
     private final boolean urlFilter;
     private final boolean profanityFilter;
+    private final boolean doCooldown;
 
-    public StringChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter){
+    public StringChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown){
         this.strings = strings;
         this.name = name;
         this.members = ConcurrentHashMap.newKeySet();
@@ -35,6 +36,7 @@ public class StringChannel implements Channel{
         this.callEvent = callEvent;
         this.urlFilter = doURLFilter;
         this.profanityFilter = doProfanityFilter;
+        this.doCooldown = doCooldown;
         channelManager.registerChannel(this);
     }
 
@@ -140,4 +142,12 @@ public class StringChannel implements Channel{
         return profanityFilter;
     }
 
+    @Override
+    public boolean doCooldown() {
+        return this.doCooldown;
+    }
+    @Override
+    public Type getType() {
+        return Type.NORMAL;
+    }
 }
