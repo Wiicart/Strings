@@ -27,19 +27,17 @@ public class ChatListener implements Listener {
             return;
         }
         User user = Strings.getInstance().getUser(playerSender);
-        if(chatManager.isOnCoolDown(playerSender)){
+        Channel c = user.getActiveChannel();
+        if(c == null){
+            user.setActiveChannel(Strings.getInstance().getChannel("global"));
+        }
+        if(chatManager.isOnCoolDown(playerSender) && user.getActiveChannel().doCooldown()){
             event.setCancelled(true);
             Messenger.sendMessage(Message.COOL_DOWN, playerSender);
             return;
         }
-        Channel c = user.getActiveChannel();
-        if(c != null){
-            user.getActiveChannel().sendMessage(playerSender,playerMessage);
-        }else{
-            Strings.getInstance().getChannel("global").sendMessage(playerSender,playerMessage);
-            user.leaveChannel(user.getActiveChannel());
-        }
+        user.getActiveChannel().sendMessage(playerSender,playerMessage);
         event.setCancelled(true);
-    }
 
+    }
 }
