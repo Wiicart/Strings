@@ -1,16 +1,18 @@
-package com.pedestriamc.strings;
+package com.pedestriamc.stringscustoms;
 
+import com.pedestriamc.strings.Strings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Broadcasts {
+public class AutoBroadcasts {
 
     private final Strings strings;
     private final FileConfiguration config;
@@ -20,7 +22,7 @@ public class Broadcasts {
     private long interval;
     private final String order;
 
-    public Broadcasts(Strings strings){
+    public AutoBroadcasts(@NotNull Strings strings){
         this.strings = strings;
         this.config = strings.getBroadcastsFileConfig();
         this.order = config.getString("sequence");
