@@ -142,6 +142,10 @@ public class User {
 
     }
 
+    public boolean memberOf(Channel channel){
+        return channels.contains(channel);
+    }
+
     public void leaveChannel(Channel channel){
         if(channel.equals(strings.getChannel("global"))){
             Bukkit.getLogger().info("[Strings] Player " + player.getName() + " just tried to leave channel global!  Cancelled leaving channel.");
