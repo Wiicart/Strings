@@ -143,4 +143,14 @@ public class HelpOPChannel implements Channel{
     public boolean doProfanityFilter() {
         return profanityFilter;
     }
+
+    @Override
+    public boolean doCooldown() {
+        return false;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.PROTECTED;
+    }
 }
