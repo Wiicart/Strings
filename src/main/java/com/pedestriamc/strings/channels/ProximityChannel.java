@@ -73,4 +73,26 @@ public class ProximityChannel implements Channel{
     public Set<Player> getMembers() {
         return null;
     }
+
+    @Override
+    public boolean doURLFilter() {
+        return false;
+    }
+
+    @Override
+    public boolean doProfanityFilter() {
+        return false;
+    }
+
+    @Override
+    public boolean doCooldown() {
+        //TODO: IMPLEMENT THIS
+        return false;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.PROXIMITY;
+    }
 }
+
