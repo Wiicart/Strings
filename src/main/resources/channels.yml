@@ -31,6 +31,9 @@ channels:
     # Should chat be filtered for URLs?
     # A URL whitelist can be found in config.yml
     block-urls: false
+    # Should this channel have a message cooldown?
+    # Cooldown duration is configured in config.yml
+    cooldown: false
 
   # Staff channel, which by default will not call events, in order to hide messages from plugin interference.
   staff:
@@ -39,14 +42,20 @@ channels:
     call-event: false
     filter-profanity: false
     block-urls: false
+    cooldown: false
 
   # Help OP channel.
-  # When this channel exists, it does not behave like a normal channel, as use of the "/helpop" command
-  # can be used by any player, which will send a message to the channel.
-  # Just like any other channel, only members of the channel can view messages.
+  # This channel does not behave like a normal channel, as membership of the channel and
+  # sending messages in the channel is different.  Typical channel commands will not work with this channel,
+  # everything that can be done with this channel should be done with the /helpop command.
   helpop:
     format: "&8[&4HelpOP&8] &f{displayname} &7» {message}"
     default-color: "&7"
     call-event: false
     filter-profanity: false
     block-urls: false
+    cooldown: false
+
+  # SocialSpy also runs on a type of channel, and customizations for it are found in config.yml
+  # Just as the HelpOP channel, it does not behave like a normal channel and normal channel commands will not work with it.
+  # In game, the /socialspy command is how you use the socialspy channel. 
