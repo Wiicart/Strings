@@ -41,14 +41,16 @@ public class ChannelManager {
                         boolean callEvent = channel.getBoolean("call-event", true);
                         boolean urlFilter = channel.getBoolean("block-urls", false);
                         boolean profanityFilter = channel.getBoolean("filter-profanity", false);
+                        boolean doCooldown = channel.getBoolean("cooldown", false);
                         if(channelName.equalsIgnoreCase("helpop")){
                             new HelpOPChannel(strings,channelName,format,defaultColor,this, callEvent, urlFilter, profanityFilter);
                             helpOpExists = true;
-                        }
-                        Bukkit.getLogger().info("[Strings] Loading channel '" + channelName + "'..");
-                        new StringChannel(strings, channelName, format, defaultColor, this, callEvent, urlFilter, profanityFilter);
-                        if(channelName.equalsIgnoreCase("global")){
-                            globalExists = true;
+                        }else{
+                            Bukkit.getLogger().info("[Strings] Loading channel '" + channelName + "'..");
+                            new StringChannel(strings, channelName, format, defaultColor, this, callEvent, urlFilter, profanityFilter, doCooldown);
+                            if(channelName.equalsIgnoreCase("global")){
+                                globalExists = true;
+                            }
                         }
                     }
                 }
@@ -56,7 +58,7 @@ public class ChannelManager {
         }
         if(!globalExists){
             Bukkit.getLogger().info("[Strings] Creating global channel");
-            new StringChannel(strings,"global","{prefix}{displayname}{suffix} &7» {message}", "&f", this, true, false, false);
+            new StringChannel(strings,"global","{prefix}{displayname}{suffix} &7» {message}", "&f", this, true, false, false, false);
         }
         if(!helpOpExists){
             Bukkit.getLogger().info("[Strings] Creating help op channel");
