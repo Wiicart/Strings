@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.commands;
+package com.pedestriamc.stringscustoms.commands;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.message.Message;
@@ -15,9 +15,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class BroadcastCommand implements CommandExecutor {
 
-    private final String broadcastFormat = Strings.getInstance().getBroadcastFormat();
+    private final String broadcastFormat = Strings.getInstance().getConfig().getString("broadcast-format");
     private final boolean usePAPI = Strings.getInstance().usePlaceholderAPI();
 
+    @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args){
         if(!sender.hasPermission("strings.chat.broadcast") && !sender.hasPermission("strings.chat.*") && !sender.hasPermission("strings.*")){
             Messenger.sendMessage(Message.NO_PERMS, sender);
@@ -38,3 +39,4 @@ public class BroadcastCommand implements CommandExecutor {
         return true;
     }
 }
+
