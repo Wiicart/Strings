@@ -23,8 +23,8 @@ public class PlayerDirectMessenger {
 
     public PlayerDirectMessenger(Strings strings){
         this.strings = strings;
-        this.messageFormatSender = strings.getDirectMessageFormatSender();
-        this.messageFormatRecipient = strings.getDirectMessageFormatRecipient();
+        this.messageFormatSender = strings.getConfig().getString("msg-format-outgoing");
+        this.messageFormatRecipient = strings.getConfig().getString("msg-format-receiving");
         this.usePAPI = strings.usePlaceholderAPI();
 
     }
@@ -81,3 +81,4 @@ public class PlayerDirectMessenger {
         return message;
     }
 }
+
