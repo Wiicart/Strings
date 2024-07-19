@@ -1,17 +1,19 @@
-package com.pedestriamc.strings.commands;
+package com.pedestriamc.stringscustoms.commands;
 
-import com.pedestriamc.strings.Message;
-import com.pedestriamc.strings.Messenger;
+import com.pedestriamc.strings.message.Message;
+import com.pedestriamc.strings.message.Messenger;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ClearChatCommand implements CommandExecutor
 {
+    @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         //By default, the command clear chat will only clear the sender's chat.  If args[0] is equal to "all", given the user
         //has the permission strings.chat.clear.all, it will clear all player's chat.
@@ -28,7 +30,10 @@ public class ClearChatCommand implements CommandExecutor
         }
         // Clear chat for all
         if(args.length > 0 && args[0].equalsIgnoreCase("all") && (sender.hasPermission("strings.chat.clear.other") || sender.hasPermission("strings.chat.*"))){
-            Bukkit.broadcastMessage(StringUtils.repeat(" \n",100));
+            for(Player p : Bukkit.getOnlinePlayers()){
+                p.sendMessage(StringUtils.repeat(" \n",100));
+                Messenger.sendMessage(Message.CHAT_CLEARED, p);
+            }
             Messenger.sendMessage(Message.CHAT_CLEARED_ALL, sender);
             return true;
         }
