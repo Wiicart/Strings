@@ -19,5 +19,6 @@ public interface Channel {
     Set<Player> getMembers();
     boolean doURLFilter();
     boolean doProfanityFilter();
-
+    boolean doCooldown();
+    Type getType();
 }
