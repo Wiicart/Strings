@@ -43,6 +43,7 @@ public class ChannelManager {
                         boolean profanityFilter = channel.getBoolean("filter-profanity", false);
                         boolean doCooldown = channel.getBoolean("cooldown", false);
                         if(channelName.equalsIgnoreCase("helpop")){
+                            Bukkit.getLogger().info("[Strings] Loading channel 'helpop'..");
                             new HelpOPChannel(strings,channelName,format,defaultColor,this, callEvent, urlFilter, profanityFilter);
                             helpOpExists = true;
                         }else{
