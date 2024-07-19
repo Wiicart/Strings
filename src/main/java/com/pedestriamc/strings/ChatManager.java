@@ -18,7 +18,6 @@ public final class ChatManager {
     private final boolean usePAPI;
     private final boolean messagePlaceholders;
     private final boolean parseChatColors;
-    private final boolean doCoolDown;
     private final ChatFilter chatFilter;
     private final Set<Player> coolDownList = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private BukkitScheduler scheduler;
@@ -29,12 +28,9 @@ public final class ChatManager {
         this.usePAPI = strings.usePlaceholderAPI();
         this.parseChatColors = strings.processMessageColors();
         this.messagePlaceholders = strings.processMessagePlaceholders();
-        this.doCoolDown = strings.isDoCoolDown();
         this.chatFilter = strings.getChatFilter();
-        if(doCoolDown){
-            this.scheduler = Bukkit.getScheduler();
-            this.coolDownLength = calcTicks(strings.getCoolDownLength());
-        }
+        this.scheduler = Bukkit.getScheduler();
+        this.coolDownLength = calcTicks(strings.getCoolDownLength());
     }
 
     public @NotNull String formatMessage(Player sender, Channel channel){
@@ -73,17 +69,12 @@ public final class ChatManager {
     }
 
     public boolean isOnCoolDown(Player player){
-        if(doCoolDown){
-            return coolDownList.contains(player) && !(player.hasPermission("strings.*") || player.hasPermission("strings.chat.*") || player.hasPermission("strings.chat.bypasscooldown") || player.hasPermission("*"));
-        }
-        return false;
+        return coolDownList.contains(player) && !(player.hasPermission("strings.*") || player.hasPermission("strings.chat.*") || player.hasPermission("strings.chat.bypasscooldown") || player.hasPermission("*"));
     }
 
     public void startCoolDown(Player player){
-        if(doCoolDown){
             coolDownList.add(player);
             scheduler.runTaskLater(strings,() -> coolDownList.remove(player), coolDownLength);
-        }
 
     }
 
@@ -106,4 +97,3 @@ public final class ChatManager {
         return delayNum * 20L;
     }
 }
-
