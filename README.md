@@ -10,3 +10,6 @@ Features:
 * Clear Chat
 * Customizing Join Messages
 
+https://modrinth.com/plugin/strings
+https://www.spigotmc.org/resources/strings-chat-plugin.118186/
+https://hangar.papermc.io/wiicart/Strings
