@@ -20,6 +20,7 @@ import com.pedestriamc.stringscustoms.commands.ClearChatCommand;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -37,8 +38,8 @@ public final class Strings extends JavaPlugin {
     private static Strings instance;
     private final Logger logger = Bukkit.getLogger();
     private static Chat chat = null;
-    private final String version = "1.0";
-    private final String distributor = "spigot";
+    private final String version = "1.1";
+    private final String distributor = "modrinth";
     private String coolDownLength;
     private final FileConfiguration config = this.getConfig();
     private AutoBroadcasts autoBroadcasts;
@@ -76,6 +77,8 @@ public final class Strings extends JavaPlugin {
         setupChannels();
         int pluginId = 22597;
         Metrics metrics = new Metrics(this, pluginId);
+        metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
+        checkIfReload();
         logger.info("[Strings] Enabled!");
     }
 
@@ -92,6 +95,7 @@ public final class Strings extends JavaPlugin {
     }
     //Register commands and listeners
     private void registerClasses(){
+        this.getCommand("strings").setExecutor(new StringsCommand());
         this.getCommand("helpop").setExecutor(new HelpOPCommand());
         this.getCommand("broadcast").setExecutor(new BroadcastCommand());
         this.getCommand("announce").setExecutor(new BroadcastCommand());
@@ -203,9 +207,20 @@ public final class Strings extends JavaPlugin {
         usersFileConfig = YamlConfiguration.loadConfiguration(usersFile);
         channelsFileConfig = YamlConfiguration.loadConfiguration(channelsFile);
     }
+    private void checkIfReload(){
+        if(Bukkit.getOnlinePlayers().size() > 0){
+            for(Player p : Bukkit.getOnlinePlayers()){
+                if(UserUtil.loadUser(p.getUniqueId()) == null){
+                    new User(p.getUniqueId());
+                }
+            }
+        }
+    }
+
     /*
     Public getter and setter methods
      */
+    public String getDistributor(){ return distributor; }
     public String getVersion(){ return version; }
     public String getCoolDownLength(){ return coolDownLength; }
     public ChatManager getChatManager(){ return chatManager; }
@@ -254,6 +269,23 @@ public final class Strings extends JavaPlugin {
         }catch(IOException e){
             e.printStackTrace();
         }
+    }
+    public void reload(){
+        onDisable();
+        logger.info("[Strings] Loading...");
+        this.saveDefaultConfig();
+        this.setupCustomConfigs();
+        this.updateConfigs();
+        this.loadConfigOptions();
+        this.instantiateObjects();
+        this.setupVault();
+        Messenger.initialize();
+        setupChannels();
+        int pluginId = 22597;
+        Metrics metrics = new Metrics(this, pluginId);
+        metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
+        checkIfReload();
+        logger.info("[Strings] Enabled!");
     }
     /**
      * Returns a User object that contains info Strings uses.
