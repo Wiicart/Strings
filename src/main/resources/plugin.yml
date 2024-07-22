@@ -44,6 +44,9 @@ commands:
   helpop:
     description: "Send a message to server operators"
     usage: "/helpop <message>"
+  strings:
+    description: "Tells the plugin version and allows reloading"
+    usage: "/strings version/reload"
 permissions:
   strings.*:
     description: "All Strings permissions"
@@ -101,5 +104,10 @@ permissions:
   strings.chat.bypasscooldown:
     description: "Allows bypassing the chat cooldown"
     default: false
-
+  strings.reload:
+    description: "Allows reloading the Strings plugin"
+    default: false
+  strings.chat.filterbypass:
+    description: "Allows bypassing the chat filter"
+    default: false
 
