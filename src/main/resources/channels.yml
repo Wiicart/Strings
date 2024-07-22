@@ -25,6 +25,7 @@ channels:
     # Should an event be called when players send a message?
     # This allows other plugins to receive the message and modify it.
     # It's recommended to keep this on unless you want no other plugins to receive or modify chat.
+    # WARNING: This should be fixed soon, but if events are not called, cool downs will not work.
     call-event: true
     # Should chat be filtered for profanity?
     filter-profanity: false
@@ -34,6 +35,12 @@ channels:
     # Should this channel have a message cooldown?
     # Cooldown duration is configured in config.yml
     cooldown: false
+    # Channel Type
+    # Options:
+    # - stringchannel - normal channel, ignores worlds
+    # - proximity - as the name says, proximity
+    # - world - a channel that only works for one world
+    type: stringchannel
 
   # Staff channel, which by default will not call events, in order to hide messages from plugin interference.
   staff:
@@ -43,6 +50,7 @@ channels:
     filter-profanity: false
     block-urls: false
     cooldown: false
+    type: stringchannel
 
   # Help OP channel.
   # This channel does not behave like a normal channel, as membership of the channel and
@@ -55,7 +63,23 @@ channels:
     filter-profanity: false
     block-urls: false
     cooldown: false
+    type: helpop
+
+  # Below is an example of a world channel, which by default will send messages to players in a certain world.
+  # In these types of channels, the /channel command can still be used to join/leave the channel regardless of world,
+  # and this functionality is intended for moderation use.    
+
+  #world2:
+  #  format: "{prefix}{displayname}{suffix} &7» {message}"
+  #  default-color: "&f"
+  #  call-event: true
+  #  filter-profanity: false
+  #  block-urls: false
+  #  cooldown: false
+  #  type: world
+  #  worldname: "world2"
+
 
   # SocialSpy also runs on a type of channel, and customizations for it are found in config.yml
   # Just as the HelpOP channel, it does not behave like a normal channel and normal channel commands will not work with it.
-  # In game, the /socialspy command is how you use the socialspy channel. 
+  # In game, the /socialspy command is how you use the socialspy channel.
