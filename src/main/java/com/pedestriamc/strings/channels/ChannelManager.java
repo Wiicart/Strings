@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.UserUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +37,9 @@ public class ChannelManager {
                 for(String channelName : channels.getKeys(false)){
                     ConfigurationSection channel = channels.getConfigurationSection(channelName);
                     if(channel != null){
+                        String type = channel.getString("type", "stringchannel");
+                        String world = channel.getString("world");
+                        int distance = channel.getInt("distance");
                         String format = channel.getString("format", "{prefix}{displayname}{suffix} &7» {message}");
                         String defaultColor = channel.getString("default-color", "&f");
                         boolean callEvent = channel.getBoolean("call-event", true);
@@ -46,12 +50,33 @@ public class ChannelManager {
                             Bukkit.getLogger().info("[Strings] Loading channel 'helpop'..");
                             new HelpOPChannel(strings,channelName,format,defaultColor,this, callEvent, urlFilter, profanityFilter);
                             helpOpExists = true;
-                        }else{
-                            Bukkit.getLogger().info("[Strings] Loading channel '" + channelName + "'..");
-                            new StringChannel(strings, channelName, format, defaultColor, this, callEvent, urlFilter, profanityFilter, doCooldown);
-                            if(channelName.equalsIgnoreCase("global")){
-                                globalExists = true;
+                            return;
+                        }
+                        switch(type){
+                            case "stringchannel" -> {
+                                Bukkit.getLogger().info("[Strings] Loading stringchannel " + channelName + "...");
+                                new StringChannel(strings, channelName, format, defaultColor, this, callEvent, urlFilter, profanityFilter, doCooldown);
+                                if(channelName.equalsIgnoreCase("global")) {
+                                    globalExists = true;
+                                }
                             }
+                            case "world" -> {
+                                Bukkit.getLogger().info("[Strings] Loading world channel " + channelName + "...");
+                                World actualWorld = Bukkit.getWorld(world);
+                                if(actualWorld == null){
+                                    Bukkit.getLogger().info("[Strings] Failed to load world channel " + channelName + ". Invalid world '" + world + "' defined.");
+                                    break;
+                                }
+
+                            }
+                            case "proximity" -> {
+                                Bukkit.getLogger().info("[Strings] Loading proximity channel " + channelName + "...");
+
+                            }
+                            default -> {
+                                Bukkit.getLogger().info("Failed to load channel " + channelName + ", channel type is invalid in channels.yml");
+                            }
+
                         }
                     }
                 }
@@ -132,4 +157,5 @@ public class ChannelManager {
         return list;
     }
 }
+
 
