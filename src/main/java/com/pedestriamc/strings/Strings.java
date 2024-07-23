@@ -12,6 +12,7 @@ import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.tabcompleters.ChannelTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ClearChatTabCompleter;
 import com.pedestriamc.strings.tabcompleters.MessageTabCompleter;
+import com.pedestriamc.strings.tabcompleters.SocialSpyTabCompleter;
 import com.pedestriamc.stringscustoms.AutoBroadcasts;
 import com.pedestriamc.stringscustoms.ChatFilter;
 import com.pedestriamc.stringscustoms.ServerMessages;
@@ -74,7 +75,6 @@ public final class Strings extends JavaPlugin {
         this.registerClasses();
         this.setupVault();
         Messenger.initialize();
-        setupChannels();
         int pluginId = 22597;
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
@@ -90,9 +90,6 @@ public final class Strings extends JavaPlugin {
     /*
     Private methods
      */
-    private void setupChannels(){
-
-    }
     //Register commands and listeners
     private void registerClasses(){
         this.getCommand("strings").setExecutor(new StringsCommand());
@@ -104,6 +101,7 @@ public final class Strings extends JavaPlugin {
         this.getCommand("clearchat").setTabCompleter(new ClearChatTabCompleter());
         this.getCommand("chatclear").setTabCompleter(new ClearChatTabCompleter());
         this.getCommand("socialspy").setExecutor(new SocialSpyCommand());
+        this.getCommand("socialspy").setTabCompleter(new SocialSpyTabCompleter());
         this.getCommand("msg").setExecutor(new DirectMessageCommand());
         this.getCommand("message").setExecutor(new DirectMessageCommand());
         this.getCommand("msg").setTabCompleter(new MessageTabCompleter());
@@ -280,7 +278,6 @@ public final class Strings extends JavaPlugin {
         this.instantiateObjects();
         this.setupVault();
         Messenger.initialize();
-        setupChannels();
         int pluginId = 22597;
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
