@@ -46,37 +46,38 @@ public class ChannelManager {
                         boolean urlFilter = channel.getBoolean("block-urls", false);
                         boolean profanityFilter = channel.getBoolean("filter-profanity", false);
                         boolean doCooldown = channel.getBoolean("cooldown", false);
-                        if(channelName.equalsIgnoreCase("helpop")){
-                            Bukkit.getLogger().info("[Strings] Loading channel 'helpop'..");
-                            new HelpOPChannel(strings,channelName,format,defaultColor,this, callEvent, urlFilter, profanityFilter);
-                            helpOpExists = true;
-                            return;
-                        }
                         switch(type){
                             case "stringchannel" -> {
-                                Bukkit.getLogger().info("[Strings] Loading stringchannel " + channelName + "...");
+                                Bukkit.getLogger().info("[Strings] Loading stringchannel '" + channelName + "'...");
                                 new StringChannel(strings, channelName, format, defaultColor, this, callEvent, urlFilter, profanityFilter, doCooldown);
                                 if(channelName.equalsIgnoreCase("global")) {
                                     globalExists = true;
                                 }
                             }
                             case "world" -> {
-                                Bukkit.getLogger().info("[Strings] Loading world channel " + channelName + "...");
-                                World actualWorld = Bukkit.getWorld(world);
-                                if(actualWorld == null){
-                                    Bukkit.getLogger().info("[Strings] Failed to load world channel " + channelName + ". Invalid world '" + world + "' defined.");
+                                Bukkit.getLogger().info("[Strings] Loading world channel '" + channelName + "'...");
+                                if(world == null){
+                                    Bukkit.getLogger().info("[Strings] Failed to load world channel '" + channelName + "', world undefined in channels.yml file.");
                                     break;
                                 }
-
+                                World actualWorld = Bukkit.getWorld(world);
+                                if(actualWorld == null){
+                                    Bukkit.getLogger().info("[Strings] Failed to load world channel '" + channelName + "'. Invalid world '" + world + "' defined.");
+                                    break;
+                                }
+                                new WorldChannel(channelName,format,defaultColor,this, strings.getChatManager(), callEvent, urlFilter, profanityFilter, doCooldown, actualWorld);
                             }
                             case "proximity" -> {
-                                Bukkit.getLogger().info("[Strings] Loading proximity channel " + channelName + "...");
+                                Bukkit.getLogger().info("[Strings] Loading proximity channel '" + channelName + "'...");
+                                new ProximityChannel(strings,channelName, format, defaultColor, this, strings.getChatManager(), callEvent, urlFilter, profanityFilter, doCooldown, distance);
 
                             }
-                            default -> {
-                                Bukkit.getLogger().info("Failed to load channel " + channelName + ", channel type is invalid in channels.yml");
+                            case "helpop" -> {
+                                Bukkit.getLogger().info("[Strings] Loading channel 'helpop'..");
+                                new HelpOPChannel(strings,channelName,format,defaultColor,this, callEvent, urlFilter, profanityFilter);
+                                helpOpExists = true;
                             }
-
+                            default -> Bukkit.getLogger().info("Failed to load channel " + channelName + ", channel type is invalid in channels.yml");
                         }
                     }
                 }
@@ -98,6 +99,7 @@ public class ChannelManager {
 
     public void registerChannel(Channel channel){
         channels.put(channel.getName(), channel);
+        Bukkit.getLogger().info("[Strings] Channel " + channel.getName() + " registered.");
     }
 
     public void unregisterChannel(Channel channel){
