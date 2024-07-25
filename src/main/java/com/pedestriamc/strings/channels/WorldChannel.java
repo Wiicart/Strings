@@ -158,4 +158,19 @@ public class WorldChannel implements Channel{
     public World getWorld(){
         return world;
     }
+
+    @Override
+    public Map<String, String> getData() {
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("format", format);
+        map.put("default-color", defaultColor);
+        map.put("call-event", String.valueOf(callEvent));
+        map.put("filter-profanity", String.valueOf(doProfanityFilter));
+        map.put("block-urls", String.valueOf(doURLFilter));
+        map.put("cooldown", String.valueOf(false));
+        map.put("type", String.valueOf(this.getType()));
+        return map;
+    }
 }
+}
+
