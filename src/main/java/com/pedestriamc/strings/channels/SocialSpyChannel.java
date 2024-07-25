@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class SocialSpyChannel implements Channel{
@@ -113,5 +114,10 @@ public class SocialSpyChannel implements Channel{
     @Override
     public Type getType() {
         return Type.PROTECTED;
+    }
+
+    @Override
+    public Map<String, String> getData() {
+        return null;
     }
 }
