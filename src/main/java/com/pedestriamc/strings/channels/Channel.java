@@ -2,6 +2,7 @@ package com.pedestriamc.strings.channels;
 
 import org.bukkit.entity.Player;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface Channel {
@@ -21,4 +22,5 @@ public interface Channel {
     boolean doProfanityFilter();
     boolean doCooldown();
     Type getType();
+    Map<String, String> getData();
 }
