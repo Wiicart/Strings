@@ -10,6 +10,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class HelpOPChannel implements Channel{
@@ -120,14 +121,10 @@ public class HelpOPChannel implements Channel{
     }
 
     @Override
-    public void addPlayer(Player player) {
-
-    }
+    public void addPlayer(Player player) {}
 
     @Override
-    public void removePlayer(Player player) {
-
-    }
+    public void removePlayer(Player player) {}
 
     @Override
     public Set<Player> getMembers() {
@@ -152,5 +149,10 @@ public class HelpOPChannel implements Channel{
     @Override
     public Type getType() {
         return Type.PROTECTED;
+    }
+
+    @Override
+    public Map<String, String> getData() {
+        return null;
     }
 }
