@@ -9,10 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ChannelManager {
@@ -97,9 +94,32 @@ public class ChannelManager {
 
     }
 
+    public void saveChannel(@NotNull Channel channel){
+        if (channel.getType() == Type.PROTECTED) {
+            Bukkit.getLogger().info("[Strings] Unable to save protected channels.  These channels must be modified in config files.");
+            return;
+        }
+        Map<String, String> dataMap = channel.getData();
+        String channelName = channel.getName();
+        ConfigurationSection channelSection = config.getConfigurationSection("channels." + channelName);
+        if(channelSection == null){
+            channelSection = config.createSection("channels." + channelName);
+        }
+        dataMap.forEach(channelSection::set);
+        strings.saveChannelsFile();
+    }
+
+    public void deleteChannel(@NotNull Channel channel){
+        if(channel.getName().equalsIgnoreCase("global")){
+            Bukkit.getLogger().info("[Strings] Unable to delete global channel.");
+            return;
+        }
+        config.set("channels." + channel.getName(), null);
+    }
+
     public void registerChannel(Channel channel){
         channels.put(channel.getName(), channel);
-        Bukkit.getLogger().info("[Strings] Channel " + channel.getName() + " registered.");
+        Bukkit.getLogger().info("[Strings] Channel '" + channel.getName() + "' registered.");
     }
 
     public void unregisterChannel(Channel channel){
@@ -159,5 +179,4 @@ public class ChannelManager {
         return list;
     }
 }
-
 
