@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -82,10 +84,10 @@ public class StringChannel implements Channel{
     }
 
     // Closes this channel, updates players to reflect this channel closing, and unregisters channel
-    // TODO: remove this channel from the config when this method is called
     @Override
     public void closeChannel(){
         Strings.getInstance().getChannelManager().unregisterChannel(this);
+        Strings.getInstance().getChannelManager().deleteChannel(this);
         active = false;
     }
 
@@ -149,5 +151,18 @@ public class StringChannel implements Channel{
     @Override
     public Type getType() {
         return Type.NORMAL;
+    }
+
+    @Override
+    public Map<String, String> getData() {
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("format", format);
+        map.put("default-color", defaultColor);
+        map.put("call-event", String.valueOf(callEvent));
+        map.put("filter-profanity", String.valueOf(profanityFilter));
+        map.put("block-urls", String.valueOf(urlFilter));
+        map.put("cooldown", String.valueOf(doCooldown));
+        map.put("type", String.valueOf(this.getType()));
+        return map;
     }
 }
