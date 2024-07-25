@@ -30,8 +30,12 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -44,6 +48,7 @@ public final class Strings extends JavaPlugin {
     private String coolDownLength;
     private final FileConfiguration config = this.getConfig();
     private AutoBroadcasts autoBroadcasts;
+    private short pluginNum = 2;
     private ServerMessages serverMessages;
     private PlayerDirectMessenger playerDirectMessenger;
     private File broadcastsFile;
@@ -79,6 +84,7 @@ public final class Strings extends JavaPlugin {
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
         checkIfReload();
+        checkUpdate();
         logger.info("[Strings] Enabled!");
     }
 
@@ -212,6 +218,24 @@ public final class Strings extends JavaPlugin {
                     new User(p.getUniqueId());
                 }
             }
+        }
+    }
+
+    private void checkUpdate(){
+        try{
+            HttpsURLConnection connection = (HttpsURLConnection) new URL("https://www.wiicart.net/strings/version.txt").openConnection();
+            connection.setRequestMethod("GET");
+            String raw = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
+            short latest = Short.parseShort(raw);
+            if(latest > pluginNum){
+                Bukkit.getLogger().info("+------------[Strings]------------+");
+                Bukkit.getLogger().info("|    A new update is available!   |");
+                Bukkit.getLogger().info("|          Download at:           |");
+                Bukkit.getLogger().info("|   https://wiicart.net/strings   |");
+                Bukkit.getLogger().info("+---------------------------------+");
+            }
+        } catch(IOException a){
+            a.printStackTrace();
         }
     }
 
