@@ -67,6 +67,7 @@ public final class Strings extends JavaPlugin {
     private boolean processPlayerMessagePlaceholders;
     private boolean usingVault;
     private boolean useCustomJoinLeave;
+    private boolean isPaper = false;
 
     @Override
     public void onEnable() {
@@ -118,6 +119,7 @@ public final class Strings extends JavaPlugin {
         this.getCommand("c").setExecutor(new ChannelCommand());
         this.getCommand("channel").setTabCompleter(new ChannelTabCompleter());
         this.getCommand("c").setTabCompleter(new ChannelTabCompleter());
+        this.getCommand("chatcolor").setExecutor(new ChatColorCommand());
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
         this.getServer().getPluginManager().registerEvents(new JoinListener(),this);
         this.getServer().getPluginManager().registerEvents(new LeaveListener(), this);
@@ -133,6 +135,11 @@ public final class Strings extends JavaPlugin {
         this.coolDownLength = config.getString("cooldown-time", "30s");
         if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             this.usingPlaceholderAPI = true;
+        }
+        try{
+            Class.forName("com.destroystokyo.paper.util.VersionFetcher");
+            isPaper = true;
+        }catch(ClassNotFoundException ignored){
         }
     }
     //Update yml files
@@ -260,6 +267,7 @@ public final class Strings extends JavaPlugin {
     public boolean processMessagePlaceholders(){ return processPlayerMessagePlaceholders; }
     public boolean useVault(){ return usingVault; }
     public boolean modifyJoinLeaveMessages(){ return useCustomJoinLeave; }
+    public boolean isPaper(){ return this.isPaper; }
     public static Strings getInstance(){ return instance; }
     /*
     Other methods
@@ -330,4 +338,3 @@ public final class Strings extends JavaPlugin {
         return channelManager.getChannel(channel);
     }
 }
-
