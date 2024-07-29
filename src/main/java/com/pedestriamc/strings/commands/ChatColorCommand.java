@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
 import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ChatColorCommand implements CommandExecutor {
@@ -92,21 +93,22 @@ public class ChatColorCommand implements CommandExecutor {
                     Messenger.sendMessage(Message.ONE_COLOR, sender);
                     return true;
                 }
-                Bukkit.getLogger().info("Color added");
                 chatColor.append(colorMap.get(arg.toUpperCase()));
                 hasColor = true;
             } else if (styleMap.containsKey(arg.toUpperCase())) {
-                Bukkit.getLogger().info("Style added");
                 chatColor.append(styleMap.get(arg.toUpperCase()));
             } else if (arg.matches(pattern)) {
-                Bukkit.getLogger().info("HEX added");
                 ChatColor color = ChatColor.of(new Color(Integer.parseInt(arg.substring(1), 16)));
                 chatColor.append(color);
             }
         }
         User user = strings.getUser(player);
         user.setChatColor(chatColor.toString());
-        Bukkit.getLogger().info("chat color for " + user.getPlayer().getName() + " set to " + chatColor);
+        if(!player.equals(sender)){
+            Messenger.sendMessage(Message.CHATCOLOR_SET_OTHER, Map.of("{color}", user.getChatColor() + "this.", "{player}", player.getName()), sender);
+        }
+        Messenger.sendMessage(Message.CHATCOLOR_SET, Map.of("{color}", user.getChatColor() + "this.", "{player}", player.getName()), player);
         return true;
     }
 }
+
