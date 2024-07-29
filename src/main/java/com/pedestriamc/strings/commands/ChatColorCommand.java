@@ -6,13 +6,14 @@ import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.Color;
 import java.util.AbstractMap;
 import java.util.Map;
 
@@ -47,6 +48,8 @@ public class ChatColorCommand implements CommandExecutor {
             "MAGIC", ChatColor.MAGIC
     );
 
+    String pattern = "#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})";
+
     Strings strings = Strings.getInstance();
 
     @Override
@@ -56,9 +59,14 @@ public class ChatColorCommand implements CommandExecutor {
             return true;
         }
 
+        if(args.length > 7){
+            Messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
+            return true;
+        }
+
         Player player = Bukkit.getPlayer(args[args.length - 1]);
 
-        if(sender instanceof Server && player == null){
+        if(sender instanceof ConsoleCommandSender && player == null){
             Messenger.sendMessage(Message.SERVER_MUST_SPECIFY_PLAYER, sender);
             return true;
         }
@@ -77,21 +85,28 @@ public class ChatColorCommand implements CommandExecutor {
         }
 
         StringBuilder chatColor = new StringBuilder();
-        for(int i=0; i<args.length - 1; i++){
-            if(colorMap.containsKey(args[i].toUpperCase())){
-                chatColor.append(colorMap.get(args[i].toUpperCase()).toString());
-            }else if(styleMap.containsKey(args[i].toUpperCase())){
-                chatColor.append(styleMap.get(args[i].toUpperCase()).toString());
-            }else{
-                Messenger.sendMessage(Message.UNKNOWN_STYLE_COLOR, sender);
-                return true;
+        boolean hasColor = false;
+        for (String arg : args) {
+            if (colorMap.containsKey(arg.toUpperCase())) {
+                if(hasColor){
+                    Messenger.sendMessage(Message.ONE_COLOR, sender);
+                    return true;
+                }
+                Bukkit.getLogger().info("Color added");
+                chatColor.append(colorMap.get(arg.toUpperCase()));
+                hasColor = true;
+            } else if (styleMap.containsKey(arg.toUpperCase())) {
+                Bukkit.getLogger().info("Style added");
+                chatColor.append(styleMap.get(arg.toUpperCase()));
+            } else if (arg.matches(pattern)) {
+                Bukkit.getLogger().info("HEX added");
+                ChatColor color = ChatColor.of(new Color(Integer.parseInt(arg.substring(1), 16)));
+                chatColor.append(color);
             }
         }
-
-        User user = strings.getUser((Player) sender);
+        User user = strings.getUser(player);
         user.setChatColor(chatColor.toString());
-
-
+        Bukkit.getLogger().info("chat color for " + user.getPlayer().getName() + " set to " + chatColor);
         return true;
     }
 }
