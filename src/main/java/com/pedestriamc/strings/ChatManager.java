@@ -20,8 +20,8 @@ public final class ChatManager {
     private final boolean parseChatColors;
     private final ChatFilter chatFilter;
     private final Set<Player> coolDownList = Collections.newSetFromMap(new ConcurrentHashMap<>());
-    private BukkitScheduler scheduler;
-    private long coolDownLength;
+    private final BukkitScheduler scheduler;
+    private final long coolDownLength;
 
     public ChatManager(@NotNull Strings strings){
         this.strings = strings;
@@ -37,18 +37,20 @@ public final class ChatManager {
         String newMessageFormat = channel.getFormat();
         User user = strings.getUser(sender.getUniqueId());
         if(usePAPI){
-            newMessageFormat = PlaceholderAPI.setPlaceholders(sender,newMessageFormat);
+            newMessageFormat = PlaceholderAPI.setPlaceholders(sender, newMessageFormat);
         }
         newMessageFormat = newMessageFormat.replace("{prefix}", user.getPrefix());
         newMessageFormat = newMessageFormat.replace("{suffix}", user.getSuffix());
         newMessageFormat = newMessageFormat.replace("{displayname}", "%s");
-        newMessageFormat = newMessageFormat.replace("{message}", "%s");
+        newMessageFormat += user.getChatColor();
+        newMessageFormat = newMessageFormat.replace("{message}", user.getChatColor() + "%s");
         newMessageFormat = ChatColor.translateAlternateColorCodes('&', newMessageFormat);
 
         return newMessageFormat;
     }
+
     public String processMessage(Player sender, String message){
-        User user = strings.getUser(sender.getUniqueId());
+        User user = strings.getUser(sender);
         Channel channel = user.getActiveChannel();
         if(!(sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("*") || sender.hasPermission("strings.chat.filterbypass"))){
             if(channel.doURLFilter()){
@@ -58,7 +60,6 @@ public final class ChatManager {
                 message = chatFilter.profanityFilter(message, sender);
             }
         }
-        message = user.getChatColor() + message;
         if(parseChatColors && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.colormsg"))){
             message = ChatColor.translateAlternateColorCodes('&',message);
         }
@@ -73,8 +74,8 @@ public final class ChatManager {
     }
 
     public void startCoolDown(Player player){
-            coolDownList.add(player);
-            scheduler.runTaskLater(strings,() -> coolDownList.remove(player), coolDownLength);
+        coolDownList.add(player);
+        scheduler.runTaskLater(strings,() -> coolDownList.remove(player), coolDownLength);
 
     }
 
@@ -94,6 +95,7 @@ public final class ChatManager {
             delayNum *= 60;
         }
         // One tick = 0.05 seconds
+        Bukkit.getLogger().info("Cooldown ticks: " + delayNum * 20L);
         return delayNum * 20L;
     }
 }
