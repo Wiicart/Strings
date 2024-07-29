@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.EnumMap;
+import java.util.Map;
 
 public class Messenger {
 
@@ -65,4 +66,27 @@ public class Messenger {
         }
 
     }
+
+    public static void sendMessage(Message message, Map<String, String> placeholders, CommandSender sender){
+        Object msg = enumMap.get(message);
+        if(msg instanceof String[]){
+            for(String str : (String[]) msg){
+                for(Map.Entry<String, String> entry : placeholders.entrySet()) {
+                    str = str.replace(entry.getKey(), entry.getValue());
+                }
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', str));
+            }
+            return;
+        }
+        if(msg instanceof String str){
+            for(Map.Entry<String, String> entry : placeholders.entrySet()) {
+                str = str.replace(entry.getKey(), entry.getValue());
+            }
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', str));
+            return;
+        }
+        Bukkit.getLogger().info("[Strings] Unknown object type or value not found for message " + message.toString());
+
+    }
 }
+
