@@ -152,3 +152,14 @@ unknown-style-color: "&fUnknown text style or color."
 # Only one color allowed for chatcolor:
 one-color: "&fYou can't use multiple colors in your chat color!"
 
+# Sent when player's own chat color is set.
+# Placeholders:
+# {color}
+# {player}
+chatcolor-set: "&fYour chat color has been set to {color}&f."
+
+# Sent when other player's chat color is set.
+# Placeholders:
+# {color}
+# {player} 
+chatcolor-set-other: "&f{player}&f's chat color has been set to {color}&f."
