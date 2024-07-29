@@ -119,7 +119,9 @@ public final class Strings extends JavaPlugin {
         this.getCommand("c").setExecutor(new ChannelCommand());
         this.getCommand("channel").setTabCompleter(new ChannelTabCompleter());
         this.getCommand("c").setTabCompleter(new ChannelTabCompleter());
-        this.getCommand("chatcolor").setExecutor(new ChatColorCommand());
+        if(config.getBoolean("enable-chatcolor")){
+            this.getCommand("chatcolor").setExecutor(new ChatColorCommand());
+        }
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
         this.getServer().getPluginManager().registerEvents(new JoinListener(),this);
         this.getServer().getPluginManager().registerEvents(new LeaveListener(), this);
