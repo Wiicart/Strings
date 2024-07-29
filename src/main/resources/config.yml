@@ -13,6 +13,7 @@
 # NOTE: more configuration options are available in:
 #   - broadcasts.yml
 #   - messages.yml
+#   - channels.yml
 # Configuration options:
 
 # Plugin prefix:
@@ -24,6 +25,11 @@ prefix: "&8[&3Strings&8] &f"
 # (Players with proper permissions can use chat colors
 # i.e. &4 in their messages and the plugin with color them)
 process-in-chat-colors: true
+
+# Enable the /chatcolor command?
+# Disable this if you're using an alternate chat color plugin
+# to avoid conflicts with command registration.
+enable-chatcolor: true
 
 # Process placeholders in player chat messages?
 # (Players with proper permissions can use
@@ -137,3 +143,5 @@ url-whitelist:
   - "minecraft.net"
   - "apple.com"
   - "wiicart.net"
+
+
