@@ -48,7 +48,7 @@ public final class Strings extends JavaPlugin {
     private String coolDownLength;
     private final FileConfiguration config = this.getConfig();
     private AutoBroadcasts autoBroadcasts;
-    private short pluginNum = 2;
+    private short pluginNum = 1;
     private ServerMessages serverMessages;
     private PlayerDirectMessenger playerDirectMessenger;
     private File broadcastsFile;
@@ -68,6 +68,7 @@ public final class Strings extends JavaPlugin {
     private boolean usingVault;
     private boolean useCustomJoinLeave;
     private boolean isPaper = false;
+    private StringsLogger stringsLogger;
 
     @Override
     public void onEnable() {
@@ -81,6 +82,9 @@ public final class Strings extends JavaPlugin {
         this.registerClasses();
         this.setupVault();
         Messenger.initialize();
+        if(config.getBoolean("enable-logger")){
+            setupLogger();
+        }
         int pluginId = 22597;
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
@@ -248,6 +252,15 @@ public final class Strings extends JavaPlugin {
         }
     }
 
+    private void setupLogger(){
+        File file = new File(getDataFolder(), "log.txt");
+        if(!file.exists()) {
+            file.getParentFile().mkdirs();
+            saveResource("log.txt", false);
+        }
+        stringsLogger = new StringsLogger(this, file);
+    }
+
     /*
     Public getter and setter methods
      */
@@ -270,6 +283,7 @@ public final class Strings extends JavaPlugin {
     public boolean useVault(){ return usingVault; }
     public boolean modifyJoinLeaveMessages(){ return useCustomJoinLeave; }
     public boolean isPaper(){ return this.isPaper; }
+    public StringsLogger getStringsLogger(){ return stringsLogger; }
     public static Strings getInstance(){ return instance; }
     /*
     Other methods
