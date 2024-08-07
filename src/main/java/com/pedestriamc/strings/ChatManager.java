@@ -85,17 +85,12 @@ public final class ChatManager {
             Bukkit.getLogger().info("[Strings] Invalid chat cool down in config.  Defaulting to 30s.");
             return 600L;
         }
-        //Get units
         char units = string.charAt(string.length() - 1);
-        //Get number as int
         string = string.substring(0, string.length() - 1);
         int delayNum = Integer.parseInt(string);
-        //Convert into seconds if in minutes
         if(units == 'm'){
             delayNum *= 60;
         }
-        // One tick = 0.05 seconds
-        Bukkit.getLogger().info("Cooldown ticks: " + delayNum * 20L);
         return delayNum * 20L;
     }
 }
