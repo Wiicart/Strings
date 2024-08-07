@@ -2,6 +2,7 @@ package com.pedestriamc.strings.channels;
 
 import com.pedestriamc.strings.ChatManager;
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.User;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -27,14 +28,14 @@ public class StringChannel implements Channel{
     private final boolean profanityFilter;
     private final boolean doCooldown;
 
-    public StringChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown){
+    public StringChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active){
         this.strings = strings;
         this.name = name;
         this.members = ConcurrentHashMap.newKeySet();
         this.format = format;
         this.defaultColor = defaultColor != null ? defaultColor : "&f";
         this.chatManager = strings.getChatManager();
-        this.active = true;
+        this.active = active;
         this.callEvent = callEvent;
         this.urlFilter = doURLFilter;
         this.profanityFilter = doProfanityFilter;
@@ -42,40 +43,36 @@ public class StringChannel implements Channel{
         channelManager.registerChannel(this);
     }
 
-    //Send player messages in the channel.
-    //The message will be sent to all players that are a member of the channel,
-    //which includes players that don't have this channel as active.
-    //Also calls a AsyncPlayerChatEvent so that other plugins can handle this message
     @Override
     public void sendMessage(Player player, String message){
-        if(active){
-            String format = chatManager.formatMessage(player, this);
-            message = chatManager.processMessage(player, message);
-            String finalMessage = message;
-            if(callEvent){
-                Bukkit.getScheduler().runTask(strings, () ->{
-                    AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this);
-                    event.setFormat(format);
-                    Bukkit.getPluginManager().callEvent(event);
-                    if(!event.isCancelled()){
-                        String formattedMessage = String.format(event.getFormat(), strings.getUser(player).getDisplayName(), event.getMessage());
-                        for(Player p : members){
-                            p.sendMessage(formattedMessage);
-                        }
-                        Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
+        if(!active){
+            return;
+        }
+        String format = chatManager.formatMessage(player, this);
+        message = chatManager.processMessage(player, message);
+        String finalMessage = message;
+        if(callEvent){
+            Bukkit.getScheduler().runTask(strings, () ->{
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this);
+                event.setFormat(format);
+                Bukkit.getPluginManager().callEvent(event);
+                if(!event.isCancelled()){
+                    String formattedMessage = String.format(event.getFormat(), strings.getUser(player).getDisplayName(), event.getMessage());
+                    for(Player p : members){
+                        p.sendMessage(formattedMessage);
                     }
-                });
-            }else{
-                String formattedMessage = String.format(format, player.getDisplayName(), message);
-                for(Player p : members){
-                    p.sendMessage(formattedMessage);
+                    Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
                 }
-                Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
+            });
+        }else{
+            String formattedMessage = String.format(format, player.getDisplayName(), message);
+            for(Player p : members){
+                p.sendMessage(formattedMessage);
             }
+            Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
         }
     }
-
-    //Broadcasts a message to members of this channel. (Auto Broadcasts)
+    
     @Override
     public void broadcastMessage(String message){
         for(Player p : members){
@@ -125,8 +122,18 @@ public class StringChannel implements Channel{
     }
 
     @Override
+    public void addPlayer(User user){
+        this.addPlayer(user.getPlayer());
+    }
+
+    @Override
     public void removePlayer(Player player){
         members.remove(player);
+    }
+
+    @Override
+    public void removePlayer(User user){
+        this.removePlayer(user.getPlayer());
     }
 
     @Override
@@ -154,6 +161,16 @@ public class StringChannel implements Channel{
     }
 
     @Override
+    public void setEnabled(boolean isEnabled) {
+        active = isEnabled;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return active;
+    }
+
+    @Override
     public Map<String, String> getData() {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         map.put("format", format);
@@ -166,3 +183,4 @@ public class StringChannel implements Channel{
         return map;
     }
 }
+
