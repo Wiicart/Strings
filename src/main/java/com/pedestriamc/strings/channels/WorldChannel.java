@@ -2,15 +2,14 @@ package com.pedestriamc.strings.channels;
 
 import com.pedestriamc.strings.ChatManager;
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.User;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class WorldChannel implements Channel{
@@ -26,10 +25,11 @@ public class WorldChannel implements Channel{
     private final boolean doURLFilter;
     private final boolean doProfanityFilter;
     private final boolean doCooldown;
+    private volatile boolean active;
     private final World world;
 
 
-    public WorldChannel(String name, String format, String defaultColor, ChannelManager channelManager, ChatManager chatManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, World world){
+    public WorldChannel(String name, String format, String defaultColor, ChannelManager channelManager, ChatManager chatManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, World world, boolean active){
         this.members = ConcurrentHashMap.newKeySet();
         this.name = name;
         this.format = format;
@@ -41,6 +41,7 @@ public class WorldChannel implements Channel{
         this.doProfanityFilter = doProfanityFilter;
         this.doCooldown = doCooldown;
         this.world = world;
+        this.active = active;
         channelManager.registerChannel(this);
     }
 
@@ -126,8 +127,18 @@ public class WorldChannel implements Channel{
     }
 
     @Override
+    public void addPlayer(User user){
+        this.addPlayer(user.getPlayer());
+    }
+
+    @Override
     public void removePlayer(Player player) {
         members.remove(player);
+    }
+
+    @Override
+    public void removePlayer(User user){
+        this.removePlayer(user.getPlayer());
     }
 
     @Override
@@ -155,6 +166,16 @@ public class WorldChannel implements Channel{
         return Type.WORLD;
     }
 
+    @Override
+    public void setEnabled(boolean isEnabled) {
+        this.active = isEnabled;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return active;
+    }
+
     public World getWorld(){
         return world;
     }
@@ -172,5 +193,5 @@ public class WorldChannel implements Channel{
         return map;
     }
 }
-}
+
 
