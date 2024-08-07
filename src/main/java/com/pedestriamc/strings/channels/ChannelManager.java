@@ -43,10 +43,11 @@ public class ChannelManager {
                         boolean urlFilter = channel.getBoolean("block-urls", false);
                         boolean profanityFilter = channel.getBoolean("filter-profanity", false);
                         boolean doCooldown = channel.getBoolean("cooldown", false);
+                        boolean active = channel.getBoolean("active", true);
                         switch(type){
                             case "stringchannel" -> {
                                 Bukkit.getLogger().info("[Strings] Loading stringchannel '" + channelName + "'...");
-                                new StringChannel(strings, channelName, format, defaultColor, this, callEvent, urlFilter, profanityFilter, doCooldown);
+                                new StringChannel(strings, channelName, format, defaultColor, this, callEvent, urlFilter, profanityFilter, doCooldown, active);
                                 if(channelName.equalsIgnoreCase("global")) {
                                     globalExists = true;
                                 }
@@ -62,11 +63,11 @@ public class ChannelManager {
                                     Bukkit.getLogger().info("[Strings] Failed to load world channel '" + channelName + "'. Invalid world '" + world + "' defined.");
                                     break;
                                 }
-                                new WorldChannel(channelName,format,defaultColor,this, strings.getChatManager(), callEvent, urlFilter, profanityFilter, doCooldown, actualWorld);
+                                new WorldChannel(channelName,format,defaultColor,this, strings.getChatManager(), callEvent, urlFilter, profanityFilter, doCooldown, actualWorld, active);
                             }
                             case "proximity" -> {
                                 Bukkit.getLogger().info("[Strings] Loading proximity channel '" + channelName + "'...");
-                                new ProximityChannel(strings,channelName, format, defaultColor, this, strings.getChatManager(), callEvent, urlFilter, profanityFilter, doCooldown, distance);
+                                new ProximityChannel(strings,channelName, format, defaultColor, this, strings.getChatManager(), callEvent, urlFilter, profanityFilter, doCooldown, distance, active);
 
                             }
                             case "helpop" -> {
@@ -82,7 +83,7 @@ public class ChannelManager {
         }
         if(!globalExists){
             Bukkit.getLogger().info("[Strings] Creating global channel");
-            new StringChannel(strings,"global","{prefix}{displayname}{suffix} &7» {message}", "&f", this, true, false, false, false);
+            new StringChannel(strings,"global","{prefix}{displayname}{suffix} &7» {message}", "&f", this, true, false, false, false, true);
         }
         if(!helpOpExists){
             Bukkit.getLogger().info("[Strings] Creating help op channel");
