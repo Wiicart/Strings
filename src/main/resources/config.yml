@@ -1,0 +1,154 @@
+#+------------------------------------------------------------+
+#|  ███████╗████████╗██████╗  ██╗ ███╗   ██╗ ██████╗ ███████╗ |
+#|  ██╔════╝╚══██╔══╝██╔══██╗ ██║ ████╗  ██║██╔════╝ ██╔════╝ |
+#|  ███████╗   ██║   ██████╔╝ ██║ ██╔██╗ ██║██║  ███╗███████╗ |
+#|  ╚════██║   ██║   ██╔══██╗ ██║ ██║╚██╗██║██║   ██║╚════██║ |
+#|  ███████║   ██║   ██║  ██║ ██║ ██║ ╚████║╚██████╔╝███████║ |
+#|  ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═╝ ╚═╝  ╚═══╝ ╚═════╝ ╚══════╝ |
+#|                     Strings - Chat Plugin                  |
+#|                         by: wiicart                        |
+#|                       pedestriamc.com                      |
+#+------------------------------------------------------------+
+
+# NOTE: more configuration options are available in:
+#   - broadcasts.yml
+#   - messages.yml
+#   - channels.yml
+# Configuration options:
+
+# Plugin prefix:
+prefix: "&8[&3Strings&8] &f"
+
+# Chat message formats are found in channels.yml
+
+# Process chat colors in player chat messages?
+# (Players with proper permissions can use chat colors
+# i.e. &4 in their messages and the plugin with color them)
+process-in-chat-colors: true
+
+# Enable the /chatcolor command?
+# Disable this if you're using an alternate chat color plugin
+# to avoid conflicts with command registration.
+enable-chatcolor: true
+
+# Process placeholders in player chat messages?
+# (Players with proper permissions can use
+#  placeholders in their messages)
+process-in-chat-placeholders: true
+
+# Chat cool down length
+# Cool downs are enabled per channel in channels.yml
+# (Units are m and s, standing for minutes and seconds)
+# Example: 1m is one minute
+# (Cool down must be enabled for this to do anything)
+cooldown-time: 1m
+
+# Message format for /msg
+# This is for outgoing messages
+# Valid placeholders:
+# {sender_username} - sender username
+# {sender_displayname} - sender display name
+# {sender_prefix} - sender prefix
+# {sender_suffix} - sender suffix
+# {recipient_username} - recipient username
+# {recipient_displayname} - recipient display name
+# {recipient_prefix} - recipient prefix
+# {recipient_suffix} - recipient suffix
+# {message} - the sender's message
+# ** Compatible with PlaceholderAPI placeholders
+msg-format-outgoing: "&8(&7me &8» &7{recipient_username}&8) &e{message}"
+
+# Message format for /msg
+# This is for receiving messages
+# Valid placeholders:
+# {sender_username} - sender username
+# {sender_displayname} - sender display name
+# {sender_prefix} - sender prefix
+# {sender_suffix} - sender suffix
+# {recipient_username} - recipient username
+# {recipient_displayname} - recipient display name
+# {recipient_prefix} - recipient prefix
+# {recipient_suffix} - recipient suffix
+# {message} - the sender's message
+# ** Compatible with PlaceholderAPI placeholders
+msg-format-receiving: "&8(&7{sender_username} &8» &7me&8) &e{message}"
+
+# Social Spy text formatting:
+# Valid placeholders:
+# {sender_username} - sender username
+# {sender_displayname} - sender display name
+# {sender_prefix} - sender prefix
+# {sender_suffix} - sender suffix
+# {recipient_username} - recipient username
+# {recipient_displayname} - recipient display name
+# {recipient_prefix} - recipient prefix
+# {recipient_suffix} - recipient suffix
+# {message} - the sender's message
+# Due to social spy having data of two players, PlaceholderAPI is not supported
+social-spy-format: "&8[&cSocialSpy&8] &8(&7{sender_username} &8» &7{recipient_username}&8) &7{message}"
+
+# Use custom join and leave message?
+# If enabled, default join and leave messages will be replaced with
+# your input in the following two config options.
+custom-join-leave-message: false
+
+# Custom join message:
+# Placeholder list:
+# {displayname}
+# {username}
+# {prefix}
+# {suffix}
+# Any PlaceholderAPI placeholders
+join-message: "&8[&a+&8] &f{username} &7has joined the server."
+
+# Custom leave message:
+# Placeholder list:
+# {displayname}
+# {username}
+# {prefix}
+# {suffix}
+# Any PlaceholderAPI placeholders
+leave-message: "&8[&4-&8] &f{username} &7has left the server."
+
+# Send users a MOTD when they join the server?
+enable-motd: false
+
+# The MOTD that is sent out if enable-motd is true.
+# Placeholder list:
+# {displayname}
+# {username}
+# {prefix}
+# {suffix}
+# Any PlaceholderAPI placeholders
+motd:
+  - "&fWelcome to the server, {username}!"
+  - "&fHave fun!"
+
+# Broadcast prefix:
+# Prefix for messages sent using the /broadcast command
+broadcast-format: "&8[&3Broadcast&8] &f"
+
+# Enable PlaceholderAPI support?
+# It is advised to keep this enabled
+placeholder-api: true
+
+# Chat Filter Config
+# All settings for the chat filter.
+# Filter can be bypassed with the permission strings.filter.bypass
+
+# URL whitelist
+# Allow these urls to bypass chat filtering
+# Enable chat filtering per channel in channels.yml
+url-whitelist:
+  - "minecraft.net"
+  - "apple.com"
+  - "wiicart.net"
+
+# Logger Config
+
+
+# Should the logger be enabled?
+enable-logger: false
+
+
+

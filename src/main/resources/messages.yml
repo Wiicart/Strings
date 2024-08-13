@@ -1,0 +1,166 @@
+# Strings - Messages.yml
+# Bukkit chat colors may be used
+# Unless noted otherwise, the prefix from
+# config.yml is used before the message.
+# Note: these are only messages for commands.
+# other messages may be found in other config files.
+
+# No perms message:
+no-perms: "&fYou don't have permission!"
+
+# Cleared own chat message:
+chat-cleared: "&fChat cleared."
+
+# Cleared all player's chat message:
+chat-cleared-all: "&fAll player's chats cleared."
+
+# Too many args in command:
+too-many-args: "&fToo many arguments!"
+
+# Insufficient args:
+insufficient-args: "&fInsufficient arguments!"
+
+# Player on cool-down:
+cool-down: "&fYou're sending messages too quickly!  Try again later."
+
+# Messaging
+# This section includes messages for the /msg, /r and /socialspy commands
+
+# Unknown player message:
+unknown-player: "&fUnknown player!"
+
+# Player is offline:
+player-offline: "&fThat player is offline!"
+
+# No one to reply to:
+no-reply: "&fYou have no one to reply to!"
+
+# Player can't message them self
+self-message: "&fYou can't message yourself!"
+
+# Social Spy enabled:
+social-spy-on: "&fSocial Spy &aenabled&f!"
+
+# Social Spy disabled:
+social-spy-off: "&fSocial Spy &cdisabled&f!"
+
+# Channels Messages
+# All messages under this section will check for placeholders {player} and {channel}
+# however, for some messages the values of either of these placeholders may be null.
+
+# Invalid use of channels command:
+invalid-use-channel: "&fInvalid usage of command! Type &7/channel help &ffor info."
+
+# Channel active:
+# Placeholder: {channel}
+channel-active: "&fChannel &7{channel} &fset to your active channel."
+
+# Channel joined:
+# Placeholder: {channel}
+channel-joined: "&fJoined channel &7{channel}&f."
+
+# Other player joined channel:
+# Placeholders: {player}, {channel}
+other-user-joined-channel: "&7{player} &fjoined the channel &7{channel}&f."
+
+# Channel left:
+# Placeholder: {channel}
+left-channel: "&fLeft channel &7{channel}&f."
+
+# Other player left channel:
+# Placeholders {player}, {channel}
+other-user-left-channel: "&7{player} &fleft the channel &7{channel}&f."
+
+# Invalid player:
+# Placeholder {player} will be replaced with the offending player name
+invalid-player: "&fCannot find player &7{player}&f!"
+
+# Channel does not exist:
+# Placeholder {channel} will be replaced with the offending channel name
+channel-does-not-exist: "&fChannel &7{channel} &fdoes not exist!"
+
+# No perms to join channel:
+# Placeholder: {channel}
+no-perms-channel: "&fYou don't have permission to join channel &7{channel}&f."
+
+# Other player doesn't have perms to join channel:
+# Placeholders: {player}, {channel}
+other-player-no-perms: "&fPlayer &7{player} &fdoesn't have permission to join channel &7{channel}&f!"
+
+# Other player's active channel set:
+# Placeholders: {player}, {channel}
+other-player-channel-active: "&7{player}&f's active channel set to &7{channel}&f."
+
+# Other player not a member of channel:
+# Placeholder: {channel}
+not-channel-member: "&fYou're not a member of the channel &7{channel}&f."
+
+# Not a member of channel:
+# Placeholders: {player}, {channel}
+not-channel-member-other: "&7{player} &fis not a member of &7{channel}&f."
+
+# /channel help message:
+channel-help:
+  - "&8[&3Strings&8] &7| Help"
+  - "&f/channel usage"
+  - "&f/channel <active-channel> &7- Sets your active channel"
+  - "&f/channel join <channel>  &7- Lets you join a channel"
+  - "&f/channel leave <channel> &7- Lets you leave a channel"
+  - "&7* Add a player name at the end to modify another player"
+
+# Message that says that you can't leave the global channel
+cant-leave-global: "&fYou can't leave the global channel!"
+
+# Message to tell players that they can't use the /channel command with protected channels.
+# Protected channels include special channels like social spy, which have their own commands to access.
+# As they don't function like typical channels, these channels are accessed in different ways.
+protected-channel: "&fYou can't use that command with that channel!"
+
+
+# Chat Filter Messages:
+
+# Links aren't allowed message:
+links-prohibited: "&fYou're not allowed to send links in your messages!"
+
+# Help OP Messages
+
+
+# Help OP disabled
+helpop-disabled: "&fHelp OP is disabled."
+
+# Joined Help OP channel
+helpop-on: "&fNow receiving messages from the Help OP channel."
+
+# Message that explains that Help OP cannot be a player's active channel.
+helpop-active-prohibited: "&fHelpOP cannot be your active channel."
+
+# Help OP message sent:
+helpop-sent: "&fYour Help OP message has been sent."
+
+# Message if player attempts to use /channel command with helpop
+helpop-not-channel: "&fThat command cant be used with HelpOP."
+
+
+# ChatColor messages
+
+# Sent when the server tries to execute the /chatcolor command with no player specified
+server-must-specify-player: "&fA player must be specified when running this command from console!"
+
+# Unknown style or color
+unknown-style-color: "&fUnknown text style or color."
+
+# Only one color allowed for chatcolor:
+one-color: "&fYou can't use multiple colors in your chat color!"
+
+# Sent when player's own chat color is set.
+# Placeholders:
+# {color}
+# {player}
+chatcolor-set: "&fYour chat color has been set to {color}&f."
+
+# Sent when other player's chat color is set.
+# Placeholders:
+# {color}
+# {player}
+chatcolor-set-other: "&f{player}&f's chat color has been set to {color}&f."
+

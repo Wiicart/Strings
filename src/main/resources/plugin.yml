@@ -1,0 +1,115 @@
+name: Strings
+version: '${project.version}'
+main: com.pedestriamc.strings.Strings
+api-version: 1.16
+prefix: Strings
+author: wiicart
+description: "A chat plugin."
+website: pedestriamc.com
+softdepend: [PlaceholderAPI, Vault]
+commands:
+  clearchat:
+    description: "Clears in-game chat"
+    usage: "/clearchat"
+  chatclear:
+    description: "Clears in-game chat"
+    usage: "/chatclear"
+  broadcast:
+    description: "Broadcasts text"
+    usage: "/broadcast <text>"
+  announce:
+    description: "Broadcasts text"
+    usage: "/announce <text>"
+  msg:
+    description: "Direct message players"
+    usage: "/msg <player> <message>"
+  message:
+    description: "Direct message players"
+    usage: "/message <player> <message>"
+  reply:
+    description: "Reply to messages"
+    usage: "/reply <message>"
+  r:
+    description: "Reply to messages"
+    usage: "/r <message>"
+  socialspy:
+    description: "See all player's direct messages"
+    usage: "/socialspy"
+  channel:
+    description: "Join, leave and set active channels"
+    usage: "/channel"
+  c:
+    description: "Join, leave and set active channels"
+    usage: "/c"
+  helpop:
+    description: "Send a message to server operators"
+    usage: "/helpop <message>"
+  strings:
+    description: "Tells the plugin version and allows reloading"
+    usage: "/strings version/reload"
+  chatcolor:
+    description: "Allows changing chat colors"
+    usage: "/chatcolor <color>"
+permissions:
+  strings.*:
+    description: "All Strings permissions"
+    default: op
+    children:
+      strings.chat.*: true
+      strings.socialspy: true
+  strings.chat.*:
+    description: "All chat permissions"
+    default: op
+    children:
+      strings.chat.colormsg: true
+      strings.chat.placeholdermsg: true
+      strings.chat.clear: true
+      strings.chat.clear.others: true
+      strings.chat.broadcast: true
+  strings.chat.colormsg:
+    description: "Allows coloring messages with color codes"
+    default: true
+  strings.chat.placeholdermsg:
+    description: "Allows use of placeholders in messages"
+    default: false
+  strings.chat.clear:
+    description: "Allows clearing your own chat"
+    default: false
+    children:
+      strings.chat.clear.others: false
+  strings.chat.clear.others:
+    description: "Allows clearing all players' chat"
+    default: false
+  strings.chat.broadcast:
+    description: "Allows sending server broadcasts"
+    default: false
+  strings.chat.msg:
+    description: "Allows directly messaging players"
+    default: true
+  strings.socialspy:
+    description: "Allows use of the /socialspy command"
+    default: false
+  strings.channels.<channel>:
+    description: "Allows a player to join specified channel"
+    default: false
+  strings.channels.global:
+    description: "Allows use of the /channel commands with the global channel"
+    default: true
+  strings.channel.modifyplayers:
+    description: "Allows a player to manipulate another player's channels"
+    default: false
+  strings.helpop.receive:
+    description: "Allows receiving HelpOP messages"
+    default: false
+  strings.helpop.use:
+    description: "Allows sending Help OP messages"
+    default: true
+  strings.chat.bypasscooldown:
+    description: "Allows bypassing the chat cooldown"
+    default: false
+  strings.reload:
+    description: "Allows reloading the Strings plugin"
+    default: false
+  strings.chat.filterbypass:
+    description: "Allows bypassing the chat filter"
+    default: false

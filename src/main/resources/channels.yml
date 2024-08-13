@@ -1,0 +1,104 @@
+# Strings - Channels
+#
+# All channels are defined in this channel, and information about them is stored here.
+# No matter what, a "global" channel will be present, even if this file is empty.
+# If you want to prevent players from sending messages in this channel, you can set it to disabled.
+# Permission to join a channel is given by the permission strings.channel.<channel-name>
+# The channels a player is a member of is stored in users.yml, if none of those channels exist,
+# the player will join the default "global" channel.
+# Note: a user can be a member of and receive messages from multiple channels, but messages will
+# only be sent to the player's active channel.
+# The default channel is "global".
+channels:
+  global:
+    # The format messages should be posted as in the channel.
+    # **IMPORTANT: You MUST use the {displayname} and {message} placeholders!
+    # Valid placeholders:
+    # {displayname} - player display name
+    # {prefix} - player prefix
+    # {suffix} - player suffix
+    # {message} - the player's message
+    # (!) NOTE: Compatible with PlaceholderAPI placeholders
+    format: "{prefix}{displayname}{suffix} &7» {message}"
+    # The default chat color for the channel.  Chat color plugins will override this.
+    default-color: "&f"
+    # Should an event be called when players send a message?
+    # This allows other plugins to receive the message and modify it.
+    # It's recommended to keep this on unless you want no other plugins to receive or modify chat.
+    # BUG: This will be fixed, but currently if events are not called, cool downs will not work.
+    call-event: true
+    # Should chat be filtered for profanity?
+    filter-profanity: false
+    # Should chat be filtered for URLs?
+    # A URL whitelist can be found in config.yml
+    block-urls: false
+    # Should this channel have a message cooldown?
+    # Cooldown duration is configured in config.yml
+    cooldown: false
+    # Channel Type
+    # Options:
+    # - stringchannel - a server wide channel, messages are sent to every player that is a member.
+    # - proximity - as the name says, proximity
+    # - world - a channel that only works for one world
+    # Global MUST be a stringchannel.
+    type: stringchannel
+
+  # Staff channel, which by default will not call events, in order to hide messages from plugin interference.
+  staff:
+    format: "&8[&cStaff&8] &f{prefix}{displayname}{suffix} &7» {message}"
+    default-color: "&c"
+    call-event: false
+    filter-profanity: false
+    block-urls: false
+    cooldown: false
+    type: stringchannel
+
+  # Help OP channel.
+  # This channel does not behave like a normal channel, as membership of the channel and
+  # sending messages in the channel is different.  Typical channel commands will not work with this channel,
+  # everything that can be done with this channel should be done with the /helpop command.
+  # (!) WARNING: THIS CHANNEL'S OPTIONS WILL MOVE TO CONFIG.YML IN A LATER UPDATE*
+  helpop:
+    format: "&8[&4HelpOP&8] &f{displayname} &7» {message}"
+    default-color: "&7"
+    call-event: false
+    filter-profanity: false
+    block-urls: false
+    cooldown: false
+    type: helpop
+
+  # Below are examples of a world channel and a proximity channel.
+  # World channels have the additional configuration option of "world", which is required or else the channel
+  # will not be created in game when loading.  As the name suggests, by default only players that are in the world that
+  # the channel is configured to.
+  #
+  # Proximity channels have the additional option of "distance", which is measured in blocks.  Messages sent via this type
+  # of channel are only sent to players within the specified distance.
+  #
+  # Both of these channel types can be joined with the /channel join command to receive messages regardless of world or
+  # location on the server for moderation purposes.
+
+  #world2:
+  #  format: "{prefix}{displayname}{suffix} &7» {message}"
+  #  default-color: "&f"
+  #  call-event: true
+  #  filter-profanity: false
+  #  block-urls: false
+  #  cooldown: false
+  #  type: world
+  #  world: "world2"
+
+  #proximity:
+  #  format: "&8[&cProximity&8] {prefix}{displayname}{suffix} &7» {message}"
+  #  default-color: "&f"
+  #  call-event: true;
+  #  filter-profanity: false
+  #  block-urls: false
+  #  cooldown: false
+  #  distance: 30
+  #  type: proximity
+  #  world: "world3"
+
+  # SocialSpy also runs on a type of channel, and customizations for it are found in config.yml
+  # Just as the HelpOP channel, it does not behave like a normal channel and normal channel commands will not work with it.
+  # In game, the /socialspy command is how you use the socialspy channel.
