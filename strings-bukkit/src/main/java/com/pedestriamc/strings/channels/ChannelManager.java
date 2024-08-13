@@ -3,6 +3,7 @@ package com.pedestriamc.strings.channels;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.UserUtil;
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.Type;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;

@@ -4,6 +4,7 @@ import com.pedestriamc.strings.ChatManager;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.StringsChannel;
+import com.pedestriamc.strings.api.Type;
 import com.pedestriamc.strings.impl.ChannelWrapper;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class StringChannel implements Channel, StringsChannel {
+public class StringChannel implements Channel{
 
     private final Strings strings;
     private String name;

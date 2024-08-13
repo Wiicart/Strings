@@ -2,6 +2,7 @@ package com.pedestriamc.strings.channels;
 
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.api.StringsChannel;
+import com.pedestriamc.strings.api.Type;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
