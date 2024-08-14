@@ -4,6 +4,7 @@ import com.pedestriamc.strings.ChatManager;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.ChannelChatEvent;
+import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
 import com.pedestriamc.strings.impl.ChannelWrapper;
@@ -38,9 +39,11 @@ public class WorldChannel implements Channel{
     private volatile boolean active;
     private final World world;
     private StringsChannel stringsChannel;
+    private final Membership membership;
+    private final int priority;
 
 
-    public WorldChannel(String name, String format, String defaultColor, ChannelManager channelManager, ChatManager chatManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, World world, boolean active){
+    public WorldChannel(String name, String format, String defaultColor, ChannelManager channelManager, ChatManager chatManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, World world, boolean active, Membership membership, int priority){
         strings = Strings.getInstance();
         this.members = ConcurrentHashMap.newKeySet();
         this.name = name;
@@ -54,6 +57,8 @@ public class WorldChannel implements Channel{
         this.doCooldown = doCooldown;
         this.world = world;
         this.active = active;
+        this.membership = membership;
+        this.priority = priority;
         channelManager.registerChannel(this);
     }
 
@@ -68,7 +73,7 @@ public class WorldChannel implements Channel{
         String finalMessage = message;
         if(callEvent){
             Bukkit.getScheduler().runTask(strings, () ->{
-                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this.getStringsChannel());
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, getRecipients(), this.getStringsChannel());
                 event.setFormat(format);
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()){
@@ -92,6 +97,11 @@ public class WorldChannel implements Channel{
     public Set<Player> getRecipients(){
         List<Player> list = world.getPlayers();
         list.addAll(members);
+        for(Player p : Bukkit.getOnlinePlayers()){
+            if(p.hasPermission("strings.channels." + name + ".receive")){
+                list.add(p);
+            }
+        }
         return new HashSet<>(list);
     }
 
@@ -232,6 +242,17 @@ public class WorldChannel implements Channel{
         map.put("block-urls", String.valueOf(doURLFilter));
         map.put("cooldown", String.valueOf(false));
         map.put("type", String.valueOf(this.getType()));
+        map.put("membership", String.valueOf(membership));
         return map;
+    }
+
+    @Override
+    public Membership getMembership() {
+        return membership;
+    }
+
+    @Override
+    public int getPriority() {
+        return priority;
     }
 }

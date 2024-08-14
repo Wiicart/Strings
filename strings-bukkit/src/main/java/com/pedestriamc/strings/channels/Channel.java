@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.channels;
 
 import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
 import org.bukkit.entity.Player;
@@ -145,6 +146,18 @@ public interface Channel{
      * @return A populated Map containing the Channel's information.
      */
     Map<String, String> getData();
+
+    /**
+     * Provides the Channel's default Membership enum.
+     * @return The Channel's membership enum.
+     */
+    Membership getMembership();
+
+    /**
+     * Provides the priority of the Channel.
+     * @return An int representing the priority.
+     */
+    int getPriority();
 
     StringsChannel getStringsChannel();
 

@@ -1,57 +1,49 @@
 package com.pedestriamc.strings.channels;
 
+import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.Type;
-import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.api.StringsChannel;
-import com.pedestriamc.strings.impl.ChannelWrapper;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
+import com.pedestriamc.strings.api.Type;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class SocialSpyChannel implements Channel{
+/**
+ * The channel that players are assigned to by default.
+ * This channel cannot process any messages, it instead determines the proper default channel to be used.
+ */
+public class DefaultChannel implements Channel{
 
-    private String format;
-    private final PlayerDirectMessenger playerDirectMessenger;
-    private final HashSet<Player> spiesList;
-    private StringsChannel stringsChannel;
+    private final Strings strings;
+    private final ChannelManager channelManager;
+    private final Set<Player> members;
 
-
-    public SocialSpyChannel(@NotNull ChannelManager channelmanager, PlayerDirectMessenger messenger, String format){
-        this.format = format;
-        this.playerDirectMessenger = messenger;
-        this.spiesList = new HashSet<>();
-        channelmanager.registerChannel(this);
-    }
-
-    public void sendOutMessage(Player sender, Player recipient, String message){
-        String msg = format;
-        msg = playerDirectMessenger.processPlaceholders(sender, recipient, msg);
-        msg = msg.replace("{message}", message);
-        msg = ChatColor.translateAlternateColorCodes('&', msg);
-        for(CommandSender spies : spiesList){
-            spies.sendMessage(msg);
-        }
+    public DefaultChannel(Strings strings, @NotNull ChannelManager channelManager){
+        this.strings = strings;
+        this.channelManager = channelManager;
+        this.members = ConcurrentHashMap.newKeySet();
+        channelManager.registerChannel(this);
     }
 
     @Override
     public void sendMessage(Player player, String message) {
-        for(Player p : spiesList){
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+        Channel worldChannel = channelManager.getWorldChannel(player.getWorld());
+        if(worldChannel != null){
+            worldChannel.sendMessage(player, message);
+            return;
         }
+
+
     }
 
     @Override
     public void broadcastMessage(String message) {
-        for(Player p : spiesList){
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-        }
+
     }
 
     @Override
@@ -61,17 +53,17 @@ public class SocialSpyChannel implements Channel{
 
     @Override
     public String getFormat() {
-        return format;
+        return null;
     }
 
     @Override
     public String getDefaultColor() {
-        return "&f";
+        return null;
     }
 
     @Override
     public String getName() {
-        return "socialspy";
+        return "default";
     }
 
     @Override
@@ -81,36 +73,38 @@ public class SocialSpyChannel implements Channel{
 
     @Override
     public void setDefaultColor(String defaultColor) {
+
     }
 
     @Override
     public void setFormat(String format) {
-        this.format = format;
+
     }
 
     @Override
     public void addPlayer(Player player) {
-        spiesList.add(player);
-    }
-
-    @Override
-    public void addPlayer(User user){
-        this.addPlayer(user.getPlayer());
+        members.add(player);
     }
 
     @Override
     public void removePlayer(Player player) {
-        spiesList.remove(player);
+        members.remove(player);
     }
 
     @Override
-    public void removePlayer(User user){
-        this.removePlayer(user.getPlayer());
+    public void addPlayer(User user) {
+        members.add(user.getPlayer());
+
+    }
+
+    @Override
+    public void removePlayer(User user) {
+        members.remove(user.getPlayer());
     }
 
     @Override
     public Set<Player> getMembers() {
-        return spiesList;
+        return new HashSet<>(members);
     }
 
     @Override
@@ -155,7 +149,7 @@ public class SocialSpyChannel implements Channel{
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return false;
     }
 
     @Override
@@ -174,10 +168,7 @@ public class SocialSpyChannel implements Channel{
     }
 
     @Override
-    public StringsChannel getStringsChannel(){
-        if(stringsChannel == null){
-            stringsChannel = new ChannelWrapper(this);
-        }
-        return stringsChannel;
+    public StringsChannel getStringsChannel() {
+        return null;
     }
 }

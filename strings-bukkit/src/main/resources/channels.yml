@@ -42,6 +42,19 @@ channels:
     # - world - a channel that only works for one world
     # Global MUST be a stringchannel.
     type: stringchannel
+    # The Channel membership.
+    # Options:
+    # - default
+    #     All members receive channels from default membership channels.  If a user's active channel is default, default channels
+    #     are considered when deciding what channel the message will be sent to.
+    # - permission
+    #     Players are not members of permission membership channels by default, but may still recieve messages by default if
+    #     they have the proper permission.
+    membership: default
+    # Priority
+    # When a player has the channel of default, the channel that the player's message will be sent to is determined by
+    # priority.  The higher the number, the higher the priority.
+    priority: 1
 
   # Staff channel, which by default will not call events, in order to hide messages from plugin interference.
   staff:
@@ -52,6 +65,7 @@ channels:
     block-urls: false
     cooldown: false
     type: stringchannel
+    membership: permission
 
   # Help OP channel.
   # This channel does not behave like a normal channel, as membership of the channel and
@@ -66,6 +80,7 @@ channels:
     block-urls: false
     cooldown: false
     type: helpop
+    membership: protected
 
   # Below are examples of a world channel and a proximity channel.
   # World channels have the additional configuration option of "world", which is required or else the channel
@@ -87,6 +102,8 @@ channels:
   #  cooldown: false
   #  type: world
   #  world: "world2"
+  #  membership: default
+  #  priority: 10
 
   #proximity:
   #  format: "&8[&cProximity&8] {prefix}{displayname}{suffix} &7» {message}"
@@ -98,6 +115,8 @@ channels:
   #  distance: 30
   #  type: proximity
   #  world: "world3"
+  #  membership: default
+  #  priority: 11
 
   # SocialSpy also runs on a type of channel, and customizations for it are found in config.yml
   # Just as the HelpOP channel, it does not behave like a normal channel and normal channel commands will not work with it.

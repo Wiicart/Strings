@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.impl;
 
+import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.StringsUser;
@@ -55,18 +56,18 @@ public class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active) {
-        return channelManager.createChannel(name, format, defaultColor, callEvent, doURLFilter, doProfanityFilter, doCooldown, active).getStringsChannel();
+    public StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, Membership membership, int priority) {
+        return channelManager.createChannel(name, format, defaultColor, callEvent, doURLFilter, doProfanityFilter, doCooldown, active, membership, priority).getStringsChannel();
     }
 
     @Override
-    public StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, World world) {
-        return channelManager.createChannel(name, format, defaultColor, callEvent, doURLFilter, doProfanityFilter, doCooldown, active, world).getStringsChannel();
+    public StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, World world, Membership membership, int priority) {
+        return channelManager.createChannel(name, format, defaultColor, callEvent, doURLFilter, doProfanityFilter, doCooldown, active, world, membership, priority).getStringsChannel();
     }
 
     @Override
-    public StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance) {
-        return channelManager.createChannel(name, format, defaultColor, callEvent, doURLFilter, doProfanityFilter, doCooldown, active, distance).getStringsChannel();
+    public StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance, Membership membership, int priority) {
+        return channelManager.createChannel(name, format, defaultColor, callEvent, doURLFilter, doProfanityFilter, doCooldown, active, distance, membership, priority).getStringsChannel();
     }
 
     @Override

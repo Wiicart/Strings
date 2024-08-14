@@ -48,9 +48,11 @@ public interface StringsAPI {
      * @param doProfanityFilter Should this channel filter profanity?
      * @param doCooldown Should this channel have chat cool-downs?
      * @param active Is this channel active?
+     * @param membership The default membership of the Channel.
+     * @param priority The Channel's priority.
      * @return A new StringsChannel that has been registered with Strings.
      */
-    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active);
+    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, Membership membership, int priority);
 
     /**
      * Creates a World StringsChannel that is Type.WORLD.
@@ -63,9 +65,11 @@ public interface StringsAPI {
      * @param doCooldown Should this channel have chat cool-downs?
      * @param active Is this channel active?
      * @param world The world the channel is for.
+     * @param membership The default membership of the Channel.
+     * @param priority The Channel's priority.
      * @return A new StringsChannel that has been registered with Strings.
      */
-    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, World world);
+    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, World world, Membership membership, int priority);
 
     /**
      * Creates a Proximity StringsChannel that is Type.PROXIMITY.
@@ -78,9 +82,11 @@ public interface StringsAPI {
      * @param doCooldown Should this channel have chat cool-downs?
      * @param active Is this channel active?
      * @param distance The proximity players have to be within to receive messages.
+     * @param membership The default membership of the Channel.
+     * @param priority The Channel's priority.
      * @return A new StringsChannel that has been registered with Strings.
      */
-    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance);
+    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance, Membership membership, int priority);
 
     /**
      * Deletes a StringsChannel and removes it from the channels file.

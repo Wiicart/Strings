@@ -4,6 +4,7 @@ import com.pedestriamc.strings.ChatManager;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.api.ChannelChatEvent;
+import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
 import com.pedestriamc.strings.impl.ChannelWrapper;
@@ -201,5 +202,15 @@ public class HelpOPChannel implements Channel {
     @Override
     public Map<String, String> getData() {
         return null;
+    }
+
+    @Override
+    public Membership getMembership() {
+        return Membership.PROTECTED;
+    }
+
+    @Override
+    public int getPriority() {
+        return -1;
     }
 }

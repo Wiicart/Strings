@@ -4,6 +4,7 @@ import com.pedestriamc.strings.ChatManager;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.ChannelChatEvent;
+import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
 import com.pedestriamc.strings.impl.ChannelWrapper;
@@ -15,9 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StringChannel implements Channel{
@@ -35,8 +34,10 @@ public class StringChannel implements Channel{
     private final ChannelManager channelManager;
     private  boolean doCooldown;
     private StringsChannel stringsChannel;
+    private final Membership membership;
+    private final int priority;
 
-    public StringChannel(@NotNull Strings strings, String name, String format, String defaultColor, @NotNull ChannelManager channelManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active){
+    public StringChannel(@NotNull Strings strings, String name, String format, String defaultColor, @NotNull ChannelManager channelManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, Membership membership, int priority){
         this.strings = strings;
         this.name = name;
         this.members = ConcurrentHashMap.newKeySet();
@@ -49,6 +50,8 @@ public class StringChannel implements Channel{
         this.profanityFilter = doProfanityFilter;
         this.channelManager = channelManager;
         this.doCooldown = doCooldown;
+        this.membership = membership;
+        this.priority = priority;
         channelManager.registerChannel(this);
     }
 
@@ -63,12 +66,12 @@ public class StringChannel implements Channel{
         String finalMessage = message;
         if(callEvent){
             Bukkit.getScheduler().runTask(strings, () -> {
-                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this.getStringsChannel());
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, getRecipients(), this.getStringsChannel());
                 event.setFormat(format);
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()){
                     String formattedMessage = String.format(event.getFormat(), strings.getUser(player).getDisplayName(), event.getMessage());
-                    for(Player p : members){
+                    for(Player p : getRecipients()){
                         p.sendMessage(formattedMessage);
                     }
                     Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
@@ -76,16 +79,27 @@ public class StringChannel implements Channel{
             });
         }else{
             String formattedMessage = String.format(format, player.getDisplayName(), message);
-            for(Player p : members){
+            for(Player p : getRecipients()){
                 p.sendMessage(formattedMessage);
             }
             Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
         }
     }
 
+    public Set<Player> getRecipients(){
+        List<Player> list = new ArrayList<>(members);
+        for(Player p : Bukkit.getOnlinePlayers()){
+            if(p.hasPermission("strings.channels." + name + ".receive")){
+                list.add(p);
+            }
+        }
+        return new HashSet<>(list);
+    }
+
+
     @Override
     public void broadcastMessage(String message){
-        for(Player p : members){
+        for(Player p : getRecipients()){
             p.sendMessage(message);
         }
     }
@@ -216,6 +230,17 @@ public class StringChannel implements Channel{
         map.put("block-urls", String.valueOf(urlFilter));
         map.put("cooldown", String.valueOf(doCooldown));
         map.put("type", String.valueOf(this.getType()));
+        map.put("membership", String.valueOf(membership));
         return map;
+    }
+
+    @Override
+    public Membership getMembership() {
+        return membership;
+    }
+
+    @Override
+    public int getPriority() {
+        return priority;
     }
 }

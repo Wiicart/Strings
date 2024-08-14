@@ -4,6 +4,7 @@ import com.pedestriamc.strings.ChatManager;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.ChannelChatEvent;
+import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
 import com.pedestriamc.strings.impl.ChannelWrapper;
@@ -38,8 +39,10 @@ public class ProximityChannel implements Channel{
     private boolean doCooldown;
     private int distance;
     private StringsChannel stringsChannel;
+    private final Membership membership;
+    private final int priority;
 
-    public ProximityChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, ChatManager chatManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, int distance, boolean active){
+    public ProximityChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, ChatManager chatManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, int distance, boolean active, Membership membership, int priority){
         this.strings = strings;
         this.name = name;
         this.format = format;
@@ -52,6 +55,8 @@ public class ProximityChannel implements Channel{
         this.doCooldown = doCooldown;
         this.distance = distance;
         this.members = ConcurrentHashMap.newKeySet();
+        this.membership = membership;
+        this.priority = priority;
         channelManager.registerChannel(this);
     }
 
@@ -98,6 +103,8 @@ public class ProximityChannel implements Channel{
         World world = sender.getWorld();
         for(Player p : world.getPlayers()){
             if(sender.getLocation().distance(p.getLocation()) < distance){
+                players.add(p);
+            }else if(p.hasPermission("strings.channels." + name + ".receive")){
                 players.add(p);
             }
         }
@@ -237,6 +244,17 @@ public class ProximityChannel implements Channel{
         map.put("block-urls", String.valueOf(doURLFilter));
         map.put("cooldown", String.valueOf(doCooldown));
         map.put("type", String.valueOf(this.getType()));
+        map.put("membership", String.valueOf(membership));
         return map;
+    }
+
+    @Override
+    public Membership getMembership() {
+        return membership;
+    }
+
+    @Override
+    public int getPriority() {
+        return priority;
     }
 }
