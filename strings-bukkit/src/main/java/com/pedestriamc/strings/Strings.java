@@ -1,8 +1,11 @@
 package com.pedestriamc.strings;
 
+import com.pedestriamc.strings.api.StringsAPI;
+import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.channels.Channel;
 import com.pedestriamc.strings.channels.ChannelManager;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
+import com.pedestriamc.strings.impl.StringsImpl;
 import com.pedestriamc.strings.listeners.ChatListener;
 import com.pedestriamc.strings.listeners.DirectMessageListener;
 import com.pedestriamc.strings.listeners.JoinListener;
@@ -28,6 +31,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import com.pedestriamc.strings.commands.*;
@@ -71,6 +75,7 @@ public final class Strings extends JavaPlugin {
     private boolean useCustomJoinLeave;
     private boolean isPaper = false;
     private StringsLogger stringsLogger;
+    private StringsImpl stringsImpl;
 
     @Override
     public void onEnable() {
@@ -83,6 +88,7 @@ public final class Strings extends JavaPlugin {
         this.instantiateObjects();
         this.registerClasses();
         this.setupVault();
+        this.setupAPI();
         Messenger.initialize();
         if(config.getBoolean("enable-logger")){
             setupLogger();
@@ -110,6 +116,8 @@ public final class Strings extends JavaPlugin {
         this.autoBroadcasts = null;
         HandlerList.unregisterAll(this);
         this.getServer().getScheduler().cancelTasks(this);
+        this.getServer().getServicesManager().unregister(StringsAPI.class, stringsImpl);
+        this.stringsImpl = null;
         logger.info("[Strings] Disabled");
     }
 
@@ -117,6 +125,13 @@ public final class Strings extends JavaPlugin {
     Private methods
      */
     //Register commands and listeners
+
+    private void setupAPI(){
+        stringsImpl = new StringsImpl(this);
+        StringsProvider.setApi(stringsImpl);
+        //getServer().getServicesManager().register(StringsAPI.class, stringsImpl, this, ServicePriority.Highest);
+    }
+
     private void registerClasses(){
         this.getCommand("strings").setExecutor(new StringsCommand());
         this.getCommand("helpop").setExecutor(new HelpOPCommand());

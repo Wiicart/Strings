@@ -28,4 +28,10 @@ public interface StringsAPI {
      * @return An Optional containing a StringsUser if the StringsUser exists.
      */
     Optional<StringsUser> getStringsUser(UUID uuid);
+
+    /**
+     * Provides a short with the plugin's version number.
+     * @return A short with the version.
+     */
+    short getVersion();
 }

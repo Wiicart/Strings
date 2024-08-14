@@ -325,7 +325,7 @@ public class User {
      * Provides the StringsUser of this User.
      * @return A new StringsUser
      */
-    StringsUser toStringsUser(){
+    public StringsUser getStringsUser(){
         if(stringsUser == null){
             stringsUser = (StringsUser) new UserWrapper(this);
         }
