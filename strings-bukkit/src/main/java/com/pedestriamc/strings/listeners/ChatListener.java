@@ -17,7 +17,7 @@ public class ChatListener implements Listener {
 
     private final ChatManager chatManager = Strings.getInstance().getChatManager();
     private final ChannelManager channelManager = Strings.getInstance().getChannelManager();
-    private final Channel global = channelManager.getChannel("global");
+    private final Channel defaultChannel = channelManager.getChannel("default");
 
     @EventHandler
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
@@ -32,15 +32,8 @@ public class ChatListener implements Listener {
         User user = Strings.getInstance().getUser(playerSender);
         Channel channel = user.getActiveChannel();
 
-
-        Channel worldChannel = channelManager.getWorldChannel(user.getWorld());
-
-        if(worldChannel != null){
-            channel = worldChannel;
-        }
-
         if(channel == null){
-            user.setActiveChannel(Strings.getInstance().getChannel("global"));
+            user.setActiveChannel(defaultChannel);
         }
         if(chatManager.isOnCoolDown(playerSender) && user.getActiveChannel().doCooldown()){
             event.setCancelled(true);

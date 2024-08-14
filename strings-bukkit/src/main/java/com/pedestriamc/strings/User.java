@@ -62,14 +62,14 @@ public class User {
         this.displayName = displayName;
         this.player = Bukkit.getPlayer(uuid);
         this.name = player != null ? player.getName() : null;
-        this.activeChannel = activeChannel != null ? activeChannel : strings.getChannel("global");
+        this.activeChannel = activeChannel != null ? activeChannel : strings.getChannel("default");
         this.channels = Objects.requireNonNullElseGet(channels, HashSet::new);
         if(channels != null){
             for(Channel channel : channels){
                 channel.addPlayer(this.player);
             }
         }else{
-            this.joinChannel(strings.getChannel("global"));
+            this.joinChannel(strings.getChannel("default"));
         }
         UserUtil.saveUser(this);
         UserUtil.UserMap.addUser(this);
@@ -277,7 +277,7 @@ public class User {
         channels.remove(channel);
         channel.removePlayer(this.getPlayer());
         if(activeChannel.equals(channel)){
-            activeChannel = strings.getChannel("global");
+            activeChannel = strings.getChannel("default");
         }
         UserUtil.saveUser(this);
     }

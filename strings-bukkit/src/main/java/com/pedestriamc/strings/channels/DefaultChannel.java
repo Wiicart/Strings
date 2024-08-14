@@ -5,6 +5,7 @@ import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,13 +33,17 @@ public class DefaultChannel implements Channel{
 
     @Override
     public void sendMessage(Player player, String message) {
-        Channel worldChannel = channelManager.getWorldChannel(player.getWorld());
-        if(worldChannel != null){
-            worldChannel.sendMessage(player, message);
+        Channel[] worldChannels = channelManager.getWorldChannels(player.getWorld());
+        if(worldChannels.length > 0){
+            worldChannels[0].sendMessage(player, message);
             return;
         }
-
-
+        Channel[] defaultMembership = channelManager.getPriorityChannels();
+        if(defaultMembership.length > 0){
+            defaultMembership[0].sendMessage(player, message);
+            return;
+        }
+        player.sendMessage(ChatColor.RED + "[Strings] You aren't a member of any channels.  Please contact staff for help.");
     }
 
     @Override

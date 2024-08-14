@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * A class to load, maintain references to and manage all Channels.
@@ -26,6 +25,7 @@ public class ChannelManager {
     private final ConcurrentHashMap<World, Channel> worldChannels;
     private final Set<Channel> defaultMembershipChannels;
     private final FileConfiguration config;
+    private Channel[] channelsPrioritySorted;
 
     /**
      * Creates a new instance of the ChannelManager and loads Channels from the channels.yml file.
@@ -128,6 +128,7 @@ public class ChannelManager {
         String socialSpyFormat = strings.getConfig().getString("social-spy-format");
         Bukkit.getLogger().info("[Strings] Loading channel 'socialspy'..");
         new SocialSpyChannel(this, strings.getPlayerDirectMessenger(), socialSpyFormat);
+        new DefaultChannel(strings, this);
 
     }
 
@@ -155,8 +156,8 @@ public class ChannelManager {
      * @param channel The Channel to be deleted.
      */
     public void deleteChannel(@NotNull Channel channel){
-        if(channel.getName().equalsIgnoreCase("global")){
-            Bukkit.getLogger().info("[Strings] Unable to delete global channel.");
+        if(channel.getName().equalsIgnoreCase("global") || channel.getName().equalsIgnoreCase("default")){
+            Bukkit.getLogger().info("[Strings] Unable to delete global/default channels.");
             return;
         }
         this.unregisterChannel(channel);
@@ -175,6 +176,16 @@ public class ChannelManager {
         if(channel.getMembership() == Membership.DEFAULT){
             defaultMembershipChannels.add(channel);
         }
+
+        ArrayList<Channel> prChannels = new ArrayList<>();
+        for(Map.Entry<String, Channel> entry : channels.entrySet()){
+            if(entry.getValue().getMembership() == Membership.DEFAULT && entry.getValue().getType() != Type.WORLD){
+                prChannels.add(entry.getValue());
+            }
+        }
+        prChannels.sort(Comparator.comparing(Channel::getPriority).reversed());
+        channelsPrioritySorted = prChannels.toArray(new Channel[0]);
+
         Bukkit.getLogger().info("[Strings] Channel '" + channel.getName() + "' registered.");
     }
 
@@ -216,6 +227,7 @@ public class ChannelManager {
      * @param world The World the channel should be for
      * @return The Channel for the specified world, if it exists.
      */
+    @Deprecated
     @Nullable
     public Channel getWorldChannel(World world){ return worldChannels.get(world); }
 
@@ -224,6 +236,7 @@ public class ChannelManager {
      * @param world The name of the World the channel should be for
      * @return The Channel for the specified world, if it exists.
      */
+    @Deprecated
     @Nullable
     public Channel getWorldChannel(String world){ return getWorldChannel(Bukkit.getWorld(world)); }
 
@@ -297,5 +310,20 @@ public class ChannelManager {
     public Channel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance, Membership membership, int priority){
         return new ProximityChannel(strings, name, format, defaultColor, this, strings.getChatManager(), callEvent, doURLFilter, doProfanityFilter, doCooldown, distance, active, membership, priority);
 
+    }
+
+    public Channel[] getWorldChannels(World world){
+        ArrayList<Channel> wChannels = new ArrayList<>();
+        for(Map.Entry<World, Channel> entry : worldChannels.entrySet()){
+            if(entry.getKey().equals(world)){
+                wChannels.add(entry.getValue());
+            }
+        }
+        wChannels.sort(Comparator.comparing(Channel::getPriority).reversed());
+        return wChannels.toArray(new Channel[0]);
+    }
+
+    public Channel[] getPriorityChannels(){
+        return Arrays.copyOf(channelsPrioritySorted, channelsPrioritySorted.length);
     }
 }
