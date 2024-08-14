@@ -5,8 +5,11 @@ import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.api.Type;
 import com.pedestriamc.strings.channels.Channel;
+import com.pedestriamc.strings.channels.WorldChannel;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
 import java.util.Set;
 
 public record ChannelWrapper(Channel channel) implements StringsChannel {
@@ -110,5 +113,13 @@ public record ChannelWrapper(Channel channel) implements StringsChannel {
     @Override
     public boolean isEnabled() {
         return channel.isEnabled();
+    }
+
+    @Override
+    public Optional<World> getWorld() {
+        if(channel.getType() == Type.WORLD){
+            return Optional.of(((WorldChannel) channel).getWorld());
+        }
+        return Optional.empty();
     }
 }

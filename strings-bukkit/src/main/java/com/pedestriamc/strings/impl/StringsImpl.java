@@ -1,12 +1,11 @@
 package com.pedestriamc.strings.impl;
 
-import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.channels.Channel;
 import com.pedestriamc.strings.channels.ChannelManager;
+import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -16,11 +15,11 @@ import java.util.stream.Collectors;
 
 public class StringsImpl implements StringsAPI {
 
-    private final Strings strings;
+    private final com.pedestriamc.strings.Strings strings;
     private final ChannelManager channelManager;
     private final short version = 1;
 
-    public StringsImpl(@NotNull Strings strings){
+    public StringsImpl(@NotNull com.pedestriamc.strings.Strings strings){
         this.strings = strings;
         this.channelManager = strings.getChannelManager();
     }
@@ -43,11 +42,16 @@ public class StringsImpl implements StringsAPI {
 
     @Override
     public Optional<StringsUser> getStringsUser(UUID uuid) {
-        User user = strings.getUser(uuid);
-        if(user == null){
+        return Optional.ofNullable(strings.getUser(uuid).getStringsUser());
+    }
+
+    @Override
+    public Optional<StringsChannel> getChannel(World world) {
+        Channel channel = channelManager.getWorldChannel(world);
+        if(channel == null){
             return Optional.empty();
         }
-        return Optional.of(user.getStringsUser());
+        return Optional.of(channel.getStringsChannel());
     }
 
     public short getVersion(){

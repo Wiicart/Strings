@@ -1,7 +1,9 @@
 package com.pedestriamc.strings.api;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
 import java.util.Set;
 
 public interface StringsChannel {
@@ -121,4 +123,10 @@ public interface StringsChannel {
      */
     boolean isEnabled();
 
+    /**
+     * Provides the World the StringsChannel is for.
+     * If the StringsChannel is not a WorldChannel, the Optional will be empty.
+     * @return The World the StringsChannel is for, if it's a WorldChannel.
+     */
+    Optional<World> getWorld();
 }

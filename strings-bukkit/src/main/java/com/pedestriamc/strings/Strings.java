@@ -31,10 +31,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import com.pedestriamc.strings.commands.*;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -128,8 +126,7 @@ public final class Strings extends JavaPlugin {
 
     private void setupAPI(){
         stringsImpl = new StringsImpl(this);
-        StringsProvider.setApi(stringsImpl);
-        //getServer().getServicesManager().register(StringsAPI.class, stringsImpl, this, ServicePriority.Highest);
+        StringsProvider.register(stringsImpl);
     }
 
     private void registerClasses(){
@@ -327,7 +324,7 @@ public final class Strings extends JavaPlugin {
     }
     public void saveChannelsFile(){
         try{
-            channelsFileConfig.save(usersFile);
+            channelsFileConfig.save(channelsFile);
         }catch(IOException e){
             e.printStackTrace();
         }

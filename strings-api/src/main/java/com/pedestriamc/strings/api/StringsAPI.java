@@ -1,5 +1,7 @@
 package com.pedestriamc.strings.api;
 
+import org.bukkit.World;
+
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -30,8 +32,16 @@ public interface StringsAPI {
     Optional<StringsUser> getStringsUser(UUID uuid);
 
     /**
+     * Provides the WorldChannel for a World, if it exists.
+     * @param world The World to search with.
+     * @return An Optional that contains the StringsChannel if it exists.
+     */
+    Optional<StringsChannel> getChannel(World world);
+
+    /**
      * Provides a short with the plugin's version number.
      * @return A short with the version.
      */
     short getVersion();
 }
+
