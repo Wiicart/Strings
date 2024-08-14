@@ -266,4 +266,17 @@ public class ChannelManager {
         }
         return list;
     }
+
+    public Channel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active){
+        return new StringChannel(strings, name, format, defaultColor, this, callEvent, doURLFilter, doProfanityFilter, doCooldown, active);
+    }
+
+    public Channel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, World world){
+        return new WorldChannel(name, format, defaultColor, this, strings.getChatManager(), callEvent, doURLFilter, doProfanityFilter, doCooldown, world, active);
+    }
+
+    public Channel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance){
+        return new ProximityChannel(strings, name, format, defaultColor, this, strings.getChatManager(), callEvent, doURLFilter, doProfanityFilter, doCooldown, distance, active);
+
+    }
 }

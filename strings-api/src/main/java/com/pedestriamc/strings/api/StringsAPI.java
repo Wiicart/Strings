@@ -43,5 +43,6 @@ public interface StringsAPI {
      * @return A short with the version.
      */
     short getVersion();
+
 }
 

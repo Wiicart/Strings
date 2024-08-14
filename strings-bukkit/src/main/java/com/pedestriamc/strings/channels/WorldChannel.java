@@ -3,9 +3,12 @@ package com.pedestriamc.strings.channels;
 import com.pedestriamc.strings.ChatManager;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.ChannelChatEvent;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
 import com.pedestriamc.strings.impl.ChannelWrapper;
+import com.pedestriamc.strings.message.Message;
+import com.pedestriamc.strings.message.Messenger;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -56,12 +59,16 @@ public class WorldChannel implements Channel{
 
     @Override
     public void sendMessage(Player player, String message) {
+        if(!active){
+            Messenger.sendMessage(Message.CHANNEL_DISABLED, player);
+            return;
+        }
         String format = chatManager.formatMessage(player, this);
         message = chatManager.processMessage(player, message);
         String finalMessage = message;
         if(callEvent){
             Bukkit.getScheduler().runTask(strings, () ->{
-                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this);
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this.getStringsChannel());
                 event.setFormat(format);
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()){

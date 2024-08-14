@@ -3,6 +3,7 @@ package com.pedestriamc.strings.channels;
 import com.pedestriamc.strings.ChatManager;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.api.ChannelChatEvent;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
 import com.pedestriamc.strings.impl.ChannelWrapper;
@@ -64,7 +65,7 @@ public class HelpOPChannel implements Channel {
         String finalMessage = message;
         if(callEvent){
             Bukkit.getScheduler().runTask(strings, () ->{
-                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this);
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this.getStringsChannel());
                 event.setFormat(format);
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()){

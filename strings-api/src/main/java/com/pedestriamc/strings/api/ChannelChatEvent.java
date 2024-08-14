@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.channels;
+package com.pedestriamc.strings.api;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public class ChannelChatEvent extends AsyncPlayerChatEvent {
 
-    private final Channel channel;
+    private final StringsChannel channel;
 
     /**
      * @param async   This changes the event to a synchronous state.
@@ -20,7 +20,7 @@ public class ChannelChatEvent extends AsyncPlayerChatEvent {
      * @param players the players to receive the message. This may be a lazy
      * @param channel the channel which the message will be sent to
      */
-    public ChannelChatEvent(boolean async, @NotNull Player who, @NotNull String message, @NotNull Set<Player> players, Channel channel) {
+    public ChannelChatEvent(boolean async, @NotNull Player who, @NotNull String message, @NotNull Set<Player> players, StringsChannel channel) {
         super(async, who, message, players);
         this.channel = channel;
     }
@@ -29,7 +29,7 @@ public class ChannelChatEvent extends AsyncPlayerChatEvent {
      * Provides the Channel the message is being sent to.
      * @return The Channel.
      */
-    public Channel getChannel(){
+    public StringsChannel getChannel(){
         return channel;
     }
 }

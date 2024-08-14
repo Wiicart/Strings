@@ -124,11 +124,6 @@ public final class Strings extends JavaPlugin {
      */
     //Register commands and listeners
 
-    private void setupAPI(){
-        stringsImpl = new StringsImpl(this);
-        StringsProvider.register(stringsImpl);
-    }
-
     private void registerClasses(){
         this.getCommand("strings").setExecutor(new StringsCommand());
         this.getCommand("helpop").setExecutor(new HelpOPCommand());
@@ -286,6 +281,11 @@ public final class Strings extends JavaPlugin {
             saveResource("log.txt", false);
         }
         stringsLogger = new StringsLogger(this, file);
+    }
+
+    private void setupAPI(){
+        stringsImpl = new StringsImpl(this);
+        StringsProvider.register(stringsImpl, this);
     }
 
     /*

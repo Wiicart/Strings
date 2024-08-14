@@ -3,9 +3,12 @@ package com.pedestriamc.strings.channels;
 import com.pedestriamc.strings.ChatManager;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.ChannelChatEvent;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
 import com.pedestriamc.strings.impl.ChannelWrapper;
+import com.pedestriamc.strings.message.Message;
+import com.pedestriamc.strings.message.Messenger;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -54,7 +57,10 @@ public class ProximityChannel implements Channel{
 
     @Override
     public void sendMessage(@NotNull Player player, String message) {
-
+        if(!active){
+            Messenger.sendMessage(Message.CHANNEL_DISABLED, player);
+            return;
+        }
         HashSet<Player> receivers = new HashSet<>(getRecipients(player));
         receivers.addAll(members);
         String format = chatManager.formatMessage(player, this);
@@ -63,7 +69,7 @@ public class ProximityChannel implements Channel{
 
         if(callEvent){
             Bukkit.getScheduler().runTask(strings, () ->{
-                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, receivers, this);
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, receivers, this.getStringsChannel());
                 event.setFormat(format);
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()){
@@ -87,7 +93,7 @@ public class ProximityChannel implements Channel{
     }
 
     //https://www.spigotmc.org/threads/getting-player-distance-to-another-player.343523/
-    private @NotNull HashSet<Player> getRecipients(Player sender){
+    private @NotNull HashSet<Player> getRecipients(@NotNull Player sender){
         HashSet<Player> players = new HashSet<>();
         World world = sender.getWorld();
         for(Player p : world.getPlayers()){
