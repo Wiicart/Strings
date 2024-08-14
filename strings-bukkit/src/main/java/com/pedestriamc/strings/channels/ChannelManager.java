@@ -148,6 +148,7 @@ public class ChannelManager {
             Bukkit.getLogger().info("[Strings] Unable to delete global channel.");
             return;
         }
+        this.unregisterChannel(channel);
         config.set("channels." + channel.getName(), null);
     }
 

@@ -113,6 +113,7 @@ public interface StringsChannel {
 
     /**
      * Allows the enabling and disabling of the Channel.
+     * When a channel is disabled it still exists, however messages can't be sent in the channel.
      * @param isEnabled If the Channel should be enabled/disabled.
      */
     void setEnabled(boolean isEnabled);

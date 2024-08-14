@@ -54,6 +54,27 @@ public class StringsImpl implements StringsAPI {
         return Optional.of(channel.getStringsChannel());
     }
 
+    @Override
+    public StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active) {
+        return channelManager.createChannel(name, format, defaultColor, callEvent, doURLFilter, doProfanityFilter, doCooldown, active).getStringsChannel();
+    }
+
+    @Override
+    public StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, World world) {
+        return channelManager.createChannel(name, format, defaultColor, callEvent, doURLFilter, doProfanityFilter, doCooldown, active, world).getStringsChannel();
+    }
+
+    @Override
+    public StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance) {
+        return channelManager.createChannel(name, format, defaultColor, callEvent, doURLFilter, doProfanityFilter, doCooldown, active, distance).getStringsChannel();
+    }
+
+    @Override
+    public void deleteChannel(StringsChannel channel) {
+        ChannelWrapper wrapper = (ChannelWrapper) channel;
+        channelManager.deleteChannel(wrapper.getChannel());
+    }
+
     public short getVersion(){
         return version;
     }

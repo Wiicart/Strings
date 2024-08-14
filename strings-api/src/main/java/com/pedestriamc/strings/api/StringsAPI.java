@@ -39,6 +39,58 @@ public interface StringsAPI {
     Optional<StringsChannel> getChannel(World world);
 
     /**
+     * Creates a StringsChannel that is Type.NORMAL.
+     * @param name The name of the channel.
+     * @param format The format of the channel.
+     * @param defaultColor The default chat color of the channel.
+     * @param callEvent Should this channel call events when players send messages?
+     * @param doURLFilter Should this channel filter out URLs?
+     * @param doProfanityFilter Should this channel filter profanity?
+     * @param doCooldown Should this channel have chat cool-downs?
+     * @param active Is this channel active?
+     * @return A new StringsChannel that has been registered with Strings.
+     */
+    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active);
+
+    /**
+     * Creates a World StringsChannel that is Type.WORLD.
+     * @param name The name of the channel.
+     * @param format The format of the channel.
+     * @param defaultColor The default color of the channel.
+     * @param callEvent Should this channel call events when players send messages?
+     * @param doURLFilter Should this channel filter out URLs?
+     * @param doProfanityFilter Should this channel filter profanity?
+     * @param doCooldown Should this channel have chat cool-downs?
+     * @param active Is this channel active?
+     * @param world The world the channel is for.
+     * @return A new StringsChannel that has been registered with Strings.
+     */
+    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, World world);
+
+    /**
+     * Creates a Proximity StringsChannel that is Type.PROXIMITY.
+     * @param name The name of the channel.
+     * @param format The format of the channel.
+     * @param defaultColor The default color of the channel.
+     * @param callEvent Should this channel call events when players send messages?
+     * @param doURLFilter Should this channel filter out URLs?
+     * @param doProfanityFilter Should this channel filter profanity?
+     * @param doCooldown Should this channel have chat cool-downs?
+     * @param active Is this channel active?
+     * @param distance The proximity players have to be within to receive messages.
+     * @return A new StringsChannel that has been registered with Strings.
+     */
+    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance);
+
+    /**
+     * Deletes a StringsChannel and removes it from the channels file.
+     * This is permanent and cannot be recovered!
+     * As a global channel must exist, this method will not delete the global channel.
+     * @param channel The StringsChannel to be deleted.
+     */
+    void deleteChannel(StringsChannel channel);
+
+    /**
      * Provides a short with the plugin's version number.
      * @return A short with the version.
      */

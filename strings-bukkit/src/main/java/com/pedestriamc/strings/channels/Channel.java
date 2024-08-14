@@ -43,6 +43,7 @@ public interface Channel{
      */
     String getDefaultColor();
 
+
     /**
      * Provides the Channel's name.
      * @return The Channel name.
@@ -103,17 +104,23 @@ public interface Channel{
      */
     boolean doURLFilter();
 
+    void setURLFilter(boolean doURLFilter);
+
     /**
      * Tells if the Channel requires profanity filtering.
      * @return If the Channel does profanity filtering.
      */
     boolean doProfanityFilter();
 
+    void setProfanityFilter(boolean doProfanityFilter);
+
     /**
      * Tells if the Channel requires a chat cool-down.
      * @return If the Channel does a chat cool-down.
      */
     boolean doCooldown();
+
+    void setDoCooldown(boolean doCooldown);
 
     /**
      * Provides the Channel's Type.

@@ -30,10 +30,10 @@ public class StringChannel implements Channel{
     private final Set<Player> members;
     private final ChatManager chatManager;
     private volatile boolean active;
-    private final boolean urlFilter;
-    private final boolean profanityFilter;
+    private  boolean urlFilter;
+    private  boolean profanityFilter;
     private final ChannelManager channelManager;
-    private final boolean doCooldown;
+    private  boolean doCooldown;
     private StringsChannel stringsChannel;
 
     public StringChannel(@NotNull Strings strings, String name, String format, String defaultColor, @NotNull ChannelManager channelManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active){
@@ -156,13 +156,31 @@ public class StringChannel implements Channel{
     }
 
     @Override
+    public void setURLFilter(boolean doURLFilter) {
+        this.urlFilter = doURLFilter;
+        channelManager.saveChannel(this);
+    }
+
+    @Override
     public boolean doProfanityFilter() {
         return profanityFilter;
     }
 
     @Override
+    public void setProfanityFilter(boolean doProfanityFilter) {
+        this.profanityFilter = doProfanityFilter;
+        channelManager.saveChannel(this);
+    }
+
+    @Override
     public boolean doCooldown() {
         return this.doCooldown;
+    }
+
+    @Override
+    public void setDoCooldown(boolean doCooldown) {
+        this.doCooldown = doCooldown;
+        channelManager.saveChannel(this);
     }
 
     @Override

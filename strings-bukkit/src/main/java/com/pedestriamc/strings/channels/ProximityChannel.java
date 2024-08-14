@@ -177,13 +177,31 @@ public class ProximityChannel implements Channel{
     }
 
     @Override
+    public void setURLFilter(boolean doURLFilter) {
+        this.doURLFilter = doURLFilter;
+        channelManager.saveChannel(this);
+    }
+
+    @Override
     public boolean doProfanityFilter() {
         return doProfanityFilter;
     }
 
     @Override
+    public void setProfanityFilter(boolean doProfanityFilter) {
+        this.doProfanityFilter = doProfanityFilter;
+        channelManager.saveChannel(this);
+    }
+
+    @Override
     public boolean doCooldown() {
         return doCooldown;
+    }
+
+    @Override
+    public void setDoCooldown(boolean doCooldown) {
+        this.doCooldown = doCooldown;
+        channelManager.saveChannel(this);
     }
 
     @Override

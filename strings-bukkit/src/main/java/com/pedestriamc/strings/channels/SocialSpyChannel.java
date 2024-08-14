@@ -8,6 +8,7 @@ import com.pedestriamc.strings.impl.ChannelWrapper;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -21,7 +22,7 @@ public class SocialSpyChannel implements Channel{
     private StringsChannel stringsChannel;
 
 
-    public SocialSpyChannel(ChannelManager channelmanager, PlayerDirectMessenger messenger, String format){
+    public SocialSpyChannel(@NotNull ChannelManager channelmanager, PlayerDirectMessenger messenger, String format){
         this.format = format;
         this.playerDirectMessenger = messenger;
         this.spiesList = new HashSet<>();
@@ -117,13 +118,28 @@ public class SocialSpyChannel implements Channel{
     }
 
     @Override
+    public void setURLFilter(boolean doURLFilter) {
+
+    }
+
+    @Override
     public boolean doProfanityFilter() {
         return false;
     }
 
     @Override
+    public void setProfanityFilter(boolean doProfanityFilter) {
+
+    }
+
+    @Override
     public boolean doCooldown() {
         return false;
+    }
+
+    @Override
+    public void setDoCooldown(boolean doCooldown) {
+
     }
 
     @Override

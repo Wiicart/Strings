@@ -27,8 +27,8 @@ public class HelpOPChannel implements Channel {
     private String format;
     private String defaultColor;
     private final ChannelManager channelManager;
-    private final boolean urlFilter;
-    private final boolean profanityFilter;
+    private boolean urlFilter;
+    private boolean profanityFilter;
     private StringsChannel stringsChannel;
 
     public HelpOPChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean urlFilter, boolean profanityFilter) {
@@ -149,13 +149,30 @@ public class HelpOPChannel implements Channel {
     }
 
     @Override
+    public void setURLFilter(boolean doURLFilter) {
+        this.urlFilter = doURLFilter;
+        channelManager.saveChannel(this);
+
+    }
+
+    @Override
     public boolean doProfanityFilter() {
         return profanityFilter;
     }
 
     @Override
+    public void setProfanityFilter(boolean doProfanityFilter) {
+        this.profanityFilter = doProfanityFilter;
+        channelManager.saveChannel(this);
+    }
+
+    @Override
     public boolean doCooldown() {
         return false;
+    }
+
+    @Override
+    public void setDoCooldown(boolean doCooldown) {
     }
 
     @Override

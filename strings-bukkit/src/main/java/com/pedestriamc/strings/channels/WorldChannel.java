@@ -32,9 +32,9 @@ public class WorldChannel implements Channel{
     private final ChannelManager channelManager;
     private final ChatManager chatManager;
     private final boolean callEvent;
-    private final boolean doURLFilter;
-    private final boolean doProfanityFilter;
-    private final boolean doCooldown;
+    private boolean doURLFilter;
+    private boolean doProfanityFilter;
+    private boolean doCooldown;
     private volatile boolean active;
     private final World world;
     private StringsChannel stringsChannel;
@@ -168,13 +168,31 @@ public class WorldChannel implements Channel{
     }
 
     @Override
+    public void setURLFilter(boolean doURLFilter) {
+        this.doURLFilter = doURLFilter;
+        channelManager.saveChannel(this);
+    }
+
+    @Override
     public boolean doProfanityFilter() {
         return this.doProfanityFilter;
     }
 
     @Override
+    public void setProfanityFilter(boolean doProfanityFilter) {
+        this.doProfanityFilter = doProfanityFilter;
+        channelManager.saveChannel(this);
+    }
+
+    @Override
     public boolean doCooldown() {
         return this.doCooldown;
+    }
+
+    @Override
+    public void setDoCooldown(boolean doCooldown) {
+        this.doCooldown = doCooldown;
+        channelManager.saveChannel(this);
     }
 
     @Override
