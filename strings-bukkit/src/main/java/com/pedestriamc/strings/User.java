@@ -270,7 +270,7 @@ public class User {
      * @param channel the channel to leave
      */
     public void leaveChannel(@NotNull Channel channel){
-        if(channel.equals(strings.getChannel("global"))){
+        if(channel.equals(strings.getChannel("default"))){
             Bukkit.getLogger().info("[Strings] Player " + player.getName() + " just tried to leave channel global!  Cancelled leaving channel.");
             return;
         }

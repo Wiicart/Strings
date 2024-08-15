@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class StringsImpl implements StringsAPI {
+public final class StringsImpl implements StringsAPI {
 
     private final com.pedestriamc.strings.Strings strings;
     private final ChannelManager channelManager;

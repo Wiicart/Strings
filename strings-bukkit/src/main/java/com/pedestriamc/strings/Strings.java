@@ -15,11 +15,8 @@ import com.pedestriamc.strings.tabcompleters.ChannelTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ClearChatTabCompleter;
 import com.pedestriamc.strings.tabcompleters.MessageTabCompleter;
 import com.pedestriamc.strings.tabcompleters.SocialSpyTabCompleter;
-import com.pedestriamc.stringscustoms.AutoBroadcasts;
-import com.pedestriamc.stringscustoms.ChatFilter;
-import com.pedestriamc.stringscustoms.ServerMessages;
-import com.pedestriamc.stringscustoms.commands.BroadcastCommand;
-import com.pedestriamc.stringscustoms.commands.ClearChatCommand;
+import com.pedestriamc.strings.commands.BroadcastCommand;
+import com.pedestriamc.strings.commands.ClearChatCommand;
 import com.pedestriamc.strings.commands.*;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import net.milkbowl.vault.chat.Chat;
@@ -72,7 +69,6 @@ public final class Strings extends JavaPlugin {
     private boolean usingVault;
     private boolean useCustomJoinLeave;
     private boolean isPaper = false;
-    private StringsLogger stringsLogger;
     private StringsImpl stringsImpl;
 
     @Override
@@ -88,9 +84,6 @@ public final class Strings extends JavaPlugin {
         this.setupVault();
         this.setupAPI();
         Messenger.initialize();
-        if(config.getBoolean("enable-logger")){
-            setupLogger();
-        }
         int pluginId = 22597;
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
@@ -274,14 +267,14 @@ public final class Strings extends JavaPlugin {
         }
     }
 
-    private void setupLogger(){
+    /*private void setupLogger(){
         File file = new File(getDataFolder(), "log.txt");
         if(!file.exists()) {
             file.getParentFile().mkdirs();
             saveResource("log.txt", false);
         }
         stringsLogger = new StringsLogger(this, file);
-    }
+    }*/
 
     private void setupAPI(){
         stringsImpl = new StringsImpl(this);
@@ -310,7 +303,6 @@ public final class Strings extends JavaPlugin {
     public boolean useVault(){ return usingVault; }
     public boolean modifyJoinLeaveMessages(){ return useCustomJoinLeave; }
     public boolean isPaper(){ return this.isPaper; }
-    public StringsLogger getStringsLogger(){ return stringsLogger; }
     public static Strings getInstance(){ return instance; }
     /*
     Other methods

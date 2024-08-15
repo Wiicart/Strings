@@ -1,4 +1,4 @@
-package com.pedestriamc.stringscustoms.commands;
+package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;

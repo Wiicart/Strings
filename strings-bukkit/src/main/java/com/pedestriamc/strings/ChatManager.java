@@ -1,7 +1,6 @@
 package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.channels.Channel;
-import com.pedestriamc.stringscustoms.ChatFilter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

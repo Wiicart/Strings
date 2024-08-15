@@ -9,7 +9,13 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public record UserWrapper(User user) implements StringsUser {
+public final class UserWrapper implements StringsUser {
+
+    private final User user;
+
+    public UserWrapper(User user){
+        this.user = user;
+    }
 
     @Override
     public UUID getUuid() {
@@ -95,5 +101,9 @@ public record UserWrapper(User user) implements StringsUser {
     public boolean memberOf(StringsChannel channel) {
         Channel newChannel = ((ChannelWrapper) channel).getChannel();
         return user.memberOf(newChannel);
+    }
+
+    public User getUser(){
+        return this.user;
     }
 }

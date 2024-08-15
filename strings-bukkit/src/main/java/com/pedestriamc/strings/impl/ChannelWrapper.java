@@ -12,7 +12,13 @@ import org.bukkit.entity.Player;
 import java.util.Optional;
 import java.util.Set;
 
-public record ChannelWrapper(Channel channel) implements StringsChannel {
+public final class ChannelWrapper implements StringsChannel {
+
+    private final Channel channel;
+
+    public ChannelWrapper(Channel channel){
+        this.channel = channel;
+    }
 
     public Channel getChannel() {
         return this.channel;
@@ -70,13 +76,13 @@ public record ChannelWrapper(Channel channel) implements StringsChannel {
 
     @Override
     public void addPlayer(StringsUser stringsUser) {
-        User user = ((UserWrapper) stringsUser).user();
+        User user = ((UserWrapper) stringsUser).getUser();
         channel.addPlayer(user);
     }
 
     @Override
     public void removePlayer(StringsUser stringsUser) {
-        User user = ((UserWrapper) stringsUser).user();
+        User user = ((UserWrapper) stringsUser).getUser();
         channel.removePlayer(user);
     }
 
