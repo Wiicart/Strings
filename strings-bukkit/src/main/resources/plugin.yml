@@ -6,7 +6,7 @@ prefix: Strings
 author: wiicart
 description: "A chat plugin."
 website: pedestriamc.com
-softdepend: [PlaceholderAPI, Vault]
+softdepend: [PlaceholderAPI, Vault, Multiverse-Core, MultiWorld]
 commands:
   clearchat:
     description: "Clears in-game chat"

@@ -144,7 +144,7 @@ public class DefaultChannel implements Channel{
 
     @Override
     public Type getType() {
-        return Type.PROTECTED;
+        return Type.DEFAULT;
     }
 
     @Override

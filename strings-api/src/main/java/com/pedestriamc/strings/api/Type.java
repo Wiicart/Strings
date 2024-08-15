@@ -5,5 +5,5 @@ package com.pedestriamc.strings.api;
  * Type.PROTECTED represents an internal channel for Strings and should not be modified.
  */
 public enum Type {
-    PROTECTED, NORMAL, PROXIMITY, WORLD
+    PROTECTED, NORMAL, PROXIMITY, WORLD, DEFAULT
 }
