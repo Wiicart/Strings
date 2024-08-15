@@ -130,4 +130,17 @@ public interface StringsChannel {
      * @return The World the StringsChannel is for, if it's a WorldChannel.
      */
     Optional<World> getWorld();
+
+    /**
+     * Provides the StringsChannel's default Membership enum.
+     * @return The StringsChannel's membership enum.
+     */
+    Membership getMembership();
+
+    /**
+     * Provides the priority this StringsChannel has.
+     * The higher the number, the higher the priority.
+     * @return An int of the priority.
+     */
+    int getPriority();
 }

@@ -1,6 +1,5 @@
 package com.pedestriamc.strings;
 
-import com.pedestriamc.strings.Strings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;

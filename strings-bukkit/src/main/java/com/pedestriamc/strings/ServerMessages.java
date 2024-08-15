@@ -1,7 +1,5 @@
 package com.pedestriamc.strings;
 
-import com.pedestriamc.strings.User;
-import com.pedestriamc.strings.Strings;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -56,10 +54,6 @@ public class ServerMessages {
         message = message.replace("{prefix}", user.getPrefix());
         message = message.replace("{suffix}", user.getSuffix());
         return ChatColor.translateAlternateColorCodes('&',message);
-    }
-
-    public String deathMessage(Player player){
-        return null;
     }
 
     public void sendMOTD(Player player){

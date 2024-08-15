@@ -12,6 +12,12 @@ import java.util.UUID;
 public interface StringsAPI {
 
     /**
+     * Provides a short with the plugin's version number.
+     * @return A short with the version.
+     */
+    short getVersion();
+
+    /**
      * Provides a Set of all registered Channels.
      * @return A populated Set.
      */
@@ -32,11 +38,11 @@ public interface StringsAPI {
     Optional<StringsUser> getStringsUser(UUID uuid);
 
     /**
-     * Provides the WorldChannel for a World, if it exists.
+     * Provides an Array of StringsChannels that are for a specific world.
      * @param world The World to search with.
-     * @return An Optional that contains the StringsChannel if it exists.
+     * @return An Array of StringsChannels.
      */
-    Optional<StringsChannel> getChannel(World world);
+    StringsChannel[] getWorldChannels(World world);
 
     /**
      * Creates a StringsChannel that is Type.NORMAL.
@@ -97,10 +103,11 @@ public interface StringsAPI {
     void deleteChannel(StringsChannel channel);
 
     /**
-     * Provides a short with the plugin's version number.
-     * @return A short with the version.
+     * Returns true if the server is running Paper or a fork.
+     * @return If the server is Paper.
      */
-    short getVersion();
+    boolean isPaper();
+
 
 }
 

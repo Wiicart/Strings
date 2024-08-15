@@ -2,7 +2,6 @@ package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
-import com.pedestriamc.strings.Strings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -13,14 +12,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ChatFilter{
-    private final Strings strings;
     private final String regex = "(?i)\\b((?:https?|ftp):\\/\\/|www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)";
     private final Pattern pattern = Pattern.compile(regex);
     private final List<String> urlWhitelist;
     private List<String> bannedWords;
 
     public ChatFilter(@NotNull Strings strings){
-        this.strings = strings;
         this.urlWhitelist = new ArrayList<>();
         List<?> tempList = strings.getConfig().getList("url-whitelist");
         if(tempList != null)
@@ -48,7 +45,7 @@ public class ChatFilter{
         while(matcher.find()){
             String match = matcher.group();
             if(!urlWhitelist.contains(normalizeUrl(match))){
-                Bukkit.getLogger().info(urlWhitelist.toString() + " does not contain " + normalizeUrl(match));
+                Bukkit.getLogger().info(urlWhitelist + " does not contain " + normalizeUrl(match));
                 msg = msg.replace(match, "");
                 urlReplaced = true;
             }

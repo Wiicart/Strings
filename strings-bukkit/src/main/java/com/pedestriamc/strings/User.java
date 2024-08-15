@@ -5,7 +5,6 @@ import com.pedestriamc.strings.channels.Channel;
 import com.pedestriamc.strings.impl.UserWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -304,14 +303,6 @@ public class User {
     }
 
     /**
-     * Provides the World the User is in.
-     * @return The User's current world
-     */
-    public World getWorld(){
-        return player.getWorld();
-    }
-
-    /**
      * Removes the User from channels, because the player is going offline.
      * The User will rejoin the channels when they log back on.
      */
@@ -327,7 +318,7 @@ public class User {
      */
     public StringsUser getStringsUser(){
         if(stringsUser == null){
-            stringsUser = (StringsUser) new UserWrapper(this);
+            stringsUser = new UserWrapper(this);
         }
         return stringsUser;
     }

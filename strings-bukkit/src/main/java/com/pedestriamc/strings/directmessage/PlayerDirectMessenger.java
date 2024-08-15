@@ -2,6 +2,7 @@ package com.pedestriamc.strings.directmessage;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.api.event.PlayerDirectMessageEvent;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import me.clip.placeholderapi.PlaceholderAPI;

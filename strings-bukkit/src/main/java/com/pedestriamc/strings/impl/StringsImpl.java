@@ -18,7 +18,6 @@ public final class StringsImpl implements StringsAPI {
 
     private final com.pedestriamc.strings.Strings strings;
     private final ChannelManager channelManager;
-    private final short version = 1;
 
     public StringsImpl(@NotNull com.pedestriamc.strings.Strings strings){
         this.strings = strings;
@@ -47,12 +46,13 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public Optional<StringsChannel> getChannel(World world) {
-        Channel channel = channelManager.getWorldChannel(world);
-        if(channel == null){
-            return Optional.empty();
+    public StringsChannel[] getWorldChannels(World world) {
+        Channel[] worldChannels = channelManager.getWorldChannels(world);
+        StringsChannel[] worldStringsChannels = new StringsChannel[worldChannels.length];
+        for(int i=0; i<worldChannels.length; i++){
+            worldStringsChannels[i] = worldChannels[i].getStringsChannel();
         }
-        return Optional.of(channel.getStringsChannel());
+        return worldStringsChannels;
     }
 
     @Override
@@ -76,7 +76,12 @@ public final class StringsImpl implements StringsAPI {
         channelManager.deleteChannel(wrapper.getChannel());
     }
 
+    @Override
+    public boolean isPaper() {
+        return strings.isPaper();
+    }
+
     public short getVersion(){
-        return version;
+        return 1;
     }
 }

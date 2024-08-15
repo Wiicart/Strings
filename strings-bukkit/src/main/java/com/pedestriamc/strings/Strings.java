@@ -41,15 +41,19 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 public final class Strings extends JavaPlugin {
+
+    private final String version = "1.1";
+    private final String distributor = "modrinth";
+    private final short pluginNum = 1;
+
+    @SuppressWarnings("unused")
+    private AutoBroadcasts autoBroadcasts;
+
     private static Strings instance;
     private final Logger logger = Bukkit.getLogger();
     private static Chat chat = null;
-    private final String version = "1.1";
-    private final String distributor = "modrinth";
     private String coolDownLength;
     private final FileConfiguration config = this.getConfig();
-    private AutoBroadcasts autoBroadcasts;
-    private short pluginNum = 1;
     private ServerMessages serverMessages;
     private PlayerDirectMessenger playerDirectMessenger;
     private File broadcastsFile;
@@ -117,6 +121,7 @@ public final class Strings extends JavaPlugin {
      */
     //Register commands and listeners
 
+    @SuppressWarnings("ConstantConditions")
     private void registerClasses(){
         this.getCommand("strings").setExecutor(new StringsCommand());
         this.getCommand("helpop").setExecutor(new HelpOPCommand());
@@ -145,8 +150,8 @@ public final class Strings extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new JoinListener(),this);
         this.getServer().getPluginManager().registerEvents(new LeaveListener(), this);
         this.getServer().getPluginManager().registerEvents(new DirectMessageListener(), this);
-
     }
+
     //Load options from the config
     private void loadConfigOptions(){
         FileConfiguration config = this.getConfig();
@@ -213,6 +218,8 @@ public final class Strings extends JavaPlugin {
             usingVault = true;
         }
     }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void setupCustomConfigs(){
         broadcastsFile = new File(getDataFolder(), "broadcasts.yml");
         messagesFile = new File(getDataFolder(), "messages.yml");
@@ -321,6 +328,8 @@ public final class Strings extends JavaPlugin {
             e.printStackTrace();
         }
     }
+
+    @SuppressWarnings("unused")
     public void saveMessagesFile(){
         try{
             messagesFileConfig.save(messagesFile);
@@ -328,6 +337,8 @@ public final class Strings extends JavaPlugin {
             e.printStackTrace();
         }
     }
+
+    @SuppressWarnings("unused")
     public void saveBroadcastsFile(){
         try{
             broadcastsFileConfig.save(broadcastsFile);
@@ -335,6 +346,7 @@ public final class Strings extends JavaPlugin {
             e.printStackTrace();
         }
     }
+
     public void reload(){
         onDisable();
         onEnable();

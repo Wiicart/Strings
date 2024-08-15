@@ -5,5 +5,5 @@ package com.pedestriamc.strings.api;
  * If the membership is Membership.DEFAULT, all players receive messages here from default.
  */
 public enum Membership {
-    DEFAULT, PERMISSION, PROTECTED
+    DEFAULT, PERMISSION, PROTECTED, PARTY
 }

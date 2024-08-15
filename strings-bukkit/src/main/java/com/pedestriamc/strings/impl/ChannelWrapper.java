@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.impl;
 
 import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.api.Type;
@@ -127,5 +128,15 @@ public final class ChannelWrapper implements StringsChannel {
             return Optional.of(((WorldChannel) channel).getWorld());
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Membership getMembership() {
+        return channel.getMembership();
+    }
+
+    @Override
+    public int getPriority() {
+        return channel.getPriority();
     }
 }
