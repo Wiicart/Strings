@@ -32,7 +32,7 @@ public class ProximityChannel implements Channel{
     private String defaultColor;
     private final ChannelManager channelManager;
     private final ChatManager chatManager;
-    private boolean callEvent;
+    private final boolean callEvent;
     private volatile boolean active;
     private boolean doURLFilter;
     private boolean doProfanityFilter;
@@ -56,6 +56,7 @@ public class ProximityChannel implements Channel{
         this.distance = distance;
         this.members = ConcurrentHashMap.newKeySet();
         this.membership = membership;
+        this.active = active;
         this.priority = priority;
         channelManager.registerChannel(this);
     }
@@ -100,11 +101,14 @@ public class ProximityChannel implements Channel{
     //https://www.spigotmc.org/threads/getting-player-distance-to-another-player.343523/
     private @NotNull HashSet<Player> getRecipients(@NotNull Player sender){
         HashSet<Player> players = new HashSet<>();
-        World world = sender.getWorld();
-        for(Player p : world.getPlayers()){
-            if(sender.getLocation().distance(p.getLocation()) < distance){
+        for(Player p : Bukkit.getOnlinePlayers()){
+            if(sender.getLocation().distance(p.getLocation()) < distance && sender.getWorld().equals(p.getWorld())){
+                Bukkit.getLogger().info("Distance 1: " + sender.getLocation().toString());
+                Bukkit.getLogger().info("Distance 2: " + p.getLocation().toString());
+                Bukkit.getLogger().info("distance: " + sender.getLocation().distance(p.getLocation()));
                 players.add(p);
             }else if(p.hasPermission("strings.channels." + name + ".receive")){
+                Bukkit.getLogger().info("has perms");
                 players.add(p);
             }
         }
@@ -256,5 +260,14 @@ public class ProximityChannel implements Channel{
     @Override
     public int getPriority() {
         return priority;
+    }
+
+    public int getProximity(){
+        return distance;
+    }
+
+    public void setProximity(int proximity){
+        this.distance = proximity;
+        channelManager.saveChannel(this);
     }
 }

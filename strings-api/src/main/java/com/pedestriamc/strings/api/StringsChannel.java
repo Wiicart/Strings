@@ -151,4 +151,11 @@ public interface StringsChannel {
      * @return An int of the priority.
      */
     int getPriority();
+
+    /**
+     * Sets the StringsChannel's proximity, if it's a ProximityChannel.
+     * If the channel is not a ProximityChannel, nothing will happen.
+     * @param proximity The new proximity.
+     */
+    void setProximity(int proximity);
 }

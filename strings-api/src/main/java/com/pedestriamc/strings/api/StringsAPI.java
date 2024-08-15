@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.api;
 
 import org.bukkit.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Set;
@@ -28,14 +29,30 @@ public interface StringsAPI {
      * @param name The name of the Channel to search for.
      * @return The Channel, if it exists.
      */
-    Optional<StringsChannel> getChannel(String name);
+    Optional<StringsChannel> getOptionalChannel(String name);
+
+    /**
+     * Provides a StringsChannel based off its name, if it exists.
+     * @param name The name to search under.
+     * @return A StringsChannel, if it exists.
+     */
+    @Nullable
+    StringsChannel getChannel(String name);
 
     /**
      * Provides an Optional of StringsUser based on UUID
      * @param uuid The UUID of the Player.
      * @return An Optional containing a StringsUser if the StringsUser exists.
      */
-    Optional<StringsUser> getStringsUser(UUID uuid);
+    Optional<StringsUser> getOptionalStringsUser(UUID uuid);
+
+    /**
+     * Provides a StringsUser based off a UUID, if it exists.
+     * @param uuid The UUID to search under.
+     * @return A StringsUser, if it exists.
+     */
+    @Nullable
+    StringsUser getStringsUser(UUID uuid);
 
     /**
      * Provides an Array of StringsChannels that are for a specific world.
@@ -107,7 +124,5 @@ public interface StringsAPI {
      * @return If the server is Paper.
      */
     boolean isPaper();
-
-
 }
 

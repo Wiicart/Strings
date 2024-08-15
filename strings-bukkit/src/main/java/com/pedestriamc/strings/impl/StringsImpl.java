@@ -8,6 +8,7 @@ import com.pedestriamc.strings.channels.Channel;
 import com.pedestriamc.strings.channels.ChannelManager;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Set;
@@ -34,19 +35,31 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public Optional<StringsChannel> getChannel(String name) {
+    public Optional<StringsChannel> getOptionalChannel(String name) {
         this.apiUsed = true;
-        Channel channel = channelManager.getChannel(name);
-        if(channel == null){
-            return Optional.empty();
-        }
-        return Optional.of(channel.getStringsChannel());
+        return Optional.ofNullable(this.getChannel(name));
     }
 
     @Override
-    public Optional<StringsUser> getStringsUser(UUID uuid) {
+    public @Nullable StringsChannel getChannel(String name) {
+        this.apiUsed = true;
+        Channel c = channelManager.getChannel(name);
+        if(c == null){
+            return null;
+        }
+        return c.getStringsChannel();
+    }
+
+    @Override
+    public Optional<StringsUser> getOptionalStringsUser(UUID uuid) {
         this.apiUsed = true;
         return Optional.ofNullable(strings.getUser(uuid).getStringsUser());
+    }
+
+    @Override
+    public @Nullable StringsUser getStringsUser(UUID uuid){
+        this.apiUsed = true;
+        return strings.getUser(uuid).getStringsUser();
     }
 
     @Override
