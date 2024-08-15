@@ -83,6 +83,7 @@ public class ProximityChannel implements Channel{
                         p.sendMessage(formattedMessage);
                     }
                     Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
+                    chatManager.startCoolDown(player);
                 }
             });
             return;
@@ -93,8 +94,7 @@ public class ProximityChannel implements Channel{
             p.sendMessage(formattedMessage);
         }
         Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
-
-
+        chatManager.startCoolDown(player);
     }
 
     //https://www.spigotmc.org/threads/getting-player-distance-to-another-player.343523/

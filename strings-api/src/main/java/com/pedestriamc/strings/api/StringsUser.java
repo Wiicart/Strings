@@ -1,5 +1,7 @@
 package com.pedestriamc.strings.api;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 import java.util.UUID;
 
@@ -12,12 +14,14 @@ public interface StringsUser {
      * Provides the StringsUser's UUID.
      * @return A UUID.
      */
+    @NotNull
     UUID getUuid();
 
     /**
      * Provides the StringsUser's name.
      * @return A String containing the name.
      */
+    @NotNull
     String getName();
 
     /**
@@ -31,7 +35,7 @@ public interface StringsUser {
      * Sets the chat color of the User.
      * @param chatColor The new chat color.
      */
-    void setChatColor(String chatColor);
+    void setChatColor(@NotNull String chatColor);
 
     /**
      * Provides the prefix of the StringsUser, if it exists.
@@ -43,7 +47,7 @@ public interface StringsUser {
      * Sets the StringsUser's prefix.
      * @param prefix The new prefix.
      */
-    void setPrefix(String prefix);
+    void setPrefix(@NotNull String prefix);
 
     /**
      * Provides the suffix of the StringsUser, if it exists.
@@ -55,13 +59,14 @@ public interface StringsUser {
      * Sets the StringsUser's suffix.
      * @param suffix The new suffix.
      */
-    void setSuffix(String suffix);
+    void setSuffix(@NotNull String suffix);
 
     /**
      * Provides the StringsUser's display name.
      * Falls back to the server if none is set with Strings.
      * @return The display name.
      */
+    @NotNull
     String getDisplayName();
 
     /**
@@ -69,12 +74,13 @@ public interface StringsUser {
      *
      * @param displayName The new display name.
      */
-    void setDisplayName(String displayName);
+    void setDisplayName(@NotNull String displayName);
 
     /**
      * Provides a the active StringsChannel of the StringsUser.
      * @return The active StringsChannel.
      */
+    @NotNull
     StringsChannel getActiveChannel();
 
     /**
@@ -82,7 +88,7 @@ public interface StringsUser {
      * This channel is where messages will be sent by the player.
      * @param channel The StringsChannel to be set to active.
      */
-    void setActiveChannel(StringsChannel channel);
+    void setActiveChannel(@NotNull StringsChannel channel);
 
     /**
      * Provides a Set of all the channels the User is in.
@@ -94,7 +100,7 @@ public interface StringsUser {
      * Has this StringsUser join a StringsChannel.
      * @param channel The channel to join.
      */
-    void joinChannel(StringsChannel channel);
+    void joinChannel(@NotNull StringsChannel channel);
 
     /**
      * Has this StringsUser leave a StringsChannel.

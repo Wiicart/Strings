@@ -4,6 +4,7 @@ import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.channels.Channel;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.StringsUser;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.UUID;
@@ -18,12 +19,12 @@ public final class UserWrapper implements StringsUser {
     }
 
     @Override
-    public UUID getUuid() {
+    public @NotNull UUID getUuid() {
         return user.getUuid();
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return user.getName();
     }
 
@@ -33,7 +34,7 @@ public final class UserWrapper implements StringsUser {
     }
 
     @Override
-    public void setChatColor(String chatColor) {
+    public void setChatColor(@NotNull String chatColor) {
         user.setChatColor(chatColor);
     }
 
@@ -43,7 +44,7 @@ public final class UserWrapper implements StringsUser {
     }
 
     @Override
-    public void setPrefix(String prefix) {
+    public void setPrefix(@NotNull String prefix) {
         user.setPrefix(prefix);
     }
 
@@ -53,27 +54,27 @@ public final class UserWrapper implements StringsUser {
     }
 
     @Override
-    public void setSuffix(String suffix) {
+    public void setSuffix(@NotNull String suffix) {
         user.setSuffix(suffix);
     }
 
     @Override
-    public String getDisplayName() {
+    public @NotNull String getDisplayName() {
         return user.getDisplayName();
     }
 
     @Override
-    public void setDisplayName(String displayName) {
+    public void setDisplayName(@NotNull String displayName) {
         user.setDisplayName(displayName);
     }
 
     @Override
-    public StringsChannel getActiveChannel() {
+    public @NotNull StringsChannel getActiveChannel() {
         return user.getActiveChannel().getStringsChannel();
     }
 
     @Override
-    public void setActiveChannel(StringsChannel channel) {
+    public void setActiveChannel(@NotNull StringsChannel channel) {
         Channel newChannel = ((ChannelWrapper) channel).getChannel();
         user.setActiveChannel(newChannel);
     }
@@ -86,7 +87,7 @@ public final class UserWrapper implements StringsUser {
     }
 
     @Override
-    public void joinChannel(StringsChannel channel) {
+    public void joinChannel(@NotNull StringsChannel channel) {
         Channel newChannel = ((ChannelWrapper) channel).getChannel();
         user.joinChannel(newChannel);
     }

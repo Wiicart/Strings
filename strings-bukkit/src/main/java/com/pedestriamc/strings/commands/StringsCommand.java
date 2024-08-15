@@ -34,7 +34,11 @@ public class StringsCommand implements CommandExecutor {
             Messenger.sendMessage(Message.NO_PERMS, sender);
             return true;
         }
-        Messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
+        if(args.length == 1 && args[0].equalsIgnoreCase("help") && sender.hasPermission("strings.help")){
+            Messenger.sendMessage(Message.STRINGS_HELP, sender);
+            return true;
+        }
+        Messenger.sendMessage(Message.INVALID_ARGS, sender);
         return true;
     }
 }

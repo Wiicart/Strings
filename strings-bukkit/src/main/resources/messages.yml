@@ -167,3 +167,20 @@ chatcolor-set-other: "&f{player}&f's chat color has been set to {color}&f."
 # Channel disabled:
 # This message is sent to players when they attempt to send a message in a channel that is disabled.
 channel-disabled: "&fThe channel you're trying to send a message in is disabled!  Please contact staff for help."
+
+# The help message displayed when using /strings help:
+strings-help:
+  - "&8+-----[&3Strings&8]-----+"
+  - "&7Commands:"
+  - "&f - /strings"
+  - "&f - /socialspy"
+  - "&f - /reply"
+  - "&f - /helpop"
+  - "&f - /msg"
+  - "&f - /clearchat"
+  - "&f - /chatcolor"
+  - "&f - /channel"
+  - "&f - /broadcast"
+
+# Invalid args:
+invalid-args: "&fInvalid arguments."

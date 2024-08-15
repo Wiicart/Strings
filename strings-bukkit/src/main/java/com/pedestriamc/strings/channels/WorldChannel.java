@@ -82,6 +82,7 @@ public class WorldChannel implements Channel{
                         p.sendMessage(formattedMessage);
                     }
                     Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
+                    chatManager.startCoolDown(player);
                 }
             });
         }else{
@@ -90,6 +91,7 @@ public class WorldChannel implements Channel{
                 p.sendMessage(formattedMessage);
             }
             Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
+            chatManager.startCoolDown(player);
         }
 
     }

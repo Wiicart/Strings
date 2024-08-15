@@ -4,6 +4,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
 
 public interface StringsChannel {
@@ -130,6 +131,13 @@ public interface StringsChannel {
      * @return The World the StringsChannel is for, if it's a WorldChannel.
      */
     Optional<World> getWorld();
+
+    /**
+     * Provides the proximity for the StringsChannel.
+     * If the StringsChannel is not a ProximityChannel, the Optional will be empty.
+     * @return An Optional potentially containing the channel proximity.
+     */
+    OptionalInt getProximity();
 
     /**
      * Provides the StringsChannel's default Membership enum.

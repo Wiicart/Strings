@@ -91,6 +91,7 @@ public final class Strings extends JavaPlugin {
         int pluginId = 22597;
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
+        metrics.addCustomChart(new SimplePie("using_stringsapi", this::isAPIUsed));
         checkIfReload();
         checkUpdate();
         logger.info("[Strings] Enabled!");
@@ -208,6 +209,7 @@ public final class Strings extends JavaPlugin {
         serverMessages = new ServerMessages(this);
 
     }
+
     private void setupVault(){
         if(getServer().getPluginManager().getPlugin("Vault") == null){
             getLogger().info("Vault not found, using built in methods.");
@@ -270,7 +272,7 @@ public final class Strings extends JavaPlugin {
                 Bukkit.getLogger().info("+---------------------------------+");
             }
         } catch(IOException a){
-            a.printStackTrace();
+            Bukkit.getLogger().info("[Strings] Unable to check for updates.");
         }
     }
 
@@ -372,5 +374,9 @@ public final class Strings extends JavaPlugin {
 
     public Channel getChannel(String channel){
         return channelManager.getChannel(channel);
+    }
+
+    public String isAPIUsed(){
+        return "" + stringsImpl.isApiUsed();
     }
 }

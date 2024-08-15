@@ -21,13 +21,13 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
-        Player playerSender = event.getPlayer();
-        String playerMessage = event.getMessage();
 
         if(event instanceof ChannelChatEvent){
-            chatManager.startCoolDown(playerSender);
             return;
         }
+
+        Player playerSender = event.getPlayer();
+        String playerMessage = event.getMessage();
 
         User user = Strings.getInstance().getUser(playerSender);
         Channel channel = user.getActiveChannel();
