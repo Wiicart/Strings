@@ -141,15 +141,9 @@ public interface StringsAPI {
     void startCooldown(Player player);
 
     /**
-     * Registers a StringsReceiver to listen for messages on a certain channel.
-     * @param receiver The receiver.
+     * Gets the Distributor instance.
+     * @return the Distributor instance.
      */
-    void registerReceiver(StringsReceiver receiver);
-
-    /**
-     * Unregisters a StringsReceiver.
-     * @param receiver The receiver to be unregistered.
-     */
-    void unregisterReceiver(StringsReceiver receiver);
+    Distributor getDistributor();
 }
 

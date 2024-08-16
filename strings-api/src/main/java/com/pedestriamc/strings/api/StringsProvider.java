@@ -25,6 +25,11 @@ public final class StringsProvider{
         return StringsProvider.api;
     }
 
+    /**
+     * For internal use only.
+     * @param api API Implementation
+     * @param plugin Strings plugin
+     */
     public static void register(@NotNull StringsAPI api, JavaPlugin plugin){
         if(StringsProvider.api != null){
             throw new IllegalStateException("StringsProvider already initialized.");

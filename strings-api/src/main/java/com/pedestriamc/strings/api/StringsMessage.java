@@ -11,12 +11,14 @@ public class StringsMessage {
     private final Player sender;
     private final String message;
     private final Set<Player> recipients;
+    private final String finalMessage;
 
-    public StringsMessage(StringsChannel channel, Player sender, String message, Set<Player> recipients){
+    public StringsMessage(StringsChannel channel, Player sender, String message, Set<Player> recipients, String finalMessage){
         this.channel = channel;
         this.sender = sender;
         this.message = message;
         this.recipients = recipients;
+        this.finalMessage = finalMessage;
     }
 
     public StringsChannel getChannel(){
@@ -34,4 +36,6 @@ public class StringsMessage {
     public Set<Player> getRecipients(){
         return this.recipients;
     }
+
+    public String getFinalMessage(){ return this.finalMessage; }
 }

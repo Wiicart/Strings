@@ -7,6 +7,9 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
 
+/**
+ * An API Wrapper for all types of Channels.
+ */
 public interface StringsChannel {
 
     /**

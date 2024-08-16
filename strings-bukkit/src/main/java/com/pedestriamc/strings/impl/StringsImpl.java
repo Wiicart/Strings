@@ -1,17 +1,17 @@
 package com.pedestriamc.strings.impl;
 
 import com.pedestriamc.strings.ChatManager;
-import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.StringsAPI;
-import com.pedestriamc.strings.api.StringsChannel;
-import com.pedestriamc.strings.api.StringsUser;
+import com.pedestriamc.strings.api.*;
 import com.pedestriamc.strings.channels.Channel;
 import com.pedestriamc.strings.channels.ChannelManager;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -22,11 +22,15 @@ public final class StringsImpl implements StringsAPI {
     private final com.pedestriamc.strings.Strings strings;
     private final ChannelManager channelManager;
     private final ChatManager chatManager;
+    private final HashMap<StringsReceiver, Method> receivers;
+    private final DistributorImpl distributor;
     private boolean apiUsed;
 
     public StringsImpl(@NotNull com.pedestriamc.strings.Strings strings){
         this.strings = strings;
         this.channelManager = strings.getChannelManager();
+        this.receivers = new HashMap<>();
+        this.distributor = new DistributorImpl(strings);
         this.chatManager = strings.getChatManager();
     }
 
@@ -116,6 +120,11 @@ public final class StringsImpl implements StringsAPI {
     @Override
     public void startCooldown(Player player) {
         chatManager.startCoolDown(player);
+    }
+
+    @Override
+    public Distributor getDistributor() {
+        return this.distributor;
     }
 
     public short getVersion(){

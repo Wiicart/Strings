@@ -326,4 +326,8 @@ public class ChannelManager {
     public Channel[] getPriorityChannels(){
         return Arrays.copyOf(channelsPrioritySorted, channelsPrioritySorted.length);
     }
+
+    public void sendToReceivers(){
+
+    }
 }
