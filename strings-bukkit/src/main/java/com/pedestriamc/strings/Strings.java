@@ -101,8 +101,8 @@ public final class Strings extends JavaPlugin {
     public void onDisable() {
         for(User user : UserUtil.UserMap.getUserSet()){
             user.logOff();
-            UserUtil.UserMap.removeUser(user.getPlayer().getUniqueId());
         }
+        UserUtil.UserMap.clear();
         this.serverMessages = null;
         this.playerDirectMessenger = null;
         this.chatManager = null;

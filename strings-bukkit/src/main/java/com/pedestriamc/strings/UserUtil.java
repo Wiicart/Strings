@@ -104,5 +104,7 @@ public final class UserUtil {
         public static @NotNull Collection<User> getUserSet(){
             return userHashMap.values();
         }
+
+        public static void clear(){ userHashMap.clear(); }
     }
 }

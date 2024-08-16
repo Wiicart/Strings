@@ -12,7 +12,7 @@ import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
@@ -101,15 +101,18 @@ public class ProximityChannel implements Channel{
     //https://www.spigotmc.org/threads/getting-player-distance-to-another-player.343523/
     private @NotNull HashSet<Player> getRecipients(@NotNull Player sender){
         HashSet<Player> players = new HashSet<>();
+        Location senderLocation = sender.getLocation();
         for(Player p : Bukkit.getOnlinePlayers()){
-            if(sender.getLocation().distance(p.getLocation()) < distance && sender.getWorld().equals(p.getWorld())){
-                Bukkit.getLogger().info("Distance 1: " + sender.getLocation().toString());
-                Bukkit.getLogger().info("Distance 2: " + p.getLocation().toString());
-                Bukkit.getLogger().info("distance: " + sender.getLocation().distance(p.getLocation()));
+            Location pLocation = p.getLocation();
+            Bukkit.broadcastMessage(senderLocation.toString());
+            Bukkit.broadcastMessage(pLocation.toString());
+            Bukkit.broadcastMessage(String.valueOf(senderLocation.distance(pLocation)));
+            if(senderLocation.distance(pLocation) < distance){
                 players.add(p);
+                Bukkit.broadcastMessage(ChatColor.RED + "Player " + p.getName() + " within distance w/ " + String.valueOf(senderLocation.distance(pLocation)));
             }else if(p.hasPermission("strings.channels." + name + ".receive")){
-                Bukkit.getLogger().info("has perms");
                 players.add(p);
+                Bukkit.broadcastMessage(ChatColor.RED + p.getName() + "has perms");
             }
         }
         return players;
