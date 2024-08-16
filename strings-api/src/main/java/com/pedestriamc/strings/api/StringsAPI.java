@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.api;
 
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -124,5 +125,31 @@ public interface StringsAPI {
      * @return If the server is Paper.
      */
     boolean isPaper();
+
+    /**
+     * Determines if a Player is on chat cool-down.
+     * Some channels ignore this, and if the Player has the right permission, this is ignored.
+     * @param player The Player to check.
+     * @return If the player is on cool-down.
+     */
+    boolean isOnCooldown(Player player);
+
+    /**
+     * Starts a chat cool-down for a player.
+     * @param player The player to start the cool-down on.
+     */
+    void startCooldown(Player player);
+
+    /**
+     * Registers a StringsReceiver to listen for messages on a certain channel.
+     * @param receiver The receiver.
+     */
+    void registerReceiver(StringsReceiver receiver);
+
+    /**
+     * Unregisters a StringsReceiver.
+     * @param receiver The receiver to be unregistered.
+     */
+    void unregisterReceiver(StringsReceiver receiver);
 }
 

@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
 
+@SuppressWarnings("ClassCanBeRecord")
 public final class ChannelWrapper implements StringsChannel {
 
     private final Channel channel;

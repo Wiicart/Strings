@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.impl;
 
+import com.pedestriamc.strings.ChatManager;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsChannel;
@@ -7,6 +8,7 @@ import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.channels.Channel;
 import com.pedestriamc.strings.channels.ChannelManager;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,11 +21,13 @@ public final class StringsImpl implements StringsAPI {
 
     private final com.pedestriamc.strings.Strings strings;
     private final ChannelManager channelManager;
+    private final ChatManager chatManager;
     private boolean apiUsed;
 
     public StringsImpl(@NotNull com.pedestriamc.strings.Strings strings){
         this.strings = strings;
         this.channelManager = strings.getChannelManager();
+        this.chatManager = strings.getChatManager();
     }
 
     @Override
@@ -102,6 +106,16 @@ public final class StringsImpl implements StringsAPI {
     public boolean isPaper() {
         this.apiUsed = true;
         return strings.isPaper();
+    }
+
+    @Override
+    public boolean isOnCooldown(Player player) {
+        return chatManager.isOnCoolDown(player);
+    }
+
+    @Override
+    public void startCooldown(Player player) {
+        chatManager.startCoolDown(player);
     }
 
     public short getVersion(){

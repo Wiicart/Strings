@@ -98,21 +98,15 @@ public class ProximityChannel implements Channel{
         chatManager.startCoolDown(player);
     }
 
-    //https://www.spigotmc.org/threads/getting-player-distance-to-another-player.343523/
     private @NotNull HashSet<Player> getRecipients(@NotNull Player sender){
         HashSet<Player> players = new HashSet<>();
         Location senderLocation = sender.getLocation();
         for(Player p : Bukkit.getOnlinePlayers()){
             Location pLocation = p.getLocation();
-            Bukkit.broadcastMessage(senderLocation.toString());
-            Bukkit.broadcastMessage(pLocation.toString());
-            Bukkit.broadcastMessage(String.valueOf(senderLocation.distance(pLocation)));
             if(senderLocation.distance(pLocation) < distance){
                 players.add(p);
-                Bukkit.broadcastMessage(ChatColor.RED + "Player " + p.getName() + " within distance w/ " + String.valueOf(senderLocation.distance(pLocation)));
             }else if(p.hasPermission("strings.channels." + name + ".receive")){
                 players.add(p);
-                Bukkit.broadcastMessage(ChatColor.RED + p.getName() + "has perms");
             }
         }
         return players;

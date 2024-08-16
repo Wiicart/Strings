@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("ClassCanBeRecord")
 public final class UserWrapper implements StringsUser {
 
     private final User user;
