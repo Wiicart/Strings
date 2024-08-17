@@ -20,14 +20,16 @@ public class SocialSpyChannel implements Channel{
     private String format;
     private final PlayerDirectMessenger playerDirectMessenger;
     private final HashSet<Player> spiesList;
+    private final ChannelManager channelManager;
     private StringsChannel stringsChannel;
 
 
-    public SocialSpyChannel(@NotNull ChannelManager channelmanager, PlayerDirectMessenger messenger, String format){
+    public SocialSpyChannel(@NotNull ChannelManager channelManager, PlayerDirectMessenger messenger, String format){
         this.format = format;
         this.playerDirectMessenger = messenger;
         this.spiesList = new HashSet<>();
-        channelmanager.registerChannel(this);
+        this.channelManager = channelManager;
+        channelManager.registerChannel(this);
     }
 
     public void sendOutMessage(Player sender, Player recipient, String message){
@@ -179,5 +181,10 @@ public class SocialSpyChannel implements Channel{
             stringsChannel = new ChannelWrapper(this);
         }
         return stringsChannel;
+    }
+
+    @Override
+    public void saveChannel() {
+        channelManager.saveChannel(this);
     }
 }

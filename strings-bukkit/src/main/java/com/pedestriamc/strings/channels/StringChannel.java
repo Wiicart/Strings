@@ -174,7 +174,6 @@ public class StringChannel implements Channel{
     @Override
     public void setURLFilter(boolean doURLFilter) {
         this.urlFilter = doURLFilter;
-        channelManager.saveChannel(this);
     }
 
     @Override
@@ -185,7 +184,6 @@ public class StringChannel implements Channel{
     @Override
     public void setProfanityFilter(boolean doProfanityFilter) {
         this.profanityFilter = doProfanityFilter;
-        channelManager.saveChannel(this);
     }
 
     @Override
@@ -196,7 +194,6 @@ public class StringChannel implements Channel{
     @Override
     public void setDoCooldown(boolean doCooldown) {
         this.doCooldown = doCooldown;
-        channelManager.saveChannel(this);
     }
 
     @Override
@@ -233,6 +230,7 @@ public class StringChannel implements Channel{
         map.put("cooldown", String.valueOf(doCooldown));
         map.put("type", String.valueOf(this.getType()));
         map.put("membership", String.valueOf(membership));
+        map.put("priority", String.valueOf(priority));
         return map;
     }
 
@@ -244,5 +242,10 @@ public class StringChannel implements Channel{
     @Override
     public int getPriority() {
         return priority;
+    }
+
+    @Override
+    public void saveChannel() {
+        channelManager.saveChannel(this);
     }
 }

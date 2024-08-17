@@ -61,7 +61,7 @@ public class ChannelManager {
                     if(channel != null){
                         String type = channel.getString("type", "stringchannel");
                         String world = channel.getString("world");
-                        int distance = channel.getInt("distance");
+                        double distance = channel.getDouble("distance");
                         String format = channel.getString("format", "{prefix}{displayname}{suffix} &7» {message}");
                         String defaultColor = channel.getString("default-color", "&f");
                         boolean callEvent = channel.getBoolean("call-event", true);
@@ -103,7 +103,16 @@ public class ChannelManager {
                             }
                             case "proximity" -> {
                                 Bukkit.getLogger().info("[Strings] Loading proximity channel '" + channelName + "'...");
-                                new ProximityChannel(strings,channelName, format, defaultColor, this, strings.getChatManager(), callEvent, urlFilter, profanityFilter, doCooldown, distance, active, membership, priority);
+                                if(world == null){
+                                    Bukkit.getLogger().info("[Strings] Failed to load proximity channel '" + channelName + "', world undefined in channels.yml file.");
+                                    break;
+                                }
+                                World actualWorld = Bukkit.getWorld(world);
+                                if(actualWorld == null){
+                                    Bukkit.getLogger().info("[Strings] Failed to load proximity channel '" + channelName + "'. Invalid world '" + world + "' defined.");
+                                    break;
+                                }
+                                new ProximityChannel(strings,channelName, format, defaultColor, this, strings.getChatManager(), callEvent, urlFilter, profanityFilter, doCooldown, distance, active, membership, priority, actualWorld);
 
                             }
                             case "helpop" -> {
@@ -173,13 +182,16 @@ public class ChannelManager {
         if(channel instanceof WorldChannel){
             worldChannels.put(((WorldChannel) channel).getWorld(), channel);
         }
+        if(channel instanceof ProximityChannel){
+            worldChannels.put(((ProximityChannel) channel).getWorld(), channel);
+        }
         if(channel.getMembership() == Membership.DEFAULT){
             defaultMembershipChannels.add(channel);
         }
 
         ArrayList<Channel> prChannels = new ArrayList<>();
         for(Map.Entry<String, Channel> entry : channels.entrySet()){
-            if(entry.getValue().getMembership() == Membership.DEFAULT && entry.getValue().getType() != Type.WORLD){
+            if(entry.getValue().getMembership() == Membership.DEFAULT && entry.getValue().getType() != Type.WORLD && entry.getValue().getType() != Type.PROXIMITY){
                 prChannels.add(entry.getValue());
             }
         }
@@ -307,8 +319,8 @@ public class ChannelManager {
         return new WorldChannel(name, format, defaultColor, this, strings.getChatManager(), callEvent, doURLFilter, doProfanityFilter, doCooldown, world, active, membership, priority);
     }
 
-    public Channel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance, Membership membership, int priority){
-        return new ProximityChannel(strings, name, format, defaultColor, this, strings.getChatManager(), callEvent, doURLFilter, doProfanityFilter, doCooldown, distance, active, membership, priority);
+    public Channel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, double distance, Membership membership, int priority, World world){
+        return new ProximityChannel(strings, name, format, defaultColor, this, strings.getChatManager(), callEvent, doURLFilter, doProfanityFilter, doCooldown, distance, active, membership, priority, world);
 
     }
 

@@ -108,9 +108,10 @@ public interface StringsAPI {
      * @param distance The proximity players have to be within to receive messages.
      * @param membership The default membership of the Channel.
      * @param priority The Channel's priority.
+     * @param world The Channel's world.
      * @return A new StringsChannel that has been registered with Strings.
      */
-    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance, Membership membership, int priority);
+    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance, Membership membership, int priority, World world);
 
     /**
      * Deletes a StringsChannel and removes it from the channels file.
@@ -140,10 +141,5 @@ public interface StringsAPI {
      */
     void startCooldown(Player player);
 
-    /**
-     * Gets the Distributor instance.
-     * @return the Distributor instance.
-     */
-    Distributor getDistributor();
 }
 

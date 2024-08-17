@@ -29,6 +29,7 @@ public class PlayerDirectMessageEvent extends Event implements Cancellable {
         this.message = message;
     }
 
+    public static HandlerList getHandlerList(){ return HANDLER_LIST; }
     /**
      * Provides Handlers
      * @return a HanderList

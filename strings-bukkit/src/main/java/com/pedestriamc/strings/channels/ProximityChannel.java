@@ -13,6 +13,7 @@ import com.pedestriamc.strings.message.Messenger;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
@@ -37,12 +38,13 @@ public class ProximityChannel implements Channel{
     private boolean doURLFilter;
     private boolean doProfanityFilter;
     private boolean doCooldown;
-    private int distance;
+    private double distance;
     private StringsChannel stringsChannel;
     private final Membership membership;
     private final int priority;
+    private final World world;
 
-    public ProximityChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, ChatManager chatManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, int distance, boolean active, Membership membership, int priority){
+    public ProximityChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, ChatManager chatManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, double distance, boolean active, Membership membership, int priority, World world){
         this.strings = strings;
         this.name = name;
         this.format = format;
@@ -58,6 +60,7 @@ public class ProximityChannel implements Channel{
         this.membership = membership;
         this.active = active;
         this.priority = priority;
+        this.world = world;
         channelManager.registerChannel(this);
     }
 
@@ -99,9 +102,14 @@ public class ProximityChannel implements Channel{
     }
 
     private @NotNull HashSet<Player> getRecipients(@NotNull Player sender){
-        HashSet<Player> players = new HashSet<>();
+
+        if(!sender.getWorld().equals(world)){
+            return new HashSet<>(world.getPlayers());
+        }
+
+        HashSet<Player> players = new HashSet<>(members);
         Location senderLocation = sender.getLocation();
-        for(Player p : Bukkit.getOnlinePlayers()){
+        for(Player p : world.getPlayers()){
             Location pLocation = p.getLocation();
             if(senderLocation.distance(pLocation) < distance){
                 players.add(p);
@@ -187,7 +195,6 @@ public class ProximityChannel implements Channel{
     @Override
     public void setURLFilter(boolean doURLFilter) {
         this.doURLFilter = doURLFilter;
-        channelManager.saveChannel(this);
     }
 
     @Override
@@ -198,7 +205,6 @@ public class ProximityChannel implements Channel{
     @Override
     public void setProfanityFilter(boolean doProfanityFilter) {
         this.doProfanityFilter = doProfanityFilter;
-        channelManager.saveChannel(this);
     }
 
     @Override
@@ -209,7 +215,6 @@ public class ProximityChannel implements Channel{
     @Override
     public void setDoCooldown(boolean doCooldown) {
         this.doCooldown = doCooldown;
-        channelManager.saveChannel(this);
     }
 
     @Override
@@ -246,6 +251,9 @@ public class ProximityChannel implements Channel{
         map.put("cooldown", String.valueOf(doCooldown));
         map.put("type", String.valueOf(this.getType()));
         map.put("membership", String.valueOf(membership));
+        map.put("distance", String.valueOf(distance));
+        map.put("priority", String.valueOf(priority));
+        map.put("world", world.getName());
         return map;
     }
 
@@ -259,12 +267,20 @@ public class ProximityChannel implements Channel{
         return priority;
     }
 
-    public int getProximity(){
+    public double getProximity(){
         return distance;
     }
 
-    public void setProximity(int proximity){
+    public void setProximity(double proximity){
         this.distance = proximity;
+    }
+
+    public World getWorld(){
+        return this.world;
+    }
+
+    @Override
+    public void saveChannel() {
         channelManager.saveChannel(this);
     }
 }

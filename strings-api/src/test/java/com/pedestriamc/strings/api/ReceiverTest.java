@@ -1,5 +1,7 @@
 package com.pedestriamc.strings.api;
 
+import com.pedestriamc.strings.api.event.StringsMessage;
+
 public class ReceiverTest implements StringsReceiver{
 
     @StringsDistributor(channelName = "global")
@@ -9,6 +11,7 @@ public class ReceiverTest implements StringsReceiver{
         message.getRecipients();
         message.getSender();
         message.getRecipients();
+        message.getFinalMessage();
 
     }
 

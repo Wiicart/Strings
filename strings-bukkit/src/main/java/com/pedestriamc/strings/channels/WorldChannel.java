@@ -182,7 +182,6 @@ public class WorldChannel implements Channel{
     @Override
     public void setURLFilter(boolean doURLFilter) {
         this.doURLFilter = doURLFilter;
-        channelManager.saveChannel(this);
     }
 
     @Override
@@ -193,7 +192,6 @@ public class WorldChannel implements Channel{
     @Override
     public void setProfanityFilter(boolean doProfanityFilter) {
         this.doProfanityFilter = doProfanityFilter;
-        channelManager.saveChannel(this);
     }
 
     @Override
@@ -204,7 +202,6 @@ public class WorldChannel implements Channel{
     @Override
     public void setDoCooldown(boolean doCooldown) {
         this.doCooldown = doCooldown;
-        channelManager.saveChannel(this);
     }
 
     @Override
@@ -245,6 +242,8 @@ public class WorldChannel implements Channel{
         map.put("cooldown", String.valueOf(false));
         map.put("type", String.valueOf(this.getType()));
         map.put("membership", String.valueOf(membership));
+        map.put("priority", String.valueOf(priority));
+        map.put("world", world.getName());
         return map;
     }
 
@@ -256,5 +255,10 @@ public class WorldChannel implements Channel{
     @Override
     public int getPriority() {
         return priority;
+    }
+
+    @Override
+    public void saveChannel() {
+        channelManager.saveChannel(this);
     }
 }

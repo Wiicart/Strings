@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.impl;
+/*package com.pedestriamc.impl;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.Distributor;
@@ -29,7 +29,10 @@ public class DistributorImpl implements Distributor {
             return;
         }
         for(Method method : receiverClass.getDeclaredMethods()){
-            if(method.isAnnotationPresent(StringsDistributor.class)){
+            boolean isAnnotationPresent = method.isAnnotationPresent(StringsDistributor.class);
+            boolean isProperlyDefined = false;
+
+            if(isAnnotationPresent && isProperlyDefined){
                 StringsDistributor distributor = method.getAnnotation(StringsDistributor.class);
                 String channelName = distributor.channelName();
                 Channel channel = strings.getChannel(channelName);
@@ -48,3 +51,4 @@ public class DistributorImpl implements Distributor {
         receiverMap.remove(receiver);
     }
 }
+*/

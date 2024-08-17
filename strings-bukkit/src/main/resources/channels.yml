@@ -115,6 +115,7 @@ channels:
   #  distance: 30
   #  type: proximity
   #  membership: default
+  #  world: "world2"
   #  priority: 11
 
   # SocialSpy also runs on a type of channel, and customizations for it are found in config.yml

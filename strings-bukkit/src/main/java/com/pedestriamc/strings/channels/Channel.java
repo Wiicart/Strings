@@ -159,6 +159,12 @@ public interface Channel{
      */
     int getPriority();
 
+    /**
+     * Saves the Channel to channels.yml
+     * No API changes will be retained if this is not called.
+     */
+    void saveChannel();
+
     StringsChannel getStringsChannel();
 
 }

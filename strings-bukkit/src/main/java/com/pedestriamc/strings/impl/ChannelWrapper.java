@@ -12,7 +12,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.OptionalDouble;
 import java.util.Set;
 
 @SuppressWarnings("ClassCanBeRecord")
@@ -134,11 +134,19 @@ public final class ChannelWrapper implements StringsChannel {
     }
 
     @Override
-    public OptionalInt getProximity() {
+    public OptionalDouble getOptionalProximity() {
         if(!(channel instanceof ProximityChannel proximityChannel)){
-            return OptionalInt.empty();
+            return OptionalDouble.empty();
         }
-        return OptionalInt.of(proximityChannel.getProximity());
+        return OptionalDouble.of(proximityChannel.getProximity());
+    }
+
+    @Override
+    public double getProximity() {
+        if(!(channel instanceof ProximityChannel proximityChannel)){
+            return -1;
+        }
+        return proximityChannel.getProximity();
     }
 
     @Override
@@ -152,7 +160,7 @@ public final class ChannelWrapper implements StringsChannel {
     }
 
     @Override
-    public void setProximity(int proximity) {
+    public void setProximity(double proximity) {
         if(!(channel instanceof ProximityChannel)){
             return;
         }

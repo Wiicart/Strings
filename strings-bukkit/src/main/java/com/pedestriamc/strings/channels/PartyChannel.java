@@ -20,13 +20,15 @@ public class PartyChannel implements Channel{
     private final Set<Player> members;
     private String format;
     private String color;
+    private final ChannelManager channelManager;
 
-    public PartyChannel(String name, Player leader, String format, String color){
+    public PartyChannel(String name, Player leader, String format, String color, ChannelManager channelManager){
         this.name = name;
         this.leader = leader;
         this.members = ConcurrentHashMap.newKeySet();
         this.format = format;
         this.color = color;
+        this.channelManager = channelManager;
     }
 
 
@@ -163,5 +165,10 @@ public class PartyChannel implements Channel{
     @Override
     public StringsChannel getStringsChannel() {
         return null;
+    }
+
+    @Override
+    public void saveChannel() {
+        channelManager.saveChannel(this);
     }
 }

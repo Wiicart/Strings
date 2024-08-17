@@ -152,8 +152,6 @@ public class HelpOPChannel implements Channel {
     @Override
     public void setURLFilter(boolean doURLFilter) {
         this.urlFilter = doURLFilter;
-        channelManager.saveChannel(this);
-
     }
 
     @Override
@@ -164,7 +162,6 @@ public class HelpOPChannel implements Channel {
     @Override
     public void setProfanityFilter(boolean doProfanityFilter) {
         this.profanityFilter = doProfanityFilter;
-        channelManager.saveChannel(this);
     }
 
     @Override
@@ -212,5 +209,10 @@ public class HelpOPChannel implements Channel {
     @Override
     public int getPriority() {
         return -1;
+    }
+
+    @Override
+    public void saveChannel() {
+        channelManager.saveChannel(this);
     }
 }

@@ -20,12 +20,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultChannel implements Channel{
 
-    private final Strings strings;
     private final ChannelManager channelManager;
     private final Set<Player> members;
 
     public DefaultChannel(Strings strings, @NotNull ChannelManager channelManager){
-        this.strings = strings;
         this.channelManager = channelManager;
         this.members = ConcurrentHashMap.newKeySet();
         channelManager.registerChannel(this);
@@ -170,6 +168,11 @@ public class DefaultChannel implements Channel{
     @Override
     public int getPriority() {
         return -1;
+    }
+
+    @Override
+    public void saveChannel() {
+        channelManager.saveChannel(this);
     }
 
     @Override

@@ -4,6 +4,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.Set;
 
@@ -140,7 +141,14 @@ public interface StringsChannel {
      * If the StringsChannel is not a ProximityChannel, the Optional will be empty.
      * @return An Optional potentially containing the channel proximity.
      */
-    OptionalInt getProximity();
+    OptionalDouble getOptionalProximity();
+
+    /**
+     * Provides the proximity for the StringsChannel.
+     * If the StringsChannel is not a ProximityChannel, -1 will be returned.
+     * @return A double.
+     */
+    double getProximity();
 
     /**
      * Provides the StringsChannel's default Membership enum.
@@ -160,5 +168,5 @@ public interface StringsChannel {
      * If the channel is not a ProximityChannel, nothing will happen.
      * @param proximity The new proximity.
      */
-    void setProximity(int proximity);
+    void setProximity(double proximity);
 }
