@@ -5,41 +5,57 @@ import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The channel that players are assigned to by default.
- * This channel cannot process any messages, it instead determines the proper default channel to be used.
+ * This channel cannot process any messages, it instead determines the proper channel to be used.
  */
 public class DefaultChannel implements Channel{
 
     private final ChannelManager channelManager;
     private final Set<Player> members;
+    private final Strings strings;
 
     public DefaultChannel(Strings strings, @NotNull ChannelManager channelManager){
         this.channelManager = channelManager;
         this.members = ConcurrentHashMap.newKeySet();
+        this.strings = strings;
         channelManager.registerChannel(this);
     }
 
     @Override
     public void sendMessage(Player player, String message) {
-        Channel[] worldChannels = channelManager.getWorldChannels(player.getWorld());
+        Channel[] worldChannels = channelManager.getWorldPriorityChannels(player.getWorld());
+        Bukkit.broadcastMessage(ChatColor.AQUA + "----------------------------");
+        Bukkit.broadcastMessage("WORLD CHANNELS");
+        Bukkit.broadcastMessage(Arrays.toString(worldChannels));
+        Bukkit.broadcastMessage(ChatColor.AQUA + "----------------------------");
         if(worldChannels.length > 0){
             worldChannels[0].sendMessage(player, message);
             return;
         }
         Channel[] defaultMembership = channelManager.getPriorityChannels();
+        Bukkit.broadcastMessage("DEFAULT MEMBERSHIP");
+        Bukkit.broadcastMessage(Arrays.toString(defaultMembership));
         if(defaultMembership.length > 0){
             defaultMembership[0].sendMessage(player, message);
             return;
+        }
+
+        Bukkit.broadcastMessage(ChatColor.AQUA + "----------------------------");
+        Bukkit.broadcastMessage("USERS CHANNELS");
+        User user = strings.getUser(player);
+        Set<Channel> usersChannels = user.getChannels();
+        if(usersChannels.size() > 0){
+            Optional<Channel> optional =  usersChannels.stream().max(Comparator.comparingInt(Channel::getPriority));
+            optional.get().sendMessage(player, message);
         }
         player.sendMessage(ChatColor.RED + "[Strings] You aren't a member of any channels.  Please contact staff for help.");
     }

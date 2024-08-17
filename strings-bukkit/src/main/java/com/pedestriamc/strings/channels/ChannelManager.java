@@ -23,6 +23,7 @@ public class ChannelManager {
     private final Strings strings;
     private final ConcurrentHashMap<String, Channel> channels;
     private final ConcurrentHashMap<World, Channel> worldChannels;
+    private final ConcurrentHashMap<World, Channel[]> wChannelsByPriority;
     private final Set<Channel> defaultMembershipChannels;
     private final FileConfiguration config;
     private Channel[] channelsPrioritySorted;
@@ -35,8 +36,12 @@ public class ChannelManager {
         this.strings = strings;
         this.channels = new ConcurrentHashMap<>();
         this.worldChannels = new ConcurrentHashMap<>();
+        this.wChannelsByPriority = new ConcurrentHashMap<>();
         this.config = strings.getChannelsFileConfig();
         this.defaultMembershipChannels = Collections.synchronizedSet(new HashSet<>());
+        for(World world : Bukkit.getWorlds()){
+            wChannelsByPriority.put(world, new Channel[0]);
+        }
         loadChannelsFromConfig();
     }
 
@@ -179,24 +184,53 @@ public class ChannelManager {
      */
     public void registerChannel(Channel channel){
         channels.put(channel.getName(), channel);
+        boolean isWorldOrProx = false;
+        World world = null;
         if(channel instanceof WorldChannel){
             worldChannels.put(((WorldChannel) channel).getWorld(), channel);
+            world = ((WorldChannel) channel).getWorld();
+            isWorldOrProx = true;
         }
         if(channel instanceof ProximityChannel){
             worldChannels.put(((ProximityChannel) channel).getWorld(), channel);
+            world = ((ProximityChannel) channel).getWorld();
+            isWorldOrProx = true;
         }
         if(channel.getMembership() == Membership.DEFAULT){
             defaultMembershipChannels.add(channel);
         }
 
-        ArrayList<Channel> prChannels = new ArrayList<>();
-        for(Map.Entry<String, Channel> entry : channels.entrySet()){
-            if(entry.getValue().getMembership() == Membership.DEFAULT && entry.getValue().getType() != Type.WORLD && entry.getValue().getType() != Type.PROXIMITY){
-                prChannels.add(entry.getValue());
+        if(!isWorldOrProx){
+            ArrayList<Channel> prChannels = new ArrayList<>();
+            for(Map.Entry<String, Channel> entry : channels.entrySet()){
+                if(entry.getValue().getMembership() == Membership.DEFAULT){
+                    prChannels.add(entry.getValue());
+                }
             }
+            prChannels.sort(Comparator.comparing(Channel::getPriority).reversed());
+            channelsPrioritySorted = prChannels.toArray(new Channel[0]);
         }
-        prChannels.sort(Comparator.comparing(Channel::getPriority).reversed());
-        channelsPrioritySorted = prChannels.toArray(new Channel[0]);
+        if(isWorldOrProx){
+            if(world == null){
+                if(channel instanceof WorldChannel){
+                    world = ((WorldChannel) channel).getWorld();
+                }
+                if(channel instanceof ProximityChannel){
+                    world = ((ProximityChannel) channel).getWorld();
+                }
+
+            }
+            ArrayList<Channel> prWChannels = new ArrayList<>();
+            for(Map.Entry<World, Channel> entry : worldChannels.entrySet()){
+                if(entry.getKey().equals(world) && entry.getValue().getMembership() == Membership.DEFAULT){
+                    prWChannels.add(entry.getValue());
+                }
+            }
+            prWChannels.sort(Comparator.comparing(Channel::getPriority).reversed());
+            wChannelsByPriority.put(world, prWChannels.toArray(new Channel[0]));
+        }
+
+
 
         Bukkit.getLogger().info("[Strings] Channel '" + channel.getName() + "' registered.");
     }
@@ -339,7 +373,8 @@ public class ChannelManager {
         return Arrays.copyOf(channelsPrioritySorted, channelsPrioritySorted.length);
     }
 
-    public void sendToReceivers(){
-
+    public Channel[] getWorldPriorityChannels(World world){
+        return Arrays.copyOf(wChannelsByPriority.get(world), wChannelsByPriority.get(world).length);
     }
+
 }

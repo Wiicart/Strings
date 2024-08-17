@@ -116,3 +116,6 @@ permissions:
   strings.channels.*:
     description: "channels perms"
     default: false
+  strings.channels.default:
+    description: "Allows use of default channels! It is strongly encouraged that all players have this permission."
+    default: true
