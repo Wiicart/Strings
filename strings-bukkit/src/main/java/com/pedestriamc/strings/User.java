@@ -75,7 +75,7 @@ public class User {
     }
 
     /**
-     * Provides a Map containing all of the User's information.
+     * Provides a Map containing all the User's information.
      * @return The populated Map.
      */
     public Map<String, Object> getData(){

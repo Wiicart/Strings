@@ -5,12 +5,12 @@ import org.bukkit.entity.Player;
 
 import java.util.Optional;
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 import java.util.Set;
 
 /**
  * An API Wrapper for all types of Channels.
  */
+@SuppressWarnings("unused")
 public interface StringsChannel {
 
     /**

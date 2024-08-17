@@ -8,6 +8,7 @@ import java.util.UUID;
 /**
  * This represents the Strings internal User object which stores data on individual players.
  */
+@SuppressWarnings("unused")
 public interface StringsUser {
 
     /**
@@ -77,7 +78,7 @@ public interface StringsUser {
     void setDisplayName(@NotNull String displayName);
 
     /**
-     * Provides a the active StringsChannel of the StringsUser.
+     * Provides the active StringsChannel of the StringsUser.
      * @return The active StringsChannel.
      */
     @NotNull

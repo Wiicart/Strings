@@ -81,9 +81,9 @@ public class ChannelManager {
                             membershipString = "permission";
                         }
                         switch(membershipString){
-                            case "default" -> {membership = Membership.DEFAULT;}
-                            case "permission" -> {membership = Membership.PERMISSION;}
-                            default -> {membership = Membership.PROTECTED;}
+                            case "default" -> membership = Membership.DEFAULT;
+                            case "permission" -> membership = Membership.PERMISSION;
+                            default -> membership = Membership.PROTECTED;
                         }
                         switch(type){
                             case "stringchannel" -> {
@@ -196,14 +196,14 @@ public class ChannelManager {
             world = ((ProximityChannel) channel).getWorld();
             isWorldOrProx = true;
         }
-        if(channel.getMembership() == Membership.DEFAULT){
+        if(channel.getMembership() == Membership.DEFAULT && !isWorldOrProx){
             defaultMembershipChannels.add(channel);
         }
 
         if(!isWorldOrProx){
             ArrayList<Channel> prChannels = new ArrayList<>();
             for(Map.Entry<String, Channel> entry : channels.entrySet()){
-                if(entry.getValue().getMembership() == Membership.DEFAULT){
+                if(entry.getValue().getMembership() == Membership.DEFAULT && !(entry.getValue() instanceof ProximityChannel) && !(entry.getValue() instanceof WorldChannel)){
                     prChannels.add(entry.getValue());
                 }
             }
@@ -220,12 +220,8 @@ public class ChannelManager {
                 }
 
             }
-            ArrayList<Channel> prWChannels = new ArrayList<>();
-            for(Map.Entry<World, Channel> entry : worldChannels.entrySet()){
-                if(entry.getKey().equals(world) && entry.getValue().getMembership() == Membership.DEFAULT){
-                    prWChannels.add(entry.getValue());
-                }
-            }
+
+            ArrayList<Channel> prWChannels = getChannels(world);
             prWChannels.sort(Comparator.comparing(Channel::getPriority).reversed());
             wChannelsByPriority.put(world, prWChannels.toArray(new Channel[0]));
         }
@@ -233,6 +229,26 @@ public class ChannelManager {
 
 
         Bukkit.getLogger().info("[Strings] Channel '" + channel.getName() + "' registered.");
+    }
+
+    private @NotNull ArrayList<Channel> getChannels(World world) {
+        ArrayList<Channel> prWChannels = new ArrayList<>();
+        for(Map.Entry<String, Channel> entry : channels.entrySet()){
+            Channel c = entry.getValue();
+            World w = null;
+
+            if(c instanceof WorldChannel){
+                w = ((WorldChannel) c).getWorld();
+            }
+            if(c instanceof ProximityChannel){
+                w = ((ProximityChannel) c).getWorld();
+            }
+            if(w != null && w.equals(world) && c.getMembership() == Membership.DEFAULT){
+                prWChannels.add(c);
+            }
+
+        }
+        return prWChannels;
     }
 
     /**

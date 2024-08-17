@@ -39,11 +39,19 @@ public class PlayerDirectMessageEvent extends Event implements Cancellable {
         return HANDLER_LIST;
     }
 
+    /**
+     * Checks if the Event is cancelled.
+     * @return A boolean.
+     */
     @Override
     public boolean isCancelled(){
         return this.isCancelled;
     }
 
+    /**
+     * Sets the Event to cancelled.
+     * @param isCancelled boolean if the event should be cancelled.
+     */
     @Override
     public void setCancelled(boolean isCancelled){
         this.isCancelled = isCancelled;

@@ -5,7 +5,6 @@ import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -33,27 +32,18 @@ public class DefaultChannel implements Channel{
     @Override
     public void sendMessage(Player player, String message) {
         Channel[] worldChannels = channelManager.getWorldPriorityChannels(player.getWorld());
-        Bukkit.broadcastMessage(ChatColor.AQUA + "----------------------------");
-        Bukkit.broadcastMessage("WORLD CHANNELS");
-        Bukkit.broadcastMessage(Arrays.toString(worldChannels));
-        Bukkit.broadcastMessage(ChatColor.AQUA + "----------------------------");
         if(worldChannels.length > 0){
             worldChannels[0].sendMessage(player, message);
             return;
         }
         Channel[] defaultMembership = channelManager.getPriorityChannels();
-        Bukkit.broadcastMessage("DEFAULT MEMBERSHIP");
-        Bukkit.broadcastMessage(Arrays.toString(defaultMembership));
         if(defaultMembership.length > 0){
             defaultMembership[0].sendMessage(player, message);
             return;
         }
-
-        Bukkit.broadcastMessage(ChatColor.AQUA + "----------------------------");
-        Bukkit.broadcastMessage("USERS CHANNELS");
         User user = strings.getUser(player);
         Set<Channel> usersChannels = user.getChannels();
-        if(usersChannels.size() > 0){
+        if(!usersChannels.isEmpty()){
             Optional<Channel> optional =  usersChannels.stream().max(Comparator.comparingInt(Channel::getPriority));
             optional.get().sendMessage(player, message);
         }

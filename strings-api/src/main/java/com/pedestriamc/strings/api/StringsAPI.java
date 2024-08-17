@@ -11,6 +11,7 @@ import java.util.UUID;
 /**
  * The API for Strings
  */
+@SuppressWarnings("unused")
 public interface StringsAPI {
 
     /**
