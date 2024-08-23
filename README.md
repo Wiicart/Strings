@@ -13,7 +13,7 @@
 ## Information
 Strings is a Minecraft chat plugin written with the Spigot API, bringing lots of customizability to Minecraft server's chat.
 
-![example](https://www.spigotmc.org/attachments/strongs-png.841882/)
+![text example](https://www.spigotmc.org/attachments/strongs-png.841882)
 
 **Features include:**
 
@@ -44,17 +44,17 @@ There are 3 main channel types:
  
  Some additional features available to channels are per-channel formatting, priority and default membership.  
 
- **Channel Membership:**
+ **Channel Membership:**\
  There are two options for channel `membership`, and those are `default` and `permission`.  Default channels are available to all players, regardless of permissions, as long as they are within the scope of the channel.
  
- **Priority:**
+ **Priority:**\
  Each channel can be designated a certain priority, the higher the number, the higher the priority.  This only matters for channels with `membership: default`, as priority will determine what channel a player's message will be sent in. 
  
-  **Default Channels:**
+  **Default Channels:**\
  Both channel membership and priority work together to offer a key piece of functionality, the default channel.  Every player has an active channel set, however, internally there is a channel type that does not process messages, rather it designates the appropriate channel a player's message should be sent in, considering world, priority and membership.
  
  
- **Developer:**
+ **Developer:**\
  Nearly all of the things listed in this section, and more are customizable through the API.  For more information, check out the [wiki](https://github.com/Wiicart/Strings/wiki).
 ## Developer
 I've added a public API which will be available through Maven soon.  The API is currently published through [GitHub releases](https://github.com/Wiicart/Strings/releases).
