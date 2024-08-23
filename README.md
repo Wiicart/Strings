@@ -35,11 +35,11 @@ And much more!
 One of the biggest and most versatile features of this plugin is the channel system.
 There are 3 main channel types: 
 
- - StringsChannel
+ - StringChannel\
  A channel that does not consider the player's world or proximity.
- - WorldChannel
+ - WorldChannel\
  A channel that only works in one specific world, unless the channel manually joined.
- - ProximityChannel
+ - ProximityChannel\
  A channel that only sends messages to players within the right proximity of the sender, unless the channel is manually joined.
  
  Some additional features available to channels are per-channel formatting, priority and default membership.  
