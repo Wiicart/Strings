@@ -13,8 +13,6 @@
 ## Information
 Strings is a Minecraft chat plugin written with the Spigot API, bringing lots of customizability to your Minecraft server's chat.
 
-![text example](https://www.spigotmc.org/attachments/strongs-png.841882)
-
 **Features include:**
 
  - Customizability
