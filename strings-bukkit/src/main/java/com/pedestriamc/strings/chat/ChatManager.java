@@ -1,6 +1,8 @@
-package com.pedestriamc.strings;
+package com.pedestriamc.strings.chat;
 
-import com.pedestriamc.strings.channels.Channel;
+import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.chat.channels.Channel;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -22,6 +24,8 @@ public final class ChatManager {
     private final Set<Player> coolDownList = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final BukkitScheduler scheduler;
     private final long coolDownLength;
+    private final String mentionColor;
+    private final boolean mentionsEnabled;
 
     public ChatManager(@NotNull Strings strings){
         this.strings = strings;
@@ -31,6 +35,8 @@ public final class ChatManager {
         this.chatFilter = strings.getChatFilter();
         this.scheduler = Bukkit.getScheduler();
         this.coolDownLength = calcTicks(strings.getCoolDownLength());
+        this.mentionColor = ChatColor.translateAlternateColorCodes('&', strings.getConfig().getString("mention-chat-format", "&e&l"));
+        this.mentionsEnabled = strings.getConfig().getBoolean("enable-mentions", true);
     }
 
     public @NotNull String formatMessage(Player sender, Channel channel){
@@ -42,7 +48,6 @@ public final class ChatManager {
         newMessageFormat = newMessageFormat.replace("{prefix}", user.getPrefix());
         newMessageFormat = newMessageFormat.replace("{suffix}", user.getSuffix());
         newMessageFormat = newMessageFormat.replace("{displayname}", "%s");
-        newMessageFormat += user.getChatColor();
         newMessageFormat = newMessageFormat.replace("{message}", user.getChatColor(channel) + "%s");
         newMessageFormat = ChatColor.translateAlternateColorCodes('&', newMessageFormat);
 
@@ -60,11 +65,14 @@ public final class ChatManager {
                 message = chatFilter.profanityFilter(message, sender);
             }
         }
+        if(mentionsEnabled && sender.hasPermission("strings.*") || sender.hasPermission("strings.mention")) {
+            message = processMentions(sender, message);
+        }
         if(parseChatColors && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.colormsg"))){
             message = ChatColor.translateAlternateColorCodes('&', message);
         }
         if(usePAPI && messagePlaceholders && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.placeholdermsg"))){
-            message = PlaceholderAPI.setPlaceholders(sender,message);
+            message = PlaceholderAPI.setPlaceholders(sender, message);
         }
         return message;
     }
@@ -91,5 +99,21 @@ public final class ChatManager {
             delayNum *= 60;
         }
         return delayNum * 20L;
+    }
+
+    public String processMentions(Player sender, String str){
+        if(!str.contains("@")){
+            return str;
+        }
+        for(Player p : Bukkit.getOnlinePlayers()){
+            if(strings.getUser(p).isMentionsEnabled() == false){
+                continue;
+            }
+            str = str.replace("@" + p.getName(), mentionColor + "@" + p.getName() + ChatColor.RESET);
+        }
+        if(sender.hasPermission("strings.mention.all")){
+            str = str.replace("@everyone", mentionColor + "@everyone" + ChatColor.RESET);
+        }
+        return str;
     }
 }

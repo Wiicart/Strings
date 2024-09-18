@@ -20,7 +20,7 @@ public final class StringsProvider{
      */
     public static StringsAPI get(){
         if(api == null){
-            throw new IllegalStateException("StringsProvider not initialized.");
+            throw new IllegalStateException("Strings API not initialized.");
         }
         return StringsProvider.api;
     }

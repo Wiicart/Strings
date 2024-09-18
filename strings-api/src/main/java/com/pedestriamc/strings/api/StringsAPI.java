@@ -142,5 +142,18 @@ public interface StringsAPI {
      */
     void startCooldown(Player player);
 
+    /**
+     * Mentions a Player.
+     * Uses the format found in the Strings config.yml
+     * @param player The player to be mentioned.
+     */
+    void mention(Player player);
+
+    /**
+     * Mentions a Player.
+     * Uses the format found in the Strings config.yml
+     * @param user The StringsUser object of the player to be mentioned.
+     */
+    void mention(StringsUser user);
 }
 

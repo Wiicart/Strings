@@ -2,19 +2,16 @@ package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
-import com.pedestriamc.strings.channels.Channel;
-import com.pedestriamc.strings.channels.ChannelManager;
+import com.pedestriamc.strings.chat.Mentioner;
+import com.pedestriamc.strings.chat.channels.Channel;
+import com.pedestriamc.strings.chat.channels.ChannelManager;
+import com.pedestriamc.strings.chat.ChatFilter;
+import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.impl.StringsImpl;
-import com.pedestriamc.strings.listeners.ChatListener;
-import com.pedestriamc.strings.listeners.DirectMessageListener;
-import com.pedestriamc.strings.listeners.JoinListener;
-import com.pedestriamc.strings.listeners.LeaveListener;
+import com.pedestriamc.strings.listeners.*;
 import com.pedestriamc.strings.message.Messenger;
-import com.pedestriamc.strings.tabcompleters.ChannelTabCompleter;
-import com.pedestriamc.strings.tabcompleters.ClearChatTabCompleter;
-import com.pedestriamc.strings.tabcompleters.MessageTabCompleter;
-import com.pedestriamc.strings.tabcompleters.SocialSpyTabCompleter;
+import com.pedestriamc.strings.tabcompleters.*;
 import com.pedestriamc.strings.commands.BroadcastCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
 import com.pedestriamc.strings.commands.*;
@@ -42,9 +39,9 @@ import java.util.logging.Logger;
 
 public final class Strings extends JavaPlugin {
 
-    private final String version = "1.1";
-    private final String distributor = "modrinth";
-    private final short pluginNum = 1;
+    private final String version = "1.2";
+    private final String distributor = "spigot";
+    private final short pluginNum = 2;
 
     @SuppressWarnings("unused")
     private AutoBroadcasts autoBroadcasts;
@@ -74,6 +71,7 @@ public final class Strings extends JavaPlugin {
     private boolean useCustomJoinLeave;
     private boolean isPaper = false;
     private StringsImpl stringsImpl;
+    private Mentioner mentioner;
 
     @Override
     public void onEnable() {
@@ -110,6 +108,7 @@ public final class Strings extends JavaPlugin {
         this.channelManager = null;
         this.chatFilter = null;
         this.autoBroadcasts = null;
+        this.mentioner = null;
         HandlerList.unregisterAll(this);
         this.getServer().getScheduler().cancelTasks(this);
         this.getServer().getServicesManager().unregister(StringsAPI.class, stringsImpl);
@@ -124,33 +123,40 @@ public final class Strings extends JavaPlugin {
 
     @SuppressWarnings("ConstantConditions")
     private void registerClasses(){
-        this.getCommand("strings").setExecutor(new StringsCommand());
-        this.getCommand("helpop").setExecutor(new HelpOPCommand());
-        this.getCommand("broadcast").setExecutor(new BroadcastCommand());
-        this.getCommand("announce").setExecutor(new BroadcastCommand());
+        this.getCommand("strings").setExecutor(new StringsCommand(this));
+        this.getCommand("helpop").setExecutor(new HelpOPCommand(this));
+        this.getCommand("broadcast").setExecutor(new BroadcastCommand(this));
+        this.getCommand("announce").setExecutor(new BroadcastCommand(this));
         this.getCommand("clearchat").setExecutor(new ClearChatCommand());
         this.getCommand("chatclear").setExecutor(new ClearChatCommand());
         this.getCommand("clearchat").setTabCompleter(new ClearChatTabCompleter());
         this.getCommand("chatclear").setTabCompleter(new ClearChatTabCompleter());
-        this.getCommand("socialspy").setExecutor(new SocialSpyCommand());
+        this.getCommand("socialspy").setExecutor(new SocialSpyCommand(this));
         this.getCommand("socialspy").setTabCompleter(new SocialSpyTabCompleter());
-        this.getCommand("msg").setExecutor(new DirectMessageCommand());
-        this.getCommand("message").setExecutor(new DirectMessageCommand());
+        this.getCommand("msg").setExecutor(new DirectMessageCommand(this));
+        this.getCommand("message").setExecutor(new DirectMessageCommand(this));
         this.getCommand("msg").setTabCompleter(new MessageTabCompleter());
         this.getCommand("message").setTabCompleter(new MessageTabCompleter());
-        this.getCommand("reply").setExecutor(new ReplyCommand());
-        this.getCommand("r").setExecutor(new ReplyCommand());
-        this.getCommand("channel").setExecutor(new ChannelCommand());
-        this.getCommand("c").setExecutor(new ChannelCommand());
-        this.getCommand("channel").setTabCompleter(new ChannelTabCompleter());
-        this.getCommand("c").setTabCompleter(new ChannelTabCompleter());
+        this.getCommand("reply").setExecutor(new ReplyCommand(this));
+        this.getCommand("r").setExecutor(new ReplyCommand(this));
+        this.getCommand("channel").setExecutor(new ChannelCommand(this));
+        this.getCommand("c").setExecutor(new ChannelCommand(this));
+        this.getCommand("channel").setTabCompleter(new ChannelTabCompleter(this));
+        this.getCommand("c").setTabCompleter(new ChannelTabCompleter(this));
+        this.getCommand("mention").setExecutor(new MentionCommand(this));
+        this.getCommand("mentions").setExecutor(new MentionCommand(this));
+        this.getCommand("mention").setTabCompleter(new MentionCommandTabCompleter());
+        this.getCommand("mentions").setTabCompleter(new MentionCommandTabCompleter());
         if(config.getBoolean("enable-chatcolor")){
-            this.getCommand("chatcolor").setExecutor(new ChatColorCommand());
+            this.getCommand("chatcolor").setExecutor(new ChatColorCommand(this));
         }
-        this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
+        this.getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         this.getServer().getPluginManager().registerEvents(new JoinListener(),this);
         this.getServer().getPluginManager().registerEvents(new LeaveListener(), this);
         this.getServer().getPluginManager().registerEvents(new DirectMessageListener(), this);
+        if(config.getBoolean("enable-mentions")){
+            this.getServer().getPluginManager().registerEvents(new MentionListener(this), this);
+        }
     }
 
     //Load options from the config
@@ -207,6 +213,7 @@ public final class Strings extends JavaPlugin {
         channelManager = new ChannelManager(this);
         autoBroadcasts = new AutoBroadcasts(this);
         serverMessages = new ServerMessages(this);
+        mentioner = new Mentioner(this);
 
     }
 
@@ -276,15 +283,6 @@ public final class Strings extends JavaPlugin {
         }
     }
 
-    /*private void setupLogger(){
-        File file = new File(getDataFolder(), "log.txt");
-        if(!file.exists()) {
-            file.getParentFile().mkdirs();
-            saveResource("log.txt", false);
-        }
-        stringsLogger = new StringsLogger(this, file);
-    }*/
-
     private void setupAPI(){
         stringsImpl = new StringsImpl(this);
         StringsProvider.register(stringsImpl, this);
@@ -313,6 +311,7 @@ public final class Strings extends JavaPlugin {
     public boolean modifyJoinLeaveMessages(){ return useCustomJoinLeave; }
     public boolean isPaper(){ return this.isPaper; }
     public static Strings getInstance(){ return instance; }
+    public Mentioner getMentioner(){ return mentioner; }
     /*
     Other methods
      */

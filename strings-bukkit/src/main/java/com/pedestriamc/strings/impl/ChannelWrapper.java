@@ -5,18 +5,19 @@ import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.api.Type;
-import com.pedestriamc.strings.channels.Channel;
-import com.pedestriamc.strings.channels.ProximityChannel;
-import com.pedestriamc.strings.channels.WorldChannel;
+import com.pedestriamc.strings.chat.channels.Channel;
+import com.pedestriamc.strings.chat.channels.ProximityChannel;
+import com.pedestriamc.strings.chat.channels.WorldChannel;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
 import java.util.OptionalDouble;
+import java.util.OptionalInt;
 import java.util.Set;
 
 @SuppressWarnings("ClassCanBeRecord")
-public final class ChannelWrapper implements StringsChannel {
+public final class ChannelWrapper implements StringsChannel{
 
     private final Channel channel;
 
@@ -134,20 +135,10 @@ public final class ChannelWrapper implements StringsChannel {
     }
 
     @Override
-    public OptionalDouble getOptionalProximity() {
-        if(!(channel instanceof ProximityChannel proximityChannel)){
-            return OptionalDouble.empty();
-        }
-        return OptionalDouble.of(proximityChannel.getProximity());
+    public OptionalInt getProximity() {
+        return null;
     }
 
-    @Override
-    public double getProximity() {
-        if(!(channel instanceof ProximityChannel proximityChannel)){
-            return -1;
-        }
-        return proximityChannel.getProximity();
-    }
 
     @Override
     public Membership getMembership() {
@@ -160,10 +151,9 @@ public final class ChannelWrapper implements StringsChannel {
     }
 
     @Override
-    public void setProximity(double proximity) {
-        if(!(channel instanceof ProximityChannel)){
-            return;
-        }
-        ((ProximityChannel) channel).setProximity(proximity);
+    public void setProximity(int i) {
+
     }
+
+
 }

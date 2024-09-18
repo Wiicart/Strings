@@ -14,7 +14,7 @@
 #   - broadcasts.yml
 #   - messages.yml
 #   - channels.yml
-# Configuration options:
+# Main Configuration Options:
 
 # Plugin prefix:
 prefix: "&8[&3Strings&8] &f"
@@ -149,6 +149,47 @@ url-whitelist:
 
 # Should the logger be enabled?
 enable-logger: false
+
+
+
+# Mentioning Options
+
+# Enable mentioning?
+enable-mentions: true
+
+# Enable @everyone mentions?
+# Players will still need the permission strings.mention.all to use this.
+mention-everyone: true
+
+# Mention Chat Format:
+# How should the text change in chat when a player uses @<username>?
+mention-chat-format: "&e"
+
+# Mention Format:
+# This text will show up in the mentioned player's action bar.
+# Available Placeholders:
+# - %sender% - who mentioned you?
+mention-format: "&e%sender% mentioned you."
+
+# Mention Sound:
+# You can have any valid Bukkit sound play when a player is mentioned.
+# A list of options:
+# https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+# NOTE: This plugin is compiled for 1.16, so only sounds available in 1.16 will work.
+# If you want to use more recent sounds, you can compile the plugin for a later version of Minecraft.
+mention-sound: "BLOCK_NOTE_BLOCK_PLING"
+
+# Mention Pitch:
+# Players hear a sound any time they're pinged.
+# This modifies the pitch of the sound.  Be cautious with this.
+# See link below for options:
+# https://minecraft.wiki/w/Note_Block
+mention-pitch: 0.594604
+
+# Mention Volume:
+# How loud should the note block sound be for the player?
+mention-vol: 10
+
 
 
 

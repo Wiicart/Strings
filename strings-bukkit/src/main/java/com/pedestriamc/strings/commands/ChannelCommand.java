@@ -2,8 +2,8 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.User;
-import com.pedestriamc.strings.channels.Channel;
-import com.pedestriamc.strings.channels.ChannelManager;
+import com.pedestriamc.strings.chat.channels.Channel;
+import com.pedestriamc.strings.chat.channels.ChannelManager;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import org.bukkit.Bukkit;
@@ -16,8 +16,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class ChannelCommand implements CommandExecutor {
 
-    private final Strings strings = Strings.getInstance();
-    private final ChannelManager channelManager = strings.getChannelManager();
+    private final Strings strings;
+    private final ChannelManager channelManager;
+
+    public ChannelCommand(@NotNull Strings strings){
+        this.strings = strings;
+        this.channelManager = strings.getChannelManager();
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args){
@@ -55,7 +60,7 @@ public class ChannelCommand implements CommandExecutor {
                  */
                 switch(args[0].toUpperCase()){
                     case "JOIN" -> {
-                        if(sender instanceof Server){
+                        if(!(sender instanceof Player)){
                             sender.sendMessage("[Strings] /channel join must be used with a player parameter");
                             return true;
                         }

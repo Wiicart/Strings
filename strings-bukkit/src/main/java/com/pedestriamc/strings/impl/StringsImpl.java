@@ -1,9 +1,9 @@
 package com.pedestriamc.strings.impl;
 
-import com.pedestriamc.strings.ChatManager;
+import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.api.*;
-import com.pedestriamc.strings.channels.Channel;
-import com.pedestriamc.strings.channels.ChannelManager;
+import com.pedestriamc.strings.chat.channels.Channel;
+import com.pedestriamc.strings.chat.channels.ChannelManager;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

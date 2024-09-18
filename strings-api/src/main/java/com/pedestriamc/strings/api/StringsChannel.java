@@ -11,7 +11,7 @@ import java.util.Set;
  * An API Wrapper for all types of Channels.
  */
 @SuppressWarnings("unused")
-public interface StringsChannel {
+public interface StringsChannel{
 
     /**
      * Sends a message in a Channel from a player.

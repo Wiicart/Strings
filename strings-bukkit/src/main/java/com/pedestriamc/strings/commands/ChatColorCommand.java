@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class ChatColorCommand implements CommandExecutor {
 
-    Map<String, ChatColor> colorMap = Map.ofEntries(
+    private final Map<String, ChatColor> colorMap = Map.ofEntries(
             new AbstractMap.SimpleEntry<>("BLACK", ChatColor.BLACK),
             new AbstractMap.SimpleEntry<>("DARKBLUE", ChatColor.DARK_BLUE),
             new AbstractMap.SimpleEntry<>("DARKGREEN", ChatColor.DARK_GREEN),
@@ -38,7 +38,7 @@ public class ChatColorCommand implements CommandExecutor {
             new AbstractMap.SimpleEntry<>("WHITE", ChatColor.WHITE)
     );
 
-    Map<String, ChatColor> styleMap = Map.of(
+    private final Map<String, ChatColor> styleMap = Map.of(
             "BOLD", ChatColor.BOLD,
             "UNDERLINE", ChatColor.UNDERLINE,
             "ITALIC", ChatColor.ITALIC,
@@ -48,9 +48,11 @@ public class ChatColorCommand implements CommandExecutor {
             "MAGIC", ChatColor.MAGIC
     );
 
-    String pattern = "#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})";
+    private final Strings strings;
 
-    Strings strings = Strings.getInstance();
+    public ChatColorCommand(@NotNull Strings strings){
+        this.strings = strings;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -87,6 +89,7 @@ public class ChatColorCommand implements CommandExecutor {
         StringBuilder chatColor = new StringBuilder();
         boolean hasColor = false;
         for (String arg : args) {
+            String pattern = "#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})";
             if (colorMap.containsKey(arg.toUpperCase())) {
                 if(hasColor){
                     Messenger.sendMessage(Message.ONE_COLOR, sender);

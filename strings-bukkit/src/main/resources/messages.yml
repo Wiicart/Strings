@@ -184,3 +184,9 @@ strings-help:
 
 # Invalid args:
 invalid-args: "&fInvalid arguments."
+
+# Mentions enabled:
+mentions-enabled: "&fMentions enabled.  Players can now mention you."
+
+# Mentions disabled:
+mentions-disabled: "&fMentions disabled.  Players can not mention you now."

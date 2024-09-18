@@ -14,8 +14,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class BroadcastCommand implements CommandExecutor {
 
-    private final String broadcastFormat = Strings.getInstance().getConfig().getString("broadcast-format");
-    private final boolean usePAPI = Strings.getInstance().usePlaceholderAPI();
+    private final String broadcastFormat;
+    private final boolean usePAPI;
+
+
+    public BroadcastCommand(@NotNull Strings strings){
+        broadcastFormat = strings.getConfig().getString("broadcast-format", "&8[&3Broadcast&8] &f");
+        usePAPI = strings.usePlaceholderAPI();
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args){

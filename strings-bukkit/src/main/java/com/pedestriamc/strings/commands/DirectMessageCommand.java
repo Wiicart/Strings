@@ -13,7 +13,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class DirectMessageCommand implements CommandExecutor {
 
-    private final PlayerDirectMessenger playerDirectMessenger = Strings.getInstance().getPlayerDirectMessenger();
+    private final PlayerDirectMessenger playerDirectMessenger;
+
+    public DirectMessageCommand(@NotNull Strings strings){
+        this.playerDirectMessenger = strings.getPlayerDirectMessenger();
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args){

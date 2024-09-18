@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.commands;
 
-import com.pedestriamc.strings.channels.Channel;
+import com.pedestriamc.strings.chat.channels.Channel;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.Strings;
@@ -10,9 +10,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class SocialSpyCommand implements CommandExecutor {
 
-    private final Strings strings = Strings.getInstance();
+    private final Strings strings;
+
+    public SocialSpyCommand(@NotNull Strings strings){
+        this.strings = strings;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args){

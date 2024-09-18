@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.tabcompleters;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.channels.ChannelManager;
+import com.pedestriamc.strings.chat.channels.ChannelManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -15,7 +15,11 @@ import java.util.List;
 
 public class ChannelTabCompleter implements TabCompleter {
 
-    private final ChannelManager channelManager = Strings.getInstance().getChannelManager();
+    private final ChannelManager channelManager;
+
+    public ChannelTabCompleter(@NotNull Strings strings){
+        this.channelManager = strings.getChannelManager();
+    }
 
     @Nullable
     @Override

@@ -1,53 +1,40 @@
-package com.pedestriamc.strings.channels;
+package com.pedestriamc.strings.chat.channels;
 
-import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The channel that players are assigned to by default.
- * This channel cannot process any messages, it instead determines the proper channel to be used.
+ * A Channel used for Parties, these channels cannot be saved and are deleted on reboot or when all players leave.
  */
-public class DefaultChannel implements Channel{
+public class PartyChannel implements Channel{
 
-    private final ChannelManager channelManager;
+    private String name;
+    private Player leader;
     private final Set<Player> members;
-    private final Strings strings;
+    private String format;
+    private String color;
+    private final ChannelManager channelManager;
 
-    public DefaultChannel(Strings strings, @NotNull ChannelManager channelManager){
-        this.channelManager = channelManager;
+    public PartyChannel(String name, Player leader, String format, String color, ChannelManager channelManager){
+        this.name = name;
+        this.leader = leader;
         this.members = ConcurrentHashMap.newKeySet();
-        this.strings = strings;
-        channelManager.registerChannel(this);
+        this.format = format;
+        this.color = color;
+        this.channelManager = channelManager;
     }
+
 
     @Override
     public void sendMessage(Player player, String message) {
-        Channel[] worldChannels = channelManager.getWorldPriorityChannels(player.getWorld());
-        if(worldChannels.length > 0){
-            worldChannels[0].sendMessage(player, message);
-            return;
-        }
-        Channel[] defaultMembership = channelManager.getPriorityChannels();
-        if(defaultMembership.length > 0){
-            defaultMembership[0].sendMessage(player, message);
-            return;
-        }
-        User user = strings.getUser(player);
-        Set<Channel> usersChannels = user.getChannels();
-        if(!usersChannels.isEmpty()){
-            Optional<Channel> optional =  usersChannels.stream().max(Comparator.comparingInt(Channel::getPriority));
-            optional.get().sendMessage(player, message);
-        }
-        player.sendMessage(ChatColor.RED + "[Strings] You aren't a member of any channels.  Please contact staff for help.");
+
     }
 
     @Override
@@ -62,7 +49,7 @@ public class DefaultChannel implements Channel{
 
     @Override
     public String getFormat() {
-        return null;
+        return format;
     }
 
     @Override
@@ -72,12 +59,12 @@ public class DefaultChannel implements Channel{
 
     @Override
     public String getName() {
-        return "default";
+        return name;
     }
 
     @Override
     public void setName(String name) {
-
+        this.name = name;
     }
 
     @Override
@@ -103,7 +90,6 @@ public class DefaultChannel implements Channel{
     @Override
     public void addPlayer(User user) {
         members.add(user.getPlayer());
-
     }
 
     @Override
@@ -113,7 +99,7 @@ public class DefaultChannel implements Channel{
 
     @Override
     public Set<Player> getMembers() {
-        return new HashSet<>(members);
+        return null;
     }
 
     @Override
@@ -148,7 +134,7 @@ public class DefaultChannel implements Channel{
 
     @Override
     public Type getType() {
-        return Type.DEFAULT;
+        return Type.PARTY;
     }
 
     @Override
@@ -168,21 +154,21 @@ public class DefaultChannel implements Channel{
 
     @Override
     public Membership getMembership() {
-        return Membership.PROTECTED;
+        return Membership.PARTY;
     }
 
     @Override
     public int getPriority() {
-        return -1;
-    }
-
-    @Override
-    public void saveChannel() {
-        channelManager.saveChannel(this);
+        return 0;
     }
 
     @Override
     public StringsChannel getStringsChannel() {
         return null;
+    }
+
+    @Override
+    public void saveChannel() {
+        channelManager.saveChannel(this);
     }
 }

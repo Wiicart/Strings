@@ -12,7 +12,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class StringsCommand implements CommandExecutor {
 
-    private final Strings strings = Strings.getInstance();
+    private final Strings strings;
+
+    public StringsCommand(@NotNull Strings strings){
+        this.strings = strings;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {

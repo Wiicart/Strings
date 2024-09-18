@@ -1,6 +1,6 @@
 package com.pedestriamc.strings;
 
-import com.pedestriamc.strings.channels.Channel;
+import com.pedestriamc.strings.chat.channels.Channel;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,6 +48,7 @@ public final class UserUtil {
         String prefix = config.getString(userPath + ".prefix");
         String displayName = config.getString(userPath + ".display-name");
         String chatColor = config.getString(userPath + ".chat-color");
+        boolean mentionsEnabled = config.getBoolean(userPath + "mentions-enabled", true);
         Channel activeChannel = strings.getChannel(config.getString(userPath + ".active-channel"));
         List<?> channelNames = config.getList(userPath + ".channels");
         if(channelNames != null){
@@ -57,7 +58,7 @@ public final class UserUtil {
                 }
             }
         }
-        return new User(uuid, chatColor, prefix, suffix, displayName, channels, activeChannel);
+        return new User(uuid, chatColor, prefix, suffix, displayName, channels, activeChannel, mentionsEnabled);
     }
 
     /**

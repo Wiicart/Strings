@@ -1,6 +1,6 @@
-package com.pedestriamc.strings.channels;
+package com.pedestriamc.strings.chat.channels;
 
-import com.pedestriamc.strings.ChatManager;
+import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;

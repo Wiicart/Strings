@@ -1,5 +1,5 @@
 name: Strings
-version: '1.1'
+version: '1.2'
 main: com.pedestriamc.strings.Strings
 api-version: 1.16
 prefix: Strings
@@ -50,6 +50,12 @@ commands:
   chatcolor:
     description: "Allows changing chat colors"
     usage: "/chatcolor <color>"
+  mention:
+    description: "Toggles whether you receive mentions or not"
+    usage: "/mention <enable|disable>"
+  mentions:
+    description: "Toggles whether you receive mentions or not"
+    usage: "/mentions <enable|disable>"
 permissions:
   strings.*:
     description: "All Strings permissions"
@@ -118,4 +124,16 @@ permissions:
     default: false
   strings.channels.default:
     description: "Allows use of default channels! It is strongly encouraged that all players have this permission."
+    default: true
+  strings.mention:
+    description: "Allows mentioning players in chat using @<username>"
+    default: true
+    children:
+      strings.mention.all: false
+      strings.mention.toggle: true
+  strings.mention.all:
+    description: "Allows mentioning all players with @everyone"
+    default: op
+  strings.mention.toggle:
+    description: "Allows toggling whether you receive mentions or not"
     default: true

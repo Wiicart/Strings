@@ -1,7 +1,7 @@
 package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.api.StringsUser;
-import com.pedestriamc.strings.channels.Channel;
+import com.pedestriamc.strings.chat.channels.Channel;
 import com.pedestriamc.strings.impl.UserWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,20 +26,22 @@ public class User {
     private final UUID uuid;
     private final Player player;
     private final String name;
+    private final HashSet<Channel> channels;
     private String chatColor;
     private String prefix;
     private String suffix;
     private String displayName;
     private Channel activeChannel;
     private StringsUser stringsUser;
-    private final HashSet<Channel> channels;
+    private boolean mentionsEnabled;
 
     /**
-     * The constructor for a User with no stored data.  All values except for UUID are initialized as null.
+     * The constructor for a User with no stored data.
+     * All values are default or null.
      * @param uuid the User's UUID.  This should match the Player's UUID.
      */
     public User(UUID uuid){
-        this(uuid, null, null, null, null, null, null);
+        this(uuid, null, null, null, null, null, null, true);
     }
 
     /**
@@ -51,8 +53,9 @@ public class User {
      * @param displayName The User's display name.
      * @param channels The channels the User is a member of.
      * @param activeChannel The User's active channel.
+     * @param mentionsEnabled If the user receives mentions or not.
      */
-    public User(UUID uuid, String chatColor, String prefix, String suffix, String displayName, HashSet<Channel> channels, Channel activeChannel){
+    public User(UUID uuid, String chatColor, String prefix, String suffix, String displayName, HashSet<Channel> channels, Channel activeChannel, boolean mentionsEnabled){
         this.strings = Strings.getInstance();
         this.uuid = uuid;
         this.chatColor = chatColor;
@@ -60,6 +63,7 @@ public class User {
         this.suffix = suffix;
         this.displayName = displayName;
         this.player = Bukkit.getPlayer(uuid);
+        this.mentionsEnabled = mentionsEnabled;
         this.name = player != null ? player.getName() : null;
         this.activeChannel = activeChannel != null ? activeChannel : strings.getChannel("default");
         this.channels = Objects.requireNonNullElseGet(channels, HashSet::new);
@@ -86,6 +90,7 @@ public class User {
         infoMap.put("display-name", this.displayName);
         infoMap.put("active-channel", this.activeChannel.getName());
         infoMap.put("channels", this.getChannelNames());
+        infoMap.put("mentions-enabled", this.mentionsEnabled);
         return infoMap;
     }
 
@@ -224,6 +229,23 @@ public class User {
     }
 
     /**
+     * Provides a boolean of if the player wants to receive messages.
+     * @return A boolean.
+     */
+    public boolean isMentionsEnabled(){
+        return this.mentionsEnabled;
+    }
+
+    /**
+     * Sets if this player will receive mentions
+     * @param mentionsEnabled A boolean of if the mentions should be enabled.
+     */
+    public void setMentionsEnabled(boolean mentionsEnabled){
+        this.mentionsEnabled = mentionsEnabled;
+        UserUtil.saveUser(this);
+    }
+
+    /**
      * Provides the player's active channel.
      * @return The active channel.
      */
@@ -303,7 +325,7 @@ public class User {
     }
 
     /**
-     * Removes the User from channels, because the player is going offline.
+     * Removes the User from channels because the player is going offline.
      * The User will rejoin the channels when they log back on.
      */
     public void logOff(){

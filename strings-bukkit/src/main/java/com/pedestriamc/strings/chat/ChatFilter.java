@@ -1,5 +1,6 @@
-package com.pedestriamc.strings;
+package com.pedestriamc.strings.chat;
 
+import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import org.bukkit.Bukkit;

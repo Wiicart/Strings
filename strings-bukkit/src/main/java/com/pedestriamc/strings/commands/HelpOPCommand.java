@@ -1,9 +1,9 @@
 package com.pedestriamc.strings.commands;
 
+import com.pedestriamc.strings.chat.channels.Channel;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.message.Messenger;
-import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,7 +12,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class HelpOPCommand implements CommandExecutor {
 
-    private final Strings strings = Strings.getInstance();
+    private final Strings strings;
+    private final Channel helpOPChannel;
+
+    public HelpOPCommand(@NotNull Strings strings){
+        this.strings = strings;
+        this.helpOPChannel = strings.getChannel("helpop");
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -20,7 +26,7 @@ public class HelpOPCommand implements CommandExecutor {
             Messenger.sendMessage(Message.HELPOP_DISABLED, sender);
             return true;
         }
-        if(sender instanceof Server){
+        if(!(sender instanceof Player)){
             sender.sendMessage("[Strings] This command can only be used by players.");
             return true;
         }
@@ -37,7 +43,7 @@ public class HelpOPCommand implements CommandExecutor {
             builder.append(arg);
             builder.append(" ");
         }
-        strings.getChannel("helpop").sendMessage((Player) sender,builder.toString());
+        helpOPChannel.sendMessage((Player) sender, builder.toString());
         Messenger.sendMessage(Message.HELPOP_SENT, sender);
         return true;
     }

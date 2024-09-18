@@ -1,6 +1,6 @@
-package com.pedestriamc.strings.channels;
+package com.pedestriamc.strings.chat.channels;
 
-import com.pedestriamc.strings.ChatManager;
+import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
@@ -12,158 +12,151 @@ import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ProximityChannel implements Channel{
+public class StringChannel implements Channel{
 
     private final Strings strings;
-    private final Set<Player> members;
     private String name;
     private String format;
     private String defaultColor;
-    private final ChannelManager channelManager;
-    private final ChatManager chatManager;
     private final boolean callEvent;
+    private final Set<Player> members;
+    private final ChatManager chatManager;
     private volatile boolean active;
-    private boolean doURLFilter;
-    private boolean doProfanityFilter;
-    private boolean doCooldown;
-    private double distance;
+    private  boolean urlFilter;
+    private  boolean profanityFilter;
+    private final ChannelManager channelManager;
+    private  boolean doCooldown;
     private StringsChannel stringsChannel;
     private final Membership membership;
     private final int priority;
-    private final World world;
 
-    public ProximityChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, ChatManager chatManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, double distance, boolean active, Membership membership, int priority, World world){
+    public StringChannel(@NotNull Strings strings, String name, String format, String defaultColor, @NotNull ChannelManager channelManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, Membership membership, int priority){
         this.strings = strings;
         this.name = name;
-        this.format = format;
-        this.defaultColor = defaultColor;
-        this.channelManager = channelManager;
-        this.chatManager = chatManager;
-        this.callEvent = callEvent;
-        this.doURLFilter = doURLFilter;
-        this.doProfanityFilter = doProfanityFilter;
-        this.doCooldown = doCooldown;
-        this.distance = distance;
         this.members = ConcurrentHashMap.newKeySet();
-        this.membership = membership;
+        this.format = format;
+        this.defaultColor = defaultColor != null ? defaultColor : "&f";
+        this.chatManager = strings.getChatManager();
         this.active = active;
+        this.callEvent = callEvent;
+        this.urlFilter = doURLFilter;
+        this.profanityFilter = doProfanityFilter;
+        this.channelManager = channelManager;
+        this.doCooldown = doCooldown;
+        this.membership = membership;
         this.priority = priority;
-        this.world = world;
         channelManager.registerChannel(this);
     }
 
     @Override
-    public void sendMessage(@NotNull Player player, String message) {
+    public void sendMessage(Player player, String message){
         if(!active){
             Messenger.sendMessage(Message.CHANNEL_DISABLED, player);
             return;
         }
-        HashSet<Player> receivers = new HashSet<>(getRecipients(player));
-        receivers.addAll(members);
         String format = chatManager.formatMessage(player, this);
         message = chatManager.processMessage(player, message);
         String finalMessage = message;
-
         if(callEvent){
-            Bukkit.getScheduler().runTask(strings, () ->{
-                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, receivers, this.getStringsChannel());
+            Bukkit.getScheduler().runTask(strings, () -> {
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, getRecipients(), this.getStringsChannel());
                 event.setFormat(format);
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()){
                     String formattedMessage = String.format(event.getFormat(), strings.getUser(player).getDisplayName(), event.getMessage());
-                    for(Player p : receivers){
+                    for(Player p : getRecipients()){
                         p.sendMessage(formattedMessage);
                     }
                     Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
                     chatManager.startCoolDown(player);
                 }
             });
-            return;
+        }else{
+            String formattedMessage = String.format(format, player.getDisplayName(), message);
+            for(Player p : getRecipients()){
+                p.sendMessage(formattedMessage);
+            }
+            Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
+            chatManager.startCoolDown(player);
         }
-
-        String formattedMessage = String.format(format, player.getDisplayName(), message);
-        for(Player p : receivers){
-            p.sendMessage(formattedMessage);
-        }
-        Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
-        chatManager.startCoolDown(player);
     }
 
-    private @NotNull HashSet<Player> getRecipients(@NotNull Player sender){
-
-        if(!sender.getWorld().equals(world)){
-            return new HashSet<>(world.getPlayers());
-        }
-
-        HashSet<Player> players = new HashSet<>(members);
-        Location senderLocation = sender.getLocation();
-        for(Player p : world.getPlayers()){
-            Location pLocation = p.getLocation();
-            if(senderLocation.distance(pLocation) < distance){
-                players.add(p);
-            }else if(p.hasPermission("strings.channels." + name + ".receive")){
-                players.add(p);
+    public Set<Player> getRecipients(){
+        List<Player> list = new ArrayList<>(members);
+        if(membership == Membership.DEFAULT){
+            for(Player p : Bukkit.getOnlinePlayers()){
+                if(list.contains(p)){
+                    continue;
+                }
+                list.add(p);
             }
         }
-        return players;
+
+        for(Player p : Bukkit.getOnlinePlayers()){
+            if(p.hasPermission("strings.channels." + name + ".receive")){
+                list.add(p);
+            }
+        }
+        return new HashSet<>(list);
     }
 
+
     @Override
-    public void broadcastMessage(String message) {
-        for(Player p : members){
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+    public void broadcastMessage(String message){
+        for(Player p : getRecipients()){
+            p.sendMessage(message);
         }
     }
 
     @Override
-    public void closeChannel() {
+    public void closeChannel(){
         channelManager.unregisterChannel(this);
+        channelManager.deleteChannel(this);
+        active = false;
     }
 
     @Override
-    public String getFormat() {
+    public String getFormat(){
         return format;
     }
 
     @Override
-    public String getDefaultColor() {
+    public String getDefaultColor(){
         return defaultColor;
     }
 
     @Override
-    public String getName() {
+    public String getName(){
         return name;
     }
 
     @Override
-    public void setName(String name) {
+    public void setName(String name){
         this.name = name;
     }
 
     @Override
-    public void setDefaultColor(String defaultColor) {
+    public void setDefaultColor(String defaultColor){
         this.defaultColor = defaultColor;
     }
 
     @Override
-    public void setFormat(String format) {
-        this.format = format;
-    }
+    public void setFormat(String format){ this.format = format; }
 
     @Override
-    public void addPlayer(Player player) {
+    public void addPlayer(Player player){
         members.add(player);
     }
 
@@ -173,7 +166,7 @@ public class ProximityChannel implements Channel{
     }
 
     @Override
-    public void removePlayer(Player player) {
+    public void removePlayer(Player player){
         members.remove(player);
     }
 
@@ -183,33 +176,33 @@ public class ProximityChannel implements Channel{
     }
 
     @Override
-    public Set<Player> getMembers() {
-        return new HashSet<>(members);
+    public Set<Player> getMembers(){
+        return members;
     }
 
     @Override
     public boolean doURLFilter() {
-        return doURLFilter;
+        return urlFilter;
     }
 
     @Override
     public void setURLFilter(boolean doURLFilter) {
-        this.doURLFilter = doURLFilter;
+        this.urlFilter = doURLFilter;
     }
 
     @Override
     public boolean doProfanityFilter() {
-        return doProfanityFilter;
+        return profanityFilter;
     }
 
     @Override
     public void setProfanityFilter(boolean doProfanityFilter) {
-        this.doProfanityFilter = doProfanityFilter;
+        this.profanityFilter = doProfanityFilter;
     }
 
     @Override
     public boolean doCooldown() {
-        return doCooldown;
+        return this.doCooldown;
     }
 
     @Override
@@ -219,12 +212,12 @@ public class ProximityChannel implements Channel{
 
     @Override
     public Type getType() {
-        return Type.PROXIMITY;
+        return Type.NORMAL;
     }
 
     @Override
     public void setEnabled(boolean isEnabled) {
-        this.active = isEnabled;
+        active = isEnabled;
     }
 
     @Override
@@ -246,14 +239,12 @@ public class ProximityChannel implements Channel{
         map.put("format", format);
         map.put("default-color", defaultColor);
         map.put("call-event", String.valueOf(callEvent));
-        map.put("filter-profanity", String.valueOf(doProfanityFilter));
-        map.put("block-urls", String.valueOf(doURLFilter));
+        map.put("filter-profanity", String.valueOf(profanityFilter));
+        map.put("block-urls", String.valueOf(urlFilter));
         map.put("cooldown", String.valueOf(doCooldown));
         map.put("type", String.valueOf(this.getType()));
         map.put("membership", String.valueOf(membership));
-        map.put("distance", String.valueOf(distance));
         map.put("priority", String.valueOf(priority));
-        map.put("world", world.getName());
         return map;
     }
 
@@ -265,18 +256,6 @@ public class ProximityChannel implements Channel{
     @Override
     public int getPriority() {
         return priority;
-    }
-
-    public double getProximity(){
-        return distance;
-    }
-
-    public void setProximity(double proximity){
-        this.distance = proximity;
-    }
-
-    public World getWorld(){
-        return this.world;
     }
 
     @Override

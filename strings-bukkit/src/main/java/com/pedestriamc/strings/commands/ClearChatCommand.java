@@ -38,7 +38,7 @@ public class ClearChatCommand implements CommandExecutor
             return true;
         }
         //Self chat clear
-        if(sender instanceof Server){
+        if(!(sender instanceof Player)){
             sender.sendMessage("[Strings] Console cannot clear it's own chat.");
             return true;
         }

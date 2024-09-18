@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.impl;
 
 import com.pedestriamc.strings.User;
-import com.pedestriamc.strings.channels.Channel;
+import com.pedestriamc.strings.chat.channels.Channel;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.StringsUser;
 import org.jetbrains.annotations.NotNull;
