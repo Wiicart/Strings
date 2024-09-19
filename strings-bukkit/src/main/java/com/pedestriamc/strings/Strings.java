@@ -112,6 +112,7 @@ public final class Strings extends JavaPlugin {
         HandlerList.unregisterAll(this);
         this.getServer().getScheduler().cancelTasks(this);
         this.getServer().getServicesManager().unregister(StringsAPI.class, stringsImpl);
+        StringsProvider.unregister();
         this.stringsImpl = null;
         logger.info("[Strings] Disabled");
     }
