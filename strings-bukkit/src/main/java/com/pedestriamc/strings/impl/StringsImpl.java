@@ -2,6 +2,7 @@ package com.pedestriamc.strings.impl;
 
 import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.api.*;
+import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.chat.channels.Channel;
 import com.pedestriamc.strings.chat.channels.ChannelManager;
 import org.bukkit.World;
@@ -19,12 +20,14 @@ public final class StringsImpl implements StringsAPI {
     private final com.pedestriamc.strings.Strings strings;
     private final ChannelManager channelManager;
     private final ChatManager chatManager;
+    private final Mentioner mentioner;
     private boolean apiUsed;
 
     public StringsImpl(@NotNull com.pedestriamc.strings.Strings strings){
         this.strings = strings;
         this.channelManager = strings.getChannelManager();
         this.chatManager = strings.getChatManager();
+        this.mentioner = strings.getMentioner();
     }
 
     @Override
@@ -115,9 +118,25 @@ public final class StringsImpl implements StringsAPI {
         chatManager.startCoolDown(player);
     }
 
+    @Override
+    public void mention(Player subject, Player sender) {
+        mentioner.mention(subject, sender);
+    }
+
+    @Override
+    public void mention(StringsUser subject, StringsUser sender) {
+        if(!(subject instanceof UserWrapper subj)){
+            return;
+        }
+        if(!(sender instanceof UserWrapper sndr)){
+            return;
+        }
+        mentioner.mention(subj.getUser(), sndr.getUser());
+    }
+
     public short getVersion(){
         this.apiUsed = true;
-        return 1;
+        return 2;
     }
 
     public boolean isApiUsed(){

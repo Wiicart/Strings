@@ -115,4 +115,16 @@ public interface StringsUser {
      * @return True/false if the StringsUser is a member.
      */
     boolean memberOf(StringsChannel channel);
+
+    /**
+     * Tells if the StringsUser has mentions enabled.
+     * @return A boolean if the User has mentions enabled or not.
+     */
+    boolean mentionsEnabled();
+
+    /**
+     * Sets if the StringsUser has mentions enabled.
+     * @param mentionsEnabled true/false if the StringsUser should have mentions enabled.
+     */
+    void setMentionsEnabled(boolean mentionsEnabled);
 }

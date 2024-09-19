@@ -47,6 +47,6 @@ public final class StringsProvider{
      * @return A short of the API version.
      */
     public static short getVersion(){
-        return 1;
+        return 2;
     }
 }

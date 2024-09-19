@@ -145,15 +145,17 @@ public interface StringsAPI {
     /**
      * Mentions a Player.
      * Uses the format found in the Strings config.yml
-     * @param player The player to be mentioned.
+     * @param subject The player to be mentioned.
+     * @param sender The sender of the mention.
      */
-    void mention(Player player);
+    void mention(Player subject, Player sender);
 
     /**
      * Mentions a Player.
      * Uses the format found in the Strings config.yml
-     * @param user The StringsUser object of the player to be mentioned.
+     * @param subject The StringsUser object of the player to be mentioned.
+     * @param sender The StringsUser object of the sender of the mention.
      */
-    void mention(StringsUser user);
+    void mention(StringsUser subject, StringsUser sender);
 }
 

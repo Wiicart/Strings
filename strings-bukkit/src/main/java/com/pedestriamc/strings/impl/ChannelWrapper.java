@@ -13,11 +13,10 @@ import org.bukkit.entity.Player;
 
 import java.util.Optional;
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 import java.util.Set;
 
 @SuppressWarnings("ClassCanBeRecord")
-public final class ChannelWrapper implements StringsChannel{
+public final class ChannelWrapper implements StringsChannel {
 
     private final Channel channel;
 
@@ -135,10 +134,20 @@ public final class ChannelWrapper implements StringsChannel{
     }
 
     @Override
-    public OptionalInt getProximity() {
-        return null;
+    public OptionalDouble getOptionalProximity() {
+        if(!(channel instanceof ProximityChannel proximityChannel)){
+            return OptionalDouble.empty();
+        }
+        return OptionalDouble.of(proximityChannel.getProximity());
     }
 
+    @Override
+    public double getProximity() {
+        if(!(channel instanceof ProximityChannel proximityChannel)){
+            return -1;
+        }
+        return proximityChannel.getProximity();
+    }
 
     @Override
     public Membership getMembership() {
@@ -151,9 +160,10 @@ public final class ChannelWrapper implements StringsChannel{
     }
 
     @Override
-    public void setProximity(int i) {
-
+    public void setProximity(double proximity) {
+        if(!(channel instanceof ProximityChannel)){
+            return;
+        }
+        ((ProximityChannel) channel).setProximity(proximity);
     }
-
-
 }
