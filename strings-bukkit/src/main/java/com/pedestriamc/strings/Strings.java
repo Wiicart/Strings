@@ -72,6 +72,7 @@ public final class Strings extends JavaPlugin {
     private boolean isPaper = false;
     private StringsImpl stringsImpl;
     private Mentioner mentioner;
+    private UUID apiUUID;
 
     @Override
     public void onEnable() {
@@ -112,7 +113,9 @@ public final class Strings extends JavaPlugin {
         HandlerList.unregisterAll(this);
         this.getServer().getScheduler().cancelTasks(this);
         this.getServer().getServicesManager().unregister(StringsAPI.class, stringsImpl);
-        StringsProvider.unregister();
+        try{
+            StringsProvider.unregister(apiUUID);
+        }catch(IllegalStateException | SecurityException ignored){}
         this.stringsImpl = null;
         logger.info("[Strings] Disabled");
     }
@@ -219,11 +222,11 @@ public final class Strings extends JavaPlugin {
     }
 
     private void setupVault(){
-        if(getServer().getPluginManager().getPlugin("Vault") == null){
+        RegisteredServiceProvider<Chat> serviceProvider = getServer().getServicesManager().getRegistration(Chat.class);
+        if(serviceProvider == null){
             getLogger().info("Vault not found, using built in methods.");
             usingVault = false;
         }else{
-            RegisteredServiceProvider<Chat> serviceProvider = getServer().getServicesManager().getRegistration(Chat.class);
             chat = serviceProvider.getProvider();
             usingVault = true;
         }
@@ -285,8 +288,13 @@ public final class Strings extends JavaPlugin {
     }
 
     private void setupAPI(){
+        apiUUID = UUID.randomUUID();
         stringsImpl = new StringsImpl(this);
-        StringsProvider.register(stringsImpl, this);
+        try{
+            StringsProvider.register(stringsImpl, this, apiUUID);
+        }catch(IllegalStateException a){
+            Bukkit.getLogger().info("Failed to register StringsAPI");
+        }
     }
 
     /*
