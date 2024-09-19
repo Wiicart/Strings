@@ -42,13 +42,13 @@ public final class ChatManager {
     public @NotNull String formatMessage(Player sender, Channel channel){
         String newMessageFormat = channel.getFormat();
         User user = strings.getUser(sender.getUniqueId());
+        newMessageFormat = newMessageFormat.replace("{prefix}", user.getPrefix());
+        newMessageFormat = newMessageFormat.replace("{suffix}", user.getSuffix());
+        newMessageFormat = newMessageFormat.replace("{displayname}", user.getDisplayName());
+        newMessageFormat = newMessageFormat.replace("{message}", user.getChatColor(channel) + "{message}");
         if(usePAPI){
             newMessageFormat = PlaceholderAPI.setPlaceholders(sender, newMessageFormat);
         }
-        newMessageFormat = newMessageFormat.replace("{prefix}", user.getPrefix());
-        newMessageFormat = newMessageFormat.replace("{suffix}", user.getSuffix());
-        newMessageFormat = newMessageFormat.replace("{displayname}", "%s");
-        newMessageFormat = newMessageFormat.replace("{message}", user.getChatColor(channel) + "%s");
         newMessageFormat = ChatColor.translateAlternateColorCodes('&', newMessageFormat);
 
         return newMessageFormat;
@@ -68,11 +68,11 @@ public final class ChatManager {
         if(mentionsEnabled && sender.hasPermission("strings.*") || sender.hasPermission("strings.mention")) {
             message = processMentions(sender, message);
         }
-        if(parseChatColors && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.colormsg"))){
-            message = ChatColor.translateAlternateColorCodes('&', message);
-        }
         if(usePAPI && messagePlaceholders && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.placeholdermsg"))){
             message = PlaceholderAPI.setPlaceholders(sender, message);
+        }
+        if(parseChatColors && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.colormsg"))){
+            message = ChatColor.translateAlternateColorCodes('&', message);
         }
         return message;
     }

@@ -64,13 +64,12 @@ public class HelpOPChannel implements Channel {
         String format = chatManager.formatMessage(player, this);
         message = chatManager.processMessage(player, message);
         String finalMessage = message;
+        String formattedMessage = format.replace("{message}", finalMessage);
         if(callEvent){
             Bukkit.getScheduler().runTask(strings, () ->{
                 AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this.getStringsChannel());
-                event.setFormat(format);
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()){
-                    String formattedMessage = String.format(event.getFormat(), strings.getUser(player).getDisplayName(), event.getMessage());
                     for(Player p : members){
                         p.sendMessage(formattedMessage);
                     }
@@ -78,7 +77,6 @@ public class HelpOPChannel implements Channel {
                 }
             });
         }else{
-            String formattedMessage = String.format(format, player.getDisplayName(), message);
             for(Player p : members){
                 p.sendMessage(formattedMessage);
             }

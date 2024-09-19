@@ -43,6 +43,16 @@ public final class StringsProvider{
     }
 
     /**
+     * For internal use only.
+     * @param api API Implementation
+     * @param plugin Strings plugin
+     */
+    public static void unregister(){
+        StringsProvider.api = null;
+        Bukkit.getLogger().info("[Strings] Strings API unloaded.");
+    }
+
+    /**
      * Provides a short of the API version.
      * @return A short of the API version.
      */
