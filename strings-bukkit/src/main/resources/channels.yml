@@ -12,7 +12,6 @@
 channels:
   global:
     # The format messages should be posted as in the channel.
-    # **IMPORTANT: You MUST use the {displayname} and {message} placeholders!
     # Valid placeholders:
     # {displayname} - player display name
     # {prefix} - player prefix

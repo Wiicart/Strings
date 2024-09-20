@@ -39,7 +39,9 @@ public class ChatListener implements Listener {
 
         if(channel == null){
             user.setActiveChannel(defaultChannel);
+            channel = user.getActiveChannel();
         }
+
         if(chatManager.isOnCoolDown(playerSender) && user.getActiveChannel().doCooldown()){
             event.setCancelled(true);
             Messenger.sendMessage(Message.COOL_DOWN, playerSender);

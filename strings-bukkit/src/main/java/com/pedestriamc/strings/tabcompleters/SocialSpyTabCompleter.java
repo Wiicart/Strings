@@ -12,12 +12,13 @@ import java.util.List;
 public class SocialSpyTabCompleter implements TabCompleter {
 
     private final List<String> list = Arrays.asList("on", "off");
+    private final List<String> empty = new ArrayList<>();
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if(args.length <= 1){
             return list;
         }
-        return new ArrayList<>();
+        return empty;
     }
 }

@@ -38,7 +38,7 @@ public class DirectMessageCommand implements CommandExecutor {
             Messenger.sendMessage(Message.UNKNOWN_PLAYER, sender);
             return true;
         }
-        if(recipient.equals((Player) sender)){
+        if(recipient.equals(sender)){
             Messenger.sendMessage(Message.SELF_MESSAGE, sender);
             return true;
         }

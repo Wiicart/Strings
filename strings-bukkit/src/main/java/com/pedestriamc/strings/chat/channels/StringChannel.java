@@ -41,6 +41,7 @@ public class StringChannel implements Channel{
     private StringsChannel stringsChannel;
     private final Membership membership;
     private final int priority;
+    private final String mentionColor;
 
     public StringChannel(@NotNull Strings strings, String name, String format, String defaultColor, @NotNull ChannelManager channelManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, Membership membership, int priority){
         this.strings = strings;
@@ -57,6 +58,7 @@ public class StringChannel implements Channel{
         this.doCooldown = doCooldown;
         this.membership = membership;
         this.priority = priority;
+        this.mentionColor = ChatColor.translateAlternateColorCodes('&', strings.getConfig().getString("mention-color", "&e"));
         channelManager.registerChannel(this);
     }
 
@@ -109,7 +111,6 @@ public class StringChannel implements Channel{
         }
         return new HashSet<>(list);
     }
-
 
     @Override
     public void broadcastMessage(String message){

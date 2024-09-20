@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class MentionCommand implements CommandExecutor {
 
     private final Strings strings;

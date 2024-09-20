@@ -222,13 +222,19 @@ public final class Strings extends JavaPlugin {
     }
 
     private void setupVault(){
-        RegisteredServiceProvider<Chat> serviceProvider = getServer().getServicesManager().getRegistration(Chat.class);
-        if(serviceProvider == null){
+        try{
+            RegisteredServiceProvider<Chat> serviceProvider = getServer().getServicesManager().getRegistration(Chat.class);
+            if(serviceProvider == null){
+                getLogger().info("Vault not found, using built in methods.");
+                usingVault = false;
+            }else{
+                chat = serviceProvider.getProvider();
+                usingVault = true;
+                getLogger().info("Vault found.");
+            }
+        }catch(NoClassDefFoundError a){
             getLogger().info("Vault not found, using built in methods.");
             usingVault = false;
-        }else{
-            chat = serviceProvider.getProvider();
-            usingVault = true;
         }
     }
 

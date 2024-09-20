@@ -21,6 +21,8 @@ public class ChannelTabCompleter implements TabCompleter {
         this.channelManager = strings.getChannelManager();
     }
 
+    private final List<String> empty = new ArrayList<>();
+
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
@@ -47,6 +49,6 @@ public class ChannelTabCompleter implements TabCompleter {
             }
             return list;
         }
-        return new ArrayList<>();
+        return empty;
     }
 }

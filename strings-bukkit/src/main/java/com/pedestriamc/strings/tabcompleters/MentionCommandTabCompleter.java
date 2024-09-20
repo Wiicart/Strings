@@ -12,6 +12,7 @@ import java.util.List;
 public class MentionCommandTabCompleter implements TabCompleter {
 
     private final List<String> list = List.of("enable", "disable", "on", "off");
+    private final List<String> empty = new ArrayList<>();
 
     @Nullable
     @Override
@@ -19,6 +20,6 @@ public class MentionCommandTabCompleter implements TabCompleter {
         if(args.length <= 1){
             return list;
         }
-        return new ArrayList<>();
+        return empty;
     }
 }

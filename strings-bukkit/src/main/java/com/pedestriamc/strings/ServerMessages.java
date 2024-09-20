@@ -31,6 +31,7 @@ public class ServerMessages {
             }
         }
     }
+
     public String joinMessage(Player player){
         String message = joinMessageTemplate;
         User user = strings.getUser(player);
@@ -43,6 +44,7 @@ public class ServerMessages {
         message = message.replace("{suffix}", user.getSuffix());
         return ChatColor.translateAlternateColorCodes('&',message);
     }
+
     public String leaveMessage(Player player){
         String message = leaveMessageTemplate;
         User user = strings.getUser(player);
@@ -70,7 +72,5 @@ public class ServerMessages {
             message = ChatColor.translateAlternateColorCodes('&', message);
             player.sendMessage(message);
         }
-
-
     }
 }
