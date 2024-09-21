@@ -56,11 +56,6 @@ public class DefaultChannel implements Channel{
     }
 
     @Override
-    public void closeChannel() {
-
-    }
-
-    @Override
     public String getFormat() {
         return null;
     }
@@ -117,12 +112,12 @@ public class DefaultChannel implements Channel{
     }
 
     @Override
-    public boolean doURLFilter() {
+    public boolean doUrlFilter() {
         return false;
     }
 
     @Override
-    public void setURLFilter(boolean doURLFilter) {
+    public void setUrlFilter(boolean doUrlFilter) {
 
     }
 
@@ -149,16 +144,6 @@ public class DefaultChannel implements Channel{
     @Override
     public Type getType() {
         return Type.DEFAULT;
-    }
-
-    @Override
-    public void setEnabled(boolean isEnabled) {
-
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
     }
 
     @Override

@@ -97,7 +97,7 @@ public final class ChannelWrapper implements StringsChannel {
 
     @Override
     public boolean doURLFilter() {
-        return channel.doURLFilter();
+        return channel.doUrlFilter();
     }
 
     @Override
@@ -117,12 +117,12 @@ public final class ChannelWrapper implements StringsChannel {
 
     @Override
     public void setEnabled(boolean isEnabled) {
-        channel.setEnabled(isEnabled);
+
     }
 
     @Override
     public boolean isEnabled() {
-        return channel.isEnabled();
+        return true;
     }
 
     @Override

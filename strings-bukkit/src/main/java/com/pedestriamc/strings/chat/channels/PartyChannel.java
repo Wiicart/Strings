@@ -43,11 +43,6 @@ public class PartyChannel implements Channel{
     }
 
     @Override
-    public void closeChannel() {
-
-    }
-
-    @Override
     public String getFormat() {
         return format;
     }
@@ -103,12 +98,12 @@ public class PartyChannel implements Channel{
     }
 
     @Override
-    public boolean doURLFilter() {
+    public boolean doUrlFilter() {
         return false;
     }
 
     @Override
-    public void setURLFilter(boolean doURLFilter) {
+    public void setUrlFilter(boolean doUrlFilter) {
 
     }
 
@@ -135,16 +130,6 @@ public class PartyChannel implements Channel{
     @Override
     public Type getType() {
         return Type.PARTY;
-    }
-
-    @Override
-    public void setEnabled(boolean isEnabled) {
-
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
     }
 
     @Override

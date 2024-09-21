@@ -28,22 +28,16 @@ public interface Channel{
     void broadcastMessage(String message);
 
     /**
-     * Closes the Channel.
-     */
-    void closeChannel();
-
-    /**
      * Provides the formatting of the Channel.
      * @return The Channel format.
      */
     String getFormat();
 
     /**
-     * Provides the default chat color of the Channel.
-     * @return The default chat color.
+     * Sets the Channel's format.
+     * @param format The new format.
      */
-    String getDefaultColor();
-
+    void setFormat(String format);
 
     /**
      * Provides the Channel's name.
@@ -58,16 +52,52 @@ public interface Channel{
     void setName(String name);
 
     /**
+     * Provides the default chat color of the Channel.
+     * @return The default chat color.
+     */
+    String getDefaultColor();
+
+    /**
      * Sets the Channel's default chat color.
      * @param defaultColor The new default chat color.
      */
     void setDefaultColor(String defaultColor);
 
     /**
-     * Sets the Channel's format.
-     * @param format The new format.
+     * Tells if the channel requires URL filtering.
+     * @return If the Channel does URL filtering.
      */
-    void setFormat(String format);
+    boolean doUrlFilter();
+
+    /**
+     * Sets if the channel should do URL filtering.
+     * @param doUrlFilter If the channel should filter URLs.
+     */
+    void setUrlFilter(boolean doUrlFilter);
+
+    /**
+     * Tells if the Channel requires profanity filtering.
+     * @return If the Channel does profanity filtering.
+     */
+    boolean doProfanityFilter();
+
+    /**
+     * Sets if the Channel should preform profanity filtering.
+     * @param doProfanityFilter If the Channel should do profanity filtering.
+     */
+    void setProfanityFilter(boolean doProfanityFilter);
+
+    /**
+     * Tells if the Channel requires a chat cool-down.
+     * @return If the Channel does a chat cool-down.
+     */
+    boolean doCooldown();
+
+    /**
+     * Sets if the Channel should do cool-downs.
+     * @param doCooldown Should the Channel do cool-downs.
+     */
+    void setDoCooldown(boolean doCooldown);
 
     /**
      * Adds a player to the Channel.
@@ -76,16 +106,16 @@ public interface Channel{
     void addPlayer(Player player);
 
     /**
-     * Removes a player from the Channel.
-     * @param player The player to be removed.
-     */
-    void removePlayer(Player player);
-
-    /**
      * Adds a User to the channel.
      * @param user The User to be added.
      */
     void addPlayer(User user);
+
+    /**
+     * Removes a player from the Channel.
+     * @param player The player to be removed.
+     */
+    void removePlayer(Player player);
 
     /**
      * Removes a User from the Channel.
@@ -100,46 +130,11 @@ public interface Channel{
     Set<Player> getMembers();
 
     /**
-     * Tells if the channel requires URL filtering.
-     * @return If the Channel does URL filtering.
-     */
-    boolean doURLFilter();
-
-    void setURLFilter(boolean doURLFilter);
-
-    /**
-     * Tells if the Channel requires profanity filtering.
-     * @return If the Channel does profanity filtering.
-     */
-    boolean doProfanityFilter();
-
-    void setProfanityFilter(boolean doProfanityFilter);
-
-    /**
-     * Tells if the Channel requires a chat cool-down.
-     * @return If the Channel does a chat cool-down.
-     */
-    boolean doCooldown();
-
-    void setDoCooldown(boolean doCooldown);
-
-    /**
      * Provides the Channel's Type.
      * @return The Channel's Type.
      */
     Type getType();
 
-    /**
-     * Allows the enabling and disabling of the Channel.
-     * @param isEnabled If the Channel should be enabled/disabled.
-     */
-    void setEnabled(boolean isEnabled);
-
-    /**
-     * Provides if the Channel is enabled.
-     * @return The status of the Channel.
-     */
-    boolean isEnabled();
 
     /**
      * Provides all of the Channel's information in a Map.

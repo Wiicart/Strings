@@ -137,3 +137,6 @@ permissions:
   strings.mention.toggle:
     description: "Allows toggling whether you receive mentions or not"
     default: true
+  strings.channels.global.receive:
+    description: "Allows players to receive messages from the global channel"
+    default: true

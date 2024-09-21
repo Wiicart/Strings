@@ -117,16 +117,18 @@ public interface StringsChannel{
     Type getType();
 
     /**
-     * Allows the enabling and disabling of the Channel.
-     * When a channel is disabled it still exists, however messages can't be sent in the channel.
+     * Deprecated, this no longer does anything.
      * @param isEnabled If the Channel should be enabled/disabled.
      */
+    @Deprecated
     void setEnabled(boolean isEnabled);
 
     /**
+     * DEPRECATED, will always return true now.
      * Provides if the Channel is enabled.
      * @return The status of the Channel.
      */
+    @Deprecated
     boolean isEnabled();
 
     /**

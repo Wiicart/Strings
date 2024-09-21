@@ -60,7 +60,7 @@ public final class ChatManager {
         User user = strings.getUser(sender);
         Channel channel = user.getActiveChannel();
         if(!(sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("*") || sender.hasPermission("strings.chat.filterbypass"))){
-            if(channel.doURLFilter()){
+            if(channel.doUrlFilter()){
                 message = chatFilter.urlFilter(message, sender);
             }
             if(channel.doProfanityFilter()){

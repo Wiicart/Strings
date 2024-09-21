@@ -91,11 +91,6 @@ public class HelpOPChannel implements Channel {
     }
 
     @Override
-    public void closeChannel() {
-        channelManager.unregisterChannel(this);
-    }
-
-    @Override
     public String getFormat() {
         return format;
     }
@@ -143,13 +138,13 @@ public class HelpOPChannel implements Channel {
     }
 
     @Override
-    public boolean doURLFilter() {
+    public boolean doUrlFilter() {
         return urlFilter;
     }
 
     @Override
-    public void setURLFilter(boolean doURLFilter) {
-        this.urlFilter = doURLFilter;
+    public void setUrlFilter(boolean doUrlFilter) {
+        this.urlFilter = doUrlFilter;
     }
 
     @Override
@@ -174,16 +169,6 @@ public class HelpOPChannel implements Channel {
     @Override
     public Type getType() {
         return Type.PROTECTED;
-    }
-
-    @Override
-    public void setEnabled(boolean isEnabled) {
-
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 
     @Override

@@ -57,11 +57,6 @@ public class SocialSpyChannel implements Channel{
     }
 
     @Override
-    public void closeChannel() {
-
-    }
-
-    @Override
     public String getFormat() {
         return format;
     }
@@ -116,12 +111,12 @@ public class SocialSpyChannel implements Channel{
     }
 
     @Override
-    public boolean doURLFilter() {
+    public boolean doUrlFilter() {
         return false;
     }
 
     @Override
-    public void setURLFilter(boolean doURLFilter) {
+    public void setUrlFilter(boolean doUrlFilter) {
 
     }
 
@@ -148,16 +143,6 @@ public class SocialSpyChannel implements Channel{
     @Override
     public Type getType() {
         return Type.PROTECTED;
-    }
-
-    @Override
-    public void setEnabled(boolean isEnabled) {
-
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 
     @Override

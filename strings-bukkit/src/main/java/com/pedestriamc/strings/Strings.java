@@ -40,7 +40,7 @@ import java.util.logging.Logger;
 public final class Strings extends JavaPlugin {
 
     private final String version = "1.2";
-    private final String distributor = "spigot";
+    private final String distributor = "hangar";
     private final short pluginNum = 2;
 
     @SuppressWarnings("unused")
