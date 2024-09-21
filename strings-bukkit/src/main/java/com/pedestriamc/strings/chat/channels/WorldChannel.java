@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.chat.channels;
 
 import com.pedestriamc.strings.api.Type;
-import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.Membership;
 import org.bukkit.Bukkit;
@@ -45,18 +44,8 @@ public class WorldChannel extends AbstractChannel{
     }
 
     @Override
-    public void addPlayer(User user){
-        this.addPlayer(user.getPlayer());
-    }
-
-    @Override
     public void removePlayer(Player player) {
         members.remove(player);
-    }
-
-    @Override
-    public void removePlayer(User user){
-        this.removePlayer(user.getPlayer());
     }
 
     @Override

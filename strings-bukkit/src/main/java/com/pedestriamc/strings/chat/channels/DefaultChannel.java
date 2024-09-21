@@ -51,9 +51,7 @@ public class DefaultChannel implements Channel{
     }
 
     @Override
-    public void broadcastMessage(String message) {
-
-    }
+    public void broadcastMessage(String message) {}
 
     @Override
     public String getFormat() {
@@ -71,19 +69,13 @@ public class DefaultChannel implements Channel{
     }
 
     @Override
-    public void setName(String name) {
-
-    }
+    public void setName(String name) {}
 
     @Override
-    public void setDefaultColor(String defaultColor) {
-
-    }
+    public void setDefaultColor(String defaultColor) {}
 
     @Override
-    public void setFormat(String format) {
-
-    }
+    public void setFormat(String format) {}
 
     @Override
     public void addPlayer(Player player) {
@@ -96,10 +88,7 @@ public class DefaultChannel implements Channel{
     }
 
     @Override
-    public void addPlayer(User user) {
-        members.add(user.getPlayer());
-
-    }
+    public void addPlayer(User user) { members.add(user.getPlayer()); }
 
     @Override
     public void removePlayer(User user) {
@@ -117,9 +106,7 @@ public class DefaultChannel implements Channel{
     }
 
     @Override
-    public void setUrlFilter(boolean doUrlFilter) {
-
-    }
+    public void setUrlFilter(boolean doUrlFilter) {}
 
     @Override
     public boolean doProfanityFilter() {
@@ -127,9 +114,7 @@ public class DefaultChannel implements Channel{
     }
 
     @Override
-    public void setProfanityFilter(boolean doProfanityFilter) {
-
-    }
+    public void setProfanityFilter(boolean doProfanityFilter) {}
 
     @Override
     public boolean doCooldown() {
@@ -137,9 +122,7 @@ public class DefaultChannel implements Channel{
     }
 
     @Override
-    public void setDoCooldown(boolean doCooldown) {
-
-    }
+    public void setDoCooldown(boolean doCooldown) {}
 
     @Override
     public Type getType() {

@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -132,13 +133,17 @@ abstract class AbstractChannel implements Channel{
     public abstract void addPlayer(Player player);
 
     @Override
-    public abstract void addPlayer(User user);
+    public void addPlayer(User user){
+        addPlayer(user.getPlayer());
+    }
 
     @Override
     public abstract void removePlayer(Player player);
 
     @Override
-    public abstract void removePlayer(User user);
+    public void removePlayer(User user){
+        removePlayer(user.getPlayer());
+    }
 
     @Override
     public abstract Set<Player> getMembers();
@@ -177,9 +182,6 @@ abstract class AbstractChannel implements Channel{
     public abstract Type getType();
 
     @Override
-    public abstract Map<String, String> getData();
-
-    @Override
     public Membership getMembership() {
         return membership;
     }
@@ -192,6 +194,25 @@ abstract class AbstractChannel implements Channel{
     @Override
     public void saveChannel() {
         channelManager.saveChannel(this);
+    }
+
+    /**
+     * Base-line getData() implementation.  Most subclasses should override this.
+     * @return A populated LinkedHashMap containing channel data
+     */
+    @Override
+    public Map<String, String> getData() {
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("format", format);
+        map.put("default-color", defaultColor);
+        map.put("call-event", String.valueOf(callEvent));
+        map.put("filter-profanity", String.valueOf(doProfanityFilter));
+        map.put("block-urls", String.valueOf(doUrlFilter));
+        map.put("cooldown", String.valueOf(doCooldown));
+        map.put("type", String.valueOf(this.getType()));
+        map.put("membership", String.valueOf(membership));
+        map.put("priority", String.valueOf(priority));
+        return map;
     }
 
     @Override

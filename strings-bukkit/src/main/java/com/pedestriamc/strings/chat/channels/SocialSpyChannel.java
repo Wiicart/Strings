@@ -23,7 +23,6 @@ public class SocialSpyChannel implements Channel{
     private final ChannelManager channelManager;
     private StringsChannel stringsChannel;
 
-
     public SocialSpyChannel(@NotNull ChannelManager channelManager, PlayerDirectMessenger messenger, String format){
         this.format = format;
         this.playerDirectMessenger = messenger;
@@ -72,13 +71,10 @@ public class SocialSpyChannel implements Channel{
     }
 
     @Override
-    public void setName(String name) {
-
-    }
+    public void setName(String name) {}
 
     @Override
-    public void setDefaultColor(String defaultColor) {
-    }
+    public void setDefaultColor(String defaultColor) {}
 
     @Override
     public void setFormat(String format) {
@@ -116,9 +112,7 @@ public class SocialSpyChannel implements Channel{
     }
 
     @Override
-    public void setUrlFilter(boolean doUrlFilter) {
-
-    }
+    public void setUrlFilter(boolean doUrlFilter) {}
 
     @Override
     public boolean doProfanityFilter() {
@@ -126,9 +120,7 @@ public class SocialSpyChannel implements Channel{
     }
 
     @Override
-    public void setProfanityFilter(boolean doProfanityFilter) {
-
-    }
+    public void setProfanityFilter(boolean doProfanityFilter) {}
 
     @Override
     public boolean doCooldown() {
@@ -136,9 +128,7 @@ public class SocialSpyChannel implements Channel{
     }
 
     @Override
-    public void setDoCooldown(boolean doCooldown) {
-
-    }
+    public void setDoCooldown(boolean doCooldown) {}
 
     @Override
     public Type getType() {
@@ -172,4 +162,5 @@ public class SocialSpyChannel implements Channel{
     public void saveChannel() {
         channelManager.saveChannel(this);
     }
+
 }

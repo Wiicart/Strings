@@ -1,15 +1,12 @@
 package com.pedestriamc.strings.chat.channels;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.User;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.Type;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -47,18 +44,8 @@ public class StringChannel extends AbstractChannel{
     }
 
     @Override
-    public void addPlayer(User user) {
-        addPlayer(user.getPlayer());
-    }
-
-    @Override
     public void removePlayer(Player player) {
         members.remove(player);
-    }
-
-    @Override
-    public void removePlayer(User user) {
-        removePlayer(user.getPlayer());
     }
 
     @Override
@@ -69,23 +56,6 @@ public class StringChannel extends AbstractChannel{
     @Override
     public Type getType() {
         return Type.WORLD;
-    }
-
-    @Override
-    public Map<String, String> getData() {
-
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put("format", this.getFormat());
-        map.put("default-color", this.getDefaultColor());
-        map.put("call-event", String.valueOf(this.isCallEvent()));
-        map.put("filter-profanity", String.valueOf(this.doProfanityFilter()));
-        map.put("block-urls", String.valueOf(this.doUrlFilter()));
-        map.put("cooldown", String.valueOf(this.doCooldown()));
-        map.put("type", String.valueOf(this.getType()));
-        map.put("membership", String.valueOf(this.getMembership()));
-        map.put("priority", String.valueOf(this.getPriority()));
-
-        return map;
     }
 
 }

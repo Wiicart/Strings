@@ -47,20 +47,7 @@ public class HelpOPChannel implements Channel {
 
     @Override
     public void sendMessage(Player player, String message){
-        HashSet<Player> members = new HashSet<>();
-        for(OfflinePlayer op : Bukkit.getOperators()){
-            if(op.getName() != null){
-                Player p = Bukkit.getPlayer(op.getName());
-                if(p != null){
-                    members.add(p);
-                }
-            }
-        }
-        for(Player onlinePlayer : Bukkit.getOnlinePlayers()){
-            if(onlinePlayer.hasPermission("strings.helpop.receive") || onlinePlayer.hasPermission("strings.helpop.*") || onlinePlayer.hasPermission("strings.*")){
-                members.add(onlinePlayer);
-            }
-        }
+        Set<Player> members = getRecipients();
         String format = chatManager.formatMessage(player, this);
         message = chatManager.processMessage(player, message);
         String finalMessage = message;
@@ -82,13 +69,28 @@ public class HelpOPChannel implements Channel {
             }
             Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
         }
+    }
 
+    private Set<Player> getRecipients(){
+        HashSet<Player> members = new HashSet<>();
+        for(OfflinePlayer op : Bukkit.getOperators()){
+            if(op.getName() != null){
+                Player p = Bukkit.getPlayer(op.getName());
+                if(p != null){
+                    members.add(p);
+                }
+            }
+        }
+        for(Player onlinePlayer : Bukkit.getOnlinePlayers()){
+            if(onlinePlayer.hasPermission("strings.helpop.receive") || onlinePlayer.hasPermission("strings.helpop.*") || onlinePlayer.hasPermission("strings.*")){
+                members.add(onlinePlayer);
+            }
+        }
+        return members;
     }
 
     @Override
-    public void broadcastMessage(String message) {
-
-    }
+    public void broadcastMessage(String message) {}
 
     @Override
     public String getFormat() {
@@ -163,8 +165,7 @@ public class HelpOPChannel implements Channel {
     }
 
     @Override
-    public void setDoCooldown(boolean doCooldown) {
-    }
+    public void setDoCooldown(boolean doCooldown) {}
 
     @Override
     public Type getType() {
