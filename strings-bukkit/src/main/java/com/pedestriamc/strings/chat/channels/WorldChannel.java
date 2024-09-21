@@ -63,24 +63,28 @@ public class WorldChannel implements Channel{
     }
 
     @Override
-    public void sendMessage(Player player, String message) {
+    public void sendMessage(Player player, String message){
         if(!active){
             Messenger.sendMessage(Message.CHANNEL_DISABLED, player);
             return;
         }
         String format = chatManager.formatMessage(player, this);
         message = chatManager.processMessage(player, message);
-        String finalMessage = message;
-        String formattedMessage = format.replace("{message}", finalMessage);
+        String fMessage = message;
+        String formattedMessage = format.replace("{message}", fMessage);
+        if(chatManager.isMentionsEnabled() && player.hasPermission("strings.*") || player.hasPermission("strings.mention")) {
+            formattedMessage = chatManager.processMentions(player, formattedMessage);
+        }
         if(callEvent){
-            Bukkit.getScheduler().runTask(strings, () ->{
-                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, getRecipients(), this.getStringsChannel());
+            String finalFormattedMessage = formattedMessage;
+            Bukkit.getScheduler().runTask(strings, () -> {
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, fMessage, getRecipients(), this.getStringsChannel());
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()){
                     for(Player p : getRecipients()){
-                        p.sendMessage(formattedMessage);
+                        p.sendMessage(finalFormattedMessage);
                     }
-                    Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
+                    Bukkit.getLogger().info(ChatColor.stripColor(finalFormattedMessage));
                     chatManager.startCoolDown(player);
                 }
             });
@@ -91,7 +95,6 @@ public class WorldChannel implements Channel{
             Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
             chatManager.startCoolDown(player);
         }
-
     }
 
     public Set<Player> getRecipients(){

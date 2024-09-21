@@ -65,9 +65,6 @@ public final class ChatManager {
                 message = chatFilter.profanityFilter(message, sender);
             }
         }
-        if(mentionsEnabled && sender.hasPermission("strings.*") || sender.hasPermission("strings.mention")) {
-            message = processMentions(sender, message);
-        }
         if(usePAPI && messagePlaceholders && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.placeholdermsg"))){
             message = PlaceholderAPI.setPlaceholders(sender, message);
         }
@@ -105,15 +102,31 @@ public final class ChatManager {
         if(!str.contains("@")){
             return str;
         }
-        for(Player p : Bukkit.getOnlinePlayers()){
-            if(strings.getUser(p).isMentionsEnabled() == false){
+        str = ChatColor.translateAlternateColorCodes('&', str);
+        String[] splitStr = str.split("((?=@))"); //https://www.baeldung.com/java-split-string-keep-delimiters
+        StringBuilder sb = new StringBuilder();
+        String color = "";
+        for(String segment : splitStr){
+            if(!segment.contains("@")){
+                color = ChatColor.getLastColors(segment);
+                sb.append(segment);
                 continue;
             }
-            str = str.replace("@" + p.getName(), mentionColor + "@" + p.getName() + ChatColor.RESET);
+            for(Player p : Bukkit.getOnlinePlayers()){
+                if(!strings.getUser(p).isMentionsEnabled() || !segment.contains(p.getName())){
+                    continue;
+                }
+                segment = segment.replace("@" + p.getName(), mentionColor + "@" + p.getName() + ChatColor.RESET + color);
+            }
+            if(sender.hasPermission("strings.mention.all") && segment.contains("@everyone")){
+                segment = segment.replace("@everyone", mentionColor + "@everyone" + ChatColor.RESET + color);
+            }
+            sb.append(segment);
         }
-        if(sender.hasPermission("strings.mention.all")){
-            str = str.replace("@everyone", mentionColor + "@everyone" + ChatColor.RESET);
-        }
-        return str;
+        return sb.toString();
+    }
+
+    public boolean isMentionsEnabled(){
+        return mentionsEnabled;
     }
 }

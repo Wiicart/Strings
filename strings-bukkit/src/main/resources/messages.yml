@@ -1,9 +1,10 @@
 # Strings - Messages.yml
 # Bukkit chat colors may be used
-# Unless noted otherwise, the prefix from
-# config.yml is used before the message.
 # Note: these are only messages for commands.
 # other messages may be found in other config files.
+
+# Plugin prefix:
+prefix: "&8[&3Strings&8] &f"
 
 # No perms message:
 no-perms: "&fYou don't have permission!"

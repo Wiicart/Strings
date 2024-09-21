@@ -74,18 +74,21 @@ public class ProximityChannel implements Channel{
         receivers.addAll(members);
         String format = chatManager.formatMessage(player, this);
         message = chatManager.processMessage(player, message);
-        String finalMessage = message;
-        String formattedMessage = format.replace("{message}", finalMessage);
-
+        String fMessage = message;
+        String formattedMessage = format.replace("{message}", fMessage);
+        if(chatManager.isMentionsEnabled() && player.hasPermission("strings.*") || player.hasPermission("strings.mention")) {
+            formattedMessage = chatManager.processMentions(player, formattedMessage);
+        }
         if(callEvent){
+            String finalFormattedMessage = formattedMessage;
             Bukkit.getScheduler().runTask(strings, () ->{
-                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, receivers, this.getStringsChannel());
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, fMessage, receivers, this.getStringsChannel());
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()){
                     for(Player p : receivers){
-                        p.sendMessage(formattedMessage);
+                        p.sendMessage(finalFormattedMessage);
                     }
-                    Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
+                    Bukkit.getLogger().info(ChatColor.stripColor(finalFormattedMessage));
                     chatManager.startCoolDown(player);
                 }
             });

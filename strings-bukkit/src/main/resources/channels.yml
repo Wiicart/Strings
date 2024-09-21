@@ -105,7 +105,7 @@ channels:
   #  priority: 10
 
   #proximity:
-  #  format: "&8[&cProximity&8] {prefix}{displayname}{suffix} &7» {message}"
+  #  format: "&8[&cProximity&8] &f{prefix}{displayname}{suffix} &7» {message}"
   #  default-color: "&f"
   #  call-event: true
   #  filter-profanity: false

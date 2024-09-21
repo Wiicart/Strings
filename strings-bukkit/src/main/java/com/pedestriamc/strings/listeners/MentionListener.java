@@ -18,7 +18,7 @@ public class MentionListener implements Listener {
         mentioner = strings.getMentioner();
     }
 
-    @EventHandler( priority = EventPriority.LOWEST)
+    @EventHandler( priority = EventPriority.LOW)
     public void onEvent(AsyncPlayerChatEvent event){
         if(!(event instanceof ChannelChatEvent)){
             return;

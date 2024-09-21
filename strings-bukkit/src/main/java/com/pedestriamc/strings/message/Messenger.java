@@ -86,6 +86,5 @@ public class Messenger {
             return;
         }
         Bukkit.getLogger().info("[Strings] Unknown object type or value not found for message " + message.toString());
-
     }
 }

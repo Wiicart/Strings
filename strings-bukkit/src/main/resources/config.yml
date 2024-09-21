@@ -16,8 +16,7 @@
 #   - channels.yml
 # Main Configuration Options:
 
-# Plugin prefix:
-prefix: "&8[&3Strings&8] &f"
+# (!) PREFIX HAS BEEN MOVED TO "messages.yml" (!)
 
 # Chat message formats are found in channels.yml
 
@@ -162,6 +161,8 @@ enable-mentions: true
 mention-everyone: true
 
 # Mention Chat Format:
+# NOT IMPLEMENTED YET, WILL BE IMPLEMENTED NEXT UPDATE.
+# MEANWHILE, USE "mention-color", THIS WILL BE SHOWN TO ALL PLAYERS.
 # How should the text change in chat when a player uses @<username>?
 # NOTE: This will change it for ALL players.
 # The option mention-color represents what it will look like for the mentioned player.
