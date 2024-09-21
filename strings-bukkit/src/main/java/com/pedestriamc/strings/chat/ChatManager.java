@@ -6,6 +6,7 @@ import com.pedestriamc.strings.chat.channels.Channel;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,8 @@ public final class ChatManager {
         this.chatFilter = strings.getChatFilter();
         this.scheduler = Bukkit.getScheduler();
         this.coolDownLength = calcTicks(strings.getCoolDownLength());
-        this.mentionColor = ChatColor.translateAlternateColorCodes('&', strings.getConfig().getString("mention-chat-format", "&e&l"));
+        FileConfiguration config = strings.getConfig();
+        this.mentionColor = ChatColor.translateAlternateColorCodes('&', config.getString("mention-color", "&e"));
         this.mentionsEnabled = strings.getConfig().getBoolean("enable-mentions", true);
     }
 
