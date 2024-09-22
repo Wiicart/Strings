@@ -39,9 +39,9 @@ import java.util.logging.Logger;
 
 public final class Strings extends JavaPlugin {
 
-    private final String version = "1.2";
+    private final String version = "1.3";
     private final String distributor = "hangar";
-    private final short pluginNum = 2;
+    private final short pluginNum = 3;
 
     @SuppressWarnings("unused")
     private AutoBroadcasts autoBroadcasts;
@@ -68,7 +68,6 @@ public final class Strings extends JavaPlugin {
     private boolean processPlayerMessageColors;
     private boolean processPlayerMessagePlaceholders;
     private boolean usingVault;
-    private boolean useCustomJoinLeave;
     private boolean isPaper = false;
     private StringsImpl stringsImpl;
     private Mentioner mentioner;
@@ -155,9 +154,9 @@ public final class Strings extends JavaPlugin {
             this.getCommand("chatcolor").setExecutor(new ChatColorCommand(this));
         }
         this.getServer().getPluginManager().registerEvents(new ChatListener(this), this);
-        this.getServer().getPluginManager().registerEvents(new JoinListener(),this);
-        this.getServer().getPluginManager().registerEvents(new LeaveListener(), this);
-        this.getServer().getPluginManager().registerEvents(new DirectMessageListener(), this);
+        this.getServer().getPluginManager().registerEvents(new JoinListener(this),this);
+        this.getServer().getPluginManager().registerEvents(new LeaveListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new DirectMessageListener(this), this);
         if(config.getBoolean("enable-mentions")){
             this.getServer().getPluginManager().registerEvents(new MentionListener(this), this);
         }
@@ -168,7 +167,6 @@ public final class Strings extends JavaPlugin {
         FileConfiguration config = this.getConfig();
         this.processPlayerMessageColors = config.getBoolean("process-in-chat-colors", true);
         this.processPlayerMessagePlaceholders = config.getBoolean("process-in-chat-placeholders", false);
-        this.useCustomJoinLeave = config.getBoolean("custom-join-leave-message");
         this.coolDownLength = config.getString("cooldown-time", "30s");
         if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             this.usingPlaceholderAPI = true;
@@ -311,7 +309,7 @@ public final class Strings extends JavaPlugin {
     public String getCoolDownLength(){ return coolDownLength; }
     public ChatManager getChatManager(){ return chatManager; }
     public ChannelManager getChannelManager(){ return channelManager; }
-    public ServerMessages getJoinLeaveMessage(){ return serverMessages; }
+    public ServerMessages getServerMessages(){ return serverMessages; }
     public PlayerDirectMessenger getPlayerDirectMessenger(){ return playerDirectMessenger; }
     public ChatFilter getChatFilter(){ return chatFilter; }
     public Chat getVaultChat(){ return chat; }
@@ -323,7 +321,6 @@ public final class Strings extends JavaPlugin {
     public boolean processMessageColors(){ return processPlayerMessageColors; }
     public boolean processMessagePlaceholders(){ return processPlayerMessagePlaceholders; }
     public boolean useVault(){ return usingVault; }
-    public boolean modifyJoinLeaveMessages(){ return useCustomJoinLeave; }
     public boolean isPaper(){ return this.isPaper; }
     public static Strings getInstance(){ return instance; }
     public Mentioner getMentioner(){ return mentioner; }

@@ -10,12 +10,19 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class LeaveListener implements Listener {
 
-    private final boolean modifyLeaveMessage = Strings.getInstance().modifyJoinLeaveMessages();
-    private final ServerMessages serverMessages = Strings.getInstance().getJoinLeaveMessage();
+    private final Strings strings;
+    private final boolean modifyLeaveMessage;
+    private final ServerMessages serverMessages;
+
+    public LeaveListener(Strings strings){
+        this.strings = strings;
+        modifyLeaveMessage = strings.getConfig().getBoolean("custom-join-leave-message", false);
+        serverMessages = strings.getServerMessages();
+    }
 
     @EventHandler
     public void onPlayerQuitEvent(PlayerQuitEvent event){
-        User user = Strings.getInstance().getUser(event.getPlayer());
+        User user = strings.getUser(event.getPlayer());
         if(modifyLeaveMessage){
             event.setQuitMessage(serverMessages.leaveMessage(event.getPlayer()));
         }

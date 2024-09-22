@@ -40,6 +40,4 @@ public class MentionListener implements Listener {
             }
         }
     }
-
-
 }

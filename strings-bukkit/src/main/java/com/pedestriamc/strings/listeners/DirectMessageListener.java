@@ -8,7 +8,11 @@ import org.bukkit.event.Listener;
 
 public class DirectMessageListener implements Listener {
 
-    private final SocialSpyChannel socialSpy = (SocialSpyChannel) Strings.getInstance().getChannel("socialspy");
+    private final SocialSpyChannel socialSpy;
+
+    public DirectMessageListener(Strings strings){
+        socialSpy = (SocialSpyChannel) strings.getChannel("socialspy");
+    }
 
     @EventHandler
     public void onPlayerDirectMessageEvent(PlayerDirectMessageEvent event){

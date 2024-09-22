@@ -10,10 +10,15 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class JoinListener implements Listener {
 
-    private final Strings strings = Strings.getInstance();
-    private final boolean modifyJoinMessage = strings.modifyJoinLeaveMessages();
-    private final ServerMessages serverMessages = strings.getJoinLeaveMessage();
-    private final boolean doMOTD = strings.getConfig().getBoolean("enable-motd", false);
+    private final boolean modifyJoinMessage;
+    private final ServerMessages serverMessages;
+    private final boolean doMotd;
+
+    public JoinListener(Strings strings){
+        modifyJoinMessage = strings.getConfig().getBoolean("custom-join-leave-message", false);
+        serverMessages = strings.getServerMessages();
+        doMotd = strings.getConfig().getBoolean("enable-motd", false);
+    }
 
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event){
@@ -23,7 +28,7 @@ public class JoinListener implements Listener {
         if(modifyJoinMessage){
             event.setJoinMessage(serverMessages.joinMessage(event.getPlayer()));
         }
-        if(doMOTD){
+        if(doMotd){
             serverMessages.sendMOTD(event.getPlayer());
         }
     }

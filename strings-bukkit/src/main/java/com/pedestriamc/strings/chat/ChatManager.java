@@ -43,11 +43,13 @@ public final class ChatManager {
 
     public @NotNull String formatMessage(Player sender, Channel channel){
         String newMessageFormat = channel.getFormat();
-        User user = strings.getUser(sender.getUniqueId());
+        User user = strings.getUser(sender);
+
         newMessageFormat = newMessageFormat.replace("{prefix}", user.getPrefix());
         newMessageFormat = newMessageFormat.replace("{suffix}", user.getSuffix());
         newMessageFormat = newMessageFormat.replace("{displayname}", user.getDisplayName());
         newMessageFormat = newMessageFormat.replace("{message}", user.getChatColor(channel) + "{message}");
+
         if(usePAPI){
             newMessageFormat = PlaceholderAPI.setPlaceholders(sender, newMessageFormat);
         }
@@ -73,7 +75,9 @@ public final class ChatManager {
         if(parseChatColors && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.colormsg"))){
             message = ChatColor.translateAlternateColorCodes('&', message);
         }
+
         return message;
+
     }
 
     public boolean isOnCoolDown(Player player){
@@ -104,7 +108,6 @@ public final class ChatManager {
         if(!str.contains("@")){
             return str;
         }
-        str = ChatColor.translateAlternateColorCodes('&', str);
         String[] splitStr = str.split("((?=@))"); //https://www.baeldung.com/java-split-string-keep-delimiters
         StringBuilder sb = new StringBuilder();
         String color = "";
@@ -131,4 +134,5 @@ public final class ChatManager {
     public boolean isMentionsEnabled(){
         return mentionsEnabled;
     }
+
 }
