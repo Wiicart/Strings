@@ -171,4 +171,22 @@ public interface StringsChannel{
      * @param proximity The new proximity.
      */
     void setProximity(double proximity);
+
+    /**
+     * Saves the StringsChannel to the channels.yml file.
+     * No changes are retained if this method is not called.
+     */
+    void saveChannel();
+
+    /**
+     * Toggles if the StringsChannel should filter URLs
+     * @param doUrlFilter If the StringsChannel should do URL filtering.
+     */
+    void setUrlFilter(boolean doUrlFilter);
+
+    /**
+     * Sets if the StringsChannel should preform profanity filtering.
+     * @param doProfanityFilter If the StringsChannel should do profanity filtering.
+     */
+    void setProfanityFilter(boolean doProfanityFilter);
 }

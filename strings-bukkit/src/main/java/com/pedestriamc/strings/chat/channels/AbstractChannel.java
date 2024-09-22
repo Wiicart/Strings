@@ -50,6 +50,14 @@ abstract class AbstractChannel implements Channel{
         this.mentionsEnabled = chatManager.isMentionsEnabled();
     }
 
+    /**
+     * Determines which players messages should be sent to.
+     * Must be implemented by extending classes.
+     * @param sender The sender of the message.
+     * @return A Set<Player> of all players who will should the message.
+     */
+    public abstract Set<Player> getRecipients(Player sender);
+
     @Override
     public void sendMessage(Player player, String message) {
 
@@ -86,13 +94,43 @@ abstract class AbstractChannel implements Channel{
 
     }
 
-    public abstract Set<Player> getRecipients(Player sender);
-
     @Override
     public void broadcastMessage(String message) {
         for(Player p : getRecipients(null)){
             p.sendMessage(message);
         }
+    }
+
+    @Override
+    public void saveChannel() {
+        channelManager.saveChannel(this);
+    }
+
+    /**
+     * Base-line getData() implementation.  Most subclasses should override this.
+     * @return A populated LinkedHashMap containing channel data
+     */
+    @Override
+    public Map<String, String> getData() {
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("format", format);
+        map.put("default-color", defaultColor);
+        map.put("call-event", String.valueOf(callEvent));
+        map.put("filter-profanity", String.valueOf(doProfanityFilter));
+        map.put("block-urls", String.valueOf(doUrlFilter));
+        map.put("cooldown", String.valueOf(doCooldown));
+        map.put("type", String.valueOf(this.getType()));
+        map.put("membership", String.valueOf(membership));
+        map.put("priority", String.valueOf(priority));
+        return map;
+    }
+
+    @Override
+    public StringsChannel getStringsChannel() {
+        if(stringsChannel == null){
+            stringsChannel = new ChannelWrapper(this);
+        }
+        return stringsChannel;
     }
 
     @Override
@@ -191,35 +229,4 @@ abstract class AbstractChannel implements Channel{
         return priority;
     }
 
-    @Override
-    public void saveChannel() {
-        channelManager.saveChannel(this);
-    }
-
-    /**
-     * Base-line getData() implementation.  Most subclasses should override this.
-     * @return A populated LinkedHashMap containing channel data
-     */
-    @Override
-    public Map<String, String> getData() {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put("format", format);
-        map.put("default-color", defaultColor);
-        map.put("call-event", String.valueOf(callEvent));
-        map.put("filter-profanity", String.valueOf(doProfanityFilter));
-        map.put("block-urls", String.valueOf(doUrlFilter));
-        map.put("cooldown", String.valueOf(doCooldown));
-        map.put("type", String.valueOf(this.getType()));
-        map.put("membership", String.valueOf(membership));
-        map.put("priority", String.valueOf(priority));
-        return map;
-    }
-
-    @Override
-    public StringsChannel getStringsChannel() {
-        if(stringsChannel == null){
-            stringsChannel = new ChannelWrapper(this);
-        }
-        return stringsChannel;
-    }
 }

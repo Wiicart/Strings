@@ -166,4 +166,19 @@ public final class ChannelWrapper implements StringsChannel {
         }
         ((ProximityChannel) channel).setProximity(proximity);
     }
+
+    @Override
+    public void saveChannel() {
+        channel.saveChannel();
+    }
+
+    @Override
+    public void setUrlFilter(boolean doUrlFilter) {
+        channel.setUrlFilter(doUrlFilter);
+    }
+
+    @Override
+    public void setProfanityFilter(boolean doProfanityFilter) {
+        channel.setProfanityFilter(doProfanityFilter);
+    }
 }

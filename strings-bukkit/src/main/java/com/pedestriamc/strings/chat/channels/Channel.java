@@ -137,7 +137,7 @@ public interface Channel{
 
 
     /**
-     * Provides all of the Channel's information in a Map.
+     * Provides all the Channel's information in a Map.
      * @return A populated Map containing the Channel's information.
      */
     Map<String, String> getData();

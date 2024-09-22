@@ -46,7 +46,6 @@ public class ChatFilter{
         while(matcher.find()){
             String match = matcher.group();
             if(!urlWhitelist.contains(normalizeUrl(match))){
-                Bukkit.getLogger().info(urlWhitelist + " does not contain " + normalizeUrl(match));
                 msg = msg.replace(match, "");
                 urlReplaced = true;
             }
