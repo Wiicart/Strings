@@ -14,8 +14,12 @@ import java.util.UUID;
 
 public final class UserUtil {
 
-    private static final FileConfiguration config = Strings.getInstance().getUsersFileConfig();
     private static final Strings strings = Strings.getInstance();
+    private static final FileConfiguration config = Strings.getInstance().getUsersFileConfig();
+
+    public UserUtil(Strings strings){
+
+    }
 
     /**
      * Saves a User to the users.yml file.

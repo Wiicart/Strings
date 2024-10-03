@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,6 +25,7 @@ public class ChannelManager {
     private final ConcurrentHashMap<String, Channel> channels;
     private final ConcurrentHashMap<World, Channel> worldChannels;
     private final ConcurrentHashMap<World, Channel[]> wChannelsByPriority;
+    private final HashMap<String, Channel> channelSymbols;
     private final Set<Channel> defaultMembershipChannels;
     private final FileConfiguration config;
     private Channel[] channelsPrioritySorted;
@@ -39,6 +41,7 @@ public class ChannelManager {
         this.wChannelsByPriority = new ConcurrentHashMap<>();
         this.config = strings.getChannelsFileConfig();
         this.defaultMembershipChannels = Collections.synchronizedSet(new HashSet<>());
+        this.channelSymbols = new HashMap<>();
         for(World world : Bukkit.getWorlds()){
             wChannelsByPriority.put(world, new Channel[0]);
         }
@@ -69,11 +72,11 @@ public class ChannelManager {
                         double distance = channel.getDouble("distance");
                         String format = channel.getString("format", "{prefix}{displayname}{suffix} &7» {message}");
                         String defaultColor = channel.getString("default-color", "&f");
+                        String symbol = channel.getString("symbol", "");
                         boolean callEvent = channel.getBoolean("call-event", true);
                         boolean urlFilter = channel.getBoolean("block-urls", false);
                         boolean profanityFilter = channel.getBoolean("filter-profanity", false);
                         boolean doCooldown = channel.getBoolean("cooldown", false);
-                        boolean active = channel.getBoolean("active", true);
                         int priority = channel.getInt("priority", -1);
                         String membershipString = channel.getString("membership");
                         Membership membership;
@@ -88,7 +91,10 @@ public class ChannelManager {
                         switch(type){
                             case "stringchannel" -> {
                                 Bukkit.getLogger().info("[Strings] Loading stringchannel '" + channelName + "'...");
-                                new StringChannel(strings, channelName, format, defaultColor, this, callEvent, urlFilter, profanityFilter, doCooldown, membership, priority);
+                                Channel c = new StringChannel(strings, channelName, format, defaultColor, this, callEvent, urlFilter, profanityFilter, doCooldown, membership, priority);
+                                if(!Objects.equals(symbol, "")){
+                                    channelSymbols.put(symbol, c);
+                                }
                                 if(channelName.equalsIgnoreCase("global")) {
                                     globalExists = true;
                                 }
@@ -104,7 +110,10 @@ public class ChannelManager {
                                     Bukkit.getLogger().info("[Strings] Failed to load world channel '" + channelName + "'. Invalid world '" + world + "' defined.");
                                     break;
                                 }
-                                new WorldChannel(strings, channelName, format, defaultColor,this, callEvent, urlFilter, profanityFilter, doCooldown, actualWorld, membership, priority);
+                                Channel c = new WorldChannel(strings, channelName, format, defaultColor,this, callEvent, urlFilter, profanityFilter, doCooldown, actualWorld, membership, priority);
+                                if(!Objects.equals(symbol, "")){
+                                    channelSymbols.put(symbol, c);
+                                }
                             }
                             case "proximity" -> {
                                 Bukkit.getLogger().info("[Strings] Loading proximity channel '" + channelName + "'...");
@@ -117,12 +126,18 @@ public class ChannelManager {
                                     Bukkit.getLogger().info("[Strings] Failed to load proximity channel '" + channelName + "'. Invalid world '" + world + "' defined.");
                                     break;
                                 }
-                                new ProximityChannel(strings, channelName, format, defaultColor, this, callEvent, urlFilter, profanityFilter, doCooldown, distance, membership, priority, actualWorld);
+                                Channel c = new ProximityChannel(strings, channelName, format, defaultColor, this, callEvent, urlFilter, profanityFilter, doCooldown, distance, membership, priority, actualWorld);
+                                if(!Objects.equals(symbol, "")){
+                                    channelSymbols.put(symbol, c);
+                                }
 
                             }
                             case "helpop" -> {
                                 Bukkit.getLogger().info("[Strings] Loading channel 'helpop'..");
-                                new HelpOPChannel(strings,channelName,format,defaultColor,this, callEvent, urlFilter, profanityFilter);
+                                Channel c = new HelpOPChannel(strings,channelName,format,defaultColor,this, callEvent, urlFilter, profanityFilter);
+                                if(!Objects.equals(symbol, "")){
+                                    channelSymbols.put(symbol, c);
+                                }
                                 helpOpExists = true;
                             }
                             default -> Bukkit.getLogger().info("Failed to load channel " + channelName + ", channel type is invalid in channels.yml");
@@ -184,23 +199,23 @@ public class ChannelManager {
      */
     public void registerChannel(Channel channel){
         channels.put(channel.getName(), channel);
-        boolean isWorldOrProx = false;
+        boolean isWorldOrProximity = false;
         World world = null;
         if(channel instanceof WorldChannel){
             worldChannels.put(((WorldChannel) channel).getWorld(), channel);
             world = ((WorldChannel) channel).getWorld();
-            isWorldOrProx = true;
+            isWorldOrProximity = true;
         }
         if(channel instanceof ProximityChannel){
             worldChannels.put(((ProximityChannel) channel).getWorld(), channel);
             world = ((ProximityChannel) channel).getWorld();
-            isWorldOrProx = true;
+            isWorldOrProximity = true;
         }
-        if(channel.getMembership() == Membership.DEFAULT && !isWorldOrProx){
+        if(channel.getMembership() == Membership.DEFAULT && !isWorldOrProximity){
             defaultMembershipChannels.add(channel);
         }
 
-        if(!isWorldOrProx){
+        if(!isWorldOrProximity){
             ArrayList<Channel> prChannels = new ArrayList<>();
             for(Map.Entry<String, Channel> entry : channels.entrySet()){
                 if(entry.getValue().getMembership() == Membership.DEFAULT && !(entry.getValue() instanceof ProximityChannel) && !(entry.getValue() instanceof WorldChannel)){
@@ -210,7 +225,7 @@ public class ChannelManager {
             prChannels.sort(Comparator.comparing(Channel::getPriority).reversed());
             channelsPrioritySorted = prChannels.toArray(new Channel[0]);
         }
-        if(isWorldOrProx){
+        if(isWorldOrProximity){
             if(world == null){
                 if(channel instanceof WorldChannel){
                     world = ((WorldChannel) channel).getWorld();
@@ -285,32 +300,6 @@ public class ChannelManager {
     }
 
     /**
-     * Provides the WorldChannel for a specified World, if it exists.
-     * @param world The World the channel should be for
-     * @return The Channel for the specified world, if it exists.
-     */
-    @Deprecated
-    @Nullable
-    public Channel getWorldChannel(World world){ return worldChannels.get(world); }
-
-    /**
-     * Provides the WorldChannel for a specified World name, if it exists.
-     * @param world The name of the World the channel should be for
-     * @return The Channel for the specified world, if it exists.
-     */
-    @Deprecated
-    @Nullable
-    public Channel getWorldChannel(String world){ return getWorldChannel(Bukkit.getWorld(world)); }
-
-    /**
-     * Provides a List of the names of all Channels.
-     * @return A populated List of Strings.
-     */
-    public List<String> getChannelNames(){
-        return Collections.list(channels.keys());
-    }
-
-    /**
      * Provides a list of the names of all Channels that are not protected.
      * @return A populated List of Strings.
      */
@@ -341,10 +330,6 @@ public class ChannelManager {
             }
         }
         return list;
-    }
-
-    public Set<Channel> getDefaultChannels(){
-        return this.defaultMembershipChannels;
     }
 
     /**
@@ -393,4 +378,11 @@ public class ChannelManager {
         return Arrays.copyOf(wChannelsByPriority.get(world), wChannelsByPriority.get(world).length);
     }
 
+    public Map<String, Channel> getChannelSymbols() {
+        return channelSymbols;
+    }
+
+    public boolean hasPermission(Player player, Channel channel){
+        return false;
+    }
 }

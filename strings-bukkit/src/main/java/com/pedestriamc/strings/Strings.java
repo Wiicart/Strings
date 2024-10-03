@@ -263,6 +263,7 @@ public final class Strings extends JavaPlugin {
         usersFileConfig = YamlConfiguration.loadConfiguration(usersFile);
         channelsFileConfig = YamlConfiguration.loadConfiguration(channelsFile);
     }
+
     private void checkIfReload(){
         if(Bukkit.getOnlinePlayers().size() > 0){
             for(Player p : Bukkit.getOnlinePlayers()){

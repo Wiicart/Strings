@@ -5,5 +5,29 @@ package com.pedestriamc.strings.api;
  * Type.PROTECTED represents an internal channel for Strings and should not be modified.
  */
 public enum Type {
-    PROTECTED, NORMAL, PROXIMITY, WORLD, DEFAULT, PARTY
+    /**
+     * Represents Channels for internal plugin use
+     */
+    PROTECTED,
+    /**
+     * Represents "normal" channels such as StringChannels
+     */
+    NORMAL,
+    /**
+     * Represents ProximityChannels
+     */
+    PROXIMITY,
+    /**
+     * Represents WorldChannels
+     */
+    WORLD,
+    /**
+     * Represents the DefaultChannel, a channel that does not process any messages, instead
+     * forwards them to a different channel.
+     */
+    DEFAULT,
+    /**
+     * Represents PartyChannels
+     */
+    PARTY
 }

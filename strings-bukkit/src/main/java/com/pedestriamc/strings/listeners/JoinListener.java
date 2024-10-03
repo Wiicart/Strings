@@ -21,7 +21,7 @@ public class JoinListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoinEvent(PlayerJoinEvent event){
+    public void onEvent(PlayerJoinEvent event){
         if(UserUtil.loadUser(event.getPlayer().getUniqueId()) == null){
             new User(event.getPlayer().getUniqueId());
         }

@@ -25,7 +25,6 @@ public class WorldChannel extends AbstractChannel{
         channelManager.registerChannel(this);
     }
 
-
     @Override
     public Set<Player> getRecipients(Player sender){
         HashSet<Player> recipients = new HashSet<>(world.getPlayers());
@@ -58,10 +57,6 @@ public class WorldChannel extends AbstractChannel{
         return Type.WORLD;
     }
 
-    public World getWorld(){
-        return world;
-    }
-
     @Override
     public Map<String, String> getData() {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
@@ -76,6 +71,10 @@ public class WorldChannel extends AbstractChannel{
         map.put("priority", String.valueOf(this.getPriority()));
         map.put("world", world.getName());
         return map;
+    }
+
+    public World getWorld(){
+        return world;
     }
 
 }

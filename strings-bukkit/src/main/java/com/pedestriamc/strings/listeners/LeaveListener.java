@@ -14,16 +14,16 @@ public class LeaveListener implements Listener {
     private final boolean modifyLeaveMessage;
     private final ServerMessages serverMessages;
 
-    public LeaveListener(Strings strings){
+    public LeaveListener(Strings strings) {
         this.strings = strings;
         modifyLeaveMessage = strings.getConfig().getBoolean("custom-join-leave-message", false);
         serverMessages = strings.getServerMessages();
     }
 
     @EventHandler
-    public void onPlayerQuitEvent(PlayerQuitEvent event){
+    public void onEvent(PlayerQuitEvent event) {
         User user = strings.getUser(event.getPlayer());
-        if(modifyLeaveMessage){
+        if (modifyLeaveMessage) {
             event.setQuitMessage(serverMessages.leaveMessage(event.getPlayer()));
         }
         UserUtil.UserMap.removeUser(event.getPlayer().getUniqueId());

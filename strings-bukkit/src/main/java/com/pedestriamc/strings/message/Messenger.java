@@ -32,11 +32,12 @@ public class Messenger {
     }
 
     public static void sendMessage(Message message, CommandSender sender){
-        if(enumMap.get(message) instanceof String[] msg){
+        Object msgObject = enumMap.get(message);
+        if(msgObject instanceof String[] msg){
             for(String str : msg){
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', str));
             }
-        }else if(enumMap.get(message) instanceof String){
+        }else if(msgObject instanceof String){
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + enumMap.get(message)));
         }else{
             Bukkit.getLogger().info("[Strings] Unknown object type or value not found for message " + message.toString());
@@ -44,7 +45,9 @@ public class Messenger {
     }
 
     public static void channelCmdMessage(Message message, CommandSender sender, String playerName, String channelName){
+
         Object msg = enumMap.get(message);
+
         if(playerName == null){
             playerName = "null";
         }

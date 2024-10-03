@@ -160,6 +160,10 @@ public interface Channel{
      */
     void saveChannel();
 
+    boolean hasPermission(Player player);
+
     StringsChannel getStringsChannel();
+
+
 
 }

@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-abstract class AbstractChannel implements Channel{
+abstract class AbstractChannel implements Channel {
 
     private final Strings strings;
     private final ChannelManager channelManager;
@@ -53,8 +53,9 @@ abstract class AbstractChannel implements Channel{
     /**
      * Determines which players messages should be sent to.
      * Must be implemented by extending classes.
+     *
      * @param sender The sender of the message.
-     * @return A Set<Player> of all players who will should the message.
+     * @return A Set<Player> of all players who will see the message.
      */
     public abstract Set<Player> getRecipients(Player sender);
 
@@ -66,17 +67,17 @@ abstract class AbstractChannel implements Channel{
         String processedMessage = chatManager.processMessage(player, message);
         String finalForm = template.replace("{message}", processedMessage);
 
-        if(mentionsEnabled && player.hasPermission("strings.*") || player.hasPermission("strings.mention")) {
+        if (mentionsEnabled && player.hasPermission("strings.*") || player.hasPermission("strings.mention")) {
             finalForm = chatManager.processMentions(player, finalForm);
         }
 
-        if(callEvent){
+        if (callEvent) {
             String finalString = finalForm;
             Bukkit.getScheduler().runTask(strings, () -> {
                 AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, message, recipients, this.getStringsChannel());
                 Bukkit.getPluginManager().callEvent(event);
-                if(!event.isCancelled()){
-                    for(Player p : recipients){
+                if (!event.isCancelled()) {
+                    for (Player p : recipients) {
                         p.sendMessage(finalString);
                     }
                     Bukkit.getLogger().info(ChatColor.stripColor(finalString));
@@ -86,9 +87,10 @@ abstract class AbstractChannel implements Channel{
             return;
         }
 
-        for(Player p : recipients){
+        for (Player p : recipients) {
             p.sendMessage(finalForm);
         }
+
         Bukkit.getLogger().info(ChatColor.stripColor(finalForm));
         chatManager.startCoolDown(player);
 
@@ -96,7 +98,7 @@ abstract class AbstractChannel implements Channel{
 
     @Override
     public void broadcastMessage(String message) {
-        for(Player p : getRecipients(null)){
+        for (Player p : getRecipients(null)) {
             p.sendMessage(message);
         }
     }
@@ -108,26 +110,27 @@ abstract class AbstractChannel implements Channel{
 
     /**
      * Base-line getData() implementation.  Most subclasses should override this.
+     *
      * @return A populated LinkedHashMap containing channel data
      */
     @Override
     public Map<String, String> getData() {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put("format", format);
-        map.put("default-color", defaultColor);
-        map.put("call-event", String.valueOf(callEvent));
-        map.put("filter-profanity", String.valueOf(doProfanityFilter));
-        map.put("block-urls", String.valueOf(doUrlFilter));
-        map.put("cooldown", String.valueOf(doCooldown));
-        map.put("type", String.valueOf(this.getType()));
-        map.put("membership", String.valueOf(membership));
-        map.put("priority", String.valueOf(priority));
+        map.put("format", getFormat());
+        map.put("default-color", getDefaultColor());
+        map.put("call-event", String.valueOf(isCallEvent()));
+        map.put("filter-profanity", String.valueOf(doProfanityFilter()));
+        map.put("block-urls", String.valueOf(doUrlFilter()));
+        map.put("cooldown", String.valueOf(doCooldown()));
+        map.put("type", String.valueOf(getType()));
+        map.put("membership", String.valueOf(getMembership()));
+        map.put("priority", String.valueOf(getPriority()));
         return map;
     }
 
     @Override
     public StringsChannel getStringsChannel() {
-        if(stringsChannel == null){
+        if (stringsChannel == null) {
             stringsChannel = new ChannelWrapper(this);
         }
         return stringsChannel;
@@ -163,7 +166,7 @@ abstract class AbstractChannel implements Channel{
         this.name = name;
     }
 
-    public boolean isCallEvent(){
+    public boolean isCallEvent() {
         return callEvent;
     }
 
@@ -171,7 +174,7 @@ abstract class AbstractChannel implements Channel{
     public abstract void addPlayer(Player player);
 
     @Override
-    public void addPlayer(User user){
+    public void addPlayer(User user) {
         addPlayer(user.getPlayer());
     }
 
@@ -179,7 +182,7 @@ abstract class AbstractChannel implements Channel{
     public abstract void removePlayer(Player player);
 
     @Override
-    public void removePlayer(User user){
+    public void removePlayer(User user) {
         removePlayer(user.getPlayer());
     }
 
@@ -229,4 +232,10 @@ abstract class AbstractChannel implements Channel{
         return priority;
     }
 
+    @Override
+    public boolean hasPermission(Player player) {
+        return (player.hasPermission("strings.channels." + getName()) ||
+                player.hasPermission("strings.channels.*") ||
+                player.hasPermission("strings.*"));
+    }
 }

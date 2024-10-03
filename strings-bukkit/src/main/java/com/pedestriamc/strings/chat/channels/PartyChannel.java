@@ -156,4 +156,11 @@ public class PartyChannel implements Channel{
     public void saveChannel() {
         channelManager.saveChannel(this);
     }
+
+    @Override
+    public boolean hasPermission(Player player) {
+        return (player.hasPermission("strings.channels." + getName()) ||
+                player.hasPermission("strings.channels.*") ||
+                player.hasPermission("strings.*"));
+    }
 }

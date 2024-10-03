@@ -114,6 +114,7 @@ public class ChannelCommand implements CommandExecutor {
             }
         }
     }
+
     private void setActiveChannel(CommandSender sender, @NotNull String channelName, Player target){
         boolean modifyingOther = !sender.equals(target);
         if(modifyingOther && !sender.hasPermission("strings.channel.modifyplayers")){

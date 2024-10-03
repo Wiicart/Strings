@@ -65,6 +65,7 @@ public interface StringsAPI {
 
     /**
      * Creates a StringsChannel that is Type.NORMAL.
+     * Deprecated
      * @param name The name of the channel.
      * @param format The format of the channel.
      * @param defaultColor The default chat color of the channel.
@@ -77,10 +78,12 @@ public interface StringsAPI {
      * @param priority The Channel's priority.
      * @return A new StringsChannel that has been registered with Strings.
      */
+    @Deprecated
     StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, Membership membership, int priority);
 
     /**
      * Creates a World StringsChannel that is Type.WORLD.
+     * Deprecated
      * @param name The name of the channel.
      * @param format The format of the channel.
      * @param defaultColor The default color of the channel.
@@ -94,10 +97,12 @@ public interface StringsAPI {
      * @param priority The Channel's priority.
      * @return A new StringsChannel that has been registered with Strings.
      */
+    @Deprecated
     StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, World world, Membership membership, int priority);
 
     /**
      * Creates a Proximity StringsChannel that is Type.PROXIMITY.
+     * Deprecated
      * @param name The name of the channel.
      * @param format The format of the channel.
      * @param defaultColor The default color of the channel.
@@ -112,6 +117,7 @@ public interface StringsAPI {
      * @param world The Channel's world.
      * @return A new StringsChannel that has been registered with Strings.
      */
+    @Deprecated
     StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance, Membership membership, int priority, World world);
 
     /**

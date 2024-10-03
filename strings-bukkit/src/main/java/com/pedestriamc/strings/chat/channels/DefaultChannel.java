@@ -153,4 +153,9 @@ public class DefaultChannel implements Channel{
     public StringsChannel getStringsChannel() {
         return null;
     }
+
+    @Override
+    public boolean hasPermission(Player player) {
+        return true;
+    }
 }

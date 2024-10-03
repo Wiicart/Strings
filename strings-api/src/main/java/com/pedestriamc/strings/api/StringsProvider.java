@@ -19,7 +19,7 @@ public final class StringsProvider{
 
     /**
      * Provides an instance of the StringsAPI.
-     * @return A instance of StringsAPI.
+     * @return An instance of the StringsAPI.
      */
     public static StringsAPI get(){
         if(api == null){
@@ -66,6 +66,6 @@ public final class StringsProvider{
      * @return A short of the API version.
      */
     public static short getVersion(){
-        return 2;
+        return 3;
     }
 }

@@ -22,9 +22,7 @@ public class StringChannel extends AbstractChannel{
 
     @Override
     public Set<Player> getRecipients(Player sender){
-
         Set<Player> recipients = new HashSet<>(members);
-
         if(super.getMembership() == Membership.DEFAULT){
             for(Player p : Bukkit.getOnlinePlayers()){
                 if(!p.hasPermission("strings.channels." + super.getName() + ".receive")){
@@ -33,9 +31,7 @@ public class StringChannel extends AbstractChannel{
                 recipients.add(p);
             }
         }
-
         return recipients;
-
     }
 
     @Override
@@ -55,7 +51,7 @@ public class StringChannel extends AbstractChannel{
 
     @Override
     public Type getType() {
-        return Type.WORLD;
+        return Type.NORMAL;
     }
 
 }

@@ -163,4 +163,9 @@ public class SocialSpyChannel implements Channel{
         channelManager.saveChannel(this);
     }
 
+    @Override
+    public boolean hasPermission(Player player) {
+        return false;
+    }
+
 }

@@ -54,6 +54,10 @@ channels:
     # When a player has the channel of default, the channel that the player's message will be sent to is determined by
     # priority.  The higher the number, the higher the priority.
     priority: 1
+    # Prefix
+    # When a player types this prefix before their message in chat, it will be sent to this channel, as long as the
+    # player has permission.  This should only be one character, or else it will NOT work.
+    symbol: "#"
 
   # Staff channel, which by default will not call events, in order to hide messages from plugin interference.
   staff:
@@ -65,6 +69,7 @@ channels:
     cooldown: false
     type: stringchannel
     membership: permission
+    symbol: "$"
 
   # Help OP channel.
   # This channel does not behave like a normal channel, as membership of the channel and
@@ -80,6 +85,7 @@ channels:
     cooldown: false
     type: helpop
     membership: protected
+    symbol: "?"
 
   # Below are examples of a world channel and a proximity channel.
   # World channels have the additional configuration option of "world", which is required or else the channel
@@ -103,6 +109,7 @@ channels:
   #  world: "world2"
   #  membership: default
   #  priority: 10
+  #  symbol: "^"
 
   #proximity:
   #  format: "&8[&cProximity&8] &f{prefix}{displayname}{suffix} &7» {message}"
@@ -116,6 +123,7 @@ channels:
   #  membership: default
   #  world: "world2"
   #  priority: 11
+  #  symbol: "!"
 
   # SocialSpy also runs on a type of channel, and customizations for it are found in config.yml
   # Just as the HelpOP channel, it does not behave like a normal channel and normal channel commands will not work with it.

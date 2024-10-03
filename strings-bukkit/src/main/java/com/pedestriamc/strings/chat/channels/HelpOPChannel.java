@@ -22,6 +22,7 @@ import java.util.Set;
 public class HelpOPChannel implements Channel {
 
     private final Strings strings;
+    private final String prefix = null;
     private String name;
     private final ChatManager chatManager;
     private final boolean callEvent;
@@ -198,5 +199,10 @@ public class HelpOPChannel implements Channel {
     @Override
     public void saveChannel() {
         channelManager.saveChannel(this);
+    }
+
+    @Override
+    public boolean hasPermission(Player player) {
+        return (player.hasPermission("strings.helpop.use") ||  player.hasPermission("strings.*"));
     }
 }
