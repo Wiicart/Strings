@@ -31,6 +31,12 @@ public class SocialSpyChannel implements Channel{
         channelManager.registerChannel(this);
     }
 
+    /**
+     * Sends msg log to social spies.
+     * @param sender The sender of the message
+     * @param recipient The recipient of the message
+     * @param message The message sent
+     */
     public void sendOutMessage(Player sender, Player recipient, String message){
         String msg = format;
         msg = playerDirectMessenger.processPlaceholders(sender, recipient, msg);
@@ -164,7 +170,7 @@ public class SocialSpyChannel implements Channel{
     }
 
     @Override
-    public boolean hasPermission(Player player) {
+    public boolean allows(Player player) {
         return false;
     }
 

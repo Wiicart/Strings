@@ -82,6 +82,9 @@ abstract class AbstractChannel implements Channel {
                     }
                     Bukkit.getLogger().info(ChatColor.stripColor(finalString));
                     chatManager.startCoolDown(player);
+                    if(!recipients.contains(player)) {
+                        player.sendMessage(finalString);
+                    }
                 }
             });
             return;
@@ -89,6 +92,9 @@ abstract class AbstractChannel implements Channel {
 
         for (Player p : recipients) {
             p.sendMessage(finalForm);
+        }
+        if(!recipients.contains(player)) {
+            player.sendMessage(finalForm);
         }
 
         Bukkit.getLogger().info(ChatColor.stripColor(finalForm));
@@ -233,9 +239,15 @@ abstract class AbstractChannel implements Channel {
     }
 
     @Override
-    public boolean hasPermission(Player player) {
-        return (player.hasPermission("strings.channels." + getName()) ||
+    public boolean allows(Player player) {
+        if(getMembers().contains(player)){
+            return true;
+        }
+        return (
+                player.hasPermission("strings.channels." + getName()) ||
                 player.hasPermission("strings.channels.*") ||
-                player.hasPermission("strings.*"));
+                player.hasPermission("strings.*"
+                )
+        );
     }
 }

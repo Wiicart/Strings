@@ -85,7 +85,7 @@ public class Messenger {
             for(Map.Entry<String, String> entry : placeholders.entrySet()) {
                 str = str.replace(entry.getKey(), entry.getValue());
             }
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', str));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + str));
             return;
         }
         Bukkit.getLogger().info("[Strings] Unknown object type or value not found for message " + message.toString());

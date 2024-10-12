@@ -165,6 +165,9 @@ chatcolor-set: "&fYour chat color has been set to {color}&f."
 # {player}
 chatcolor-set-other: "&f{player}&f's chat color has been set to {color}&f."
 
+# Sent when player attempts to set chat color with unknown color:
+unknown-color: "&fUnknown chat color!"
+
 # Channel disabled:
 # This message is sent to players when they attempt to send a message in a channel that is disabled.
 channel-disabled: "&fThe channel you're trying to send a message in is disabled!  Please contact staff for help."

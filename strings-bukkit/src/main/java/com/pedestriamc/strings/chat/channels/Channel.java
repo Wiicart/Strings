@@ -160,7 +160,12 @@ public interface Channel{
      */
     void saveChannel();
 
-    boolean hasPermission(Player player);
+    /**
+     * Returns if a player has permission to use the Channel.
+     * @param player The player to check
+     * @return If the player has permission
+     */
+    boolean allows(Player player);
 
     StringsChannel getStringsChannel();
 

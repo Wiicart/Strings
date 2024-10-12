@@ -8,7 +8,6 @@ import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.chat.channels.ChannelManager;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,7 +31,7 @@ public class ChatListener implements Listener {
     }
 
     @EventHandler
-    public void onAsyncPlayerChatEvent(AsyncPlayerChatEvent event) {
+    public void onEvent(AsyncPlayerChatEvent event) {
 
         if (event instanceof ChannelChatEvent) {
             return;
@@ -42,7 +41,10 @@ public class ChatListener implements Listener {
         String playerMessage = event.getMessage();
 
         User user = strings.getUser(playerSender);
-        Channel channel = processPrefix(playerMessage, user);
+
+        Container container = processSymbol(playerMessage, user);
+        Channel channel = container.channel();
+        playerMessage = container.message();
 
         if (channel == null) {
             user.setActiveChannel(defaultChannel);
@@ -59,18 +61,19 @@ public class ChatListener implements Listener {
         event.setCancelled(true);
     }
 
-    public Channel processPrefix(String message, User user) {
+    public Container processSymbol(String msg, User user) {
         for (String key : symbolMap.keySet()) {
-            if (message.startsWith(key)) {
+            if (msg.startsWith(key)) {
                 Channel c = symbolMap.get(key);
-                if(!c.hasPermission(user.getPlayer())){
-                    continue;
+                if (c.allows(user.getPlayer())) {
+                    msg = msg.substring(key.length());
+                    return new Container(c, msg);
                 }
-                return c;
             }
         }
-
-        return user.getActiveChannel();
+        return new Container(user.getActiveChannel(), msg);
     }
+
+    private record Container(Channel channel, String message){}
 
 }

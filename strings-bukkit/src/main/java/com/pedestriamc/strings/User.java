@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -104,14 +105,14 @@ public class User {
 
     /**
      * Provides the User's chat color.
-     * If the User's chat color is null, the User's active channel's chat color is returned.
      * @return A chat color.
      */
+    @Nullable
     public String getChatColor(){
-        if(chatColor == null){
-            return activeChannel.getDefaultColor();
+        if(chatColor != null && !chatColor.equals("")) {
+            return ChatColor.translateAlternateColorCodes('&', chatColor);
         }
-        return ChatColor.translateAlternateColorCodes('&', chatColor);
+        return "";
     }
 
     /**

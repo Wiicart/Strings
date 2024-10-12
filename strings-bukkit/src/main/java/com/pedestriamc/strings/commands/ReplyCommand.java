@@ -37,7 +37,7 @@ public class ReplyCommand implements CommandExecutor {
             message.append(arg);
             message.append(" ");
         }
-        playerDirectMessenger.reply((Player) sender,message.toString().trim());
+        playerDirectMessenger.reply((Player) sender, message.toString().trim());
         return true;
     }
 }

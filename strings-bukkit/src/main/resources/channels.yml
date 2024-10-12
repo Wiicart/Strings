@@ -54,9 +54,12 @@ channels:
     # When a player has the channel of default, the channel that the player's message will be sent to is determined by
     # priority.  The higher the number, the higher the priority.
     priority: 1
-    # Prefix
-    # When a player types this prefix before their message in chat, it will be sent to this channel, as long as the
-    # player has permission.  This should only be one character, or else it will NOT work.
+    # Symbol
+    # When a player types this symbol before their message in chat, it will be sent to this channel, as long as the
+    # player has permission.  Despite its name, this may contain multiple characters.
+    # WARNING:
+    # If used with world and proximity channels, this allows players to communicate in these channels, regardless of
+    # if they are in the right world to use the channel.
     symbol: "#"
 
   # Staff channel, which by default will not call events, in order to hide messages from plugin interference.

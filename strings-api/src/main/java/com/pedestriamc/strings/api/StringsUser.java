@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.api;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.UUID;
@@ -30,6 +31,7 @@ public interface StringsUser {
      * If the StringsUser's chat color is null, the StringsUser's active channel's chat color is returned.
      * @return A chat color.
      */
+    @Nullable
     String getChatColor();
 
     /**

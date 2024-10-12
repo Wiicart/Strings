@@ -6,6 +6,7 @@ import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.StringsUser;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.UUID;
@@ -21,16 +22,19 @@ public final class UserWrapper implements StringsUser {
     }
 
     @Override
-    public @NotNull UUID getUuid() {
+    @NotNull
+    public UUID getUuid() {
         return user.getUuid();
     }
 
     @Override
-    public @NotNull String getName() {
+    @NotNull
+    public String getName() {
         return user.getName();
     }
 
     @Override
+    @Nullable
     public String getChatColor() {
         return user.getChatColor();
     }
@@ -61,7 +65,8 @@ public final class UserWrapper implements StringsUser {
     }
 
     @Override
-    public @NotNull String getDisplayName() {
+    @NotNull
+    public String getDisplayName() {
         return user.getDisplayName();
     }
 
@@ -71,7 +76,8 @@ public final class UserWrapper implements StringsUser {
     }
 
     @Override
-    public @NotNull StringsChannel getActiveChannel() {
+    @NotNull
+    public StringsChannel getActiveChannel() {
         return user.getActiveChannel().getStringsChannel();
     }
 

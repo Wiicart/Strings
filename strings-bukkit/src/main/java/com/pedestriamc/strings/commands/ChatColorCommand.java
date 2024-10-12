@@ -50,48 +50,58 @@ public class ChatColorCommand implements CommandExecutor {
 
     private final Strings strings;
 
-    public ChatColorCommand(@NotNull Strings strings){
+    public ChatColorCommand(@NotNull Strings strings) {
         this.strings = strings;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(args.length == 0){
+
+        if(!(sender.hasPermission("strings.chat.chatcolor") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.*"))) {
+            Messenger.sendMessage(Message.NO_PERMS, sender);
+            return true;
+        }
+
+        if(args.length == 0) {
             Messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
             return true;
         }
 
-        if(args.length > 7){
+        if(args.length > 7) {
             Messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
             return true;
         }
 
         Player player = Bukkit.getPlayer(args[args.length - 1]);
 
-        if(sender instanceof ConsoleCommandSender && player == null){
+        if(sender instanceof ConsoleCommandSender && player == null) {
             Messenger.sendMessage(Message.SERVER_MUST_SPECIFY_PLAYER, sender);
             return true;
         }
-        if(!(sender.hasPermission("strings.chat.chatcolor") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.*"))){
-            Messenger.sendMessage(Message.NO_PERMS, sender);
-            return true;
-        }
 
-        if(player != null){
-            if(!sender.hasPermission("strings.chat.chatcolor.other")){
+        if(player != null) {
+            if (!sender.hasPermission("strings.chat.chatcolor.other")) {
                 Messenger.sendMessage(Message.NO_PERMS, sender);
                 return true;
             }
-        }else{
+        } else {
             player = (Player) sender;
+        }
+
+        User user = strings.getUser(player);
+
+        if(args.length == 1 && args[0].equalsIgnoreCase("reset")){
+            user.setChatColor(null);
+            Messenger.sendMessage(Message.CHATCOLOR_SET, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), player);
+            return true;
         }
 
         StringBuilder chatColor = new StringBuilder();
         boolean hasColor = false;
         for (String arg : args) {
             String pattern = "#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})";
-            if (colorMap.containsKey(arg.toUpperCase())) {
-                if(hasColor){
+            if(colorMap.containsKey(arg.toUpperCase())) {
+                if (hasColor) {
                     Messenger.sendMessage(Message.ONE_COLOR, sender);
                     return true;
                 }
@@ -103,10 +113,15 @@ public class ChatColorCommand implements CommandExecutor {
                 ChatColor color = ChatColor.of(new Color(Integer.parseInt(arg.substring(1), 16)));
                 chatColor.append(color);
             }
+
+            if(!hasColor) {
+                Messenger.sendMessage(Message.UNKNOWN_COLOR, sender);
+                return true;
+            }
+
         }
-        User user = strings.getUser(player);
         user.setChatColor(chatColor.toString());
-        if(!player.equals(sender)){
+        if(!player.equals(sender)) {
             Messenger.sendMessage(Message.CHATCOLOR_SET_OTHER, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), sender);
         }
         Messenger.sendMessage(Message.CHATCOLOR_SET, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), player);

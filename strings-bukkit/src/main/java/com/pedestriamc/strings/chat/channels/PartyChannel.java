@@ -158,9 +158,12 @@ public class PartyChannel implements Channel{
     }
 
     @Override
-    public boolean hasPermission(Player player) {
-        return (player.hasPermission("strings.channels." + getName()) ||
+    public boolean allows(Player player) {
+        return (
+                player.hasPermission("strings.channels." + getName()) ||
                 player.hasPermission("strings.channels.*") ||
-                player.hasPermission("strings.*"));
+                player.hasPermission("strings.*"
+                )
+        );
     }
 }

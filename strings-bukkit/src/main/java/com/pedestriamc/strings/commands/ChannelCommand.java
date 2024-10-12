@@ -117,7 +117,7 @@ public class ChannelCommand implements CommandExecutor {
 
     private void setActiveChannel(CommandSender sender, @NotNull String channelName, Player target){
         boolean modifyingOther = !sender.equals(target);
-        if(modifyingOther && !sender.hasPermission("strings.channel.modifyplayers")){
+        if(modifyingOther && !sender.hasPermission("strings.channel.modifyplayers") && sender instanceof Player){
             Messenger.sendMessage(Message.NO_PERMS, sender);
             return;
         }
@@ -153,7 +153,7 @@ public class ChannelCommand implements CommandExecutor {
     private void joinChannel(@NotNull CommandSender sender, String channel, Player target){
         boolean modifyingOther = !sender.equals(target);
         //Check if sender has permission to modify other players:
-        if(modifyingOther && !sender.hasPermission("strings.channels.modifyplayers")){
+        if(modifyingOther && !sender.hasPermission("strings.channels.modifyplayers") && sender instanceof Player){
             Messenger.sendMessage(Message.NO_PERMS, sender);
             return;
         }

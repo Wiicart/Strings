@@ -44,7 +44,6 @@ public class HelpOPCommand implements CommandExecutor {
             builder.append(" ");
         }
         helpOPChannel.sendMessage((Player) sender, builder.toString());
-        Messenger.sendMessage(Message.HELPOP_SENT, sender);
         return true;
     }
 }

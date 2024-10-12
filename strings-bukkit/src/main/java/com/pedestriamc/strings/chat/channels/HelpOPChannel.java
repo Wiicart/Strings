@@ -8,6 +8,8 @@ import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
 import com.pedestriamc.strings.impl.ChannelWrapper;
+import com.pedestriamc.strings.message.Message;
+import com.pedestriamc.strings.message.Messenger;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -22,7 +24,6 @@ import java.util.Set;
 public class HelpOPChannel implements Channel {
 
     private final Strings strings;
-    private final String prefix = null;
     private String name;
     private final ChatManager chatManager;
     private final boolean callEvent;
@@ -70,6 +71,7 @@ public class HelpOPChannel implements Channel {
             }
             Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
         }
+        Messenger.sendMessage(Message.HELPOP_SENT, player);
     }
 
     private Set<Player> getRecipients(){
@@ -202,7 +204,7 @@ public class HelpOPChannel implements Channel {
     }
 
     @Override
-    public boolean hasPermission(Player player) {
+    public boolean allows(Player player) {
         return (player.hasPermission("strings.helpop.use") ||  player.hasPermission("strings.*"));
     }
 }

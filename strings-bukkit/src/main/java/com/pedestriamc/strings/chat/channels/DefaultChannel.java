@@ -155,7 +155,7 @@ public class DefaultChannel implements Channel{
     }
 
     @Override
-    public boolean hasPermission(Player player) {
+    public boolean allows(Player player) {
         return true;
     }
 }

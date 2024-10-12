@@ -32,30 +32,28 @@ public class AutoBroadcasts {
         }
     }
 
-    public void messageScheduler(){
+    private void messageScheduler(){
         scheduler.runTaskTimer(strings, this::broadcastMessage, 20L, interval);
     }
 
-    public long calculateDelay(String delay){
+    private long calculateDelay(String delay){
         String regex = "^[0-9]+[sm]$";
         if(delay == null || !delay.matches(regex)){
             Bukkit.getLogger().info("[Strings] Invalid broadcast delay in config.  Defaulting to 3m.");
             return 3600L;
         }
-        //Get units
         char units = delay.charAt(delay.length() - 1);
-        //Get number as int
         delay = delay.substring(0, delay.length() - 1);
         int delayNum = Integer.parseInt(delay);
-        //Convert into seconds if in minutes
         if(units == 'm'){
             delayNum *= 60;
         }
-        // One tick = 0.05 seconds
+
         return delayNum * 20L;
+
     }
 
-    public void broadcastMessage(){
+    private void broadcastMessage(){
         if(pos == broadcastList.size()){
             pos = 0;
             if(order.equalsIgnoreCase("random")){
@@ -68,7 +66,7 @@ public class AutoBroadcasts {
         pos++;
     }
 
-    public void loadBroadcastList(){
+    private void loadBroadcastList(){
         ConfigurationSection section = config.getConfigurationSection("broadcasts");
         if(section != null){
             for(String key : section.getKeys(false)){
