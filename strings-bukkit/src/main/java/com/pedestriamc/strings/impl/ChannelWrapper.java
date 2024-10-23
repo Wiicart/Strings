@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.impl;
 
-import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.StringsUser;

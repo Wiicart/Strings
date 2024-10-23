@@ -1,12 +1,14 @@
 package com.pedestriamc.strings.chat.channels;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.chat.ChannelManager;
+import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -31,21 +33,39 @@ public class DefaultChannel implements Channel{
 
     @Override
     public void sendMessage(Player player, String message) {
+        this.sendMessage(player, message, null);
+    }
+
+    @Override
+    public void sendMessage(Player player, String message, AsyncPlayerChatEvent event) {
         Channel[] worldChannels = channelManager.getWorldPriorityChannels(player.getWorld());
         if(worldChannels.length > 0){
-            worldChannels[0].sendMessage(player, message);
+            if(event == null){
+                worldChannels[0].sendMessage(player, message);
+                return;
+            }
+            worldChannels[0].sendMessage(player, message, event);
             return;
         }
         Channel[] defaultMembership = channelManager.getPriorityChannels();
         if(defaultMembership.length > 0){
-            defaultMembership[0].sendMessage(player, message);
+            if(event == null){
+                defaultMembership[0].sendMessage(player, message);
+                return;
+            }
+            defaultMembership[0].sendMessage(player, message, event);
             return;
         }
         User user = strings.getUser(player);
         Set<Channel> usersChannels = user.getChannels();
         if(!usersChannels.isEmpty()){
             Optional<Channel> optional =  usersChannels.stream().max(Comparator.comparingInt(Channel::getPriority));
-            optional.get().sendMessage(player, message);
+            if(event == null){
+                optional.get().sendMessage(player, message);
+                return;
+            }
+            optional.get().sendMessage(player, message, event);
+
         }
         player.sendMessage(ChatColor.RED + "[Strings] You aren't a member of any channels.  Please contact staff for help.");
     }
@@ -152,6 +172,11 @@ public class DefaultChannel implements Channel{
     @Override
     public StringsChannel getStringsChannel() {
         return null;
+    }
+
+    @Override
+    public boolean isCallEvent() {
+        return true;
     }
 
     @Override

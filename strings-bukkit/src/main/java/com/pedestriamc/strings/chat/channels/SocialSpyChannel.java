@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.chat.channels;
 
-import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.chat.ChannelManager;
+import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.Type;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
@@ -9,6 +10,7 @@ import com.pedestriamc.strings.impl.ChannelWrapper;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -52,6 +54,11 @@ public class SocialSpyChannel implements Channel{
         for(Player p : spiesList){
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
         }
+    }
+
+    @Override
+    public void sendMessage(Player player, String message, AsyncPlayerChatEvent event) {
+        this.sendMessage(player, message);
     }
 
     @Override
@@ -162,6 +169,11 @@ public class SocialSpyChannel implements Channel{
             stringsChannel = new ChannelWrapper(this);
         }
         return stringsChannel;
+    }
+
+    @Override
+    public boolean isCallEvent() {
+        return false;
     }
 
     @Override

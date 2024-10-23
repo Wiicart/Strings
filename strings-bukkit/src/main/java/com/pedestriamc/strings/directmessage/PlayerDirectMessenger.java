@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.directmessage;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.event.PlayerDirectMessageEvent;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
@@ -15,29 +15,30 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerDirectMessenger {
 
-    //first player: recipient, second: sender
     private final Strings strings;
     private final ConcurrentHashMap<Player, Player> replyList = new ConcurrentHashMap<>();
     private final String messageFormatSender;
     private final String messageFormatRecipient;
     private final boolean usePAPI;
+    private final Messenger messenger;
 
     public PlayerDirectMessenger(@NotNull Strings strings){
         this.strings = strings;
         this.messageFormatSender = strings.getConfig().getString("msg-format-outgoing");
         this.messageFormatRecipient = strings.getConfig().getString("msg-format-receiving");
         this.usePAPI = strings.usePlaceholderAPI();
+        this.messenger = strings.getMessenger();
 
     }
 
     public void reply(@NotNull Player sender, @NotNull String message){
         Player recipient = replyList.get(sender);
         if(recipient == null){
-            Messenger.sendMessage(Message.NO_REPLY, sender);
+            messenger.sendMessage(Message.NO_REPLY, sender);
             return;
         }
         if(!recipient.isOnline()){
-            Messenger.sendMessage(Message.PLAYER_OFFLINE, sender);
+            messenger.sendMessage(Message.PLAYER_OFFLINE, sender);
             return;
         }
         sendMessage(sender,replyList.get(sender), message);

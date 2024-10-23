@@ -10,13 +10,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("ClassCanBeRecord")
 public class StringsCommand implements CommandExecutor {
 
     private final Strings strings;
+    private final Messenger messenger;
 
     public StringsCommand(@NotNull Strings strings){
         this.strings = strings;
+        this.messenger = strings.getMessenger();
     }
 
     @Override
@@ -36,14 +37,14 @@ public class StringsCommand implements CommandExecutor {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[&3Strings&8] &fStrings version &a" + strings.getVersion() + "&f reloaded."));
                 return true;
             }
-            Messenger.sendMessage(Message.NO_PERMS, sender);
+            messenger.sendMessage(Message.NO_PERMS, sender);
             return true;
         }
         if(args.length == 1 && args[0].equalsIgnoreCase("help") && sender.hasPermission("strings.help")){
-            Messenger.sendMessage(Message.STRINGS_HELP, sender);
+            messenger.sendMessage(Message.STRINGS_HELP, sender);
             return true;
         }
-        Messenger.sendMessage(Message.INVALID_ARGS, sender);
+        messenger.sendMessage(Message.INVALID_ARGS, sender);
         return true;
     }
 }

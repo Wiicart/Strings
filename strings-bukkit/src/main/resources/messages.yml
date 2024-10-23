@@ -56,6 +56,14 @@ invalid-use-channel: "&fInvalid usage of command! Type &7/channel help &ffor inf
 # Placeholder: {channel}
 channel-active: "&fChannel &7{channel} &fset to your active channel."
 
+# Already active:
+# Placeholder: {channel}
+already-active: "&fChannel &7{channel} &fis already your active channel."
+
+# Already active for other player:
+# Placeholders: {channel}, {player}
+already-active-other: "&fChannel &7{channel} &fis already &7{player}&f's active channel."
+
 # Channel joined:
 # Placeholder: {channel}
 channel-joined: "&fJoined channel &7{channel}&f."
@@ -99,6 +107,14 @@ not-channel-member: "&fYou're not a member of the channel &7{channel}&f."
 # Not a member of channel:
 # Placeholders: {player}, {channel}
 not-channel-member-other: "&7{player} &fis not a member of &7{channel}&f."
+
+# Already member of a channel:
+# Placeholder: {channel} - channel name
+already-member: "&fYou're already a member of channel &7{channel}&f."
+
+# Already member of a channel:
+# Placeholders: {channel}, {player}
+already-member-other: "&7{player} &fis already a member of channel &7{channel}&f."
 
 # /channel help message:
 channel-help:

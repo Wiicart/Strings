@@ -1,227 +1,338 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.chat.channels.Channel;
-import com.pedestriamc.strings.chat.channels.ChannelManager;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
+import com.pedestriamc.strings.user.User;
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class ChannelCommand implements CommandExecutor {
+import java.util.HashMap;
+import java.util.Map;
 
-    private final Strings strings;
-    private final ChannelManager channelManager;
+public class ChannelCommand extends CommandBase {
 
-    public ChannelCommand(@NotNull Strings strings){
-        this.strings = strings;
-        this.channelManager = strings.getChannelManager();
+
+    public ChannelCommand(Strings strings){
+        super();
+        HashMap<String, CommandComponent> map = new HashMap<>();
+        JoinCommand joinCommand = new JoinCommand(strings);
+        map.put("JOIN", joinCommand);
+        map.put("J", joinCommand);
+        LeaveCommand leaveCommand = new LeaveCommand(strings);
+        map.put("LEAVE", leaveCommand);
+        map.put("L", leaveCommand);
+        HelpCommand helpCommand = new HelpCommand(strings);
+        map.put("HELP", helpCommand);
+        map.put("H", helpCommand);
+        BaseCommand baseCommand = new BaseCommand(strings);
+        initialize(map, baseCommand);
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args){
-        if(args.length > 3){
-            Messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
+    /**
+     * Base command for setting active channel
+     */
+    private static class BaseCommand extends ChannelProcessor {
+
+        private final Strings strings;
+        private final Messenger messenger;
+
+        public BaseCommand(Strings strings){
+            super(strings);
+            this.strings = strings;
+            this.messenger = strings.getMessenger();
         }
-        switch(args.length){
-            case 0 -> {
-                Messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+
+        @Override
+        public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+
+            String[] newArgs;
+
+            switch(args.length) {
+                case 0 -> {
+                    messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+                    return true;
+                }
+                case 1 -> {
+                    String channelName = args[0];
+                    newArgs = new String[2];
+                    newArgs[0] = " ";
+                    newArgs[1] = channelName;
+                }
+                case 2 -> {
+                    String channelName = args[0];
+                    String targetName = args[1];
+                    newArgs = new String[3];
+                    newArgs[0] = " ";
+                    newArgs[1] = channelName;
+                    newArgs[2] = targetName;
+                }
+                default -> {
+                    messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
+                    return true;
+                }
+            }
+
+            BaseData data = process(sender, newArgs, Type.BASE);
+
+            if(data.shouldReturn){
                 return true;
             }
-            case 1 -> {
-                if(args[0].equalsIgnoreCase("join")){
-                    Messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
-                    return true;
+
+            boolean modifyingOther = !sender.equals(data.target);
+            User user = strings.getUser(data.target);
+            Channel channel = data.channel;
+
+            if(!user.memberOf(channel)) {
+                user.joinChannel(channel);
+            }
+
+            if(user.getActiveChannel().equals(channel)){
+                if(modifyingOther){
+                    messenger.sendMessage(Message.ALREADY_ACTIVE_OTHER, data.placeholders, sender);
+                }else{
+                    messenger.sendMessage(Message.ALREADY_ACTIVE, data.placeholders, sender);
                 }
-                if(args[0].equalsIgnoreCase("leave")){
-                    Messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
-                    return true;
-                }
-                if(args[0].equalsIgnoreCase("help")){
-                    Messenger.sendMessage(Message.CHANNEL_HELP, sender);
-                    return true;
-                }
-                if(sender instanceof Server){
-                    sender.sendMessage("[Strings] This command cannot be used with 1 arg as server.");
-                }
-                setActiveChannel(sender, args[0], (Player) sender);
                 return true;
             }
-            case 2 -> {
-                /*
-                the command has two args, proper usage will be trying to join or leave a channel, or setting the active
-                channel of another player.
-                 */
-                switch(args[0].toUpperCase()){
-                    case "JOIN" -> {
-                        if(!(sender instanceof Player)){
-                            sender.sendMessage("[Strings] /channel join must be used with a player parameter");
-                            return true;
-                        }
-                        //joining channel
-                        joinChannel(sender, args[1].toLowerCase(), (Player) sender);
-                        return true;
-                    }
-                    case "LEAVE" -> {
-                        if(sender instanceof Server){
-                            sender.sendMessage("[Strings] /channel join must be used with a player parameter");
-                            return true;
-                        }
-                        //leaving channel
-                        leaveChannel(sender, args[1].toLowerCase(), (Player) sender);
-                        return true;
-                    }
-                    default -> {
-                        Player p = Bukkit.getPlayer(args[1]);
-                        if(p == null){
-                            Messenger.channelCmdMessage(Message.INVALID_PLAYER, sender, args[1], null);
-                        }else{
-                            setActiveChannel(sender, args[0], p);
-                        }
-                        return true;
-                    }
-                }
+
+            user.setActiveChannel(channel);
+
+            if(modifyingOther) {
+                messenger.sendMessage(Message.OTHER_PLAYER_CHANNEL_ACTIVE, data.placeholders, sender);
             }
-            case 3 -> {
-                if(args[1].equalsIgnoreCase("join")){
-                    if(Bukkit.getPlayer(args[2]) == null){
-                        Messenger.channelCmdMessage(Message.INVALID_PLAYER, sender, args[2], null);
-                        return true;
-                    }
-                    joinChannel(sender, args[1], Bukkit.getPlayer(args[2]));
-                    return true;
-                }
-                if(args[1].equalsIgnoreCase("leave")){
-                    if(Bukkit.getPlayer(args[2]) == null){
-                        Messenger.channelCmdMessage(Message.INVALID_PLAYER, sender, args[2], null);
-                        return true;
-                    }
-                    leaveChannel(sender, args[1], Bukkit.getPlayer(args[2]));
-                    return true;
-                }
-                Messenger.sendMessage(Message.INVALID_USE_CHANNEL, sender);
+            messenger.sendMessage(Message.CHANNEL_ACTIVE, data.placeholders, data.target);
+
+            return true;
+        }
+
+    }
+
+    /**
+     * Channel join sub command
+     */
+    private static class JoinCommand extends ChannelProcessor {
+
+        private final Strings strings;
+        private final Messenger messenger;
+
+        public JoinCommand(Strings strings) {
+            super(strings);
+            this.strings = strings;
+            this.messenger = strings.getMessenger();
+        }
+
+        @Override
+        public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+
+            BaseData data = process(sender, args, Type.JOIN);
+
+            if(data.shouldReturn) {
                 return true;
             }
-            default -> {
-                Messenger.sendMessage(Message.INVALID_USE_CHANNEL, sender);
+
+            boolean modifyingOther = !sender.equals(data.target);
+            User user = strings.getUser(data.target);
+            Channel channel = data.channel;
+
+            if(user.memberOf(channel)){
+                if(modifyingOther){
+                    messenger.sendMessage(Message.ALREADY_MEMBER_OTHER, data.placeholders, sender);
+                }else{
+                    messenger.sendMessage(Message.ALREADY_MEMBER, data.placeholders, sender);
+                }
                 return true;
             }
-        }
-    }
 
-    private void setActiveChannel(CommandSender sender, @NotNull String channelName, Player target){
-        boolean modifyingOther = !sender.equals(target);
-        if(modifyingOther && !sender.hasPermission("strings.channel.modifyplayers") && sender instanceof Player){
-            Messenger.sendMessage(Message.NO_PERMS, sender);
-            return;
-        }
-        Channel c = strings.getChannel(channelName);
-        if(c == null){
-            Messenger.channelCmdMessage(Message.CHANNEL_DOES_NOT_EXIST, sender, target.getName(), channelName);
-            return;
-        }
-        if(channelManager.getProtectedChannels().contains(c)){
-            Messenger.sendMessage(Message.PROTECTED_CHANNEL, sender);
-            return;
-        }
-        if (!target.hasPermission("strings.channels." + c.getName()) &&
-                !target.hasPermission("strings.channels.*") &&
-                !target.hasPermission("strings.*") &&
-                !target.hasPermission("strings.channels.channel.*")) {
-            if (modifyingOther) {
-                Messenger.channelCmdMessage(Message.OTHER_PLAYER_NO_PERMS, sender, target.getName(), channelName);
-            } else {
-                Messenger.channelCmdMessage(Message.NO_PERMS_CHANNEL, sender, sender.getName(), channelName);
+            user.joinChannel(channel);
+            if(modifyingOther) {
+                messenger.sendMessage(Message.OTHER_USER_JOINED_CHANNEL, data.placeholders, sender);
             }
-            return;
+            messenger.sendMessage(Message.CHANNEL_JOINED, data.placeholders, data.target);
+
+            return true;
         }
-        User user = strings.getUser(target);
-        user.setActiveChannel(c);
-        if(modifyingOther){
-            Messenger.channelCmdMessage(Message.OTHER_PLAYER_CHANNEL_ACTIVE, sender, target.getName(), channelName);
-        }
-        Messenger.channelCmdMessage(Message.CHANNEL_ACTIVE, target, target.getName(), channelName);
 
     }
 
-    private void joinChannel(@NotNull CommandSender sender, String channel, Player target){
-        boolean modifyingOther = !sender.equals(target);
-        //Check if sender has permission to modify other players:
-        if(modifyingOther && !sender.hasPermission("strings.channels.modifyplayers") && sender instanceof Player){
-            Messenger.sendMessage(Message.NO_PERMS, sender);
-            return;
+    /**
+     * Channel leave subcommand
+     */
+    private static class LeaveCommand extends ChannelProcessor {
+
+        private final Strings strings;
+        private final Messenger messenger;
+
+        public LeaveCommand(Strings strings) {
+            super(strings);
+            this.strings = strings;
+            this.messenger = strings.getMessenger();
         }
-        // Check if channel exists:
-        Channel c = strings.getChannel(channel);
-        if(c == null){
-            Messenger.channelCmdMessage(Message.CHANNEL_DOES_NOT_EXIST, sender, target.getName(), channel);
-            return;
-        }
-        if(c.getName().equals("helpop")){
-            Messenger.sendMessage(Message.HELPOP_NOT_CHANNEL, sender);
-            return;
-        }
-        if(channelManager.getProtectedChannels().contains(c)){
-            Messenger.sendMessage(Message.PROTECTED_CHANNEL, sender);
-            return;
-        }
-        if (!target.hasPermission("strings.channels." + c.getName()) &&
-                !target.hasPermission("strings.channels.*") &&
-                !target.hasPermission("strings.*")) {
-            if (modifyingOther) {
-                Messenger.channelCmdMessage(Message.OTHER_PLAYER_NO_PERMS, sender, target.getName(), channel);
-            } else {
-                Messenger.channelCmdMessage(Message.NO_PERMS_CHANNEL, sender, sender.getName(), channel);
+
+        @Override
+        public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+
+            BaseData data = process(sender, args, Type.LEAVE);
+
+            if(data.shouldReturn) {
+                return true;
             }
-            return;
+
+            User user = strings.getUser(data.target);
+            Channel channel = data.channel;
+            boolean modifyingOther = !sender.equals(data.target);
+
+            if(!user.getChannels().contains(channel)) {
+                if(modifyingOther){
+                    messenger.sendMessage(Message.NOT_CHANNEL_MEMBER_OTHER, data.placeholders, sender);
+                }else{
+                    messenger.sendMessage(Message.NOT_CHANNEL_MEMBER, data.placeholders, data.target);
+                }
+                return true;
+            }
+
+            if(channel.getName().equals("global") || channel.getName().equals("default")){
+                messenger.sendMessage(Message.CANT_LEAVE_GLOBAL, sender);
+                return true;
+            }
+
+            user.leaveChannel(channel);
+            if(modifyingOther) {
+                messenger.sendMessage(Message.OTHER_USER_LEFT_CHANNEL, data.placeholders, sender);
+            }
+            messenger.sendMessage(Message.LEFT_CHANNEL, data.placeholders, data.target);
+
+            return true;
         }
-        User user = strings.getUser(target);
-        user.joinChannel(c);
-        if(modifyingOther){
-            Messenger.channelCmdMessage(Message.OTHER_USER_JOINED_CHANNEL, sender, target.getName(), channel);
-        }
-        Messenger.channelCmdMessage(Message.CHANNEL_JOINED, target, target.getName(), channel);
     }
 
-    private void leaveChannel(@NotNull CommandSender sender, String channel, Player target){
-        boolean modifyingOther = !sender.equals(target);
-        //Check if sender has permission to modify other players:
-        if(modifyingOther && !sender.hasPermission("strings.channels.modifyplayers")){
-            Messenger.sendMessage(Message.NO_PERMS, sender);
-            return;
+    private static class HelpCommand implements CommandComponent {
+
+        private final Messenger messenger;
+
+        public HelpCommand(Strings strings){
+            this.messenger = strings.getMessenger();
         }
-        // Check if channel exists:
-        Channel c = strings.getChannel(channel);
-        if(c == null){
-            Messenger.channelCmdMessage(Message.CHANNEL_DOES_NOT_EXIST, sender, target.getName(), channel);
-            return;
+
+        @Override
+        public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+            messenger.sendMessage(Message.CHANNEL_HELP, sender);
+            return true;
         }
-        if(channelManager.getProtectedChannels().contains(c)){
-            Messenger.sendMessage(Message.PROTECTED_CHANNEL, sender);
-            return;
-        }
-        if(c.getName().equals("global")){
-            Messenger.sendMessage(Message.CANT_LEAVE_GLOBAL, sender);
-            return;
-        }
-        User user = strings.getUser(target);
-        if(!user.getChannels().contains(c)){
-            if(modifyingOther){
-                Messenger.channelCmdMessage(Message.NOT_CHANNEL_MEMBER_OTHER, sender, target.getName(), channel);
-            }
-            Messenger.channelCmdMessage(Message.NOT_CHANNEL_MEMBER, target, target.getName(), channel);
-            return;
-        }
-        user.leaveChannel(c);
-        if(modifyingOther){
-            Messenger.channelCmdMessage(Message.OTHER_USER_LEFT_CHANNEL, sender, target.getName(), channel);
-        }
-        Messenger.channelCmdMessage(Message.LEFT_CHANNEL, target, target.getName(), channel);
     }
+
+    /**
+     * Class to handle shared sub command processes
+     */
+    protected static abstract class ChannelProcessor implements CommandComponent {
+
+        private final ChannelManager channelManager;
+        private final Messenger messenger;
+
+        protected ChannelProcessor(@NotNull Strings strings) {
+            this.channelManager = strings.getChannelManager();
+            this.messenger = strings.getMessenger();
+        }
+
+        protected BaseData process(@NotNull CommandSender sender, @NotNull String @NotNull [] args, Type type) {
+
+            Player target;
+            boolean modifyingOther = false;
+            boolean isPlayer = sender instanceof Player;
+
+            switch(args.length) {
+                case 1 -> {
+                    messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+                    return new BaseData(null,null, null, true);
+                }
+                case 2 -> {
+                    if(!isPlayer) {
+                        sender.sendMessage("[Strings] You must define a player to use this command on.");
+                        return new BaseData(null,null, null, true);
+                    } else {
+                        target = (Player) sender;
+                    }
+                }
+                case 3 -> {
+                    target = Bukkit.getPlayer(args[2]);
+                    modifyingOther = true;
+                    if(target == null){
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("{player}", args[2]);
+                        messenger.sendMessage(Message.INVALID_PLAYER, map, sender);
+                        return new BaseData(null,null, null, true);
+                    }
+                }
+                default -> {
+                    messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
+                    return new BaseData(null,null, null, true);
+                }
+            }
+
+            String channelName = args[1];
+
+            if(modifyingOther && !isPlayer && noPerms(sender, "strings.channels.modifyplayers")) {
+                messenger.sendMessage(Message.NO_PERMS, sender);
+                return new BaseData(null,null, null, true);
+            }
+
+            if(channelName.equalsIgnoreCase("helpop")) {
+                messenger.sendMessage(Message.HELPOP_NOT_CHANNEL, sender);
+                return new BaseData(null,null, null, true);
+            }
+
+            Channel channel = channelManager.getChannel(channelName);
+            if(channel == null) {
+                HashMap<String, String> placeholders = new HashMap<>();
+                placeholders.put("{channel}", channelName);
+                messenger.sendMessage(Message.CHANNEL_DOES_NOT_EXIST, placeholders,  sender);
+                return new BaseData(null,null, null, true);
+            }
+
+            if(channelManager.getProtectedChannels().contains(channel)) {
+                messenger.sendMessage(Message.PROTECTED_CHANNEL, sender);
+                return new BaseData(null,null, null, true);
+            }
+
+            if(type == Type.JOIN || type == Type.BASE){
+
+                if (
+                        noPerms(sender, "strings.channels." + channel.getName()) &&
+                        noPerms(sender, "strings.channels.*") &&
+                        noPerms(sender, "strings.*")
+                ) {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("{channel}", channelName);
+                    messenger.sendMessage(Message.NO_PERMS_CHANNEL, map, sender);
+                    return new BaseData(null, null, null, true);
+                }
+
+            }
+
+            HashMap<String, String> placeholders = new HashMap<>();
+            placeholders.put("{channel}", channelName);
+            placeholders.put("{player}", target.getName());
+
+            return new BaseData(channel, target, placeholders, false);
+        }
+
+        protected enum Type {
+            JOIN,
+            LEAVE,
+            BASE
+        }
+
+        protected boolean noPerms(CommandSender sender, String perm) {
+            return !sender.hasPermission(perm);
+        }
+
+        protected record BaseData(Channel channel, Player target, Map<String, String> placeholders, boolean shouldReturn){}
+
+    }
+
 }

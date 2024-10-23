@@ -1,6 +1,8 @@
-package com.pedestriamc.strings;
+package com.pedestriamc.strings.user;
 
+import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.chat.channels.Channel;
+import com.pedestriamc.strings.user.User;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

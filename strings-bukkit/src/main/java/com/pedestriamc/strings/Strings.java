@@ -4,7 +4,7 @@ import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.chat.channels.Channel;
-import com.pedestriamc.strings.chat.channels.ChannelManager;
+import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.chat.ChatFilter;
 import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
@@ -15,6 +15,8 @@ import com.pedestriamc.strings.tabcompleters.*;
 import com.pedestriamc.strings.commands.BroadcastCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
 import com.pedestriamc.strings.commands.*;
+import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.UserUtil;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
@@ -39,9 +41,12 @@ import java.util.logging.Logger;
 
 public final class Strings extends JavaPlugin {
 
-    private final String version = "1.3";
-    private final String distributor = "hangar";
-    private final short pluginNum = 3;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final String version = "1.4";
+    @SuppressWarnings("FieldCanBeLocal")
+    private final String distributor = "github";
+    @SuppressWarnings("FieldCanBeLocal")
+    private final short pluginNum = 4;
 
     @SuppressWarnings("unused")
     private AutoBroadcasts autoBroadcasts;
@@ -72,6 +77,7 @@ public final class Strings extends JavaPlugin {
     private StringsImpl stringsImpl;
     private Mentioner mentioner;
     private UUID apiUUID;
+    private Messenger messenger;
 
     @Override
     public void onEnable() {
@@ -85,7 +91,6 @@ public final class Strings extends JavaPlugin {
         this.registerClasses();
         this.setupVault();
         this.setupAPI();
-        Messenger.initialize();
         int pluginId = 22597;
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
@@ -117,6 +122,7 @@ public final class Strings extends JavaPlugin {
         }catch(IllegalStateException | SecurityException ignored){}
         this.stringsImpl = null;
         logger.info("[Strings] Disabled");
+
     }
 
     /*
@@ -130,8 +136,8 @@ public final class Strings extends JavaPlugin {
         this.getCommand("helpop").setExecutor(new HelpOPCommand(this));
         this.getCommand("broadcast").setExecutor(new BroadcastCommand(this));
         this.getCommand("announce").setExecutor(new BroadcastCommand(this));
-        this.getCommand("clearchat").setExecutor(new ClearChatCommand());
-        this.getCommand("chatclear").setExecutor(new ClearChatCommand());
+        this.getCommand("clearchat").setExecutor(new ClearChatCommand(this));
+        this.getCommand("chatclear").setExecutor(new ClearChatCommand(this));
         this.getCommand("clearchat").setTabCompleter(new ClearChatTabCompleter());
         this.getCommand("chatclear").setTabCompleter(new ClearChatTabCompleter());
         this.getCommand("socialspy").setExecutor(new SocialSpyCommand(this));
@@ -209,6 +215,7 @@ public final class Strings extends JavaPlugin {
         }
     }
     private void instantiateObjects(){
+        messenger = new Messenger(this);
         chatFilter = new ChatFilter(this);
         chatManager = new ChatManager(this);
         playerDirectMessenger = new PlayerDirectMessenger(this);
@@ -312,6 +319,7 @@ public final class Strings extends JavaPlugin {
     public ChannelManager getChannelManager(){ return channelManager; }
     public ServerMessages getServerMessages(){ return serverMessages; }
     public PlayerDirectMessenger getPlayerDirectMessenger(){ return playerDirectMessenger; }
+    public Messenger getMessenger(){ return messenger; }
     public ChatFilter getChatFilter(){ return chatFilter; }
     public Chat getVaultChat(){ return chat; }
     public FileConfiguration getUsersFileConfig(){ return usersFileConfig; }

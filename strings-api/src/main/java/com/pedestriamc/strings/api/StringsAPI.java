@@ -31,6 +31,7 @@ public interface StringsAPI {
      * @param name The name of the Channel to search for.
      * @return The Channel, if it exists.
      */
+    @Deprecated
     Optional<StringsChannel> getOptionalChannel(String name);
 
     /**
@@ -46,6 +47,7 @@ public interface StringsAPI {
      * @param uuid The UUID of the Player.
      * @return An Optional containing a StringsUser if the StringsUser exists.
      */
+    @Deprecated
     Optional<StringsUser> getOptionalStringsUser(UUID uuid);
 
     /**
@@ -62,63 +64,6 @@ public interface StringsAPI {
      * @return An Array of StringsChannels.
      */
     StringsChannel[] getWorldChannels(World world);
-
-    /**
-     * Creates a StringsChannel that is Type.NORMAL.
-     * Deprecated
-     * @param name The name of the channel.
-     * @param format The format of the channel.
-     * @param defaultColor The default chat color of the channel.
-     * @param callEvent Should this channel call events when players send messages?
-     * @param doURLFilter Should this channel filter out URLs?
-     * @param doProfanityFilter Should this channel filter profanity?
-     * @param doCooldown Should this channel have chat cool-downs?
-     * @param active Is this channel active?
-     * @param membership The default membership of the Channel.
-     * @param priority The Channel's priority.
-     * @return A new StringsChannel that has been registered with Strings.
-     */
-    @Deprecated
-    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, Membership membership, int priority);
-
-    /**
-     * Creates a World StringsChannel that is Type.WORLD.
-     * Deprecated
-     * @param name The name of the channel.
-     * @param format The format of the channel.
-     * @param defaultColor The default color of the channel.
-     * @param callEvent Should this channel call events when players send messages?
-     * @param doURLFilter Should this channel filter out URLs?
-     * @param doProfanityFilter Should this channel filter profanity?
-     * @param doCooldown Should this channel have chat cool-downs?
-     * @param active Is this channel active?
-     * @param world The world the channel is for.
-     * @param membership The default membership of the Channel.
-     * @param priority The Channel's priority.
-     * @return A new StringsChannel that has been registered with Strings.
-     */
-    @Deprecated
-    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, World world, Membership membership, int priority);
-
-    /**
-     * Creates a Proximity StringsChannel that is Type.PROXIMITY.
-     * Deprecated
-     * @param name The name of the channel.
-     * @param format The format of the channel.
-     * @param defaultColor The default color of the channel.
-     * @param callEvent Should this channel call events when players send messages?
-     * @param doURLFilter Should this channel filter out URLs?
-     * @param doProfanityFilter Should this channel filter profanity?
-     * @param doCooldown Should this channel have chat cool-downs?
-     * @param active Is this channel active?
-     * @param distance The proximity players have to be within to receive messages.
-     * @param membership The default membership of the Channel.
-     * @param priority The Channel's priority.
-     * @param world The Channel's world.
-     * @return A new StringsChannel that has been registered with Strings.
-     */
-    @Deprecated
-    StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance, Membership membership, int priority, World world);
 
     /**
      * Deletes a StringsChannel and removes it from the channels file.

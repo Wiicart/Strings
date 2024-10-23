@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.user.User;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;

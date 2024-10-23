@@ -17,9 +17,11 @@ public class ChatFilter{
     private final Pattern pattern = Pattern.compile(regex);
     private final List<String> urlWhitelist;
     private List<String> bannedWords;
+    private final Messenger messenger;
 
     public ChatFilter(@NotNull Strings strings){
         this.urlWhitelist = new ArrayList<>();
+        this.messenger = strings.getMessenger();
         List<?> tempList = strings.getConfig().getList("url-whitelist");
         if(tempList != null)
         for(Object obj : tempList){
@@ -51,7 +53,7 @@ public class ChatFilter{
             }
         }
         if(urlReplaced){
-            Messenger.sendMessage(Message.LINKS_PROHIBITED, player);
+            messenger.sendMessage(Message.LINKS_PROHIBITED, player);
         }
         return msg;
     }

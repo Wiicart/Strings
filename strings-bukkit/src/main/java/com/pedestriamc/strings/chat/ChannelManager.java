@@ -1,7 +1,8 @@
-package com.pedestriamc.strings.chat.channels;
+package com.pedestriamc.strings.chat;
 
-import com.pedestriamc.strings.User;
-import com.pedestriamc.strings.UserUtil;
+import com.pedestriamc.strings.chat.channels.*;
+import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.UserUtil;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.Type;
@@ -28,6 +29,7 @@ public class ChannelManager {
     private final HashMap<String, Channel> channelSymbols;
     private final Set<Channel> defaultMembershipChannels;
     private final FileConfiguration config;
+    private ArrayList<Channel> nonProtectedChannels;
     private Channel[] channelsPrioritySorted;
 
     /**
@@ -323,13 +325,16 @@ public class ChannelManager {
      * @return A populated ArrayList of Channels.
      */
     public ArrayList<Channel> getNonProtectedChannels(){
-        ArrayList<Channel> list = new ArrayList<>();
-        for(Channel c : getChannelList()){
-            if(c.getType() != Type.PROTECTED){
-                list.add(c);
+        if(nonProtectedChannels == null){
+            ArrayList<Channel> list = new ArrayList<>();
+            for(Channel c : getChannelList()){
+                if(c.getType() != Type.PROTECTED){
+                    list.add(c);
+                }
             }
+            nonProtectedChannels = list;
         }
-        return list;
+        return new ArrayList<>(nonProtectedChannels);
     }
 
     /**
@@ -344,19 +349,6 @@ public class ChannelManager {
             }
         }
         return list;
-    }
-
-    public Channel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, Membership membership, int priority){
-        return new StringChannel(strings, name, format, defaultColor, this, callEvent, doURLFilter, doProfanityFilter, doCooldown, membership, priority);
-    }
-
-    public Channel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, World world, Membership membership, int priority){
-        return new WorldChannel(strings, name, format, defaultColor, this, callEvent, doURLFilter, doProfanityFilter, doCooldown, world, membership, priority);
-    }
-
-    public Channel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, double distance, Membership membership, int priority, World world){
-        return new ProximityChannel(strings, name, format, defaultColor, this, callEvent, doURLFilter, doProfanityFilter, doCooldown, distance, membership, priority, world);
-
     }
 
     public Channel[] getWorldChannels(World world){
@@ -382,7 +374,4 @@ public class ChannelManager {
         return channelSymbols;
     }
 
-    public boolean hasPermission(Player player, Channel channel){
-        return false;
-    }
 }

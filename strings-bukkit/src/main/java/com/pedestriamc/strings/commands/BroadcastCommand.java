@@ -16,17 +16,19 @@ public class BroadcastCommand implements CommandExecutor {
 
     private final String broadcastFormat;
     private final boolean usePAPI;
+    private final Messenger messenger;
 
 
     public BroadcastCommand(@NotNull Strings strings){
         broadcastFormat = strings.getConfig().getString("broadcast-format", "&8[&3Broadcast&8] &f");
         usePAPI = strings.usePlaceholderAPI();
+        messenger = strings.getMessenger();
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args){
         if(!sender.hasPermission("strings.chat.broadcast") && !sender.hasPermission("strings.chat.*") && !sender.hasPermission("strings.*")){
-            Messenger.sendMessage(Message.NO_PERMS, sender);
+            messenger.sendMessage(Message.NO_PERMS, sender);
             return true;
         }
         StringBuilder broadcast = new StringBuilder(broadcastFormat);

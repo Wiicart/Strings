@@ -14,9 +14,11 @@ import org.jetbrains.annotations.NotNull;
 public class DirectMessageCommand implements CommandExecutor {
 
     private final PlayerDirectMessenger playerDirectMessenger;
+    private final Messenger messenger;
 
     public DirectMessageCommand(@NotNull Strings strings){
         this.playerDirectMessenger = strings.getPlayerDirectMessenger();
+        this.messenger = strings.getMessenger();
     }
 
     @Override
@@ -26,20 +28,20 @@ public class DirectMessageCommand implements CommandExecutor {
             return true;
         }
         if(!(sender.hasPermission("strings.chat.msg") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.*"))){
-            Messenger.sendMessage(Message.NO_PERMS, sender);
+            messenger.sendMessage(Message.NO_PERMS, sender);
             return true;
         }
         if(args.length < 2){
-            Messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+            messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
             return true;
         }
         Player recipient = Bukkit.getPlayer(args[0]);
         if(recipient == null){
-            Messenger.sendMessage(Message.UNKNOWN_PLAYER, sender);
+            messenger.sendMessage(Message.UNKNOWN_PLAYER, sender);
             return true;
         }
         if(recipient.equals(sender)){
-            Messenger.sendMessage(Message.SELF_MESSAGE, sender);
+            messenger.sendMessage(Message.SELF_MESSAGE, sender);
             return true;
         }
         StringBuilder stringBuilder = new StringBuilder();

@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.tabcompleters;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.chat.channels.ChannelManager;
+import com.pedestriamc.strings.chat.ChannelManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

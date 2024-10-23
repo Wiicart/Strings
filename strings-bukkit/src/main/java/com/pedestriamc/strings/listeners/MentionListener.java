@@ -20,9 +20,6 @@ public class MentionListener implements Listener {
 
     @EventHandler( priority = EventPriority.LOW)
     public void onEvent(AsyncPlayerChatEvent event){
-        if(!(event instanceof ChannelChatEvent)){
-            return;
-        }
         Player p = event.getPlayer();
         if(!(p.hasPermission("strings.*") || p.hasPermission("strings.mention") || p.hasPermission("strings.mention.all"))){
             return;

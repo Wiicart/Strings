@@ -1,10 +1,11 @@
 package com.pedestriamc.strings.chat.channels;
 
-import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Map;
 import java.util.Set;
@@ -15,11 +16,19 @@ import java.util.Set;
 public interface Channel{
 
     /**
-     * Sends a message to a Channel.
+     * Sends a message from a player to the channel.
      * @param player The player sending the message.
      * @param message The player's message.
      */
     void sendMessage(Player player, String message);
+
+    /**
+     * Sends a message from the player to the channel.
+     * @param player The sender
+     * @param message The message
+     * @param event The event triggering this message
+     */
+    void sendMessage(Player player, String message, AsyncPlayerChatEvent event);
 
     /**
      * Broadcasts a message to a Channel.
@@ -168,6 +177,8 @@ public interface Channel{
     boolean allows(Player player);
 
     StringsChannel getStringsChannel();
+
+    boolean isCallEvent();
 
 
 

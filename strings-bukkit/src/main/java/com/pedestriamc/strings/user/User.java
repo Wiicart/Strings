@@ -1,5 +1,6 @@
-package com.pedestriamc.strings;
+package com.pedestriamc.strings.user;
 
+import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.chat.channels.Channel;
 import com.pedestriamc.strings.impl.UserWrapper;
@@ -354,5 +355,18 @@ public class User {
     @Override
     public String toString(){
         return getData().toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return mentionsEnabled == user.mentionsEnabled && Objects.equals(strings, user.strings) && Objects.equals(uuid, user.uuid) && Objects.equals(player, user.player) && Objects.equals(name, user.name) && Objects.equals(channels, user.channels) && Objects.equals(chatColor, user.chatColor) && Objects.equals(prefix, user.prefix) && Objects.equals(suffix, user.suffix) && Objects.equals(displayName, user.displayName) && Objects.equals(activeChannel, user.activeChannel) && Objects.equals(stringsUser, user.stringsUser);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(strings, uuid, player, name, channels, chatColor, prefix, suffix, displayName, activeChannel, stringsUser, mentionsEnabled);
     }
 }

@@ -1,5 +1,6 @@
 package com.pedestriamc.strings;
 
+import com.pedestriamc.strings.user.User;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

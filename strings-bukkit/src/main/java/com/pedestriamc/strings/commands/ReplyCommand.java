@@ -13,9 +13,11 @@ import org.jetbrains.annotations.NotNull;
 public class ReplyCommand implements CommandExecutor {
 
     private final PlayerDirectMessenger playerDirectMessenger;
+    private final Messenger messenger;
 
     public ReplyCommand(@NotNull Strings strings){
         this.playerDirectMessenger = strings.getPlayerDirectMessenger();
+        this.messenger = strings.getMessenger();
     }
 
     @Override
@@ -25,11 +27,11 @@ public class ReplyCommand implements CommandExecutor {
             return true;
         }
         if(!(sender.hasPermission("strings.chat.msg") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.*"))){
-            Messenger.sendMessage(Message.NO_PERMS, sender);
+            messenger.sendMessage(Message.NO_PERMS, sender);
             return true;
         }
         if(args.length < 1){
-            Messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+            messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
             return true;
         }
         StringBuilder message = new StringBuilder();

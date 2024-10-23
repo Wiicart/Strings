@@ -1,9 +1,10 @@
 package com.pedestriamc.strings.chat.channels;
 
+import com.pedestriamc.strings.api.event.StringsChatEvent;
+import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.User;
-import com.pedestriamc.strings.api.event.ChannelChatEvent;
+import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
@@ -33,6 +34,7 @@ public class HelpOPChannel implements Channel {
     private boolean urlFilter;
     private boolean profanityFilter;
     private StringsChannel stringsChannel;
+    private final Messenger messenger;
 
     public HelpOPChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean urlFilter, boolean profanityFilter) {
         this.strings = strings;
@@ -44,26 +46,34 @@ public class HelpOPChannel implements Channel {
         this.channelManager = channelManager;
         this.urlFilter = urlFilter;
         this.profanityFilter = profanityFilter;
+        this.messenger = strings.getMessenger();
         channelManager.registerChannel(this);
     }
 
     @Override
     public void sendMessage(Player player, String message){
+        this.sendMessage(player, message, null);
+    }
+
+    @Override
+    public void sendMessage(Player player, String message, AsyncPlayerChatEvent event) {
+
+        boolean eventIsNull = event == null;
+
         Set<Player> members = getRecipients();
+        if(!eventIsNull){
+            event.getRecipients().clear();
+            event.getRecipients().addAll(members);
+        }
+
         String format = chatManager.formatMessage(player, this);
         message = chatManager.processMessage(player, message);
         String finalMessage = message;
         String formattedMessage = format.replace("{message}", finalMessage);
-        if(callEvent){
+        if(callEvent && !eventIsNull){
             Bukkit.getScheduler().runTask(strings, () ->{
-                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this.getStringsChannel());
-                Bukkit.getPluginManager().callEvent(event);
-                if(!event.isCancelled()){
-                    for(Player p : members){
-                        p.sendMessage(formattedMessage);
-                    }
-                    Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
-                }
+                StringsChatEvent stringsChatEvent = new StringsChatEvent(event, this.getStringsChannel());
+                Bukkit.getPluginManager().callEvent(stringsChatEvent);
             });
         }else{
             for(Player p : members){
@@ -71,7 +81,7 @@ public class HelpOPChannel implements Channel {
             }
             Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
         }
-        Messenger.sendMessage(Message.HELPOP_SENT, player);
+        messenger.sendMessage(Message.HELPOP_SENT, player);
     }
 
     private Set<Player> getRecipients(){
@@ -181,6 +191,11 @@ public class HelpOPChannel implements Channel {
             stringsChannel = new ChannelWrapper(this);
         }
         return stringsChannel;
+    }
+
+    @Override
+    public boolean isCallEvent(){
+        return callEvent;
     }
 
     @Override

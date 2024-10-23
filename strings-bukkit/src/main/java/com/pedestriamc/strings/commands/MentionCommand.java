@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import org.bukkit.command.Command;
@@ -10,13 +10,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("ClassCanBeRecord")
 public class MentionCommand implements CommandExecutor {
 
     private final Strings strings;
+    private final Messenger messenger;
 
     public MentionCommand(Strings strings){
         this.strings = strings;
+        this.messenger = strings.getMessenger();
     }
 
     @Override
@@ -28,7 +29,7 @@ public class MentionCommand implements CommandExecutor {
         }
 
         if(!(player.hasPermission("strings.mention.toggle") || player.hasPermission("strings.mention.*") || player.hasPermission("strings.*"))){
-            Messenger.sendMessage(Message.NO_PERMS, sender);
+            messenger.sendMessage(Message.NO_PERMS, sender);
             return true;
         }
 
@@ -53,23 +54,23 @@ public class MentionCommand implements CommandExecutor {
                 disable(player, user);
                 return true;
             }
-            Messenger.sendMessage(Message.INVALID_ARGS, sender);
+            messenger.sendMessage(Message.INVALID_ARGS, sender);
             return true;
         }
 
-        Messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
+        messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
         return true;
     }
 
     private void enable(CommandSender sender, @NotNull User user){
         user.setMentionsEnabled(true);
-        Messenger.sendMessage(Message.MENTIONS_ENABLED, sender);
+        messenger.sendMessage(Message.MENTIONS_ENABLED, sender);
 
     }
 
     private void disable(CommandSender sender, @NotNull User user){
         user.setMentionsEnabled(false);
-        Messenger.sendMessage(Message.MENTIONS_DISABLED, sender);
+        messenger.sendMessage(Message.MENTIONS_DISABLED, sender);
     }
 
 }

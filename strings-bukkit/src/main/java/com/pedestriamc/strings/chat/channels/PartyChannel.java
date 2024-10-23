@@ -1,10 +1,12 @@
 package com.pedestriamc.strings.chat.channels;
 
-import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.chat.ChannelManager;
+import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsChannel;
 import com.pedestriamc.strings.api.Type;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +37,11 @@ public class PartyChannel implements Channel{
     @Override
     public void sendMessage(Player player, String message) {
 
+    }
+
+    @Override
+    public void sendMessage(Player player, String message, AsyncPlayerChatEvent event) {
+        this.sendMessage(player, message);
     }
 
     @Override
@@ -150,6 +157,11 @@ public class PartyChannel implements Channel{
     @Override
     public StringsChannel getStringsChannel() {
         return null;
+    }
+
+    @Override
+    public boolean isCallEvent() {
+        return false;
     }
 
     @Override

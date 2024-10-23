@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.listeners;
 
-import com.pedestriamc.strings.User;
-import com.pedestriamc.strings.UserUtil;
+import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.UserUtil;
 import com.pedestriamc.strings.ServerMessages;
 import com.pedestriamc.strings.Strings;
 import org.bukkit.event.EventHandler;

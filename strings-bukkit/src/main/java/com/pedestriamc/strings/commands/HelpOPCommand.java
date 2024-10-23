@@ -14,16 +14,18 @@ public class HelpOPCommand implements CommandExecutor {
 
     private final Strings strings;
     private final Channel helpOPChannel;
+    private final Messenger messenger;
 
     public HelpOPCommand(@NotNull Strings strings){
         this.strings = strings;
         this.helpOPChannel = strings.getChannel("helpop");
+        this.messenger = strings.getMessenger();
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(strings.getChannel("helpop") == null){
-            Messenger.sendMessage(Message.HELPOP_DISABLED, sender);
+            messenger.sendMessage(Message.HELPOP_DISABLED, sender);
             return true;
         }
         if(!(sender instanceof Player)){
@@ -31,11 +33,11 @@ public class HelpOPCommand implements CommandExecutor {
             return true;
         }
         if(!sender.hasPermission("strings.helpop.use")){
-            Messenger.sendMessage(Message.NO_PERMS, sender);
+            messenger.sendMessage(Message.NO_PERMS, sender);
             return true;
         }
         if(args.length == 0){
-            Messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+            messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
             return true;
         }
         StringBuilder builder = new StringBuilder();

@@ -4,7 +4,7 @@ import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.api.*;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.chat.channels.Channel;
-import com.pedestriamc.strings.chat.channels.ChannelManager;
+import com.pedestriamc.strings.chat.ChannelManager;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -75,24 +75,6 @@ public final class StringsImpl implements StringsAPI {
             worldStringsChannels[i] = worldChannels[i].getStringsChannel();
         }
         return worldStringsChannels;
-    }
-
-    @Override
-    public StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, Membership membership, int priority) {
-        this.apiUsed = true;
-        return channelManager.createChannel(name, format, defaultColor, callEvent, doURLFilter, doProfanityFilter, doCooldown, active, membership, priority).getStringsChannel();
-    }
-
-    @Override
-    public StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, World world, Membership membership, int priority) {
-        this.apiUsed = true;
-        return channelManager.createChannel(name, format, defaultColor, callEvent, doURLFilter, doProfanityFilter, doCooldown, active, world, membership, priority).getStringsChannel();
-    }
-
-    @Override
-    public StringsChannel createChannel(String name, String format, String defaultColor, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, boolean active, int distance, Membership membership, int priority, World world) {
-        this.apiUsed = true;
-        return channelManager.createChannel(name, format, defaultColor, callEvent, doURLFilter, doProfanityFilter, doCooldown, active, distance, membership, priority, world).getStringsChannel();
     }
 
     @Override

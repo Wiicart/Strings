@@ -8,8 +8,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 /**
+ * Deprecated - listen for StringsChatEvent instead.
+ * Will be removed
  * An AsyncPlayerChatEvent with the additional field of a Channel.
  */
+@Deprecated(since = "1.4", forRemoval = true)
 public class ChannelChatEvent extends AsyncPlayerChatEvent {
 
     private final StringsChannel channel;
@@ -28,9 +31,11 @@ public class ChannelChatEvent extends AsyncPlayerChatEvent {
 
     /**
      * Provides the Channel the message is being sent to.
+     * Deprecated, use ChannelMessageEvent#getChannel() instead
      * @return The Channel.
      */
     public StringsChannel getChannel(){
         return channel;
     }
+
 }

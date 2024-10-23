@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.User;
+import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.chat.channels.Channel;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
