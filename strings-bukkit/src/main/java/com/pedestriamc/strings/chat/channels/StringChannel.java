@@ -2,7 +2,7 @@ package com.pedestriamc.strings.chat.channels;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.Type;
+import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.chat.ChannelManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -20,6 +20,7 @@ public class StringChannel extends AbstractChannel{
         this.members = ConcurrentHashMap.newKeySet();
         channelManager.registerChannel(this);
     }
+
 
     @Override
     public Set<Player> getRecipients(Player sender){

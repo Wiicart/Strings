@@ -32,7 +32,7 @@ public class BroadcastCommand implements CommandExecutor {
             return true;
         }
         StringBuilder broadcast = new StringBuilder(broadcastFormat);
-        String broadCastString;
+        String broadcastString;
         if(sender.hasPermission("strings.chat.placeholdermsg") && usePAPI && (sender instanceof Player)){
             PlaceholderAPI.setPlaceholders((Player) sender, broadcast.toString());
         }
@@ -40,9 +40,9 @@ public class BroadcastCommand implements CommandExecutor {
             broadcast.append(arg);
             broadcast.append(" ");
         }
-        broadCastString = broadcast.toString();
-        broadCastString = ChatColor.translateAlternateColorCodes('&', broadCastString);
-        Bukkit.broadcastMessage(broadCastString);
+        broadcastString = broadcast.toString();
+        broadcastString = ChatColor.translateAlternateColorCodes('&', broadcastString);
+        Bukkit.broadcastMessage(broadcastString);
         return true;
     }
 }

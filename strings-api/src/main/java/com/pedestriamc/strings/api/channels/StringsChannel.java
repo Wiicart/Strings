@@ -1,5 +1,7 @@
-package com.pedestriamc.strings.api;
+package com.pedestriamc.strings.api.channels;
 
+import com.pedestriamc.strings.api.Membership;
+import com.pedestriamc.strings.api.StringsUser;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 

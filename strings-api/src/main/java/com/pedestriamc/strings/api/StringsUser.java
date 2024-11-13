@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.api;
 
+import com.pedestriamc.strings.api.channels.StringsChannel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

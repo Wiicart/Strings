@@ -104,10 +104,13 @@ public final class ChatManager {
         return delayNum * 20L;
     }
 
-    public String processMentions(Player sender, String str){
+    public String processMentions(Player sender, String str)
+    {
+
         if(!str.contains("@")){
             return str;
         }
+
         String[] splitStr = str.split("((?=@))"); //https://www.baeldung.com/java-split-string-keep-delimiters
         StringBuilder sb = new StringBuilder();
         String color = "";

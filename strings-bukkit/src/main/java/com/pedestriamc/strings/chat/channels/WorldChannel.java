@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.chat.channels;
 
-import com.pedestriamc.strings.api.Type;
+import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.chat.ChannelManager;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WorldChannel extends AbstractChannel{
+public class WorldChannel extends AbstractChannel {
 
     private final Set<Player> members;
     private final World world;

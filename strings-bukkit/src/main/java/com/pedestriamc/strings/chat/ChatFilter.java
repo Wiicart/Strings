@@ -24,7 +24,7 @@ public class ChatFilter{
         this.messenger = strings.getMessenger();
         List<?> tempList = strings.getConfig().getList("url-whitelist");
         if(tempList != null)
-        for(Object obj : tempList){
+            for(Object obj : tempList){
             if(obj instanceof String) {
                 this.urlWhitelist.add(normalizeUrl((String) obj));
             }

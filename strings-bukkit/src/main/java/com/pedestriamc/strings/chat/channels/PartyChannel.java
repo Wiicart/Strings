@@ -3,8 +3,8 @@ package com.pedestriamc.strings.chat.channels;
 import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.StringsChannel;
-import com.pedestriamc.strings.api.Type;
+import com.pedestriamc.strings.api.channels.StringsChannel;
+import com.pedestriamc.strings.api.channels.Type;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 

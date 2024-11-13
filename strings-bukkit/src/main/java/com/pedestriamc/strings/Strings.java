@@ -11,6 +11,8 @@ import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.impl.StringsImpl;
 import com.pedestriamc.strings.listeners.*;
 import com.pedestriamc.strings.message.Messenger;
+import com.pedestriamc.strings.misc.AutoBroadcasts;
+import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.tabcompleters.*;
 import com.pedestriamc.strings.commands.BroadcastCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
@@ -42,11 +44,11 @@ import java.util.logging.Logger;
 public final class Strings extends JavaPlugin {
 
     @SuppressWarnings("FieldCanBeLocal")
-    private final String version = "1.4";
+    private final String version = "1.5";
     @SuppressWarnings("FieldCanBeLocal")
     private final String distributor = "github";
     @SuppressWarnings("FieldCanBeLocal")
-    private final short pluginNum = 4;
+    private final short pluginNum = 5;
 
     @SuppressWarnings("unused")
     private AutoBroadcasts autoBroadcasts;
@@ -333,6 +335,8 @@ public final class Strings extends JavaPlugin {
     public boolean isPaper(){ return this.isPaper; }
     public static Strings getInstance(){ return instance; }
     public Mentioner getMentioner(){ return mentioner; }
+    public short getPluginNum(){ return pluginNum; }
+
     /*
     Other methods
      */

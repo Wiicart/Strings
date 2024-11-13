@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.api.event;
 
-import com.pedestriamc.strings.api.StringsChannel;
+import com.pedestriamc.strings.api.channels.StringsChannel;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.AsyncPlayerChatEvent;

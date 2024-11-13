@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.impl;
 
+import com.pedestriamc.strings.api.channels.StringsChannel;
 import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.api.*;
 import com.pedestriamc.strings.chat.Mentioner;
@@ -118,7 +119,7 @@ public final class StringsImpl implements StringsAPI {
 
     public short getVersion(){
         this.apiUsed = true;
-        return 2;
+        return strings.getPluginNum();
     }
 
     public boolean isApiUsed(){

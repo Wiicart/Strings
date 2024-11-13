@@ -3,9 +3,9 @@ package com.pedestriamc.strings.chat.channels;
 import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.Type;
+import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
-import com.pedestriamc.strings.api.StringsChannel;
+import com.pedestriamc.strings.api.channels.StringsChannel;
 import com.pedestriamc.strings.impl.ChannelWrapper;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class SocialSpyChannel implements Channel{
+public class SocialSpyChannel implements Channel {
 
     private String format;
     private final PlayerDirectMessenger playerDirectMessenger;

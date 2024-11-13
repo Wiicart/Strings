@@ -1,13 +1,14 @@
 package com.pedestriamc.strings.chat.channels;
 
+import com.pedestriamc.strings.api.channels.data.ChannelData;
 import com.pedestriamc.strings.api.event.StringsChatEvent;
 import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.StringsChannel;
-import com.pedestriamc.strings.api.Type;
+import com.pedestriamc.strings.api.channels.StringsChannel;
+import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.impl.ChannelWrapper;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
@@ -36,7 +37,8 @@ public class HelpOPChannel implements Channel {
     private StringsChannel stringsChannel;
     private final Messenger messenger;
 
-    public HelpOPChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean urlFilter, boolean profanityFilter) {
+    public HelpOPChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean urlFilter, boolean profanityFilter)
+    {
         this.strings = strings;
         this.chatManager = strings.getChatManager();
         this.callEvent = callEvent;
@@ -48,6 +50,23 @@ public class HelpOPChannel implements Channel {
         this.profanityFilter = profanityFilter;
         this.messenger = strings.getMessenger();
         channelManager.registerChannel(this);
+    }
+
+    public HelpOPChannel(Strings strings, ChannelManager channelManager, ChannelData data){
+
+        this.strings = strings;
+        this.channelManager = channelManager;
+        this.chatManager = strings.getChatManager();
+        this.messenger = strings.getMessenger();
+
+        this.callEvent = data.isCallEvent();
+        this.format = data.getFormat();
+        this.name = data.getName();
+        this.defaultColor = data.getDefaultColor();
+        this.urlFilter = data.isDoUrlFilter();
+        this.profanityFilter = data.isDoProfanityFilter();
+        channelManager.registerChannel(this);
+
     }
 
     @Override

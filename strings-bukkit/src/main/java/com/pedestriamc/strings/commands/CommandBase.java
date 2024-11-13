@@ -42,6 +42,6 @@ public abstract class CommandBase implements CommandExecutor {
     /**
      * Sub command interface.  Passes on all info from the command.
      */
-    interface CommandComponent extends CommandExecutor {}
+    public interface CommandComponent extends CommandExecutor {}
 
 }

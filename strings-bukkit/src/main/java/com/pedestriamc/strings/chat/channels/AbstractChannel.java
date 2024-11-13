@@ -5,8 +5,8 @@ import com.pedestriamc.strings.api.event.StringsChatEvent;
 import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.StringsChannel;
-import com.pedestriamc.strings.api.Type;
+import com.pedestriamc.strings.api.channels.StringsChannel;
+import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.impl.ChannelWrapper;
 import net.md_5.bungee.api.ChatColor;
@@ -18,7 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-abstract class AbstractChannel implements Channel {
+public abstract class AbstractChannel implements Channel {
 
     private final Strings strings;
     private final ChannelManager channelManager;
@@ -65,7 +65,6 @@ abstract class AbstractChannel implements Channel {
     @Override
     public void sendMessage(Player player, String message) {
         sendMessage(player, message, null);
-
     }
 
     @Override
@@ -92,6 +91,7 @@ abstract class AbstractChannel implements Channel {
             Bukkit.getScheduler().runTask(strings, () -> {
                 event.setMessage(processedMessage);
                 event.setFormat(eventFormat);
+                Bukkit.getLogger().info(eventFormat);
                 StringsChatEvent stringsChatEvent = new StringsChatEvent(event, this.getStringsChannel());
                 Bukkit.getPluginManager().callEvent(stringsChatEvent);
                 if (!event.isCancelled()) {

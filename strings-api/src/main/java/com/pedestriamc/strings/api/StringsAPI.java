@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.api;
 
+import com.pedestriamc.strings.api.channels.StringsChannel;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -36,10 +37,12 @@ public interface StringsAPI {
 
     /**
      * Provides a StringsChannel based off its name, if it exists.
+     * Deprecated - use ChannelLoader#getChannel() instead.
      * @param name The name to search under.
      * @return A StringsChannel, if it exists.
      */
     @Nullable
+    @Deprecated
     StringsChannel getChannel(String name);
 
     /**

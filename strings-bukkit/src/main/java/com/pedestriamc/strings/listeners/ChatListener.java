@@ -13,7 +13,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 public class ChatListener implements Listener {
 
@@ -34,7 +36,6 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onEvent(AsyncPlayerChatEvent event) {
-
         Player playerSender = event.getPlayer();
         String playerMessage = event.getMessage();
 
@@ -55,7 +56,7 @@ public class ChatListener implements Listener {
             return;
         }
 
-        if(!channel.isCallEvent()){
+        if(!channel.isCallEvent()) {
             event.setCancelled(true);
             channel.sendMessage(playerSender, playerMessage);
             return;

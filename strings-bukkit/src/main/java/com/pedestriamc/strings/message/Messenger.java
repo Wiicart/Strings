@@ -44,32 +44,6 @@ public class Messenger {
         }
     }
 
-    public void channelCmdMessage(Message message, CommandSender sender, String playerName, String channelName){
-
-        Object msg = enumMap.get(message);
-
-        if(playerName == null){
-            playerName = "null";
-        }
-        if(channelName == null){
-            channelName = "null";
-        }
-        if(msg instanceof String[]){
-            for(String str : (String[]) msg){
-                str = str.replace("{player}", playerName);
-                str = str.replace("{channel}", channelName);
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', str));
-            }
-            return;
-        }
-        if(msg instanceof String str){
-            str = str.replace("{player}", playerName);
-            str = str.replace("{channel}", channelName);
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + str));
-        }
-
-    }
-
     public void sendMessage(Message message, Map<String, String> placeholders, CommandSender sender){
         Object msg = enumMap.get(message);
         if(msg instanceof String[]){

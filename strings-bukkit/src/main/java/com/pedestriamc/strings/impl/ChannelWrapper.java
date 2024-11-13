@@ -2,9 +2,9 @@ package com.pedestriamc.strings.impl;
 
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.StringsChannel;
+import com.pedestriamc.strings.api.channels.StringsChannel;
 import com.pedestriamc.strings.api.StringsUser;
-import com.pedestriamc.strings.api.Type;
+import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.chat.channels.Channel;
 import com.pedestriamc.strings.chat.channels.ProximityChannel;
 import com.pedestriamc.strings.chat.channels.WorldChannel;

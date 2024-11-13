@@ -5,12 +5,11 @@ import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.UserUtil;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.Type;
+import com.pedestriamc.strings.api.channels.Type;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
