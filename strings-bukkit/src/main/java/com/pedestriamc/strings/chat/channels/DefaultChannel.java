@@ -1,14 +1,15 @@
 package com.pedestriamc.strings.chat.channels;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.chat.ChannelManager;
+import com.pedestriamc.strings.api.StringsUser;
+import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channels.ChannelLoader;
+import com.pedestriamc.strings.chat.StringsChannelLoader;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.channels.StringsChannel;
 import com.pedestriamc.strings.api.channels.Type;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -18,56 +19,50 @@ import java.util.concurrent.ConcurrentHashMap;
  * The channel that players are assigned to by default.
  * This channel cannot process any messages, it instead determines the proper channel to be used.
  */
-public class DefaultChannel implements Channel{
+public class DefaultChannel implements Channel {
 
-    private final ChannelManager channelManager;
+    private final StringsChannelLoader channelLoader;
     private final Set<Player> members;
     private final Strings strings;
 
-    public DefaultChannel(Strings strings, @NotNull ChannelManager channelManager){
-        this.channelManager = channelManager;
+    public DefaultChannel(Strings strings, @NotNull ChannelLoader channelLoader){
+        this.channelLoader = (StringsChannelLoader) channelLoader;
         this.members = ConcurrentHashMap.newKeySet();
         this.strings = strings;
-        channelManager.registerChannel(this);
     }
 
     @Override
     public void sendMessage(Player player, String message) {
-        this.sendMessage(player, message, null);
-    }
+        List<Channel> worldChannels = channelLoader.getWorldPriorityChannels(player.getWorld());
+        if(!worldChannels.isEmpty()) {
+            for(Channel c : worldChannels) {
+                if(c.allows(player)) {
+                    c.sendMessage(player, message);
+                    return;
+                }
+            }
+        }
 
-    @Override
-    public void sendMessage(Player player, String message, AsyncPlayerChatEvent event) {
-        Channel[] worldChannels = channelManager.getWorldPriorityChannels(player.getWorld());
-        if(worldChannels.length > 0){
-            if(event == null){
-                worldChannels[0].sendMessage(player, message);
-                return;
+        List<Channel> defaultMembership = channelLoader.getChannelsByPriority();
+        if(!defaultMembership.isEmpty()) {
+            for(Channel c : defaultMembership) {
+                if(c.allows(player)) {
+                    c.sendMessage(player, message);
+                    return;
+                }
             }
-            worldChannels[0].sendMessage(player, message, event);
-            return;
         }
-        Channel[] defaultMembership = channelManager.getPriorityChannels();
-        if(defaultMembership.length > 0){
-            if(event == null){
-                defaultMembership[0].sendMessage(player, message);
-                return;
-            }
-            defaultMembership[0].sendMessage(player, message, event);
-            return;
-        }
+
         User user = strings.getUser(player);
         Set<Channel> usersChannels = user.getChannels();
         if(!usersChannels.isEmpty()){
             Optional<Channel> optional =  usersChannels.stream().max(Comparator.comparingInt(Channel::getPriority));
-            if(event == null){
-                optional.get().sendMessage(player, message);
-                return;
-            }
-            optional.get().sendMessage(player, message, event);
+            optional.get().sendMessage(player, message);
 
         }
+
         player.sendMessage(ChatColor.RED + "[Strings] You aren't a member of any channels.  Please contact staff for help.");
+
     }
 
     @Override
@@ -108,10 +103,10 @@ public class DefaultChannel implements Channel{
     }
 
     @Override
-    public void addPlayer(User user) { members.add(user.getPlayer()); }
+    public void addPlayer(StringsUser user) { members.add(user.getPlayer()); }
 
     @Override
-    public void removePlayer(User user) {
+    public void removePlayer(StringsUser user) {
         members.remove(user.getPlayer());
     }
 
@@ -150,7 +145,7 @@ public class DefaultChannel implements Channel{
     }
 
     @Override
-    public Map<String, String> getData() {
+    public Map<String, Object> getData() {
         return null;
     }
 
@@ -166,12 +161,7 @@ public class DefaultChannel implements Channel{
 
     @Override
     public void saveChannel() {
-        channelManager.saveChannel(this);
-    }
-
-    @Override
-    public StringsChannel getStringsChannel() {
-        return null;
+        channelLoader.saveChannel(this);
     }
 
     @Override

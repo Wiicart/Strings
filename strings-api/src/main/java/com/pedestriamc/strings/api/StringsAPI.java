@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.api;
 
-import com.pedestriamc.strings.api.channels.StringsChannel;
+import com.pedestriamc.strings.api.channels.Channel;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +25,7 @@ public interface StringsAPI {
      * Provides a Set of all registered Channels.
      * @return A populated Set.
      */
-    Set<StringsChannel> getChannels();
+    Set<Channel> getChannels();
 
     /**
      * Gets the Channel with the specified name, if it exists.
@@ -33,7 +33,7 @@ public interface StringsAPI {
      * @return The Channel, if it exists.
      */
     @Deprecated
-    Optional<StringsChannel> getOptionalChannel(String name);
+    Optional<Channel> getOptionalChannel(String name);
 
     /**
      * Provides a StringsChannel based off its name, if it exists.
@@ -43,7 +43,7 @@ public interface StringsAPI {
      */
     @Nullable
     @Deprecated
-    StringsChannel getChannel(String name);
+    Channel getChannel(String name);
 
     /**
      * Provides an Optional of StringsUser based on UUID
@@ -66,15 +66,7 @@ public interface StringsAPI {
      * @param world The World to search with.
      * @return An Array of StringsChannels.
      */
-    StringsChannel[] getWorldChannels(World world);
-
-    /**
-     * Deletes a StringsChannel and removes it from the channels file.
-     * This is permanent and cannot be recovered!
-     * As a global channel must exist, this method will not delete the global channel.
-     * @param channel The StringsChannel to be deleted.
-     */
-    void deleteChannel(StringsChannel channel);
+    Set<Channel> getWorldChannels(World world);
 
     /**
      * Returns true if the server is running Paper or a fork.

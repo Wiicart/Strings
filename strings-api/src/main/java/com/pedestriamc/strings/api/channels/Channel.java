@@ -1,11 +1,8 @@
-package com.pedestriamc.strings.chat.channels;
+package com.pedestriamc.strings.api.channels;
 
-import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.channels.StringsChannel;
-import com.pedestriamc.strings.api.channels.Type;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Map;
 import java.util.Set;
@@ -21,14 +18,6 @@ public interface Channel{
      * @param message The player's message.
      */
     void sendMessage(Player player, String message);
-
-    /**
-     * Sends a message from the player to the channel.
-     * @param player The sender
-     * @param message The message
-     * @param event The event triggering this message
-     */
-    void sendMessage(Player player, String message, AsyncPlayerChatEvent event);
 
     /**
      * Broadcasts a message to a Channel.
@@ -118,7 +107,7 @@ public interface Channel{
      * Adds a User to the channel.
      * @param user The User to be added.
      */
-    void addPlayer(User user);
+    void addPlayer(StringsUser user);
 
     /**
      * Removes a player from the Channel.
@@ -130,7 +119,7 @@ public interface Channel{
      * Removes a User from the Channel.
      * @param user The User to be removed.
      */
-    void removePlayer(User user);
+    void removePlayer(StringsUser user);
 
     /**
      * Provides a Set of the members of the Channel.
@@ -149,7 +138,7 @@ public interface Channel{
      * Provides all the Channel's information in a Map.
      * @return A populated Map containing the Channel's information.
      */
-    Map<String, String> getData();
+    Map<String, Object> getData();
 
     /**
      * Provides the Channel's default Membership enum.
@@ -164,9 +153,10 @@ public interface Channel{
     int getPriority();
 
     /**
+     * Deprecated - use ChannelLoader#saveChannel(Channel channel) instead
      * Saves the Channel to channels.yml
-     * No API changes will be retained if this is not called.
      */
+    @Deprecated
     void saveChannel();
 
     /**
@@ -176,10 +166,6 @@ public interface Channel{
      */
     boolean allows(Player player);
 
-    StringsChannel getStringsChannel();
-
     boolean isCallEvent();
-
-
 
 }

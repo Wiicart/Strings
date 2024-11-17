@@ -1,15 +1,15 @@
 package com.pedestriamc.strings.chat.channels;
 
+import com.pedestriamc.strings.api.StringsUser;
+import com.pedestriamc.strings.api.channels.Buildable;
+import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.api.channels.data.ChannelData;
-import com.pedestriamc.strings.api.event.StringsChatEvent;
-import com.pedestriamc.strings.chat.ChannelManager;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.channels.StringsChannel;
 import com.pedestriamc.strings.api.channels.Type;
-import com.pedestriamc.strings.impl.ChannelWrapper;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import net.md_5.bungee.api.ChatColor;
@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class HelpOPChannel implements Channel {
+public class HelpOPChannel implements Channel, Buildable {
 
     private final Strings strings;
     private String name;
@@ -31,13 +31,12 @@ public class HelpOPChannel implements Channel {
     private final boolean callEvent;
     private String format;
     private String defaultColor;
-    private final ChannelManager channelManager;
+    private final ChannelLoader channelLoader;
     private boolean urlFilter;
     private boolean profanityFilter;
-    private StringsChannel stringsChannel;
     private final Messenger messenger;
 
-    public HelpOPChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean urlFilter, boolean profanityFilter)
+    public HelpOPChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelLoader channelLoader, boolean callEvent, boolean urlFilter, boolean profanityFilter)
     {
         this.strings = strings;
         this.chatManager = strings.getChatManager();
@@ -45,54 +44,43 @@ public class HelpOPChannel implements Channel {
         this.format = format;
         this.name = name;
         this.defaultColor = defaultColor;
-        this.channelManager = channelManager;
+        this.channelLoader = channelLoader;
         this.urlFilter = urlFilter;
         this.profanityFilter = profanityFilter;
         this.messenger = strings.getMessenger();
-        channelManager.registerChannel(this);
     }
 
-    public HelpOPChannel(Strings strings, ChannelManager channelManager, ChannelData data){
-
+    public HelpOPChannel(Strings strings, ChannelData data)
+    {
         this.strings = strings;
-        this.channelManager = channelManager;
         this.chatManager = strings.getChatManager();
+        this.channelLoader = strings.getChannelLoader();
         this.messenger = strings.getMessenger();
-
+        this.name = data.getName();
         this.callEvent = data.isCallEvent();
         this.format = data.getFormat();
-        this.name = data.getName();
         this.defaultColor = data.getDefaultColor();
         this.urlFilter = data.isDoUrlFilter();
         this.profanityFilter = data.isDoProfanityFilter();
-        channelManager.registerChannel(this);
-
     }
 
     @Override
-    public void sendMessage(Player player, String message){
-        this.sendMessage(player, message, null);
-    }
-
-    @Override
-    public void sendMessage(Player player, String message, AsyncPlayerChatEvent event) {
-
-        boolean eventIsNull = event == null;
-
+    public void sendMessage(Player player, String message) {
         Set<Player> members = getRecipients();
-        if(!eventIsNull){
-            event.getRecipients().clear();
-            event.getRecipients().addAll(members);
-        }
-
         String format = chatManager.formatMessage(player, this);
         message = chatManager.processMessage(player, message);
         String finalMessage = message;
         String formattedMessage = format.replace("{message}", finalMessage);
-        if(callEvent && !eventIsNull){
+        if(callEvent){
             Bukkit.getScheduler().runTask(strings, () ->{
-                StringsChatEvent stringsChatEvent = new StringsChatEvent(event, this.getStringsChannel());
-                Bukkit.getPluginManager().callEvent(stringsChatEvent);
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this);
+                Bukkit.getPluginManager().callEvent(event);
+                if(!event.isCancelled()){
+                    for(Player p : members){
+                        p.sendMessage(formattedMessage);
+                    }
+                    Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
+                }
             });
         }else{
             for(Player p : members){
@@ -158,13 +146,13 @@ public class HelpOPChannel implements Channel {
     public void addPlayer(Player player) {}
 
     @Override
-    public void addPlayer(User user){}
+    public void addPlayer(StringsUser user){}
 
     @Override
     public void removePlayer(Player player) {}
 
     @Override
-    public void removePlayer(User user){}
+    public void removePlayer(StringsUser user){}
 
     @Override
     public Set<Player> getMembers() {
@@ -205,20 +193,12 @@ public class HelpOPChannel implements Channel {
     }
 
     @Override
-    public StringsChannel getStringsChannel(){
-        if(stringsChannel == null){
-            stringsChannel = new ChannelWrapper(this);
-        }
-        return stringsChannel;
-    }
-
-    @Override
     public boolean isCallEvent(){
         return callEvent;
     }
 
     @Override
-    public Map<String, String> getData() {
+    public Map<String, Object> getData() {
         return null;
     }
 
@@ -234,7 +214,7 @@ public class HelpOPChannel implements Channel {
 
     @Override
     public void saveChannel() {
-        channelManager.saveChannel(this);
+        channelLoader.saveChannel(this);
     }
 
     @Override

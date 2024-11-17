@@ -1,21 +1,21 @@
 package com.pedestriamc.strings.listeners;
 
+import com.pedestriamc.strings.api.channels.ChannelLoader;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.chat.ChatManager;
+import com.pedestriamc.strings.chat.StringsChannelLoader;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.chat.channels.Channel;
+import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.chat.ChannelManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 
 public class ChatListener implements Listener {
 
@@ -28,14 +28,19 @@ public class ChatListener implements Listener {
     public ChatListener(Strings strings) {
         this.strings = strings;
         chatManager = strings.getChatManager();
-        ChannelManager channelManager = strings.getChannelManager();
-        defaultChannel = channelManager.getChannel("default");
-        symbolMap = strings.getChannelManager().getChannelSymbols();
+        ChannelLoader channelLoader = strings.getChannelLoader();
+        defaultChannel = channelLoader.getChannel("default");
+        symbolMap = ((StringsChannelLoader) strings.getChannelLoader()).getChannelSymbols();
         messenger = strings.getMessenger();
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEvent(AsyncPlayerChatEvent event) {
+
+        if (event instanceof ChannelChatEvent) {
+            return;
+        }
+
         Player playerSender = event.getPlayer();
         String playerMessage = event.getMessage();
 
@@ -56,15 +61,8 @@ public class ChatListener implements Listener {
             return;
         }
 
-        if(!channel.isCallEvent()) {
-            event.setCancelled(true);
-            channel.sendMessage(playerSender, playerMessage);
-            return;
-        }
-
-        channel.sendMessage(playerSender, playerMessage, event);
-
-
+        channel.sendMessage(playerSender, playerMessage);
+        event.setCancelled(true);
     }
 
     public Container processSymbol(String msg, User user) {
@@ -80,6 +78,6 @@ public class ChatListener implements Listener {
         return new Container(user.getActiveChannel(), msg);
     }
 
-    private record Container(Channel channel, String message){}
+    public record Container(Channel channel, String message) {}
 
 }

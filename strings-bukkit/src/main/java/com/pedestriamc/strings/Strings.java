@@ -2,11 +2,9 @@ package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
-import com.pedestriamc.strings.chat.Mentioner;
-import com.pedestriamc.strings.chat.channels.Channel;
-import com.pedestriamc.strings.chat.ChannelManager;
-import com.pedestriamc.strings.chat.ChatFilter;
-import com.pedestriamc.strings.chat.ChatManager;
+import com.pedestriamc.strings.api.channels.ChannelLoader;
+import com.pedestriamc.strings.chat.*;
+import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.impl.StringsImpl;
 import com.pedestriamc.strings.listeners.*;
@@ -44,11 +42,11 @@ import java.util.logging.Logger;
 public final class Strings extends JavaPlugin {
 
     @SuppressWarnings("FieldCanBeLocal")
-    private final String version = "1.5";
+    private final String version = "1.4";
     @SuppressWarnings("FieldCanBeLocal")
     private final String distributor = "github";
     @SuppressWarnings("FieldCanBeLocal")
-    private final short pluginNum = 5;
+    private final short pluginNum = 4;
 
     @SuppressWarnings("unused")
     private AutoBroadcasts autoBroadcasts;
@@ -69,7 +67,6 @@ public final class Strings extends JavaPlugin {
     private FileConfiguration usersFileConfig;
     private FileConfiguration channelsFileConfig;
     private ChatManager chatManager;
-    private ChannelManager channelManager;
     private ChatFilter chatFilter;
     private boolean usingPlaceholderAPI = false;
     private boolean processPlayerMessageColors;
@@ -80,6 +77,7 @@ public final class Strings extends JavaPlugin {
     private Mentioner mentioner;
     private UUID apiUUID;
     private Messenger messenger;
+    private ChannelLoader channelLoader;
 
     @Override
     public void onEnable() {
@@ -111,8 +109,7 @@ public final class Strings extends JavaPlugin {
         this.serverMessages = null;
         this.playerDirectMessenger = null;
         this.chatManager = null;
-        this.channelManager.disable();
-        this.channelManager = null;
+        this.channelLoader = null;
         this.chatFilter = null;
         this.autoBroadcasts = null;
         this.mentioner = null;
@@ -221,14 +218,14 @@ public final class Strings extends JavaPlugin {
         chatFilter = new ChatFilter(this);
         chatManager = new ChatManager(this);
         playerDirectMessenger = new PlayerDirectMessenger(this);
-        channelManager = new ChannelManager(this);
+        channelLoader = new StringsChannelLoader(this);
         autoBroadcasts = new AutoBroadcasts(this);
         serverMessages = new ServerMessages(this);
         mentioner = new Mentioner(this);
 
     }
 
-    private void setupVault(){
+    private void setupVault() {
         try{
             RegisteredServiceProvider<Chat> serviceProvider = getServer().getServicesManager().getRegistration(Chat.class);
             if(serviceProvider == null){
@@ -274,7 +271,7 @@ public final class Strings extends JavaPlugin {
     }
 
     private void checkIfReload(){
-        if(Bukkit.getOnlinePlayers().size() > 0){
+        if(!Bukkit.getOnlinePlayers().isEmpty()){
             for(Player p : Bukkit.getOnlinePlayers()){
                 if(UserUtil.loadUser(p.getUniqueId()) == null){
                     new User(p.getUniqueId());
@@ -318,7 +315,6 @@ public final class Strings extends JavaPlugin {
     public String getVersion(){ return version; }
     public String getCoolDownLength(){ return coolDownLength; }
     public ChatManager getChatManager(){ return chatManager; }
-    public ChannelManager getChannelManager(){ return channelManager; }
     public ServerMessages getServerMessages(){ return serverMessages; }
     public PlayerDirectMessenger getPlayerDirectMessenger(){ return playerDirectMessenger; }
     public Messenger getMessenger(){ return messenger; }
@@ -336,6 +332,7 @@ public final class Strings extends JavaPlugin {
     public static Strings getInstance(){ return instance; }
     public Mentioner getMentioner(){ return mentioner; }
     public short getPluginNum(){ return pluginNum; }
+    public ChannelLoader getChannelLoader(){ return channelLoader; }
 
     /*
     Other methods
@@ -397,7 +394,7 @@ public final class Strings extends JavaPlugin {
     }
 
     public Channel getChannel(String channel){
-        return channelManager.getChannel(channel);
+        return channelLoader.getChannel(channel);
     }
 
     public String isAPIUsed(){

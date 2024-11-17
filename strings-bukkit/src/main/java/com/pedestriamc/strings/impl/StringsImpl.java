@@ -1,88 +1,69 @@
 package com.pedestriamc.strings.impl;
 
-import com.pedestriamc.strings.api.channels.StringsChannel;
 import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.api.*;
 import com.pedestriamc.strings.chat.Mentioner;
-import com.pedestriamc.strings.chat.channels.Channel;
-import com.pedestriamc.strings.chat.ChannelManager;
+import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.chat.StringsChannelLoader;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public final class StringsImpl implements StringsAPI {
 
     private final com.pedestriamc.strings.Strings strings;
-    private final ChannelManager channelManager;
+    private final StringsChannelLoader channelLoader;
     private final ChatManager chatManager;
     private final Mentioner mentioner;
     private boolean apiUsed;
 
     public StringsImpl(@NotNull com.pedestriamc.strings.Strings strings){
         this.strings = strings;
-        this.channelManager = strings.getChannelManager();
+        this.channelLoader = (StringsChannelLoader) strings.getChannelLoader();
         this.chatManager = strings.getChatManager();
         this.mentioner = strings.getMentioner();
     }
 
     @Override
-    public Set<StringsChannel> getChannels() {
+    public Set<Channel> getChannels() {
         this.apiUsed = true;
-        return channelManager.getChannelList().stream()
-                .map(Channel::getStringsChannel)
-                .collect(Collectors.toSet());
+        return new HashSet<>(channelLoader.getChannelList());
     }
 
     @Override
-    public Optional<StringsChannel> getOptionalChannel(String name) {
+    public Optional<Channel> getOptionalChannel(String name) {
         this.apiUsed = true;
         return Optional.ofNullable(this.getChannel(name));
     }
 
     @Override
-    public @Nullable StringsChannel getChannel(String name) {
+    public @Nullable Channel getChannel(String name) {
         this.apiUsed = true;
-        Channel c = channelManager.getChannel(name);
-        if(c == null){
-            return null;
-        }
-        return c.getStringsChannel();
+        return channelLoader.getChannel(name);
     }
 
     @Override
     public Optional<StringsUser> getOptionalStringsUser(UUID uuid) {
         this.apiUsed = true;
-        return Optional.ofNullable(strings.getUser(uuid).getStringsUser());
+        return Optional.ofNullable(strings.getUser(uuid));
     }
 
     @Override
     public @Nullable StringsUser getStringsUser(UUID uuid){
         this.apiUsed = true;
-        return strings.getUser(uuid).getStringsUser();
+        return strings.getUser(uuid);
     }
 
     @Override
-    public StringsChannel[] getWorldChannels(World world) {
+    public Set<Channel> getWorldChannels(World world) {
         this.apiUsed = true;
-        Channel[] worldChannels = channelManager.getWorldChannels(world);
-        StringsChannel[] worldStringsChannels = new StringsChannel[worldChannels.length];
-        for(int i=0; i<worldChannels.length; i++){
-            worldStringsChannels[i] = worldChannels[i].getStringsChannel();
-        }
-        return worldStringsChannels;
-    }
-
-    @Override
-    public void deleteChannel(StringsChannel channel) {
-        this.apiUsed = true;
-        ChannelWrapper wrapper = (ChannelWrapper) channel;
-        channelManager.deleteChannel(wrapper.getChannel());
+        return channelLoader.getChannels(world);
     }
 
     @Override
@@ -108,13 +89,7 @@ public final class StringsImpl implements StringsAPI {
 
     @Override
     public void mention(StringsUser subject, StringsUser sender) {
-        if(!(subject instanceof UserWrapper subj)){
-            return;
-        }
-        if(!(sender instanceof UserWrapper sndr)){
-            return;
-        }
-        mentioner.mention(subj.getUser(), sndr.getUser());
+        mentioner.mention(subject.getPlayer(), sender.getPlayer());
     }
 
     public short getVersion(){

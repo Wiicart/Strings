@@ -1,55 +1,96 @@
 package com.pedestriamc.strings.chat.channels;
 
+import com.pedestriamc.strings.api.channels.Buildable;
+import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.chat.ChannelManager;
+import com.pedestriamc.strings.api.channels.data.ChannelData;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ProximityChannel extends AbstractChannel{
+public class ProximityChannel extends AbstractChannel implements Buildable {
 
     private final Set<Player> members;
     private double distance;
-    private final World world;
+    private final Set<World> worlds;
 
-    public ProximityChannel(Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, double distance, Membership membership, int priority, World world){
-        super(strings, channelManager, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doURLFilter, callEvent, priority);
+    @Deprecated
+    public ProximityChannel(Strings strings, String name, String format, String defaultColor, ChannelLoader channelLoader, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, double distance, Membership membership, int priority, World world){
+        super(strings, channelLoader, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doURLFilter, callEvent, priority);
         this.distance = distance;
         this.members = ConcurrentHashMap.newKeySet();
-        this.world = world;
-        channelManager.registerChannel(this);
+        this.worlds = new HashSet<>();
+        worlds.add(world);
+    }
+
+    public ProximityChannel(Strings strings, ChannelData data) {
+
+        super(
+                strings,
+                strings.getChannelLoader(),
+                data.getName(),
+                data.getDefaultColor(),
+                data.getFormat(),
+                data.getMembership(),
+                data.isDoCooldown(),
+                data.isDoProfanityFilter(),
+                data.isDoUrlFilter(),
+                data.isCallEvent(),
+                data.getPriority()
+        );
+
+        this.members = ConcurrentHashMap.newKeySet();
+        this.worlds = data.getWorlds();
+        this.distance = data.getDistance();
+
     }
 
 
-    public @NotNull HashSet<Player> getRecipients(Player sender){
-        HashSet<Player> recipients = new HashSet<>(members);
+    public @NotNull HashSet<Player> getRecipients(Player sender) {
 
-        if(sender == null || !sender.getWorld().equals(world)){
-            return new HashSet<>(world.getPlayers());
+        if(sender == null) {
+            return defaultSet();
         }
 
+        World senderWorld = sender.getWorld();
+        if(!worlds.contains(senderWorld)){
+            return defaultSet();
+        }
+
+        HashSet<Player> recipients = new HashSet<>(members);
+
         Location senderLocation = sender.getLocation();
-        for(Player p : world.getPlayers()){
+        for(Player p : senderWorld.getPlayers()){
             Location pLocation = p.getLocation();
             if(senderLocation.distance(pLocation) < distance){
                 recipients.add(p);
-            }else if(p.hasPermission("strings.channels." + this.getName() + ".receive")){
+            }else if(p.hasPermission("strings.channels." + getName() + ".receive")){
                 recipients.add(p);
             }
         }
 
         return recipients;
+
     }
 
+    private HashSet<Player> defaultSet() {
+        HashSet<Player> set = new HashSet<>(members);
+        for(World w : worlds){
+            set.addAll(w.getPlayers());
+        }
+        return set;
+    }
 
     @Override
     public void addPlayer(Player player) {
@@ -72,8 +113,8 @@ public class ProximityChannel extends AbstractChannel{
     }
 
     @Override
-    public Map<String, String> getData() {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+    public Map<String, Object> getData() {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("format", this.getFormat());
         map.put("default-color", this.getDefaultColor());
         map.put("call-event", String.valueOf(this.isCallEvent()));
@@ -84,20 +125,50 @@ public class ProximityChannel extends AbstractChannel{
         map.put("membership", String.valueOf(this.getMembership()));
         map.put("distance", String.valueOf(distance));
         map.put("priority", String.valueOf(this.getPriority()));
-        map.put("world", world.getName());
+        map.put("worlds", getWorldNames());
         return map;
     }
 
+    @SuppressWarnings("unused")
     public double getProximity(){
         return distance;
     }
 
+    @SuppressWarnings("unused")
     public void setProximity(double proximity){
         this.distance = proximity;
     }
 
-    public World getWorld(){
-        return this.world;
+    public Set<World> getWorlds() {
+        return new HashSet<>(worlds);
+    }
+
+    public List<String> getWorldNames() {
+        ArrayList<String> worlds = new ArrayList<>();
+        for (World w : getWorlds() ){
+            worlds.add(w.getName());
+        }
+
+        return worlds;
+    }
+
+    @Override
+    public boolean allows(Player player) {
+
+        if(getMembers().contains(player)) {
+            return true;
+        }
+
+        if(getMembership() == Membership.DEFAULT) {
+            return worlds.contains(player.getWorld());
+        }
+
+        return (
+                player.hasPermission("strings.channels." + getName()) ||
+                player.hasPermission("strings.channels.*") ||
+                player.hasPermission("strings.*")
+        );
+
     }
 
 }

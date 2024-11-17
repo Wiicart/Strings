@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.chat.ChannelManager;
-import com.pedestriamc.strings.chat.channels.Channel;
+import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.chat.StringsChannelLoader;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.user.User;
@@ -231,11 +231,11 @@ public class ChannelCommand extends CommandBase {
      */
     protected static abstract class ChannelProcessor implements CommandComponent {
 
-        private final ChannelManager channelManager;
+        private final StringsChannelLoader channelLoader;
         private final Messenger messenger;
 
         protected ChannelProcessor(@NotNull Strings strings) {
-            this.channelManager = strings.getChannelManager();
+            this.channelLoader = (StringsChannelLoader) strings.getChannelLoader();
             this.messenger = strings.getMessenger();
         }
 
@@ -286,7 +286,7 @@ public class ChannelCommand extends CommandBase {
                 return new BaseData(null,null, null, true);
             }
 
-            Channel channel = channelManager.getChannel(channelName);
+            Channel channel = channelLoader.getChannel(channelName);
             if(channel == null) {
                 HashMap<String, String> placeholders = new HashMap<>();
                 placeholders.put("{channel}", channelName);
@@ -294,7 +294,7 @@ public class ChannelCommand extends CommandBase {
                 return new BaseData(null,null, null, true);
             }
 
-            if(channelManager.getProtectedChannels().contains(channel)) {
+            if(channelLoader.getProtectedChannels().contains(channel)) {
                 messenger.sendMessage(Message.PROTECTED_CHANNEL, sender);
                 return new BaseData(null,null, null, true);
             }

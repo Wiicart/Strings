@@ -1,10 +1,14 @@
 package com.pedestriamc.strings.api.channels.data;
 
 import com.pedestriamc.strings.api.Membership;
+import org.bukkit.World;
+
+import java.util.Set;
 
 /**
  * A class that holds data to load channels.
- * Enter all fields before using, otherwise unexpected behavior may occur.
+ * None of the constructors will create an object sufficient to create a Channel.
+ * Enter all data by using all the set methods, with the exceptions of setDistance() and setWorld() if not applicable.
  */
 public class ChannelData
 {
@@ -18,19 +22,17 @@ public class ChannelData
     private boolean doUrlFilter;
     private boolean callEvent;
     private int priority;
+    private double distance;
+    private Set<World> worlds;
 
-    public ChannelData(){}
+    /**
+     * Default constructor for this class.
+     * All values are null when using this constructor, you must later define them with methods.
+     */
+    public ChannelData() {}
 
-    public ChannelData(String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doUrlFilter, boolean doProfanityFilter, boolean callEvent, int priority) {
+    public ChannelData(String name) {
         this.name = name;
-        this.defaultColor = defaultColor;
-        this.format = format;
-        this.membership = membership;
-        this.doCooldown = doCooldown;
-        this.doUrlFilter = doUrlFilter;
-        this.doProfanityFilter = doProfanityFilter;
-        this.callEvent = callEvent;
-        this.priority = priority;
     }
 
     public String getName() {
@@ -103,6 +105,22 @@ public class ChannelData
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public Set<World> getWorlds() {
+        return worlds;
+    }
+
+    public void setWorlds(Set<World> worlds) {
+        this.worlds = worlds;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
 }

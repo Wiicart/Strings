@@ -1,14 +1,13 @@
 package com.pedestriamc.strings.chat.channels;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.event.StringsChatEvent;
-import com.pedestriamc.strings.chat.ChannelManager;
-import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.api.StringsUser;
+import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channels.ChannelLoader;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.channels.StringsChannel;
 import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.chat.ChatManager;
-import com.pedestriamc.strings.impl.ChannelWrapper;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,24 +20,22 @@ import java.util.Set;
 public abstract class AbstractChannel implements Channel {
 
     private final Strings strings;
-    private final ChannelManager channelManager;
+    private final ChannelLoader channelLoader;
     private final ChatManager chatManager;
     private String name;
     private String defaultColor;
     private String format;
-    private String eventFormat;
     private final Membership membership;
     private boolean doCooldown;
     private boolean doProfanityFilter;
     private boolean doUrlFilter;
     private final boolean callEvent;
     private final int priority;
-    private StringsChannel stringsChannel;
     private final boolean mentionsEnabled;
 
-    protected AbstractChannel(Strings strings, ChannelManager channelManager, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority) {
+    protected AbstractChannel(Strings strings, ChannelLoader channelLoader, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority) {
         this.strings = strings;
-        this.channelManager = channelManager;
+        this.channelLoader = channelLoader;
         this.chatManager = strings.getChatManager();
         this.name = name;
         this.defaultColor = defaultColor != null ? defaultColor : "&f";
@@ -50,7 +47,6 @@ public abstract class AbstractChannel implements Channel {
         this.callEvent = callEvent;
         this.priority = priority;
         this.mentionsEnabled = chatManager.isMentionsEnabled();
-        this.eventFormat = format.replace("{displayname}", "%s").replace("{message}", "%s");
     }
 
     /**
@@ -63,21 +59,8 @@ public abstract class AbstractChannel implements Channel {
     public abstract Set<Player> getRecipients(Player sender);
 
     @Override
-    public void sendMessage(Player player, String message) {
-        sendMessage(player, message, null);
-    }
-
-    @Override
-    public void sendMessage(Player player, String message, AsyncPlayerChatEvent event){
-
-        boolean eventIsNull = event == null;
-
+    public void sendMessage(Player player, String message){
         Set<Player> recipients = getRecipients(player);
-        if(!eventIsNull){
-            event.getRecipients().clear();
-            event.getRecipients().addAll(recipients);
-        }
-
         String template = chatManager.formatMessage(player, this);
         String processedMessage = chatManager.processMessage(player, message);
         String finalForm = template.replace("{message}", processedMessage);
@@ -86,15 +69,16 @@ public abstract class AbstractChannel implements Channel {
             finalForm = chatManager.processMentions(player, finalForm);
         }
 
-        if (callEvent && !eventIsNull) {
+        if (callEvent) {
             String finalString = finalForm;
             Bukkit.getScheduler().runTask(strings, () -> {
-                event.setMessage(processedMessage);
-                event.setFormat(eventFormat);
-                Bukkit.getLogger().info(eventFormat);
-                StringsChatEvent stringsChatEvent = new StringsChatEvent(event, this.getStringsChannel());
-                Bukkit.getPluginManager().callEvent(stringsChatEvent);
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, message, recipients, this);
+                Bukkit.getPluginManager().callEvent(event);
                 if (!event.isCancelled()) {
+                    for (Player p : recipients) {
+                        p.sendMessage(finalString);
+                    }
+                    Bukkit.getLogger().info(ChatColor.stripColor(finalString));
                     chatManager.startCoolDown(player);
                     if(!recipients.contains(player)) {
                         player.sendMessage(finalString);
@@ -125,7 +109,7 @@ public abstract class AbstractChannel implements Channel {
 
     @Override
     public void saveChannel() {
-        channelManager.saveChannel(this);
+        channelLoader.saveChannel(this);
     }
 
     /**
@@ -134,8 +118,8 @@ public abstract class AbstractChannel implements Channel {
      * @return A populated LinkedHashMap containing channel data
      */
     @Override
-    public Map<String, String> getData() {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+    public Map<String, Object> getData() {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("format", getFormat());
         map.put("default-color", getDefaultColor());
         map.put("call-event", String.valueOf(isCallEvent()));
@@ -149,22 +133,8 @@ public abstract class AbstractChannel implements Channel {
     }
 
     @Override
-    public StringsChannel getStringsChannel() {
-        if (stringsChannel == null) {
-            stringsChannel = new ChannelWrapper(this);
-        }
-        return stringsChannel;
-    }
-
-    @Override
     public String getFormat() {
         return format;
-    }
-
-    @Override
-    public void setFormat(String format) {
-        this.format = format;
-        this.eventFormat = format.replace("{displayname}", "%s").replace("{message}", "%s");
     }
 
     @Override
@@ -195,7 +165,7 @@ public abstract class AbstractChannel implements Channel {
     public abstract void addPlayer(Player player);
 
     @Override
-    public void addPlayer(User user) {
+    public void addPlayer(StringsUser user) {
         addPlayer(user.getPlayer());
     }
 
@@ -203,7 +173,7 @@ public abstract class AbstractChannel implements Channel {
     public abstract void removePlayer(Player player);
 
     @Override
-    public void removePlayer(User user) {
+    public void removePlayer(StringsUser user) {
         removePlayer(user.getPlayer());
     }
 
@@ -251,6 +221,11 @@ public abstract class AbstractChannel implements Channel {
     @Override
     public int getPriority() {
         return priority;
+    }
+
+    @Override
+    public void setFormat(String format){
+        this.format = format;
     }
 
     @Override

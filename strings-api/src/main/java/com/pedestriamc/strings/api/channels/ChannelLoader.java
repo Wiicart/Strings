@@ -6,16 +6,23 @@ import org.jetbrains.annotations.Nullable;
 public interface ChannelLoader {
 
     /**
-     * Registers a Channel
+     * Registers a Channel with Strings
      * @param channel The channel to be registered
      */
-    void registerChannel(StringsChannel channel);
+    void registerChannel(Channel channel);
+
+    /**
+     * Unregisters a Channel
+     * @param channel The Channel to be unregistered
+     * @throws Exception Throws an exception if the Channel is not registered.
+     */
+    void unregisterChannel(Channel channel) throws Exception;
 
     /**
      * Saves a Channel
      * @param channel The channel to be saved
      */
-    void saveChannel(StringsChannel channel);
+    void saveChannel(Channel channel);
 
     /**
      * Builds and returns a Channel
@@ -25,7 +32,7 @@ public interface ChannelLoader {
      * @throws Exception When
      */
     @Nullable
-    StringsChannel build(ChannelData data, Type type) throws Exception;
+    Channel build(ChannelData data, Type type) throws Exception;
 
     /**
      * Provides a StringsChannel based off its name, if it exists.
@@ -33,5 +40,5 @@ public interface ChannelLoader {
      * @return A StringsChannel, if it exists.
      */
     @Nullable
-    StringsChannel getChannel(String name);
+    Channel getChannel(String name);
 }

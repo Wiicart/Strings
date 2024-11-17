@@ -109,7 +109,8 @@ channels:
   #  block-urls: false
   #  cooldown: false
   #  type: world
-  #  world: "world2"
+  #  worlds:
+  #    - "world2"
   #  membership: default
   #  priority: 10
   #  symbol: "^"
@@ -124,7 +125,8 @@ channels:
   #  distance: 30
   #  type: proximity
   #  membership: default
-  #  world: "world2"
+  #  worlds:
+  #    - "world2"
   #  priority: 11
   #  symbol: "!"
 

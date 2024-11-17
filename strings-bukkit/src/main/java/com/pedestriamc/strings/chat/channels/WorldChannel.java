@@ -1,30 +1,53 @@
 package com.pedestriamc.strings.chat.channels;
 
+import com.pedestriamc.strings.api.channels.Buildable;
+import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.chat.ChannelManager;
+import com.pedestriamc.strings.api.channels.data.ChannelData;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WorldChannel extends AbstractChannel {
+public class WorldChannel extends AbstractChannel implements Buildable {
 
     private final Set<Player> members;
-    private final World world;
+    private World world;
+    private Set<World> worlds;
 
-    public WorldChannel(Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, World world, Membership membership, int priority){
-        super(strings, channelManager, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doURLFilter,callEvent, priority);
+    @Deprecated
+    public WorldChannel(Strings strings, String name, String format, String defaultColor, ChannelLoader channelLoader, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, World world, Membership membership, int priority){
+        super(strings, channelLoader, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doURLFilter,callEvent, priority);
         this.members = ConcurrentHashMap.newKeySet();
         this.world = world;
-        channelManager.registerChannel(this);
     }
+
+    public WorldChannel(Strings strings, ChannelData data) {
+
+        super(
+                strings,
+                strings.getChannelLoader(),
+                data.getName(),
+                data.getDefaultColor(),
+                data.getFormat(),
+                data.getMembership(),
+                data.isDoCooldown(),
+                data.isDoProfanityFilter(),
+                data.isDoUrlFilter(),
+                data.isCallEvent(),
+                data.getPriority()
+        );
+
+        this.members = ConcurrentHashMap.newKeySet();
+        this.worlds = data.getWorlds();
+
+    }
+
+
 
     @Override
     public Set<Player> getRecipients(Player sender){
@@ -59,8 +82,8 @@ public class WorldChannel extends AbstractChannel {
     }
 
     @Override
-    public Map<String, String> getData() {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+    public Map<String, Object> getData() {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("format", this.getFormat());
         map.put("default-color", this.getDefaultColor());
         map.put("call-event", String.valueOf(this.isCallEvent()));
@@ -70,12 +93,40 @@ public class WorldChannel extends AbstractChannel {
         map.put("type", String.valueOf(this.getType()));
         map.put("membership", String.valueOf(this.getMembership()));
         map.put("priority", String.valueOf(this.getPriority()));
-        map.put("world", world.getName());
+        map.put("worlds", getWorldNames());
         return map;
     }
 
-    public World getWorld(){
-        return world;
+    public Set<World> getWorlds(){
+        return worlds;
+    }
+
+    public List<String> getWorldNames() {
+        ArrayList<String> worlds = new ArrayList<>();
+        for (World w : getWorlds() ){
+            worlds.add(w.getName());
+        }
+
+        return worlds;
+    }
+
+    @Override
+    public boolean allows(Player player) {
+
+        if(getMembers().contains(player)) {
+            return true;
+        }
+
+        if(getMembership() == Membership.DEFAULT) {
+            return worlds.contains(player.getWorld());
+        }
+
+        return (
+                player.hasPermission("strings.channels." + getName()) ||
+                player.hasPermission("strings.channels.*") ||
+                player.hasPermission("strings.*")
+        );
+
     }
 
 }

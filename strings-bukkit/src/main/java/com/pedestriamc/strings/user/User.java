@@ -2,8 +2,7 @@ package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.StringsUser;
-import com.pedestriamc.strings.chat.channels.Channel;
-import com.pedestriamc.strings.impl.UserWrapper;
+import com.pedestriamc.strings.api.channels.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -22,7 +21,7 @@ import java.util.UUID;
  * The User class is used to store information about players for the purposes of this plugin.
  * It provides the data that the plugin stores on the player, and when available provides information from other plugins.
  */
-public class User {
+public class User implements StringsUser {
 
     private final Strings strings;
     private final UUID uuid;
@@ -34,7 +33,6 @@ public class User {
     private String suffix;
     private String displayName;
     private Channel activeChannel;
-    private StringsUser stringsUser;
     private boolean mentionsEnabled;
 
     /**
@@ -100,7 +98,7 @@ public class User {
      * Provides the User's UUID.
      * @return The UUID.
      */
-    public UUID getUuid(){
+    public @NotNull UUID getUuid(){
         return uuid;
     }
 
@@ -110,7 +108,7 @@ public class User {
      */
     @Nullable
     public String getChatColor(){
-        if(chatColor != null && !chatColor.equals("")) {
+        if(chatColor != null && !chatColor.isEmpty()) {
             return ChatColor.translateAlternateColorCodes('&', chatColor);
         }
         return "";
@@ -134,7 +132,7 @@ public class User {
      * If no display name is set with this plugin, it falls back to the server.
      * @return The display name.
      */
-    public String getDisplayName(){
+    public @NotNull String getDisplayName(){
         if(displayName == null){
             return player.getDisplayName();
         }
@@ -185,13 +183,13 @@ public class User {
      * Provides the username of the User.
      * @return The username.
      */
-    public String getName(){ return name; }
+    public @NotNull String getName(){ return name; }
 
     /**
      * Sets the chat color of the User.
      * @param chatColor The new chat color.
      */
-    public void setChatColor(String chatColor){
+    public void setChatColor(@NotNull String chatColor){
         this.chatColor = chatColor;
         UserUtil.saveUser(this);
     }
@@ -200,7 +198,7 @@ public class User {
      * Sets the User's prefix.
      * @param prefix The new prefix.
      */
-    public void setPrefix(String prefix){
+    public void setPrefix(@NotNull String prefix){
         this.prefix = prefix;
         if(strings.useVault()){
             strings.getVaultChat().setPlayerPrefix(player, prefix);
@@ -212,7 +210,7 @@ public class User {
      * Sets the User's suffix.
      * @param suffix The new suffix.
      */
-    public void setSuffix(String suffix){
+    public void setSuffix(@NotNull String suffix){
         this.suffix = suffix;
         if(strings.useVault()){
             strings.getVaultChat().setPlayerSuffix(player, suffix);
@@ -224,7 +222,7 @@ public class User {
      * Sets the player's display name and updates the User, so it's saved.
      * @param displayName The new display name.
      */
-    public void setDisplayName(String displayName){
+    public void setDisplayName(@NotNull String displayName){
         this.displayName = displayName;
         this.player.setDisplayName(displayName);
         UserUtil.saveUser(this);
@@ -251,7 +249,7 @@ public class User {
      * Provides the player's active channel.
      * @return The active channel.
      */
-    public Channel getActiveChannel(){
+    public @NotNull Channel getActiveChannel(){
         return activeChannel;
     }
 
@@ -314,6 +312,11 @@ public class User {
         return channels.contains(channel);
     }
 
+    @Override
+    public boolean mentionsEnabled() {
+        return isMentionsEnabled();
+    }
+
     /**
      * Provides an ArrayList of the names of the channels the User is a member of.
      * @return An {@code ArrayList} of {@code String} containing the names of the channels the user is a member of.
@@ -337,17 +340,6 @@ public class User {
     }
 
     /**
-     * Provides the StringsUser of this User.
-     * @return A new StringsUser
-     */
-    public StringsUser getStringsUser(){
-        if(stringsUser == null){
-            stringsUser = new UserWrapper(this);
-        }
-        return stringsUser;
-    }
-
-    /**
      * Provides a String representation of the getData HashMap.
      * All data that the User has will be given.
      * @return String with information on this User.
@@ -362,11 +354,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return mentionsEnabled == user.mentionsEnabled && Objects.equals(strings, user.strings) && Objects.equals(uuid, user.uuid) && Objects.equals(player, user.player) && Objects.equals(name, user.name) && Objects.equals(channels, user.channels) && Objects.equals(chatColor, user.chatColor) && Objects.equals(prefix, user.prefix) && Objects.equals(suffix, user.suffix) && Objects.equals(displayName, user.displayName) && Objects.equals(activeChannel, user.activeChannel) && Objects.equals(stringsUser, user.stringsUser);
+        return mentionsEnabled == user.mentionsEnabled && Objects.equals(strings, user.strings) && Objects.equals(uuid, user.uuid) && Objects.equals(player, user.player) && Objects.equals(name, user.name) && Objects.equals(channels, user.channels) && Objects.equals(chatColor, user.chatColor) && Objects.equals(prefix, user.prefix) && Objects.equals(suffix, user.suffix) && Objects.equals(displayName, user.displayName) && Objects.equals(activeChannel, user.activeChannel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(strings, uuid, player, name, channels, chatColor, prefix, suffix, displayName, activeChannel, stringsUser, mentionsEnabled);
+        return Objects.hash(strings, uuid, player, name, channels, chatColor, prefix, suffix, displayName, activeChannel, mentionsEnabled);
     }
 }

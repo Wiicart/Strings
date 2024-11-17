@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.commands;
 
-import com.pedestriamc.strings.chat.channels.Channel;
+import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.Strings;

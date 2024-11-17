@@ -5,7 +5,7 @@
     <parent>
         <artifactId>Strings</artifactId>
         <groupId>com.pedestriamc</groupId>
-        <version>1.5</version>
+        <version>1.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -162,7 +162,7 @@
         <dependency>
             <groupId>com.pedestriamc.strings</groupId>
             <artifactId>strings-api</artifactId>
-            <version>1.5</version>
+            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>com.github.seeseemelk</groupId>

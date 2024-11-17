@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.listeners;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.chat.Mentioner;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

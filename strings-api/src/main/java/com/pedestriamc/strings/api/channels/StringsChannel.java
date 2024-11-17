@@ -10,10 +10,11 @@ import java.util.OptionalDouble;
 import java.util.Set;
 
 /**
- * An API Wrapper for all types of Channels.
+ * Deprecated - Use class Channel instead, unused!
  */
 @SuppressWarnings("unused")
-public interface StringsChannel{
+@Deprecated(forRemoval = true, since = "1.4")
+public interface StringsChannel extends Channel {
 
     /**
      * Sends a message in a Channel from a player.

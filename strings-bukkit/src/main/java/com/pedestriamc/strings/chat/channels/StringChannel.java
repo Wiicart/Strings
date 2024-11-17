@@ -2,8 +2,10 @@ package com.pedestriamc.strings.chat.channels;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.Membership;
+import com.pedestriamc.strings.api.channels.Buildable;
+import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.api.channels.Type;
-import com.pedestriamc.strings.chat.ChannelManager;
+import com.pedestriamc.strings.api.channels.data.ChannelData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -11,14 +13,33 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class StringChannel extends AbstractChannel{
+public class StringChannel extends AbstractChannel implements Buildable {
 
     private final Set<Player> members;
 
-    public StringChannel(Strings strings, String name, String format, String defaultColor, ChannelManager channelManager, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, Membership membership, int priority){
-        super(strings, channelManager, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doURLFilter, callEvent, priority);
+    @Deprecated
+    public StringChannel(Strings strings, String name, String format, String defaultColor, ChannelLoader channelLoader, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, Membership membership, int priority){
+        super(strings, channelLoader, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doURLFilter, callEvent, priority);
         this.members = ConcurrentHashMap.newKeySet();
-        channelManager.registerChannel(this);
+    }
+
+    public StringChannel(Strings strings, ChannelData data) {
+
+        super(
+                strings,
+                strings.getChannelLoader(),
+                data.getName(),
+                data.getDefaultColor(),
+                data.getFormat(),
+                data.getMembership(),
+                data.isDoCooldown(),
+                data.isDoProfanityFilter(),
+                data.isDoUrlFilter(),
+                data.isCallEvent(),
+                data.getPriority()
+        );
+
+        this.members = ConcurrentHashMap.newKeySet();
     }
 
 

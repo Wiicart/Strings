@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.api;
 
-import com.pedestriamc.strings.api.channels.StringsChannel;
+import com.pedestriamc.strings.api.channels.Channel;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,39 +86,39 @@ public interface StringsUser {
      * @return The active StringsChannel.
      */
     @NotNull
-    StringsChannel getActiveChannel();
+    Channel getActiveChannel();
 
     /**
      * Sets the StringsUser's active StringChannel.
      * This channel is where messages will be sent by the player.
      * @param channel The StringsChannel to be set to active.
      */
-    void setActiveChannel(@NotNull StringsChannel channel);
+    void setActiveChannel(@NotNull Channel channel);
 
     /**
      * Provides a Set of all the channels the User is in.
      * @return A populated Set.
      */
-    Set<StringsChannel> getChannels();
+    Set<Channel> getChannels();
 
     /**
      * Has this StringsUser join a StringsChannel.
      * @param channel The channel to join.
      */
-    void joinChannel(@NotNull StringsChannel channel);
+    void joinChannel(@NotNull Channel channel);
 
     /**
      * Has this StringsUser leave a StringsChannel.
      * @param channel The channel to leave.
      */
-    void leaveChannel(StringsChannel channel);
+    void leaveChannel(Channel channel);
 
     /**
      * Returns if this StringsUser is a member of a defined StringsChannel.
      * @param channel The Channel to check
      * @return True/false if the StringsUser is a member.
      */
-    boolean memberOf(StringsChannel channel);
+    boolean memberOf(Channel channel);
 
     /**
      * Tells if the StringsUser has mentions enabled.
@@ -130,4 +131,6 @@ public interface StringsUser {
      * @param mentionsEnabled true/false if the StringsUser should have mentions enabled.
      */
     void setMentionsEnabled(boolean mentionsEnabled);
+
+    Player getPlayer();
 }
