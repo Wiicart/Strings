@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Static StringsAPI getter
  */
-public final class StringsProvider{
+public final class StringsProvider {
 
     private static StringsAPI api;
     private static UUID apiUuid;

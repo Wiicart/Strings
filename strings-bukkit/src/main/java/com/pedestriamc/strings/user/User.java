@@ -74,8 +74,8 @@ public class User implements StringsUser {
         }else{
             this.joinChannel(strings.getChannel("default"));
         }
-        UserUtil.saveUser(this);
-        UserUtil.UserMap.addUser(this);
+        YamlUserUtil.saveUser(this);
+        YamlUserUtil.UserMap.addUser(this);
     }
 
     /**
@@ -191,7 +191,7 @@ public class User implements StringsUser {
      */
     public void setChatColor(@NotNull String chatColor){
         this.chatColor = chatColor;
-        UserUtil.saveUser(this);
+        YamlUserUtil.saveUser(this);
     }
 
     /**
@@ -203,7 +203,7 @@ public class User implements StringsUser {
         if(strings.useVault()){
             strings.getVaultChat().setPlayerPrefix(player, prefix);
         }
-        UserUtil.saveUser(this);
+        YamlUserUtil.saveUser(this);
     }
 
     /**
@@ -215,7 +215,7 @@ public class User implements StringsUser {
         if(strings.useVault()){
             strings.getVaultChat().setPlayerSuffix(player, suffix);
         }
-        UserUtil.saveUser(this);
+        YamlUserUtil.saveUser(this);
     }
 
     /**
@@ -225,7 +225,7 @@ public class User implements StringsUser {
     public void setDisplayName(@NotNull String displayName){
         this.displayName = displayName;
         this.player.setDisplayName(displayName);
-        UserUtil.saveUser(this);
+        YamlUserUtil.saveUser(this);
     }
 
     /**
@@ -242,7 +242,7 @@ public class User implements StringsUser {
      */
     public void setMentionsEnabled(boolean mentionsEnabled){
         this.mentionsEnabled = mentionsEnabled;
-        UserUtil.saveUser(this);
+        YamlUserUtil.saveUser(this);
     }
 
     /**
@@ -264,7 +264,7 @@ public class User implements StringsUser {
         this.activeChannel = channel;
         channels.add(channel);
         channel.addPlayer(this.getPlayer());
-        UserUtil.saveUser(this);
+        YamlUserUtil.saveUser(this);
     }
 
     /**
@@ -282,7 +282,7 @@ public class User implements StringsUser {
     public void joinChannel(@NotNull Channel channel){
         channel.addPlayer(this.player);
         channels.add(channel);
-        UserUtil.saveUser(this);
+        YamlUserUtil.saveUser(this);
 
     }
 
@@ -300,7 +300,7 @@ public class User implements StringsUser {
         if(activeChannel.equals(channel)){
             activeChannel = strings.getChannel("default");
         }
-        UserUtil.saveUser(this);
+        YamlUserUtil.saveUser(this);
     }
 
     /**

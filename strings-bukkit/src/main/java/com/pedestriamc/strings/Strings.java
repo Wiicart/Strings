@@ -16,7 +16,7 @@ import com.pedestriamc.strings.commands.BroadcastCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
 import com.pedestriamc.strings.commands.*;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.UserUtil;
+import com.pedestriamc.strings.user.YamlUserUtil;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
@@ -102,10 +102,10 @@ public final class Strings extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for(User user : UserUtil.UserMap.getUserSet()){
+        for(User user : YamlUserUtil.UserMap.getUserSet()){
             user.logOff();
         }
-        UserUtil.UserMap.clear();
+        YamlUserUtil.UserMap.clear();
         this.serverMessages = null;
         this.playerDirectMessenger = null;
         this.chatManager = null;
@@ -116,12 +116,11 @@ public final class Strings extends JavaPlugin {
         HandlerList.unregisterAll(this);
         this.getServer().getScheduler().cancelTasks(this);
         this.getServer().getServicesManager().unregister(StringsAPI.class, stringsImpl);
-        try{
+        try {
             StringsProvider.unregister(apiUUID);
-        }catch(IllegalStateException | SecurityException ignored){}
+        } catch(IllegalStateException | SecurityException ignored) {}
         this.stringsImpl = null;
         logger.info("[Strings] Disabled");
-
     }
 
     /*
@@ -132,7 +131,6 @@ public final class Strings extends JavaPlugin {
     @SuppressWarnings("ConstantConditions")
     private void registerClasses(){
         this.getCommand("strings").setExecutor(new StringsCommand(this));
-        this.getCommand("helpop").setExecutor(new HelpOPCommand(this));
         this.getCommand("broadcast").setExecutor(new BroadcastCommand(this));
         this.getCommand("announce").setExecutor(new BroadcastCommand(this));
         this.getCommand("clearchat").setExecutor(new ClearChatCommand(this));
@@ -155,6 +153,22 @@ public final class Strings extends JavaPlugin {
         this.getCommand("mentions").setExecutor(new MentionCommand(this));
         this.getCommand("mention").setTabCompleter(new MentionCommandTabCompleter());
         this.getCommand("mentions").setTabCompleter(new MentionCommandTabCompleter());
+
+        if(config.getBoolean("enable-helpop")) {
+            this.getCommand("helpop").setExecutor(new HelpOPCommand(this));
+        } else {
+
+            if(!config.getBoolean("other-helpop")) {
+                this.getCommand("helpop").setExecutor(new HelpOPDisabledCommand(this));
+            }
+
+            try {
+                Channel helpOpChannel = channelLoader.getChannel("helpop");
+                channelLoader.unregisterChannel(helpOpChannel);
+            } catch(Exception ignored) {}
+
+        }
+
         if(config.getBoolean("enable-chatcolor")){
             this.getCommand("chatcolor").setExecutor(new ChatColorCommand(this));
         }
@@ -273,7 +287,7 @@ public final class Strings extends JavaPlugin {
     private void checkIfReload(){
         if(!Bukkit.getOnlinePlayers().isEmpty()){
             for(Player p : Bukkit.getOnlinePlayers()){
-                if(UserUtil.loadUser(p.getUniqueId()) == null){
+                if(YamlUserUtil.loadUser(p.getUniqueId()) == null){
                     new User(p.getUniqueId());
                 }
             }
@@ -332,19 +346,19 @@ public final class Strings extends JavaPlugin {
     public static Strings getInstance(){ return instance; }
     public Mentioner getMentioner(){ return mentioner; }
     public short getPluginNum(){ return pluginNum; }
-    public ChannelLoader getChannelLoader(){ return channelLoader; }
+    public ChannelLoader getChannelLoader() { return channelLoader; }
 
     /*
     Other methods
      */
-    public void saveUsersFile(){
+    public void saveUsersFile() {
         try{
             usersFileConfig.save(usersFile);
         }catch(IOException e){
             e.printStackTrace();
         }
     }
-    public void saveChannelsFile(){
+    public void saveChannelsFile() {
         try{
             channelsFileConfig.save(channelsFile);
         }catch(IOException e){
@@ -353,7 +367,7 @@ public final class Strings extends JavaPlugin {
     }
 
     @SuppressWarnings("unused")
-    public void saveMessagesFile(){
+    public void saveMessagesFile() {
         try{
             messagesFileConfig.save(messagesFile);
         }catch(IOException e){
@@ -362,7 +376,7 @@ public final class Strings extends JavaPlugin {
     }
 
     @SuppressWarnings("unused")
-    public void saveBroadcastsFile(){
+    public void saveBroadcastsFile() {
         try{
             broadcastsFileConfig.save(broadcastsFile);
         }catch(IOException e){
@@ -370,7 +384,7 @@ public final class Strings extends JavaPlugin {
         }
     }
 
-    public void reload(){
+    public void reload() {
         onDisable();
         onEnable();
     }
@@ -380,8 +394,8 @@ public final class Strings extends JavaPlugin {
      * @param uuid The uuid of the player to get the User of.
      * @return User object of the player matching the UUID.
      */
-    public User getUser(@NotNull UUID uuid){
-        return UserUtil.UserMap.getUser(uuid);
+    public User getUser(@NotNull UUID uuid) {
+        return YamlUserUtil.UserMap.getUser(uuid);
     }
 
     /**
@@ -389,15 +403,15 @@ public final class Strings extends JavaPlugin {
      * @param player the player to get the User of.
      * @return User object of the player.
      */
-    public User getUser(@NotNull Player player){
-        return UserUtil.UserMap.getUser(player.getUniqueId());
+    public User getUser(@NotNull Player player) {
+        return YamlUserUtil.UserMap.getUser(player.getUniqueId());
     }
 
-    public Channel getChannel(String channel){
+    public Channel getChannel(String channel) {
         return channelLoader.getChannel(channel);
     }
 
-    public String isAPIUsed(){
+    public String isAPIUsed() {
         return "" + stringsImpl.isApiUsed();
     }
 }

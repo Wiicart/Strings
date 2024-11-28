@@ -13,7 +13,7 @@ import java.util.Set;
  * Deprecated - Use class Channel instead, unused!
  */
 @SuppressWarnings("unused")
-@Deprecated(forRemoval = true, since = "1.4")
+@Deprecated
 public interface StringsChannel extends Channel {
 
     /**

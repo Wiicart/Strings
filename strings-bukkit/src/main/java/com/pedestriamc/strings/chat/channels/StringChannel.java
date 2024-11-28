@@ -18,7 +18,7 @@ public class StringChannel extends AbstractChannel implements Buildable {
     private final Set<Player> members;
 
     @Deprecated
-    public StringChannel(Strings strings, String name, String format, String defaultColor, ChannelLoader channelLoader, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, Membership membership, int priority){
+    public StringChannel(Strings strings, String name, String format, String defaultColor, ChannelLoader channelLoader, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, Membership membership, int priority) {
         super(strings, channelLoader, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doURLFilter, callEvent, priority);
         this.members = ConcurrentHashMap.newKeySet();
     }
@@ -40,18 +40,17 @@ public class StringChannel extends AbstractChannel implements Buildable {
         );
 
         this.members = ConcurrentHashMap.newKeySet();
+
     }
 
-
     @Override
-    public Set<Player> getRecipients(Player sender){
+    public Set<Player> getRecipients(Player sender) {
         Set<Player> recipients = new HashSet<>(members);
-        if(super.getMembership() == Membership.DEFAULT){
-            for(Player p : Bukkit.getOnlinePlayers()){
-                if(!p.hasPermission("strings.channels." + super.getName() + ".receive")){
-                    continue;
+        if(getMembership() == Membership.DEFAULT) {
+            for(Player p : Bukkit.getOnlinePlayers()) {
+                if(p.hasPermission("strings.channels." + getName() + ".receive")){
+                    recipients.add(p);
                 }
-                recipients.add(p);
             }
         }
         return recipients;

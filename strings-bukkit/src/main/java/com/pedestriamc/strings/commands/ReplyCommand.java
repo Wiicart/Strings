@@ -15,18 +15,18 @@ public class ReplyCommand implements CommandExecutor {
     private final PlayerDirectMessenger playerDirectMessenger;
     private final Messenger messenger;
 
-    public ReplyCommand(@NotNull Strings strings){
+    public ReplyCommand(@NotNull Strings strings) {
         this.playerDirectMessenger = strings.getPlayerDirectMessenger();
         this.messenger = strings.getMessenger();
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args){
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if(!(sender instanceof Player)){
             sender.sendMessage("[Strings] This command can only be used by players!");
             return true;
         }
-        if(!(sender.hasPermission("strings.chat.msg") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.*"))){
+        if(!(sender.hasPermission("strings.chat.msg") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.*"))) {
             messenger.sendMessage(Message.NO_PERMS, sender);
             return true;
         }

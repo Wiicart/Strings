@@ -59,7 +59,7 @@ public abstract class AbstractChannel implements Channel {
     public abstract Set<Player> getRecipients(Player sender);
 
     @Override
-    public void sendMessage(Player player, String message){
+    public void sendMessage(Player player, String message) {
         Set<Player> recipients = getRecipients(player);
         String template = chatManager.formatMessage(player, this);
         String processedMessage = chatManager.processMessage(player, message);
@@ -69,7 +69,7 @@ public abstract class AbstractChannel implements Channel {
             finalForm = chatManager.processMentions(player, finalForm);
         }
 
-        if (callEvent) {
+        if (isCallEvent()) {
             String finalString = finalForm;
             Bukkit.getScheduler().runTask(strings, () -> {
                 AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, message, recipients, this);
@@ -230,14 +230,13 @@ public abstract class AbstractChannel implements Channel {
 
     @Override
     public boolean allows(Player player) {
-        if(getMembers().contains(player)){
+        if(getMembers().contains(player)) {
             return true;
         }
         return (
                 player.hasPermission("strings.channels." + getName()) ||
                 player.hasPermission("strings.channels.*") ||
-                player.hasPermission("strings.*"
-                )
+                player.hasPermission("strings.*")
         );
     }
 }

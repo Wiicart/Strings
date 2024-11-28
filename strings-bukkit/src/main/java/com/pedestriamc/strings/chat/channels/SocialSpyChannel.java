@@ -22,7 +22,7 @@ public class SocialSpyChannel implements Channel {
     private final HashSet<Player> spiesList;
     private final ChannelLoader channelLoader;
 
-    public SocialSpyChannel(@NotNull ChannelLoader channelLoader, PlayerDirectMessenger messenger, String format){
+    public SocialSpyChannel(@NotNull ChannelLoader channelLoader, PlayerDirectMessenger messenger, String format) {
         this.format = format;
         this.playerDirectMessenger = messenger;
         this.spiesList = new HashSet<>();

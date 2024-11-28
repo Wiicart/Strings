@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.misc;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -29,11 +30,11 @@ public class AutoBroadcasts {
         if(config.getBoolean("enabled", false)){
             this.interval = calculateDelay(config.getString("delay"));
             this.loadBroadcastList();
-            messageScheduler();
+            schedule();
         }
     }
 
-    private void messageScheduler(){
+    private void schedule(){
         scheduler.runTaskTimer(strings, this::broadcastMessage, 20L, interval);
     }
 

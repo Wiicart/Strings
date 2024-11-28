@@ -24,6 +24,12 @@ public class HelpOPCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+
+        if(!sender.hasPermission("strings.helpop.use")){
+            messenger.sendMessage(Message.NO_PERMS, sender);
+            return true;
+        }
+
         if(strings.getChannel("helpop") == null){
             messenger.sendMessage(Message.HELPOP_DISABLED, sender);
             return true;
@@ -32,10 +38,7 @@ public class HelpOPCommand implements CommandExecutor {
             sender.sendMessage("[Strings] This command can only be used by players.");
             return true;
         }
-        if(!sender.hasPermission("strings.helpop.use")){
-            messenger.sendMessage(Message.NO_PERMS, sender);
-            return true;
-        }
+
         if(args.length == 0){
             messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
             return true;

@@ -26,7 +26,7 @@ public class ProximityChannel extends AbstractChannel implements Buildable {
     private final Set<World> worlds;
 
     @Deprecated
-    public ProximityChannel(Strings strings, String name, String format, String defaultColor, ChannelLoader channelLoader, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, double distance, Membership membership, int priority, World world){
+    public ProximityChannel(Strings strings, String name, String format, String defaultColor, ChannelLoader channelLoader, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, double distance, Membership membership, int priority, World world) {
         super(strings, channelLoader, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doURLFilter, callEvent, priority);
         this.distance = distance;
         this.members = ConcurrentHashMap.newKeySet();
@@ -64,7 +64,7 @@ public class ProximityChannel extends AbstractChannel implements Buildable {
         }
 
         World senderWorld = sender.getWorld();
-        if(!worlds.contains(senderWorld)){
+        if(!worlds.contains(senderWorld)) {
             return defaultSet();
         }
 
@@ -73,9 +73,9 @@ public class ProximityChannel extends AbstractChannel implements Buildable {
         Location senderLocation = sender.getLocation();
         for(Player p : senderWorld.getPlayers()){
             Location pLocation = p.getLocation();
-            if(senderLocation.distance(pLocation) < distance){
+            if(senderLocation.distance(pLocation) < distance) {
                 recipients.add(p);
-            }else if(p.hasPermission("strings.channels." + getName() + ".receive")){
+            } else if(p.hasPermission("strings.channels." + getName() + ".receive")) {
                 recipients.add(p);
             }
         }
@@ -130,12 +130,12 @@ public class ProximityChannel extends AbstractChannel implements Buildable {
     }
 
     @SuppressWarnings("unused")
-    public double getProximity(){
+    public double getProximity() {
         return distance;
     }
 
     @SuppressWarnings("unused")
-    public void setProximity(double proximity){
+    public void setProximity(double proximity) {
         this.distance = proximity;
     }
 

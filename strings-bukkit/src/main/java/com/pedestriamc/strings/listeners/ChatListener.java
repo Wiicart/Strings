@@ -34,11 +34,13 @@ public class ChatListener implements Listener {
         messenger = strings.getMessenger();
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEvent(AsyncPlayerChatEvent event) {
 
         if (event instanceof ChannelChatEvent) {
             return;
+        } else {
+            event.setCancelled(true);
         }
 
         Player playerSender = event.getPlayer();
@@ -62,7 +64,7 @@ public class ChatListener implements Listener {
         }
 
         channel.sendMessage(playerSender, playerMessage);
-        event.setCancelled(true);
+
     }
 
     public Container processSymbol(String msg, User user) {

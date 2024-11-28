@@ -20,7 +20,7 @@ public class WorldChannel extends AbstractChannel implements Buildable {
     private Set<World> worlds;
 
     @Deprecated
-    public WorldChannel(Strings strings, String name, String format, String defaultColor, ChannelLoader channelLoader, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, World world, Membership membership, int priority){
+    public WorldChannel(Strings strings, String name, String format, String defaultColor, ChannelLoader channelLoader, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, World world, Membership membership, int priority) {
         super(strings, channelLoader, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doURLFilter,callEvent, priority);
         this.members = ConcurrentHashMap.newKeySet();
         this.world = world;
@@ -50,11 +50,11 @@ public class WorldChannel extends AbstractChannel implements Buildable {
 
 
     @Override
-    public Set<Player> getRecipients(Player sender){
+    public Set<Player> getRecipients(Player sender) {
         HashSet<Player> recipients = new HashSet<>(world.getPlayers());
         recipients.addAll(members);
-        for(Player p : Bukkit.getOnlinePlayers()){
-            if(p.hasPermission("strings.channels." + this.getName() + ".receive")){
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            if(p.hasPermission("strings.channels." + this.getName() + ".receive")) {
                 recipients.add(p);
             }
         }

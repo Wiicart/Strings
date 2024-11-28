@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.listeners;
 
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.UserUtil;
+import com.pedestriamc.strings.user.YamlUserUtil;
 import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.Strings;
 import org.bukkit.event.EventHandler;
@@ -26,7 +26,7 @@ public class LeaveListener implements Listener {
         if (modifyLeaveMessage) {
             event.setQuitMessage(serverMessages.leaveMessage(event.getPlayer()));
         }
-        UserUtil.UserMap.removeUser(event.getPlayer().getUniqueId());
+        YamlUserUtil.UserMap.removeUser(event.getPlayer().getUniqueId());
         user.logOff();
     }
 }

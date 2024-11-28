@@ -11,7 +11,7 @@ import com.pedestriamc.strings.chat.channels.ProximityChannel;
 import com.pedestriamc.strings.chat.channels.StringChannel;
 import com.pedestriamc.strings.chat.channels.WorldChannel;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.UserUtil;
+import com.pedestriamc.strings.user.YamlUserUtil;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -80,7 +80,7 @@ public class StringsChannelLoader implements ChannelLoader {
 
     public void unregisterChannel(Channel channel) {
 
-        Collection<User> users = UserUtil.UserMap.getUserSet();
+        Collection<User> users = YamlUserUtil.UserMap.getUserSet();
         Channel global = strings.getChannel("global");
         for(User user : users){
             if(user.getActiveChannel().equals(channel)) {

@@ -22,7 +22,7 @@
 
 # Process chat colors in player chat messages?
 # (Players with proper permissions can use chat colors
-# i.e. &4 in their messages and the plugin with color them)
+# like &4 in their messages and the plugin will color them)
 process-in-chat-colors: true
 
 # Enable the /chatcolor command?
@@ -196,6 +196,13 @@ mention-pitch: 0.594604
 # Mention Volume:
 # How loud should the note block sound be for the player?
 mention-vol: 10
+
+# Should HelpOP be enabled?
+enable-helpop: true
+
+# Are disabling HelpOP because you're using another HelpOP plugin?
+# Set this to true if so.
+other-helpop: false
 
 
 
