@@ -100,18 +100,6 @@ public abstract class AbstractChannel implements Channel {
 
     }
 
-    @Override
-    public void broadcastMessage(String message) {
-        for (Player p : getRecipients(null)) {
-            p.sendMessage(message);
-        }
-    }
-
-    @Override
-    public void saveChannel() {
-        channelLoader.saveChannel(this);
-    }
-
     /**
      * Base-line getData() implementation.  Most subclasses should override this.
      *
@@ -130,6 +118,31 @@ public abstract class AbstractChannel implements Channel {
         map.put("membership", String.valueOf(getMembership()));
         map.put("priority", String.valueOf(getPriority()));
         return map;
+    }
+
+    @Override
+    public boolean allows(Player player) {
+        if(getMembers().contains(player)) {
+            return true;
+        }
+        return (
+                player.hasPermission("strings.channels." + getName()) ||
+                        player.hasPermission("strings.channels.*") ||
+                        player.hasPermission("strings.*") ||
+                        player.hasPermission("*")
+        );
+    }
+
+    @Override
+    public void broadcastMessage(String message) {
+        for (Player p : getRecipients(null)) {
+            p.sendMessage(message);
+        }
+    }
+
+    @Override
+    public void saveChannel() {
+        channelLoader.saveChannel(this);
     }
 
     @Override
@@ -228,15 +241,4 @@ public abstract class AbstractChannel implements Channel {
         this.format = format;
     }
 
-    @Override
-    public boolean allows(Player player) {
-        if(getMembers().contains(player)) {
-            return true;
-        }
-        return (
-                player.hasPermission("strings.channels." + getName()) ||
-                player.hasPermission("strings.channels.*") ||
-                player.hasPermission("strings.*")
-        );
-    }
 }

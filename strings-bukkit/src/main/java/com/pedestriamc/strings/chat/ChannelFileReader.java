@@ -182,7 +182,9 @@ public class ChannelFileReader {
         String legacyWorldName = section.getString("world");
         if(legacyWorldName != null){
             World world = Bukkit.getWorld(legacyWorldName);
-            worlds.add(world);
+            if(world != null) {
+                worlds.add(world);
+            }
         } else {
             List<?> list = section.getList("worlds");
             if(list != null){

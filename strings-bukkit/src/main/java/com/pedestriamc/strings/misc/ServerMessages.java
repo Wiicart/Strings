@@ -18,7 +18,7 @@ public class ServerMessages {
     private final ArrayList<String> motd;
     private final boolean usePAPI;
 
-    public ServerMessages(@NotNull Strings strings){
+    public ServerMessages(@NotNull Strings strings) {
         this.strings = strings;
         this.joinMessageTemplate = strings.getConfig().getString("join-message");
         this.leaveMessageTemplate = strings.getConfig().getString("leave-message");

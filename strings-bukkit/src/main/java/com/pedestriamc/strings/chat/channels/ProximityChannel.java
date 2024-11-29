@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.chat.channels;
 
 import com.pedestriamc.strings.api.channels.Buildable;
-import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.Membership;
@@ -24,15 +23,6 @@ public class ProximityChannel extends AbstractChannel implements Buildable {
     private final Set<Player> members;
     private double distance;
     private final Set<World> worlds;
-
-    @Deprecated
-    public ProximityChannel(Strings strings, String name, String format, String defaultColor, ChannelLoader channelLoader, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, double distance, Membership membership, int priority, World world) {
-        super(strings, channelLoader, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doURLFilter, callEvent, priority);
-        this.distance = distance;
-        this.members = ConcurrentHashMap.newKeySet();
-        this.worlds = new HashSet<>();
-        worlds.add(world);
-    }
 
     public ProximityChannel(Strings strings, ChannelData data) {
 

@@ -51,7 +51,12 @@ public class WorldChannel extends AbstractChannel implements Buildable {
 
     @Override
     public Set<Player> getRecipients(Player sender) {
-        HashSet<Player> recipients = new HashSet<>(world.getPlayers());
+        HashSet<Player> recipients = new HashSet<>();
+
+        for(World w : getWorlds()) {
+            recipients.addAll(w.getPlayers());
+        }
+
         recipients.addAll(members);
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(p.hasPermission("strings.channels." + this.getName() + ".receive")) {
