@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * Called when a message is processed with Strings.
  * Not directly cancellable, cancel the AsyncPlayerChatEvent itself.
  */
-public class StringsChatEvent extends Event {
+public final class StringsChatEvent extends Event {
 
     public static final HandlerList handlerList = new HandlerList();
 

@@ -8,6 +8,7 @@ import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.impl.StringsImpl;
 import com.pedestriamc.strings.listeners.*;
+import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.misc.AutoBroadcasts;
 import com.pedestriamc.strings.misc.ServerMessages;
@@ -159,7 +160,7 @@ public final class Strings extends JavaPlugin {
         } else {
 
             if(!config.getBoolean("other-helpop")) {
-                this.getCommand("helpop").setExecutor(new HelpOPDisabledCommand(this));
+                this.getCommand("helpop").setExecutor(new DisabledCommand(this, Message.HELPOP_DISABLED));
             }
 
             try {

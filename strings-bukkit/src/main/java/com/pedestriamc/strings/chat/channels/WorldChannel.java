@@ -1,10 +1,10 @@
 package com.pedestriamc.strings.chat.channels;
 
 import com.pedestriamc.strings.api.channels.Buildable;
-import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.Membership;
+import com.pedestriamc.strings.api.channels.LocalChannel;
 import com.pedestriamc.strings.api.channels.data.ChannelData;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -13,18 +13,10 @@ import org.bukkit.entity.Player;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WorldChannel extends AbstractChannel implements Buildable {
+public class WorldChannel extends AbstractChannel implements Buildable, LocalChannel {
 
     private final Set<Player> members;
-    private World world;
-    private Set<World> worlds;
-
-    @Deprecated
-    public WorldChannel(Strings strings, String name, String format, String defaultColor, ChannelLoader channelLoader, boolean callEvent, boolean doURLFilter, boolean doProfanityFilter, boolean doCooldown, World world, Membership membership, int priority) {
-        super(strings, channelLoader, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doURLFilter,callEvent, priority);
-        this.members = ConcurrentHashMap.newKeySet();
-        this.world = world;
-    }
+    private final Set<World> worlds;
 
     public WorldChannel(Strings strings, ChannelData data) {
 
@@ -102,10 +94,12 @@ public class WorldChannel extends AbstractChannel implements Buildable {
         return map;
     }
 
+    @Override
     public Set<World> getWorlds(){
         return worlds;
     }
 
+    @Override
     public List<String> getWorldNames() {
         ArrayList<String> worlds = new ArrayList<>();
         for (World w : getWorlds() ){
@@ -132,6 +126,16 @@ public class WorldChannel extends AbstractChannel implements Buildable {
                 player.hasPermission("strings.*")
         );
 
+    }
+
+    @Override
+    public double getProximity() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("getProximity() called on WorldChannel instance, which is unsupported.");
+    }
+
+    @Override
+    public void setProximity(double proximity) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("setProximity() called on WorldChannel instance, which is unsupported.");
     }
 
 }

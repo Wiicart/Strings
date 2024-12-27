@@ -18,13 +18,13 @@ public class Messenger {
         FileConfiguration config = strings.getMessagesFileConfig();
         for(Message msg : Message.values()){
             String configValue = msg.toString().replace("_", "-").toLowerCase();
-            try{
-                if(config.isList(configValue)){
+            try {
+                if(config.isList(configValue)) {
                     enumMap.put(msg, config.getStringList(configValue).toArray(new String[0]));
-                }else{
+                } else {
                     enumMap.put(msg, config.getString(configValue));
                 }
-            }catch(NullPointerException e){
+            } catch(NullPointerException e) {
                 Bukkit.getLogger().warning("[Strings] Unable to find message for " + msg);
             }
         }
@@ -33,21 +33,21 @@ public class Messenger {
 
     public void sendMessage(Message message, CommandSender sender){
         Object msgObject = enumMap.get(message);
-        if(msgObject instanceof String[] msg){
+        if(msgObject instanceof String[] msg) {
             for(String str : msg){
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', str));
             }
-        }else if(msgObject instanceof String){
+        } else if(msgObject instanceof String) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + enumMap.get(message)));
-        }else{
+        } else {
             Bukkit.getLogger().info("[Strings] Unknown object type or value not found for message " + message.toString());
         }
     }
 
     public void sendMessage(Message message, Map<String, String> placeholders, CommandSender sender){
         Object msg = enumMap.get(message);
-        if(msg instanceof String[]){
-            for(String str : (String[]) msg){
+        if(msg instanceof String[]) {
+            for(String str : (String[]) msg) {
                 for(Map.Entry<String, String> entry : placeholders.entrySet()) {
                     str = str.replace(entry.getKey(), entry.getValue());
                 }
@@ -55,7 +55,7 @@ public class Messenger {
             }
             return;
         }
-        if(msg instanceof String str){
+        if(msg instanceof String str) {
             for(Map.Entry<String, String> entry : placeholders.entrySet()) {
                 str = str.replace(entry.getKey(), entry.getValue());
             }

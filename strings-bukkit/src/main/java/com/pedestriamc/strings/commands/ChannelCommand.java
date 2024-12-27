@@ -3,7 +3,6 @@ package com.pedestriamc.strings.commands;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.chat.StringsChannelLoader;
-import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.user.User;
 import org.bukkit.Bukkit;
@@ -14,6 +13,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.pedestriamc.strings.message.Message.*;
+
+
 
 public class ChannelCommand extends CommandBase {
 
@@ -55,7 +58,7 @@ public class ChannelCommand extends CommandBase {
 
             switch(args.length) {
                 case 0 -> {
-                    messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+                    messenger.sendMessage(INSUFFICIENT_ARGS, sender);
                     return true;
                 }
                 case 1 -> {
@@ -73,7 +76,7 @@ public class ChannelCommand extends CommandBase {
                     newArgs[2] = targetName;
                 }
                 default -> {
-                    messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
+                    messenger.sendMessage(TOO_MANY_ARGS, sender);
                     return true;
                 }
             }
@@ -94,9 +97,9 @@ public class ChannelCommand extends CommandBase {
 
             if(user.getActiveChannel().equals(channel)){
                 if(modifyingOther){
-                    messenger.sendMessage(Message.ALREADY_ACTIVE_OTHER, data.placeholders, sender);
+                    messenger.sendMessage(ALREADY_ACTIVE_OTHER, data.placeholders, sender);
                 }else{
-                    messenger.sendMessage(Message.ALREADY_ACTIVE, data.placeholders, sender);
+                    messenger.sendMessage(ALREADY_ACTIVE, data.placeholders, sender);
                 }
                 return true;
             }
@@ -104,9 +107,9 @@ public class ChannelCommand extends CommandBase {
             user.setActiveChannel(channel);
 
             if(modifyingOther) {
-                messenger.sendMessage(Message.OTHER_PLAYER_CHANNEL_ACTIVE, data.placeholders, sender);
+                messenger.sendMessage(OTHER_PLAYER_CHANNEL_ACTIVE, data.placeholders, sender);
             }
-            messenger.sendMessage(Message.CHANNEL_ACTIVE, data.placeholders, data.target);
+            messenger.sendMessage(CHANNEL_ACTIVE, data.placeholders, data.target);
 
             return true;
         }
@@ -142,18 +145,18 @@ public class ChannelCommand extends CommandBase {
 
             if(user.memberOf(channel)){
                 if(modifyingOther){
-                    messenger.sendMessage(Message.ALREADY_MEMBER_OTHER, data.placeholders, sender);
+                    messenger.sendMessage(ALREADY_MEMBER_OTHER, data.placeholders, sender);
                 }else{
-                    messenger.sendMessage(Message.ALREADY_MEMBER, data.placeholders, sender);
+                    messenger.sendMessage(ALREADY_MEMBER, data.placeholders, sender);
                 }
                 return true;
             }
 
             user.joinChannel(channel);
             if(modifyingOther) {
-                messenger.sendMessage(Message.OTHER_USER_JOINED_CHANNEL, data.placeholders, sender);
+                messenger.sendMessage(OTHER_USER_JOINED_CHANNEL, data.placeholders, sender);
             }
-            messenger.sendMessage(Message.CHANNEL_JOINED, data.placeholders, data.target);
+            messenger.sendMessage(CHANNEL_JOINED, data.placeholders, data.target);
 
             return true;
         }
@@ -189,23 +192,23 @@ public class ChannelCommand extends CommandBase {
 
             if(!user.getChannels().contains(channel)) {
                 if(modifyingOther){
-                    messenger.sendMessage(Message.NOT_CHANNEL_MEMBER_OTHER, data.placeholders, sender);
+                    messenger.sendMessage(NOT_CHANNEL_MEMBER_OTHER, data.placeholders, sender);
                 }else{
-                    messenger.sendMessage(Message.NOT_CHANNEL_MEMBER, data.placeholders, data.target);
+                    messenger.sendMessage(NOT_CHANNEL_MEMBER, data.placeholders, data.target);
                 }
                 return true;
             }
 
             if(channel.getName().equals("global") || channel.getName().equals("default")){
-                messenger.sendMessage(Message.CANT_LEAVE_GLOBAL, sender);
+                messenger.sendMessage(CANT_LEAVE_GLOBAL, sender);
                 return true;
             }
 
             user.leaveChannel(channel);
             if(modifyingOther) {
-                messenger.sendMessage(Message.OTHER_USER_LEFT_CHANNEL, data.placeholders, sender);
+                messenger.sendMessage(OTHER_USER_LEFT_CHANNEL, data.placeholders, sender);
             }
-            messenger.sendMessage(Message.LEFT_CHANNEL, data.placeholders, data.target);
+            messenger.sendMessage(LEFT_CHANNEL, data.placeholders, data.target);
 
             return true;
         }
@@ -221,7 +224,7 @@ public class ChannelCommand extends CommandBase {
 
         @Override
         public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-            messenger.sendMessage(Message.CHANNEL_HELP, sender);
+            messenger.sendMessage(CHANNEL_HELP, sender);
             return true;
         }
     }
@@ -247,7 +250,7 @@ public class ChannelCommand extends CommandBase {
 
             switch(args.length) {
                 case 1 -> {
-                    messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+                    messenger.sendMessage(INSUFFICIENT_ARGS, sender);
                     return new BaseData(null,null, null, true);
                 }
                 case 2 -> {
@@ -264,25 +267,25 @@ public class ChannelCommand extends CommandBase {
                     if(target == null){
                         HashMap<String, String> map = new HashMap<>();
                         map.put("{player}", args[2]);
-                        messenger.sendMessage(Message.INVALID_PLAYER, map, sender);
+                        messenger.sendMessage(INVALID_PLAYER, map, sender);
                         return new BaseData(null,null, null, true);
                     }
                 }
                 default -> {
-                    messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
+                    messenger.sendMessage(TOO_MANY_ARGS, sender);
                     return new BaseData(null,null, null, true);
                 }
             }
 
             String channelName = args[1];
 
-            if(modifyingOther && !isPlayer && noPerms(sender, "strings.channels.modifyplayers")) {
-                messenger.sendMessage(Message.NO_PERMS, sender);
+            if(modifyingOther && !isPlayer && forbids(sender, "strings.channels.modifyplayers")) {
+                messenger.sendMessage(NO_PERMS, sender);
                 return new BaseData(null,null, null, true);
             }
 
             if(channelName.equalsIgnoreCase("helpop")) {
-                messenger.sendMessage(Message.HELPOP_NOT_CHANNEL, sender);
+                messenger.sendMessage(HELPOP_NOT_CHANNEL, sender);
                 return new BaseData(null,null, null, true);
             }
 
@@ -290,25 +293,25 @@ public class ChannelCommand extends CommandBase {
             if(channel == null) {
                 HashMap<String, String> placeholders = new HashMap<>();
                 placeholders.put("{channel}", channelName);
-                messenger.sendMessage(Message.CHANNEL_DOES_NOT_EXIST, placeholders,  sender);
+                messenger.sendMessage(CHANNEL_DOES_NOT_EXIST, placeholders,  sender);
                 return new BaseData(null,null, null, true);
             }
 
             if(channelLoader.getProtectedChannels().contains(channel)) {
-                messenger.sendMessage(Message.PROTECTED_CHANNEL, sender);
+                messenger.sendMessage(PROTECTED_CHANNEL, sender);
                 return new BaseData(null,null, null, true);
             }
 
             if(type == Type.JOIN || type == Type.BASE){
 
                 if (
-                        noPerms(sender, "strings.channels." + channel.getName()) &&
-                        noPerms(sender, "strings.channels.*") &&
-                        noPerms(sender, "strings.*")
+                        forbids(sender, "strings.channels." + channel.getName()) &&
+                        forbids(sender, "strings.channels.*") &&
+                        forbids(sender, "strings.*")
                 ) {
                     HashMap<String, String> map = new HashMap<>();
                     map.put("{channel}", channelName);
-                    messenger.sendMessage(Message.NO_PERMS_CHANNEL, map, sender);
+                    messenger.sendMessage(NO_PERMS_CHANNEL, map, sender);
                     return new BaseData(null, null, null, true);
                 }
 
@@ -327,7 +330,7 @@ public class ChannelCommand extends CommandBase {
             BASE
         }
 
-        protected boolean noPerms(CommandSender sender, String perm) {
+        protected boolean forbids(CommandSender sender, String perm) {
             return !sender.hasPermission(perm);
         }
 

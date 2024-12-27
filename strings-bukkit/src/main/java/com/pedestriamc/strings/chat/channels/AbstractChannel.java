@@ -52,11 +52,22 @@ public abstract class AbstractChannel implements Channel {
     /**
      * Determines which players messages should be sent to.
      * Must be implemented by extending classes.
-     *
      * @param sender The sender of the message.
      * @return A Set<Player> of all players who will see the message.
      */
     public abstract Set<Player> getRecipients(Player sender);
+
+    @Override
+    public abstract Set<Player> getMembers();
+
+    @Override
+    public abstract void addPlayer(Player player);
+
+    @Override
+    public abstract void removePlayer(Player player);
+
+    @Override
+    public abstract Type getType();
 
     @Override
     public void sendMessage(Player player, String message) {
@@ -127,9 +138,9 @@ public abstract class AbstractChannel implements Channel {
         }
         return (
                 player.hasPermission("strings.channels." + getName()) ||
-                        player.hasPermission("strings.channels.*") ||
-                        player.hasPermission("strings.*") ||
-                        player.hasPermission("*")
+                player.hasPermission("strings.channels.*") ||
+                player.hasPermission("strings.*") ||
+                player.hasPermission("*")
         );
     }
 
@@ -175,23 +186,14 @@ public abstract class AbstractChannel implements Channel {
     }
 
     @Override
-    public abstract void addPlayer(Player player);
-
-    @Override
     public void addPlayer(StringsUser user) {
         addPlayer(user.getPlayer());
     }
 
     @Override
-    public abstract void removePlayer(Player player);
-
-    @Override
     public void removePlayer(StringsUser user) {
         removePlayer(user.getPlayer());
     }
-
-    @Override
-    public abstract Set<Player> getMembers();
 
     @Override
     public boolean doUrlFilter() {
@@ -222,9 +224,6 @@ public abstract class AbstractChannel implements Channel {
     public void setDoCooldown(boolean doCooldown) {
         this.doCooldown = doCooldown;
     }
-
-    @Override
-    public abstract Type getType();
 
     @Override
     public Membership getMembership() {

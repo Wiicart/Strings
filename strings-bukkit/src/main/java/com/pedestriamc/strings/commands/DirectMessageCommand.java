@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
-import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.Strings;
 import org.bukkit.Bukkit;
@@ -10,6 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import static com.pedestriamc.strings.message.Message.*;
 
 public class DirectMessageCommand implements CommandExecutor {
 
@@ -28,20 +29,20 @@ public class DirectMessageCommand implements CommandExecutor {
             return true;
         }
         if(!(sender.hasPermission("strings.chat.msg") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.*"))){
-            messenger.sendMessage(Message.NO_PERMS, sender);
+            messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
         if(args.length < 2){
-            messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+            messenger.sendMessage(INSUFFICIENT_ARGS, sender);
             return true;
         }
         Player recipient = Bukkit.getPlayer(args[0]);
         if(recipient == null){
-            messenger.sendMessage(Message.UNKNOWN_PLAYER, sender);
+            messenger.sendMessage(UNKNOWN_PLAYER, sender);
             return true;
         }
         if(recipient.equals(sender)){
-            messenger.sendMessage(Message.SELF_MESSAGE, sender);
+            messenger.sendMessage(SELF_MESSAGE, sender);
             return true;
         }
         StringBuilder stringBuilder = new StringBuilder();

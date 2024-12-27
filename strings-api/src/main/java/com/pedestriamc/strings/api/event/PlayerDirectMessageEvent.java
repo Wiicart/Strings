@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * An Event that is triggered when someone sends a direct message to a player with the plugin Strings.
  */
-public class PlayerDirectMessageEvent extends Event implements Cancellable {
+public final class PlayerDirectMessageEvent extends Event implements Cancellable {
 
     public static final HandlerList HANDLER_LIST = new HandlerList();
     private String message;

@@ -2,7 +2,6 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -16,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.Color;
 import java.util.AbstractMap;
 import java.util.Map;
+
+import static com.pedestriamc.strings.message.Message.*;
 
 public class ChatColorCommand implements CommandExecutor {
 
@@ -60,30 +61,30 @@ public class ChatColorCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(!(sender.hasPermission("strings.chat.chatcolor") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.*"))) {
-            messenger.sendMessage(Message.NO_PERMS, sender);
+            messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
 
         if(args.length == 0) {
-            messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+            messenger.sendMessage(INSUFFICIENT_ARGS, sender);
             return true;
         }
 
         if(args.length > 7) {
-            messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
+            messenger.sendMessage(TOO_MANY_ARGS, sender);
             return true;
         }
 
         Player player = Bukkit.getPlayer(args[args.length - 1]);
 
         if(sender instanceof ConsoleCommandSender && player == null) {
-            messenger.sendMessage(Message.SERVER_MUST_SPECIFY_PLAYER, sender);
+            messenger.sendMessage(SERVER_MUST_SPECIFY_PLAYER, sender);
             return true;
         }
 
         if(player != null) {
             if (!sender.hasPermission("strings.chat.chatcolor.other")) {
-                messenger.sendMessage(Message.NO_PERMS, sender);
+                messenger.sendMessage(NO_PERMS, sender);
                 return true;
             }
         } else {
@@ -94,7 +95,7 @@ public class ChatColorCommand implements CommandExecutor {
 
         if(args.length == 1 && args[0].equalsIgnoreCase("reset")){
             user.setChatColor(null);
-            messenger.sendMessage(Message.CHATCOLOR_SET, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), player);
+            messenger.sendMessage(CHATCOLOR_SET, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), player);
             return true;
         }
 
@@ -104,7 +105,7 @@ public class ChatColorCommand implements CommandExecutor {
             String pattern = "#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})";
             if(colorMap.containsKey(arg.toUpperCase())) {
                 if (hasColor) {
-                    messenger.sendMessage(Message.ONE_COLOR, sender);
+                    messenger.sendMessage(ONE_COLOR, sender);
                     return true;
                 }
                 chatColor.append(colorMap.get(arg.toUpperCase()));
@@ -117,16 +118,16 @@ public class ChatColorCommand implements CommandExecutor {
             }
 
             if(!hasColor) {
-                messenger.sendMessage(Message.UNKNOWN_COLOR, sender);
+                messenger.sendMessage(UNKNOWN_COLOR, sender);
                 return true;
             }
 
         }
         user.setChatColor(chatColor.toString());
         if(!player.equals(sender)) {
-            messenger.sendMessage(Message.CHATCOLOR_SET_OTHER, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), sender);
+            messenger.sendMessage(CHATCOLOR_SET_OTHER, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), sender);
         }
-        messenger.sendMessage(Message.CHATCOLOR_SET, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), player);
+        messenger.sendMessage(CHATCOLOR_SET, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), player);
         return true;
     }
 }

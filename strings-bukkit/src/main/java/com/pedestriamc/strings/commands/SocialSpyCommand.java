@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.api.channels.Channel;
-import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.Strings;
 import org.bukkit.command.Command;
@@ -9,6 +8,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import static com.pedestriamc.strings.message.Message.*;
 
 public class SocialSpyCommand implements CommandExecutor {
 
@@ -24,7 +25,7 @@ public class SocialSpyCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args){
         Channel socialSpy = strings.getChannel("socialspy");
         if(!(sender.hasPermission("strings.*") || sender.hasPermission("strings.socialspy"))){
-            messenger.sendMessage(Message.NO_PERMS, sender);
+            messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
         if(args.length == 0){
@@ -36,7 +37,7 @@ public class SocialSpyCommand implements CommandExecutor {
             return true;
         }
         if(args.length > 1){
-            messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
+            messenger.sendMessage(TOO_MANY_ARGS, sender);
             return true;
         }
         switch(args[0]){
@@ -57,12 +58,12 @@ public class SocialSpyCommand implements CommandExecutor {
 
     public void enableSocialSpy(CommandSender sender, Channel channel){
         strings.getUser((Player) sender).joinChannel(channel);
-        messenger.sendMessage(Message.SOCIAL_SPY_ON, sender);
+        messenger.sendMessage(SOCIAL_SPY_ON, sender);
     }
 
     public void disableSocialSpy(CommandSender sender, Channel channel){
         strings.getUser((Player) sender).leaveChannel(channel);
-        messenger.sendMessage(Message.SOCIAL_SPY_OFF, sender);
+        messenger.sendMessage(SOCIAL_SPY_OFF, sender);
     }
 
     public void noArgs(CommandSender sender, Channel channel){

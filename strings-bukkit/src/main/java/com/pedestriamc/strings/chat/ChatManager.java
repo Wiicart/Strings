@@ -41,7 +41,7 @@ public final class ChatManager {
         this.mentionsEnabled = strings.getConfig().getBoolean("enable-mentions", true);
     }
 
-    public @NotNull String formatMessage(Player sender, Channel channel){
+    public @NotNull String formatMessage(Player sender, Channel channel) {
         String newMessageFormat = channel.getFormat();
         User user = strings.getUser(sender);
 
@@ -50,7 +50,7 @@ public final class ChatManager {
         newMessageFormat = newMessageFormat.replace("{displayname}", user.getDisplayName());
         newMessageFormat = newMessageFormat.replace("{message}", user.getChatColor(channel) + "{message}");
 
-        if(usePAPI){
+        if(usePAPI) {
             newMessageFormat = PlaceholderAPI.setPlaceholders(sender, newMessageFormat);
         }
         newMessageFormat = ChatColor.translateAlternateColorCodes('&', newMessageFormat);
@@ -58,21 +58,21 @@ public final class ChatManager {
         return newMessageFormat;
     }
 
-    public String processMessage(Player sender, String message){
+    public String processMessage(Player sender, String message) {
         User user = strings.getUser(sender);
         Channel channel = user.getActiveChannel();
-        if(!(sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("*") || sender.hasPermission("strings.chat.filterbypass"))){
-            if(channel.doUrlFilter()){
+        if(!(sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("*") || sender.hasPermission("strings.chat.filterbypass"))) {
+            if(channel.doUrlFilter()) {
                 message = chatFilter.urlFilter(message, sender);
             }
-            if(channel.doProfanityFilter()){
+            if(channel.doProfanityFilter()) {
                 message = chatFilter.profanityFilter(message, sender);
             }
         }
-        if(usePAPI && messagePlaceholders && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.placeholdermsg"))){
+        if(usePAPI && messagePlaceholders && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.placeholdermsg"))) {
             message = PlaceholderAPI.setPlaceholders(sender, message);
         }
-        if(parseChatColors && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.colormsg"))){
+        if(parseChatColors && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.colormsg"))) {
             message = ChatColor.translateAlternateColorCodes('&', message);
         }
 
@@ -80,25 +80,25 @@ public final class ChatManager {
 
     }
 
-    public boolean isOnCoolDown(Player player){
+    public boolean isOnCoolDown(Player player) {
         return coolDownList.contains(player) && !(player.hasPermission("strings.*") || player.hasPermission("strings.chat.*") || player.hasPermission("strings.chat.bypasscooldown") || player.hasPermission("*"));
     }
 
-    public void startCoolDown(Player player){
+    public void startCoolDown(Player player) {
         coolDownList.add(player);
         scheduler.runTaskLater(strings,() -> coolDownList.remove(player), coolDownLength);
     }
 
-    public long calcTicks(String string){
+    public long calcTicks(String string) {
         String regex = "^[0-9]+[sm]$";
-        if(string == null || !string.matches(regex)){
+        if(string == null || !string.matches(regex)) {
             Bukkit.getLogger().info("[Strings] Invalid chat cool down in config.  Defaulting to 30s.");
             return 600L;
         }
         char units = string.charAt(string.length() - 1);
         string = string.substring(0, string.length() - 1);
         int delayNum = Integer.parseInt(string);
-        if(units == 'm'){
+        if(units == 'm') {
             delayNum *= 60;
         }
         return delayNum * 20L;
@@ -120,13 +120,13 @@ public final class ChatManager {
                 sb.append(segment);
                 continue;
             }
-            for(Player p : Bukkit.getOnlinePlayers()){
-                if(!strings.getUser(p).isMentionsEnabled() || !segment.contains(p.getName())){
+            for(Player p : Bukkit.getOnlinePlayers()) {
+                if(!strings.getUser(p).isMentionsEnabled() || !segment.contains(p.getName())) {
                     continue;
                 }
                 segment = segment.replace("@" + p.getName(), mentionColor + "@" + p.getName() + ChatColor.RESET + color);
             }
-            if(sender.hasPermission("strings.mention.all") && segment.contains("@everyone")){
+            if(sender.hasPermission("strings.mention.all") && segment.contains("@everyone")) {
                 segment = segment.replace("@everyone", mentionColor + "@everyone" + ChatColor.RESET + color);
             }
             sb.append(segment);

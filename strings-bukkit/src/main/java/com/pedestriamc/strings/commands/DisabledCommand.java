@@ -8,17 +8,20 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-public class HelpOPDisabledCommand implements CommandExecutor {
+
+public class DisabledCommand implements CommandExecutor {
 
     private final Messenger messenger;
+    private final Message message;
 
-    public HelpOPDisabledCommand(Strings strings) {
+    public DisabledCommand(Strings strings, Message message) {
         this.messenger = strings.getMessenger();
+        this.message = message;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        messenger.sendMessage(Message.HELPOP_DISABLED, sender);
+        messenger.sendMessage(message, sender);
         return true;
     }
 }

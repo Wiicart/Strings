@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.api.channels.Channel;
-import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.message.Messenger;
 import org.bukkit.command.Command;
@@ -9,6 +8,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import static com.pedestriamc.strings.message.Message.*;
 
 public class HelpOPCommand implements CommandExecutor {
 
@@ -26,12 +27,12 @@ public class HelpOPCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(!sender.hasPermission("strings.helpop.use")){
-            messenger.sendMessage(Message.NO_PERMS, sender);
+            messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
 
         if(strings.getChannel("helpop") == null){
-            messenger.sendMessage(Message.HELPOP_DISABLED, sender);
+            messenger.sendMessage(HELPOP_DISABLED, sender);
             return true;
         }
         if(!(sender instanceof Player)){
@@ -40,7 +41,7 @@ public class HelpOPCommand implements CommandExecutor {
         }
 
         if(args.length == 0){
-            messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+            messenger.sendMessage(INSUFFICIENT_ARGS, sender);
             return true;
         }
         StringBuilder builder = new StringBuilder();

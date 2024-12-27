@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * An AsyncPlayerChatEvent with the additional field of a Channel.
  */
-public class ChannelChatEvent extends AsyncPlayerChatEvent {
+public final class ChannelChatEvent extends AsyncPlayerChatEvent {
 
     private final Channel channel;
 

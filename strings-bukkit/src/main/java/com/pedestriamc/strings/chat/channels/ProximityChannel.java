@@ -4,6 +4,7 @@ import com.pedestriamc.strings.api.channels.Buildable;
 import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.Membership;
+import com.pedestriamc.strings.api.channels.LocalChannel;
 import com.pedestriamc.strings.api.channels.data.ChannelData;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -18,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ProximityChannel extends AbstractChannel implements Buildable {
+public class ProximityChannel extends AbstractChannel implements Buildable, LocalChannel {
 
     private final Set<Player> members;
     private double distance;
@@ -119,20 +120,22 @@ public class ProximityChannel extends AbstractChannel implements Buildable {
         return map;
     }
 
-    @SuppressWarnings("unused")
+    @Override
     public double getProximity() {
         return distance;
     }
 
-    @SuppressWarnings("unused")
+    @Override
     public void setProximity(double proximity) {
         this.distance = proximity;
     }
 
+    @Override
     public Set<World> getWorlds() {
         return new HashSet<>(worlds);
     }
 
+    @Override
     public List<String> getWorldNames() {
         ArrayList<String> worlds = new ArrayList<>();
         for (World w : getWorlds() ){

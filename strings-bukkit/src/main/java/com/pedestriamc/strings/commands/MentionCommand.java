@@ -2,13 +2,14 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import static com.pedestriamc.strings.message.Message.*;
 
 public class MentionCommand implements CommandExecutor {
 
@@ -29,7 +30,7 @@ public class MentionCommand implements CommandExecutor {
         }
 
         if(!(player.hasPermission("strings.mention.toggle") || player.hasPermission("strings.mention.*") || player.hasPermission("strings.*"))){
-            messenger.sendMessage(Message.NO_PERMS, sender);
+            messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
 
@@ -54,23 +55,23 @@ public class MentionCommand implements CommandExecutor {
                 disable(player, user);
                 return true;
             }
-            messenger.sendMessage(Message.INVALID_ARGS, sender);
+            messenger.sendMessage(INVALID_ARGS, sender);
             return true;
         }
 
-        messenger.sendMessage(Message.TOO_MANY_ARGS, sender);
+        messenger.sendMessage(TOO_MANY_ARGS, sender);
         return true;
     }
 
     private void enable(CommandSender sender, @NotNull User user){
         user.setMentionsEnabled(true);
-        messenger.sendMessage(Message.MENTIONS_ENABLED, sender);
+        messenger.sendMessage(MENTIONS_ENABLED, sender);
 
     }
 
     private void disable(CommandSender sender, @NotNull User user){
         user.setMentionsEnabled(false);
-        messenger.sendMessage(Message.MENTIONS_DISABLED, sender);
+        messenger.sendMessage(MENTIONS_DISABLED, sender);
     }
 
 }

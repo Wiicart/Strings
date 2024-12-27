@@ -4,15 +4,10 @@ import com.pedestriamc.strings.api.Membership;
 import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.api.channels.Type;
-import com.sun.source.tree.Tree;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 public abstract class ProtectedChannel implements Channel {
 

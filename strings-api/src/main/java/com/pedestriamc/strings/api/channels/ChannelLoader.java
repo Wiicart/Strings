@@ -41,4 +41,14 @@ public interface ChannelLoader {
      */
     @Nullable
     Channel getChannel(String name);
+
+    /**
+     * Provides the Channel, represented as a LocalChannel.
+     * LocalChannels contain additional methods for Worlds.
+     * Will return null if unsupported.
+     * @param channel The Channel to convert
+     * @return A Channel or null if the internal Channel type does not implement LocalChannel
+     */
+    @Nullable
+    LocalChannel asLocalChannel(Channel channel);
 }

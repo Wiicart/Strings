@@ -41,7 +41,7 @@ public class PlayerDirectMessenger {
             messenger.sendMessage(Message.PLAYER_OFFLINE, sender);
             return;
         }
-        sendMessage(sender,replyList.get(sender), message);
+        sendMessage(sender, replyList.get(sender), message);
     }
 
     public void sendMessage(@NotNull Player sender, @NotNull Player recipient, @NotNull String message) {

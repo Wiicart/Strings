@@ -1,6 +1,5 @@
 package com.pedestriamc.strings.commands;
 
-import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.Strings;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -11,6 +10,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import static com.pedestriamc.strings.message.Message.*;
 
 public class BroadcastCommand implements CommandExecutor {
 
@@ -28,7 +29,7 @@ public class BroadcastCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args){
         if(!sender.hasPermission("strings.chat.broadcast") && !sender.hasPermission("strings.chat.*") && !sender.hasPermission("strings.*")){
-            messenger.sendMessage(Message.NO_PERMS, sender);
+            messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
         StringBuilder broadcast = new StringBuilder(broadcastFormat);

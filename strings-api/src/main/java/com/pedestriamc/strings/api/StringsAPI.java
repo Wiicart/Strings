@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.api;
 
 import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channels.ChannelLoader;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -14,6 +15,12 @@ import java.util.UUID;
  */
 @SuppressWarnings("unused")
 public interface StringsAPI {
+
+    /**
+     * Provides the ChannelLoader instance.
+     * @return The ChannelLoader.
+     */
+    ChannelLoader getChannelLoader();
 
     /**
      * Provides a short with the plugin's version number.

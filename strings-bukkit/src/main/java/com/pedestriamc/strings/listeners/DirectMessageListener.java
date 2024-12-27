@@ -10,16 +10,16 @@ public class DirectMessageListener implements Listener {
 
     private final SocialSpyChannel socialSpy;
 
-    public DirectMessageListener(Strings strings){
+    public DirectMessageListener(Strings strings) {
         socialSpy = (SocialSpyChannel) strings.getChannel("socialspy");
     }
 
     @EventHandler
     public void onEvent(PlayerDirectMessageEvent event) {
-        socialSpy
-                .sendOutMessage(
+        socialSpy.sendOutMessage(
                 event.getSender(),
                 event.getRecipient(),
-                event.getMessage());
+                event.getMessage()
+        );
     }
 }

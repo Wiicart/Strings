@@ -1,6 +1,5 @@
 package com.pedestriamc.strings.commands;
 
-import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.Strings;
 import org.bukkit.ChatColor;
@@ -9,6 +8,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
+
+import static com.pedestriamc.strings.message.Message.*;
 
 public class StringsCommand implements CommandExecutor {
 
@@ -37,14 +38,14 @@ public class StringsCommand implements CommandExecutor {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[&3Strings&8] &fStrings version &a" + strings.getVersion() + "&f reloaded."));
                 return true;
             }
-            messenger.sendMessage(Message.NO_PERMS, sender);
+            messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
         if(args.length == 1 && args[0].equalsIgnoreCase("help") && sender.hasPermission("strings.help")){
-            messenger.sendMessage(Message.STRINGS_HELP, sender);
+            messenger.sendMessage(STRINGS_HELP, sender);
             return true;
         }
-        messenger.sendMessage(Message.INVALID_ARGS, sender);
+        messenger.sendMessage(INVALID_ARGS, sender);
         return true;
     }
 }
