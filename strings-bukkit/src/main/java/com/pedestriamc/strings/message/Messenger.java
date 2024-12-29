@@ -14,9 +14,9 @@ public class Messenger {
     private static final EnumMap<Message, Object> enumMap = new EnumMap<>(Message.class);
     private static String prefix;
 
-    public Messenger(Strings strings){
+    public Messenger(Strings strings) {
         FileConfiguration config = strings.getMessagesFileConfig();
-        for(Message msg : Message.values()){
+        for(Message msg : Message.values()) {
             String configValue = msg.toString().replace("_", "-").toLowerCase();
             try {
                 if(config.isList(configValue)) {
@@ -31,7 +31,7 @@ public class Messenger {
         prefix = config.getString("prefix", "&8[&3Strings&8] &f");
     }
 
-    public void sendMessage(Message message, CommandSender sender){
+    public void sendMessage(Message message, CommandSender sender) {
         Object msgObject = enumMap.get(message);
         if(msgObject instanceof String[] msg) {
             for(String str : msg){
@@ -44,7 +44,7 @@ public class Messenger {
         }
     }
 
-    public void sendMessage(Message message, Map<String, String> placeholders, CommandSender sender){
+    public void sendMessage(Message message, Map<String, String> placeholders, CommandSender sender) {
         Object msg = enumMap.get(message);
         if(msg instanceof String[]) {
             for(String str : (String[]) msg) {

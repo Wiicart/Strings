@@ -11,9 +11,9 @@ import java.util.Set;
 
 public abstract class ProtectedChannel implements Channel {
 
-    private final String name;
+    private String name;
 
-    public ProtectedChannel(String name) {
+    protected ProtectedChannel(String name) {
         this.name = name;
     }
 
@@ -45,7 +45,7 @@ public abstract class ProtectedChannel implements Channel {
 
     @Override
     public void setName(String name) {
-
+        this.name = name;
     }
 
     @Override
@@ -95,7 +95,7 @@ public abstract class ProtectedChannel implements Channel {
 
     @Override
     public void addPlayer(StringsUser user) {
-
+        addPlayer(user.getPlayer());
     }
 
     @Override
@@ -105,7 +105,7 @@ public abstract class ProtectedChannel implements Channel {
 
     @Override
     public void removePlayer(StringsUser user) {
-
+        removePlayer(user.getPlayer());
     }
 
     @Override

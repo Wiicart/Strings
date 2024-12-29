@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.impl;
 
+import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.api.*;
 import com.pedestriamc.strings.chat.Mentioner;
@@ -90,6 +91,11 @@ public final class StringsImpl implements StringsAPI {
     @Override
     public void mention(StringsUser subject, StringsUser sender) {
         mentioner.mention(subject.getPlayer(), sender.getPlayer());
+    }
+
+    @Override
+    public ChannelLoader getChannelLoader() {
+        return strings.getChannelLoader();
     }
 
     public short getVersion(){
