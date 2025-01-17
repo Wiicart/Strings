@@ -45,7 +45,7 @@ public final class Strings extends JavaPlugin {
     @SuppressWarnings("FieldCanBeLocal")
     private final String version = "1.4";
     @SuppressWarnings("FieldCanBeLocal")
-    private final String distributor = "github";
+    private final String distributor = "hangar";
     @SuppressWarnings("FieldCanBeLocal")
     private final short pluginNum = 4;
 
@@ -194,7 +194,7 @@ public final class Strings extends JavaPlugin {
         try{
             Class.forName("com.destroystokyo.paper.util.VersionFetcher");
             isPaper = true;
-        }catch(ClassNotFoundException ignored){
+        } catch(ClassNotFoundException ignored) {
         }
     }
     //Update yml files
@@ -202,7 +202,6 @@ public final class Strings extends JavaPlugin {
         //Config updater using https://github.com/tchristofferson/Config-Updater
         File configFile = new File(this.getDataFolder(), "config.yml");
         File messageFile = new File(this.getDataFolder(), "messages.yml");
-        File broadcastFile = new File(this.getDataFolder(), "broadcasts.yml");
         if(configFile.exists()){
             try{
                 ConfigUpdater.update(this,"config.yml", configFile);
@@ -216,14 +215,6 @@ public final class Strings extends JavaPlugin {
                 ConfigUpdater.update(this,"messages.yml", messageFile);
             }catch(IOException e){
                 Bukkit.getLogger().info("[Strings] Updating messages file failed.");
-                e.printStackTrace();
-            }
-        }
-        if(broadcastFile.exists()){
-            try{
-                ConfigUpdater.update(this,"broadcasts.yml", broadcastFile);
-            }catch(IOException e){
-                Bukkit.getLogger().info("[Strings] Updating broadcasts file failed.");
                 e.printStackTrace();
             }
         }

@@ -15,6 +15,7 @@ public class ServerMessages {
     private final Strings strings;
     private final String joinMessageTemplate;
     private final String leaveMessageTemplate;
+    private final boolean enableJoinLeaveMessage;
     private final ArrayList<String> motd;
     private final boolean usePAPI;
 
@@ -22,6 +23,7 @@ public class ServerMessages {
         this.strings = strings;
         this.joinMessageTemplate = strings.getConfig().getString("join-message");
         this.leaveMessageTemplate = strings.getConfig().getString("leave-message");
+        this.enableJoinLeaveMessage = strings.getConfig().getBoolean("enable-join-leave-messages");
         this.usePAPI = strings.usePlaceholderAPI();
         this.motd = new ArrayList<>();
         List<?> list = strings.getConfig().getList("motd");
@@ -34,10 +36,10 @@ public class ServerMessages {
         }
     }
 
-    public String joinMessage(Player player){
+    public String joinMessage(Player player) {
         String message = joinMessageTemplate;
         User user = strings.getUser(player);
-        if(usePAPI){
+        if(usePAPI) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
         message = message.replace("{displayname}", player.getName());
@@ -47,10 +49,10 @@ public class ServerMessages {
         return ChatColor.translateAlternateColorCodes('&',message);
     }
 
-    public String leaveMessage(Player player){
+    public String leaveMessage(Player player) {
         String message = leaveMessageTemplate;
         User user = strings.getUser(player);
-        if(usePAPI){
+        if(usePAPI) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
         message = message.replace("{displayname}", player.getName());
@@ -60,15 +62,15 @@ public class ServerMessages {
         return ChatColor.translateAlternateColorCodes('&',message);
     }
 
-    public void sendMOTD(Player player){
+    public void sendMOTD(Player player) {
         ArrayList<String> playerMOTD = new ArrayList<>(motd);
         User user = strings.getUser(player);
-        for(String message: playerMOTD){
+        for(String message: playerMOTD) {
             message = message.replace("{displayname}", player.getName());
             message = message.replace("{username}", player.getName());
             message = message.replace("{prefix}", user.getPrefix());
             message = message.replace("{suffix}", user.getSuffix());
-            if(usePAPI){
+            if(usePAPI) {
                 message = PlaceholderAPI.setPlaceholders(player, message);
             }
             message = ChatColor.translateAlternateColorCodes('&', message);

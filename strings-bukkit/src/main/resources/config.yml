@@ -86,6 +86,11 @@ msg-format-receiving: "&8(&7{sender_username} &8» &7me&8) &e{message}"
 # Due to social spy having data of two players, PlaceholderAPI is not supported
 social-spy-format: "&8[&cSocialSpy&8] &8(&7{sender_username} &8» &7{recipient_username}&8) &7{message}"
 
+# Should join/leave messages be sent?
+# This MUST be true to use custom join leave messages.
+enable-join-leave-messages: true
+
+
 # Use custom join and leave message?
 # If enabled, default join and leave messages will be replaced with
 # your input in the following two config options.
@@ -203,6 +208,10 @@ enable-helpop: true
 # Are disabling HelpOP because you're using another HelpOP plugin?
 # Set this to true if so.
 other-helpop: false
+
+
+# +----- Logging -----+
+
 
 
 
