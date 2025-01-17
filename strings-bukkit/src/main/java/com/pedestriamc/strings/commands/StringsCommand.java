@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.pedestriamc.strings.message.Message.*;
 
-public class StringsCommand implements CommandExecutor {
+public final class StringsCommand implements CommandExecutor {
 
     private final Strings strings;
     private final Messenger messenger;

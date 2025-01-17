@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.pedestriamc.strings.message.Message.*;
 
-public class ReplyCommand implements CommandExecutor {
+public final class ReplyCommand implements CommandExecutor {
 
     private final PlayerDirectMessenger playerDirectMessenger;
     private final Messenger messenger;

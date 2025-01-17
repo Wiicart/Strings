@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.pedestriamc.strings.message.Message.*;
 
-public class HelpOPCommand implements CommandExecutor {
+public final class HelpOPCommand implements CommandExecutor {
 
     private final Strings strings;
     private final Channel helpOPChannel;

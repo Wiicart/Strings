@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 
-public class DisabledCommand implements CommandExecutor {
+public final class DisabledCommand implements CommandExecutor {
 
     private final Messenger messenger;
     private final Message message;

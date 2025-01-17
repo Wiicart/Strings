@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.pedestriamc.strings.message.Message.*;
 
-public class ClearChatCommand implements CommandExecutor
+public final class ClearChatCommand implements CommandExecutor
 {
 
     private final Messenger messenger;

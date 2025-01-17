@@ -18,7 +18,7 @@ import static com.pedestriamc.strings.message.Message.*;
 
 
 
-public class ChannelCommand extends CommandBase {
+public final class ChannelCommand extends CommandBase {
 
 
     public ChannelCommand(Strings strings){
@@ -232,7 +232,7 @@ public class ChannelCommand extends CommandBase {
     /**
      * Class to handle shared sub command processes
      */
-    protected static abstract class ChannelProcessor implements CommandComponent {
+    private static abstract class ChannelProcessor implements CommandComponent {
 
         private final StringsChannelLoader channelLoader;
         private final Messenger messenger;
@@ -307,7 +307,8 @@ public class ChannelCommand extends CommandBase {
                 if (
                         forbids(sender, "strings.channels." + channel.getName()) &&
                         forbids(sender, "strings.channels.*") &&
-                        forbids(sender, "strings.*")
+                        forbids(sender, "strings.*") &&
+                        !channel.getMembers().contains(target)
                 ) {
                     HashMap<String, String> map = new HashMap<>();
                     map.put("{channel}", channelName);

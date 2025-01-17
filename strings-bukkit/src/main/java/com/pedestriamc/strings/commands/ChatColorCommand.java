@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static com.pedestriamc.strings.message.Message.*;
 
-public class ChatColorCommand implements CommandExecutor {
+public final class ChatColorCommand implements CommandExecutor {
 
     private final Map<String, ChatColor> colorMap = Map.ofEntries(
             new AbstractMap.SimpleEntry<>("BLACK", ChatColor.BLACK),

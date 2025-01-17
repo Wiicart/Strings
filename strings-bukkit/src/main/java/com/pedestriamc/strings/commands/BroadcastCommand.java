@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.pedestriamc.strings.message.Message.*;
 
-public class BroadcastCommand implements CommandExecutor {
+public final class BroadcastCommand implements CommandExecutor {
 
     private final String broadcastFormat;
     private final boolean usePAPI;

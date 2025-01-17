@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.pedestriamc.strings.message.Message.*;
 
-public class DirectMessageCommand implements CommandExecutor {
+public final class DirectMessageCommand implements CommandExecutor {
 
     private final PlayerDirectMessenger playerDirectMessenger;
     private final Messenger messenger;

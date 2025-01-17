@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * The interface for all Channels.
  */
-public interface Channel{
+public interface Channel {
 
     /**
      * Sends a message from a player to the channel.
