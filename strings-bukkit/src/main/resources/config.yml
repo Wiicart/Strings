@@ -10,10 +10,11 @@
 #|                       pedestriamc.com                      |
 #+------------------------------------------------------------+
 
-# NOTE: more configuration options are available in:
+# NOTE: More configuration options are available in:
 #   - broadcasts.yml
 #   - messages.yml
 #   - channels.yml
+#   - logs.yml
 # Main Configuration Options:
 
 # (!) PREFIX HAS BEEN MOVED TO "messages.yml" (!)
@@ -148,14 +149,6 @@ url-whitelist:
   - "apple.com"
   - "wiicart.net"
 
-# Logger Config
-
-
-# Should the logger be enabled?
-enable-logger: false
-
-
-
 # Mentioning Options
 
 # Enable mentioning?
@@ -209,8 +202,6 @@ enable-helpop: true
 # Set this to true if so.
 other-helpop: false
 
-
-# +----- Logging -----+
 
 
 

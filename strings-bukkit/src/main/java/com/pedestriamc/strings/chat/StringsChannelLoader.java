@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.Membership;
+import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.channels.LocalChannel;
 import com.pedestriamc.strings.api.channels.data.ChannelData;
 import com.pedestriamc.strings.api.channels.ChannelLoader;
@@ -203,17 +203,6 @@ public class StringsChannelLoader implements ChannelLoader {
                     return false;
                 })
                 .collect(Collectors.toSet());
-    }
-
-    @Override
-    public @Nullable LocalChannel asLocalChannel(Channel channel) {
-
-        if(channel instanceof LocalChannel) {
-            return (LocalChannel) channel;
-        }
-
-        return null;
-
     }
 
 }

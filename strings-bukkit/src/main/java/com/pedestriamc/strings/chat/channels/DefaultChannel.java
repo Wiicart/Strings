@@ -6,7 +6,7 @@ import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.chat.StringsChannelLoader;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.api.Membership;
+import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.channels.Type;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

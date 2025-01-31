@@ -8,6 +8,7 @@ import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.impl.StringsImpl;
 import com.pedestriamc.strings.listeners.*;
+import com.pedestriamc.strings.log.LogManager;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.misc.AutoBroadcasts;
@@ -43,11 +44,11 @@ import java.util.logging.Logger;
 public final class Strings extends JavaPlugin {
 
     @SuppressWarnings("FieldCanBeLocal")
-    private final String version = "1.4";
+    private final String version = "1.5";
     @SuppressWarnings("FieldCanBeLocal")
-    private final String distributor = "hangar";
+    private final String distributor = "github";
     @SuppressWarnings("FieldCanBeLocal")
-    private final short pluginNum = 4;
+    private final short pluginNum = 5;
 
     @SuppressWarnings("unused")
     private AutoBroadcasts autoBroadcasts;
@@ -63,6 +64,8 @@ public final class Strings extends JavaPlugin {
     private File messagesFile;
     private File usersFile;
     private File channelsFile;
+    private File logsFile;
+    private FileConfiguration logsFileConfig;
     private FileConfiguration broadcastsFileConfig;
     private FileConfiguration messagesFileConfig;
     private FileConfiguration usersFileConfig;
@@ -79,6 +82,7 @@ public final class Strings extends JavaPlugin {
     private UUID apiUUID;
     private Messenger messenger;
     private ChannelLoader channelLoader;
+    private LogManager logManager;
 
     @Override
     public void onEnable() {
@@ -114,6 +118,7 @@ public final class Strings extends JavaPlugin {
         this.chatFilter = null;
         this.autoBroadcasts = null;
         this.mentioner = null;
+        this.logManager = null;
         HandlerList.unregisterAll(this);
         this.getServer().getScheduler().cancelTasks(this);
         this.getServer().getServicesManager().unregister(StringsAPI.class, stringsImpl);
@@ -228,6 +233,7 @@ public final class Strings extends JavaPlugin {
         autoBroadcasts = new AutoBroadcasts(this);
         serverMessages = new ServerMessages(this);
         mentioner = new Mentioner(this);
+        logManager = new LogManager(this);
 
     }
 
@@ -254,26 +260,39 @@ public final class Strings extends JavaPlugin {
         messagesFile = new File(getDataFolder(), "messages.yml");
         usersFile = new File(getDataFolder(), "users.yml");
         channelsFile = new File(getDataFolder(), "channels.yml");
-        if(!broadcastsFile.exists()){
+        logsFile = new File(getDataFolder(), "logs.yml");
+
+        if(!broadcastsFile.exists()) {
             broadcastsFile.getParentFile().mkdirs();
             saveResource("broadcasts.yml", false);
         }
-        if(!messagesFile.exists()){
+
+        if(!messagesFile.exists()) {
             messagesFile.getParentFile().mkdirs();
             saveResource("messages.yml", false);
         }
-        if(!usersFile.exists()){
+
+        if(!usersFile.exists()) {
             usersFile.getParentFile().mkdirs();
             saveResource("users.yml", false);
         }
-        if(!channelsFile.exists()){
+
+        if(!channelsFile.exists()) {
             channelsFile.getParentFile().mkdirs();
             saveResource("channels.yml", false);
         }
+
+        if(!logsFile.exists()) {
+            logsFile.getParentFile().mkdirs();
+            saveResource("logs.yml", false);
+        }
+
+
         broadcastsFileConfig = YamlConfiguration.loadConfiguration(broadcastsFile);
         messagesFileConfig = YamlConfiguration.loadConfiguration(messagesFile);
         usersFileConfig = YamlConfiguration.loadConfiguration(usersFile);
         channelsFileConfig = YamlConfiguration.loadConfiguration(channelsFile);
+        logsFileConfig = YamlConfiguration.loadConfiguration(logsFile);
     }
 
     private void checkIfReload(){
@@ -287,29 +306,29 @@ public final class Strings extends JavaPlugin {
     }
 
     private void checkUpdate(){
-        try{
+        try {
             HttpsURLConnection connection = (HttpsURLConnection) new URL("https://www.wiicart.net/strings/version.txt").openConnection();
             connection.setRequestMethod("GET");
             String raw = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
             short latest = Short.parseShort(raw);
-            if(latest > pluginNum){
+            if(latest > pluginNum) {
                 Bukkit.getLogger().info("+------------[Strings]------------+");
                 Bukkit.getLogger().info("|    A new update is available!   |");
                 Bukkit.getLogger().info("|          Download at:           |");
                 Bukkit.getLogger().info("|   https://wiicart.net/strings   |");
                 Bukkit.getLogger().info("+---------------------------------+");
             }
-        } catch(IOException a){
+        } catch(IOException a) {
             Bukkit.getLogger().info("[Strings] Unable to check for updates.");
         }
     }
 
-    private void setupAPI(){
+    private void setupAPI() {
         apiUUID = UUID.randomUUID();
         stringsImpl = new StringsImpl(this);
-        try{
+        try {
             StringsProvider.register(stringsImpl, this, apiUUID);
-        }catch(IllegalStateException a){
+        } catch(IllegalStateException a) {
             Bukkit.getLogger().info("Failed to register StringsAPI");
         }
     }
@@ -318,27 +337,52 @@ public final class Strings extends JavaPlugin {
     Public getter and setter methods
      */
     public String getDistributor(){ return distributor; }
+
     public String getVersion(){ return version; }
+
     public String getCoolDownLength(){ return coolDownLength; }
+
     public ChatManager getChatManager(){ return chatManager; }
+
     public ServerMessages getServerMessages(){ return serverMessages; }
+
     public PlayerDirectMessenger getPlayerDirectMessenger(){ return playerDirectMessenger; }
+
     public Messenger getMessenger(){ return messenger; }
+
     public ChatFilter getChatFilter(){ return chatFilter; }
+
     public Chat getVaultChat(){ return chat; }
+
     public FileConfiguration getUsersFileConfig(){ return usersFileConfig; }
+
     public FileConfiguration getBroadcastsFileConfig(){ return broadcastsFileConfig; }
+
     public FileConfiguration getMessagesFileConfig(){ return messagesFileConfig; }
+
     public FileConfiguration getChannelsFileConfig(){ return channelsFileConfig; }
+
+    public FileConfiguration getLogsFileConfig() { return logsFileConfig; }
+
     public boolean usePlaceholderAPI(){ return usingPlaceholderAPI; }
+
     public boolean processMessageColors(){ return processPlayerMessageColors; }
+
     public boolean processMessagePlaceholders(){ return processPlayerMessagePlaceholders; }
+
     public boolean useVault(){ return usingVault; }
+
     public boolean isPaper(){ return this.isPaper; }
+
     public static Strings getInstance(){ return instance; }
+
     public Mentioner getMentioner(){ return mentioner; }
+
     public short getPluginNum(){ return pluginNum; }
+
     public ChannelLoader getChannelLoader() { return channelLoader; }
+
+    public LogManager getLogManager() { return logManager; }
 
     /*
     Other methods

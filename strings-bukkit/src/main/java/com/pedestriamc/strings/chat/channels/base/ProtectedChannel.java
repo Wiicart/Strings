@@ -1,6 +1,6 @@
-package com.pedestriamc.strings.chat.channels;
+package com.pedestriamc.strings.chat.channels.base;
 
-import com.pedestriamc.strings.api.Membership;
+import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.api.channels.Type;
@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 import java.util.Set;
+
 
 public abstract class ProtectedChannel implements Channel {
 

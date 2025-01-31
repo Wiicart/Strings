@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.Membership;
+import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.api.channels.data.ChannelData;
@@ -127,10 +127,8 @@ public class ChannelFileReader {
         if(!helpOpExists) {
             Channel c = new HelpOPChannel(
                     strings,
-                    "helpop",
                     "&8[&4HelpOP&8] &f{displayname} &7» {message}",
                     "&7",
-                    channelLoader,
                     false,
                     false,
                     false
@@ -144,7 +142,6 @@ public class ChannelFileReader {
         log("Loading channel 'socialspy'...");
         channelLoader.registerChannel(
                 new SocialSpyChannel(
-                        channelLoader,
                         strings.getPlayerDirectMessenger(),
                         socialSpyFormat
                 )

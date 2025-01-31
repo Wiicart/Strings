@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.api.channels;
 
 import com.pedestriamc.strings.api.StringsUser;
-import com.pedestriamc.strings.api.Membership;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -63,6 +62,7 @@ public interface Channel {
 
     /**
      * Tells if the channel requires URL filtering.
+     *
      * @return If the Channel does URL filtering.
      */
     boolean doUrlFilter();

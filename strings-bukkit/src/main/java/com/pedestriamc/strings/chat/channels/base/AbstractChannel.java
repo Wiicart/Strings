@@ -1,11 +1,11 @@
-package com.pedestriamc.strings.chat.channels;
+package com.pedestriamc.strings.chat.channels.base;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
-import com.pedestriamc.strings.api.Membership;
+import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.chat.ChatManager;
 import net.md_5.bungee.api.ChatColor;
@@ -73,7 +73,7 @@ public abstract class AbstractChannel implements Channel {
     public void sendMessage(Player player, String message) {
         Set<Player> recipients = getRecipients(player);
         String template = chatManager.formatMessage(player, this);
-        String processedMessage = chatManager.processMessage(player, message);
+        String processedMessage = chatManager.processMessage(player, message, this);
         String finalForm = template.replace("{message}", processedMessage);
 
         if (mentionsEnabled && player.hasPermission("strings.*") || player.hasPermission("strings.mention")) {

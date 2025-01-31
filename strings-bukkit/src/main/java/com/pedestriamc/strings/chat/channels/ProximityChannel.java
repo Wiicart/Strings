@@ -3,9 +3,10 @@ package com.pedestriamc.strings.chat.channels;
 import com.pedestriamc.strings.api.channels.Buildable;
 import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.Membership;
+import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.channels.LocalChannel;
 import com.pedestriamc.strings.api.channels.data.ChannelData;
+import com.pedestriamc.strings.chat.channels.base.AbstractChannel;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -53,6 +54,8 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
         if(sender == null) {
             return defaultSet();
         }
+
+        // WORK OUT MESSAGES FOR MEMBERS OF THE CHANNEL. REVISIT WORLDCHANNEL TOO
 
         World senderWorld = sender.getWorld();
         if(!worlds.contains(senderWorld)) {
@@ -106,16 +109,16 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
     @Override
     public Map<String, Object> getData() {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        map.put("format", this.getFormat());
-        map.put("default-color", this.getDefaultColor());
-        map.put("call-event", String.valueOf(this.isCallEvent()));
-        map.put("filter-profanity", String.valueOf(this.doProfanityFilter()));
-        map.put("block-urls", String.valueOf(this.doUrlFilter()));
-        map.put("cooldown", String.valueOf(this.doCooldown()));
-        map.put("type", String.valueOf(this.getType()));
-        map.put("membership", String.valueOf(this.getMembership()));
+        map.put("format", getFormat());
+        map.put("default-color", getDefaultColor());
+        map.put("call-event", String.valueOf(isCallEvent()));
+        map.put("filter-profanity", String.valueOf(doProfanityFilter()));
+        map.put("block-urls", String.valueOf(doUrlFilter()));
+        map.put("cooldown", String.valueOf(doCooldown()));
+        map.put("type", String.valueOf(getType()));
+        map.put("membership", String.valueOf(getMembership()));
         map.put("distance", String.valueOf(distance));
-        map.put("priority", String.valueOf(this.getPriority()));
+        map.put("priority", String.valueOf(getPriority()));
         map.put("worlds", getWorldNames());
         return map;
     }

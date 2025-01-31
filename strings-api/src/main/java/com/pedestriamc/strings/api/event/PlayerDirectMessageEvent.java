@@ -30,12 +30,13 @@ public final class PlayerDirectMessageEvent extends Event implements Cancellable
     }
 
     public static HandlerList getHandlerList(){ return HANDLER_LIST; }
+
     /**
      * Provides Handlers
-     * @return a HanderList
+     * @return A HandlerList
      */
     @Override
-    public @NotNull HandlerList getHandlers(){
+    public @NotNull HandlerList getHandlers() {
         return HANDLER_LIST;
     }
 
@@ -44,25 +45,24 @@ public final class PlayerDirectMessageEvent extends Event implements Cancellable
      * @return A boolean.
      */
     @Override
-    public boolean isCancelled(){
+    public boolean isCancelled() {
         return this.isCancelled;
     }
 
     /**
-     * Sets the Event to cancelled.
+     * Sets if the Event should be cancelled.
      * @param isCancelled boolean if the event should be cancelled.
      */
     @Override
-    public void setCancelled(boolean isCancelled){
+    public void setCancelled(boolean isCancelled) {
         this.isCancelled = isCancelled;
     }
-
 
     /**
      * Provides the message.
      * @return A String of the message.
      */
-    public String getMessage(){
+    public String getMessage() {
         return this.message;
     }
 
@@ -70,7 +70,7 @@ public final class PlayerDirectMessageEvent extends Event implements Cancellable
      * Sets the message for the direct message.
      * @param message The message to be set.
      */
-    public void setMessage(String message){
+    public void setMessage(String message) {
         this.message = message;
     }
 
@@ -78,7 +78,7 @@ public final class PlayerDirectMessageEvent extends Event implements Cancellable
      * Provides the sender of the direct message.
      * @return The Player sender.
      */
-    public Player getSender(){
+    public Player getSender() {
         return this.sender;
     }
 
@@ -86,7 +86,7 @@ public final class PlayerDirectMessageEvent extends Event implements Cancellable
      * Provides the recipient of the message.
      * @return The Player recipient.
      */
-    public Player getRecipient(){
+    public Player getRecipient() {
         return this.recipient;
     }
 }

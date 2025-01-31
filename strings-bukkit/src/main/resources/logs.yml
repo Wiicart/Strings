@@ -1,0 +1,27 @@
+# Strings - Logging
+
+# This file stores all options for logging.
+
+
+# SETTINGS
+
+# Enable chat logging?
+chat-log: false
+
+# Enable command logging?
+# This will log all commands ran by players.
+command-log: false
+
+# Enable sign logging?
+# This will log the text content of any sign a player places or edits.
+sign-log: false
+
+# Enable logging for when players messages are filtered?
+# NOTE: This will only apply in Channels with filtering enabled.
+filter-log: false
+
+# Enable direct message logging (/msg)
+# NOTE: This will only work if you're using the Strings /msg system, otherwise nothing will be logged.
+dm-log: false
+
+# Logging for restricted words & or swearing filters will be added in a later update.

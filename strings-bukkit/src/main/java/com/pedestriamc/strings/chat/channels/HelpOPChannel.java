@@ -1,15 +1,11 @@
 package com.pedestriamc.strings.chat.channels;
 
-import com.pedestriamc.strings.api.StringsUser;
+import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channels.Buildable;
-import com.pedestriamc.strings.api.channels.Channel;
-import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.api.channels.data.ChannelData;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.chat.ChatManager;
-import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.Membership;
-import com.pedestriamc.strings.api.channels.Type;
+import com.pedestriamc.strings.chat.channels.base.ProtectedChannel;
 import com.pedestriamc.strings.message.Message;
 import com.pedestriamc.strings.message.Messenger;
 import net.md_5.bungee.api.ChatColor;
@@ -20,31 +16,27 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-public class HelpOPChannel implements Channel, Buildable {
+public class HelpOPChannel extends ProtectedChannel implements Buildable {
 
     private final Strings strings;
-    private String name;
     private final ChatManager chatManager;
     private final boolean callEvent;
     private String format;
     private String defaultColor;
-    private final ChannelLoader channelLoader;
     private boolean urlFilter;
     private boolean profanityFilter;
     private final Messenger messenger;
 
-    public HelpOPChannel(@NotNull Strings strings, String name, String format, String defaultColor, ChannelLoader channelLoader, boolean callEvent, boolean urlFilter, boolean profanityFilter)
+    public HelpOPChannel(@NotNull Strings strings, String format, String defaultColor, boolean callEvent, boolean urlFilter, boolean profanityFilter)
     {
+        super("helpop");
         this.strings = strings;
         this.chatManager = strings.getChatManager();
         this.callEvent = callEvent;
         this.format = format;
-        this.name = name;
         this.defaultColor = defaultColor;
-        this.channelLoader = channelLoader;
         this.urlFilter = urlFilter;
         this.profanityFilter = profanityFilter;
         this.messenger = strings.getMessenger();
@@ -52,11 +44,10 @@ public class HelpOPChannel implements Channel, Buildable {
 
     public HelpOPChannel(Strings strings, ChannelData data)
     {
+        super("helpop");
         this.strings = strings;
         this.chatManager = strings.getChatManager();
-        this.channelLoader = strings.getChannelLoader();
         this.messenger = strings.getMessenger();
-        this.name = data.getName();
         this.callEvent = data.isCallEvent();
         this.format = data.getFormat();
         this.defaultColor = data.getDefaultColor();
@@ -68,22 +59,22 @@ public class HelpOPChannel implements Channel, Buildable {
     public void sendMessage(Player player, String message) {
         Set<Player> members = getRecipients();
         String format = chatManager.formatMessage(player, this);
-        message = chatManager.processMessage(player, message);
+        message = chatManager.processMessage(player, message, this);
         String finalMessage = message;
         String formattedMessage = format.replace("{message}", finalMessage);
         if(callEvent){
-            Bukkit.getScheduler().runTask(strings, () ->{
+            Bukkit.getScheduler().runTask(strings, () -> {
                 AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this);
                 Bukkit.getPluginManager().callEvent(event);
-                if(!event.isCancelled()){
-                    for(Player p : members){
+                if(!event.isCancelled()) {
+                    for(Player p : members) {
                         p.sendMessage(formattedMessage);
                     }
                     Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
                 }
             });
-        }else{
-            for(Player p : members){
+        } else {
+            for(Player p : members) {
                 p.sendMessage(formattedMessage);
             }
             Bukkit.getLogger().info(ChatColor.stripColor(formattedMessage));
@@ -91,18 +82,18 @@ public class HelpOPChannel implements Channel, Buildable {
         messenger.sendMessage(Message.HELPOP_SENT, player);
     }
 
-    private Set<Player> getRecipients(){
+    private Set<Player> getRecipients() {
         HashSet<Player> members = new HashSet<>();
-        for(OfflinePlayer op : Bukkit.getOperators()){
-            if(op.getName() != null){
+        for(OfflinePlayer op : Bukkit.getOperators()) {
+            if(op.getName() != null) {
                 Player p = Bukkit.getPlayer(op.getName());
-                if(p != null){
+                if(p != null) {
                     members.add(p);
                 }
             }
         }
-        for(Player onlinePlayer : Bukkit.getOnlinePlayers()){
-            if(onlinePlayer.hasPermission("strings.helpop.receive") || onlinePlayer.hasPermission("strings.helpop.*") || onlinePlayer.hasPermission("strings.*")){
+        for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if(onlinePlayer.hasPermission("strings.helpop.receive") || onlinePlayer.hasPermission("strings.helpop.*") || onlinePlayer.hasPermission("strings.*")) {
                 members.add(onlinePlayer);
             }
         }
@@ -110,31 +101,13 @@ public class HelpOPChannel implements Channel, Buildable {
     }
 
     @Override
-    public void broadcastMessage(String message) {}
+    public boolean isCallEvent() {
+        return callEvent;
+    }
 
     @Override
     public String getFormat() {
         return format;
-    }
-
-    @Override
-    public String getDefaultColor() {
-        return defaultColor;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public void setDefaultColor(String defaultColor) {
-        this.defaultColor = defaultColor;
     }
 
     @Override
@@ -143,20 +116,13 @@ public class HelpOPChannel implements Channel, Buildable {
     }
 
     @Override
-    public void addPlayer(Player player) {}
+    public String getDefaultColor() {
+        return defaultColor;
+    }
 
     @Override
-    public void addPlayer(StringsUser user){}
-
-    @Override
-    public void removePlayer(Player player) {}
-
-    @Override
-    public void removePlayer(StringsUser user){}
-
-    @Override
-    public Set<Player> getMembers() {
-        return null;
+    public void setDefaultColor(String defaultColor) {
+        this.defaultColor = defaultColor;
     }
 
     @Override
@@ -165,8 +131,8 @@ public class HelpOPChannel implements Channel, Buildable {
     }
 
     @Override
-    public void setUrlFilter(boolean doUrlFilter) {
-        this.urlFilter = doUrlFilter;
+    public void setUrlFilter(boolean urlFilter) {
+        this.urlFilter = urlFilter;
     }
 
     @Override
@@ -175,50 +141,13 @@ public class HelpOPChannel implements Channel, Buildable {
     }
 
     @Override
-    public void setProfanityFilter(boolean doProfanityFilter) {
-        this.profanityFilter = doProfanityFilter;
-    }
-
-    @Override
-    public boolean doCooldown() {
-        return false;
-    }
-
-    @Override
-    public void setDoCooldown(boolean doCooldown) {}
-
-    @Override
-    public Type getType() {
-        return Type.PROTECTED;
-    }
-
-    @Override
-    public boolean isCallEvent(){
-        return callEvent;
-    }
-
-    @Override
-    public Map<String, Object> getData() {
-        return null;
-    }
-
-    @Override
-    public Membership getMembership() {
-        return Membership.PROTECTED;
-    }
-
-    @Override
-    public int getPriority() {
-        return -1;
-    }
-
-    @Override
-    public void saveChannel() {
-        channelLoader.saveChannel(this);
+    public void setProfanityFilter(boolean profanityFilter) {
+        this.profanityFilter = profanityFilter;
     }
 
     @Override
     public boolean allows(Player player) {
         return (player.hasPermission("strings.helpop.use") ||  player.hasPermission("strings.*"));
     }
+
 }

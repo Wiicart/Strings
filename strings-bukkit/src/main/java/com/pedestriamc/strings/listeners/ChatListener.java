@@ -82,4 +82,8 @@ public class ChatListener implements Listener {
 
     public record Container(Channel channel, String message) {}
 
+    public void log(Player sender, String message) {
+
+    }
+
 }

@@ -15,7 +15,6 @@ public class ServerMessages {
     private final Strings strings;
     private final String joinMessageTemplate;
     private final String leaveMessageTemplate;
-    private final boolean enableJoinLeaveMessage;
     private final ArrayList<String> motd;
     private final boolean usePAPI;
 
@@ -23,7 +22,6 @@ public class ServerMessages {
         this.strings = strings;
         this.joinMessageTemplate = strings.getConfig().getString("join-message");
         this.leaveMessageTemplate = strings.getConfig().getString("leave-message");
-        this.enableJoinLeaveMessage = strings.getConfig().getBoolean("enable-join-leave-messages");
         this.usePAPI = strings.usePlaceholderAPI();
         this.motd = new ArrayList<>();
         List<?> list = strings.getConfig().getList("motd");
@@ -77,4 +75,5 @@ public class ServerMessages {
             player.sendMessage(message);
         }
     }
+
 }

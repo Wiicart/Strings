@@ -39,7 +39,7 @@ public class Mentioner {
 
     public void mention(@NotNull Player player, @NotNull Player sender)
     {
-        if(!strings.getUser(player).isMentionsEnabled()){
+        if(!strings.getUser(player).isMentionsEnabled()) {
             return;
         }
         String str = format;
@@ -47,7 +47,7 @@ public class Mentioner {
         sendMention(player, str);
     }
 
-    public void mention(@NotNull User user, @NotNull User sender){
+    public void mention(@NotNull User user, @NotNull User sender) {
         mention(user.getPlayer(), sender.getPlayer());
     }
 
@@ -58,7 +58,7 @@ public class Mentioner {
         String str = format;
         str = str.replace("%sender%", sender.getName());
 
-        for(Player p : group){
+        for(Player p : group) {
             sendMention(p, str);
         }
     }

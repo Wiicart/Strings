@@ -1,11 +1,12 @@
 package com.pedestriamc.strings.chat.channels;
 
+import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.api.channels.ChannelLoader;
-import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.api.Membership;
+import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.channels.Type;
+import com.pedestriamc.strings.chat.channels.base.AbstractChannel;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
@@ -15,157 +16,41 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * A Channel used for Parties, these channels cannot be saved and are deleted on reboot or when all players leave.
  */
-public class PartyChannel implements Channel {
+public class PartyChannel extends AbstractChannel {
 
     private String name;
     private Player leader;
-    private final Set<Player> members;
+    private Set<Player> members;
     private String format;
     private String color;
-    private final ChannelLoader channelLoader;
+    private ChannelLoader channelLoader;
 
-    public PartyChannel(String name, Player leader, String format, String color, ChannelLoader channelLoader){
-        this.name = name;
-        this.leader = leader;
-        this.members = ConcurrentHashMap.newKeySet();
-        this.format = format;
-        this.color = color;
-        this.channelLoader = channelLoader;
-    }
-
-
-    @Override
-    public void sendMessage(Player player, String message) {
-
+    protected PartyChannel(Strings strings, ChannelLoader channelLoader, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority) {
+        super(strings, channelLoader, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doUrlFilter, callEvent, priority);
     }
 
     @Override
-    public void broadcastMessage(String message) {
-
-    }
-
-    @Override
-    public String getFormat() {
-        return format;
-    }
-
-    @Override
-    public String getDefaultColor() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public void setDefaultColor(String defaultColor) {
-
-    }
-
-    @Override
-    public void setFormat(String format) {
-
-    }
-
-    @Override
-    public void addPlayer(Player player) {
-        members.add(player);
-    }
-
-    @Override
-    public void removePlayer(Player player) {
-        members.remove(player);
-    }
-
-    @Override
-    public void addPlayer(StringsUser user) {
-        members.add(user.getPlayer());
-    }
-
-    @Override
-    public void removePlayer(StringsUser user) {
-        members.remove(user.getPlayer());
+    public Set<Player> getRecipients(Player sender) {
+        return Set.of();
     }
 
     @Override
     public Set<Player> getMembers() {
-        return null;
+        return Set.of();
     }
 
     @Override
-    public boolean doUrlFilter() {
-        return false;
-    }
-
-    @Override
-    public void setUrlFilter(boolean doUrlFilter) {
+    public void addPlayer(Player player) {
 
     }
 
     @Override
-    public boolean doProfanityFilter() {
-        return false;
-    }
-
-    @Override
-    public void setProfanityFilter(boolean doProfanityFilter) {
-
-    }
-
-    @Override
-    public boolean doCooldown() {
-        return false;
-    }
-
-    @Override
-    public void setDoCooldown(boolean doCooldown) {
+    public void removePlayer(Player player) {
 
     }
 
     @Override
     public Type getType() {
         return Type.PARTY;
-    }
-
-    @Override
-    public Map<String, Object> getData() {
-        return null;
-    }
-
-    @Override
-    public Membership getMembership() {
-        return Membership.PARTY;
-    }
-
-    @Override
-    public int getPriority() {
-        return 0;
-    }
-
-    @Override
-    public boolean isCallEvent() {
-        return false;
-    }
-
-    @Override
-    public void saveChannel() {
-        channelLoader.saveChannel(this);
-    }
-
-    @Override
-    public boolean allows(Player player) {
-        return (
-                player.hasPermission("strings.channels." + getName()) ||
-                player.hasPermission("strings.channels.*") ||
-                player.hasPermission("strings.*"
-                )
-        );
     }
 }

@@ -58,9 +58,8 @@ public final class ChatManager {
         return newMessageFormat;
     }
 
-    public String processMessage(Player sender, String message) {
-        User user = strings.getUser(sender);
-        Channel channel = user.getActiveChannel();
+    public String processMessage(Player sender, String message, Channel channel) {
+
         if(!(sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("*") || sender.hasPermission("strings.chat.filterbypass"))) {
             if(channel.doUrlFilter()) {
                 message = chatFilter.urlFilter(message, sender);

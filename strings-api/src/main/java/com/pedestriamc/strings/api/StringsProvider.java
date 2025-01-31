@@ -15,14 +15,14 @@ public final class StringsProvider {
     private static StringsAPI api;
     private static UUID apiUuid;
 
-    private StringsProvider(){}
+    private StringsProvider() {}
 
     /**
      * Provides an instance of the StringsAPI.
      * @return An instance of the StringsAPI.
      */
-    public static StringsAPI get(){
-        if(api == null){
+    public static StringsAPI get() {
+        if(api == null) {
             throw new IllegalStateException("Strings API not initialized.");
         }
         return StringsProvider.api;
@@ -33,11 +33,11 @@ public final class StringsProvider {
      * @param api API Implementation
      * @param plugin Strings plugin
      */
-    public static void register(@NotNull StringsAPI api, JavaPlugin plugin, UUID uuid) throws IllegalStateException, SecurityException{
-        if(StringsProvider.api != null){
+    public static void register(@NotNull StringsAPI api, JavaPlugin plugin, UUID uuid) throws IllegalStateException, SecurityException {
+        if(StringsProvider.api != null) {
             throw new IllegalStateException("StringsProvider already initialized.");
         }
-        if(!StringsProvider.class.getClassLoader().equals(api.getClass().getClassLoader())){
+        if(!StringsProvider.class.getClassLoader().equals(api.getClass().getClassLoader())) {
             throw new SecurityException("Unauthorized attempt to load StringsAPI.");
         }
         apiUuid = uuid;
@@ -50,11 +50,11 @@ public final class StringsProvider {
      * For internal use only.
      * @param uuid UUID from Strings
      */
-    public static void unregister(UUID uuid) throws IllegalStateException, SecurityException{
-        if(StringsProvider.api == null){
+    public static void unregister(UUID uuid) throws IllegalStateException, SecurityException {
+        if(StringsProvider.api == null) {
             throw new IllegalStateException("StringsProvider uninitialized.");
         }
-        if(apiUuid != uuid){
+        if(apiUuid != uuid) {
             throw new SecurityException("Unregister method called with unauthorized UUID.");
         }
         StringsProvider.api = null;
@@ -65,7 +65,7 @@ public final class StringsProvider {
      * Provides a short of the API version.
      * @return A short of the API version.
      */
-    public static short getVersion(){
-        return 3;
+    public static short getVersion() {
+        return 5;
     }
 }
