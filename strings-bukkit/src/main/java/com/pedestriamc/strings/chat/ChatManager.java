@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.channels.Channel;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,6 +28,7 @@ public final class ChatManager {
     private final long coolDownLength;
     private final String mentionColor;
     private final boolean mentionsEnabled;
+    private final boolean isPaper;
 
     public ChatManager(@NotNull Strings strings){
         this.strings = strings;
@@ -35,10 +37,19 @@ public final class ChatManager {
         this.messagePlaceholders = strings.processMessagePlaceholders();
         this.chatFilter = strings.getChatFilter();
         this.scheduler = Bukkit.getScheduler();
-        this.coolDownLength = calcTicks(strings.getCoolDownLength());
+        long cooldown = Strings.calculateTicks(strings.getCoolDownLength());
+
+        if(cooldown != -1) {
+            coolDownLength = cooldown;
+        } else {
+            coolDownLength = 600L;
+            Bukkit.getLogger().info("[Strings] Invalid chat cool down in config.  Defaulting to 30s.");
+        }
+
         FileConfiguration config = strings.getConfig();
         this.mentionColor = ChatColor.translateAlternateColorCodes('&', config.getString("mention-color", "&e"));
         this.mentionsEnabled = strings.getConfig().getBoolean("enable-mentions", true);
+        isPaper = strings.isPaper();
     }
 
     public @NotNull String formatMessage(Player sender, Channel channel) {
@@ -53,6 +64,7 @@ public final class ChatManager {
         if(usePAPI) {
             newMessageFormat = PlaceholderAPI.setPlaceholders(sender, newMessageFormat);
         }
+
         newMessageFormat = ChatColor.translateAlternateColorCodes('&', newMessageFormat);
 
         return newMessageFormat;
@@ -86,21 +98,6 @@ public final class ChatManager {
     public void startCoolDown(Player player) {
         coolDownList.add(player);
         scheduler.runTaskLater(strings,() -> coolDownList.remove(player), coolDownLength);
-    }
-
-    public long calcTicks(String string) {
-        String regex = "^[0-9]+[sm]$";
-        if(string == null || !string.matches(regex)) {
-            Bukkit.getLogger().info("[Strings] Invalid chat cool down in config.  Defaulting to 30s.");
-            return 600L;
-        }
-        char units = string.charAt(string.length() - 1);
-        string = string.substring(0, string.length() - 1);
-        int delayNum = Integer.parseInt(string);
-        if(units == 'm') {
-            delayNum *= 60;
-        }
-        return delayNum * 20L;
     }
 
     public String processMentions(Player sender, String str)

@@ -3,7 +3,7 @@ package com.pedestriamc.strings.commands;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.chat.StringsChannelLoader;
-import com.pedestriamc.strings.message.Messenger;
+import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -14,8 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.pedestriamc.strings.message.Message.*;
-
+import static com.pedestriamc.strings.api.message.Message.*;
 
 
 public final class ChannelCommand extends CommandBase {
@@ -199,7 +198,7 @@ public final class ChannelCommand extends CommandBase {
                 return true;
             }
 
-            if(channel.getName().equals("global") || channel.getName().equals("default")){
+            if(channel.getName().equals("default")){
                 messenger.sendMessage(CANT_LEAVE_GLOBAL, sender);
                 return true;
             }
@@ -336,6 +335,25 @@ public final class ChannelCommand extends CommandBase {
         }
 
         protected record BaseData(Channel channel, Player target, Map<String, String> placeholders, boolean shouldReturn){}
+
+    }
+
+    private record ChannelBroadcastCommand(Strings strings) implements CommandComponent {
+
+        @Override
+        public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+            return true;
+        }
+
+    }
+
+    private record MonitorCommand(Strings strings) implements CommandComponent {
+
+        @Override
+        public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+
+            return true;
+        }
 
     }
 

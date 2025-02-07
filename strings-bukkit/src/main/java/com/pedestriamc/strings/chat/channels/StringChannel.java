@@ -77,4 +77,18 @@ public class StringChannel extends AbstractChannel implements Buildable {
         return Type.NORMAL;
     }
 
+    @Override
+    public void addMonitor(Player player) {
+
+    }
+
+    @Override
+    public void removeMonitor(Player player) {
+
+    }
+
+    @Override
+    public Set<Player> getMonitors() {
+        return Set.of();
+    }
 }

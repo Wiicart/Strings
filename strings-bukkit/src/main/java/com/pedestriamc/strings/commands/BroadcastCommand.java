@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.commands;
 
-import com.pedestriamc.strings.message.Messenger;
+import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.Strings;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import static com.pedestriamc.strings.message.Message.*;
+import static com.pedestriamc.strings.api.message.Message.NO_PERMS;
 
 public final class BroadcastCommand implements CommandExecutor {
 

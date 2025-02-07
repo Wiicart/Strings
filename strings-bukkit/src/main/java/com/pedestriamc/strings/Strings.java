@@ -9,8 +9,8 @@ import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.impl.StringsImpl;
 import com.pedestriamc.strings.listeners.*;
 import com.pedestriamc.strings.log.LogManager;
-import com.pedestriamc.strings.message.Message;
-import com.pedestriamc.strings.message.Messenger;
+import com.pedestriamc.strings.api.message.Message;
+import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.misc.AutoBroadcasts;
 import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.tabcompleters.*;
@@ -224,8 +224,9 @@ public final class Strings extends JavaPlugin {
             }
         }
     }
+
     private void instantiateObjects(){
-        messenger = new Messenger(this);
+        messenger = new Messenger(getMessagesFileConfig());
         chatFilter = new ChatFilter(this);
         chatManager = new ChatManager(this);
         playerDirectMessenger = new PlayerDirectMessenger(this);
@@ -295,7 +296,7 @@ public final class Strings extends JavaPlugin {
         logsFileConfig = YamlConfiguration.loadConfiguration(logsFile);
     }
 
-    private void checkIfReload(){
+    private void checkIfReload() {
         if(!Bukkit.getOnlinePlayers().isEmpty()){
             for(Player p : Bukkit.getOnlinePlayers()){
                 if(YamlUserUtil.loadUser(p.getUniqueId()) == null){
@@ -305,7 +306,7 @@ public final class Strings extends JavaPlugin {
         }
     }
 
-    private void checkUpdate(){
+    private void checkUpdate() {
         try {
             HttpsURLConnection connection = (HttpsURLConnection) new URL("https://www.wiicart.net/strings/version.txt").openConnection();
             connection.setRequestMethod("GET");
@@ -331,6 +332,30 @@ public final class Strings extends JavaPlugin {
         } catch(IllegalStateException a) {
             Bukkit.getLogger().info("Failed to register StringsAPI");
         }
+    }
+
+    /**
+     * Calculates tick equivalent of seconds or minutes. Example: 1m, 1s, etc..
+     * @param time the time to be converted
+     * @return a long of the tick value. Returns -1 if syntax is invalid.
+     */
+    public static long calculateTicks(String time) {
+
+        String regex = "^[0-9]+[sm]$";
+
+        if(time == null || !time.matches(regex)) {
+            return -1L;
+        }
+
+        char units = time.charAt(time.length() - 1);
+        time = time.substring(0, time.length() - 1);
+        int delayNum = Integer.parseInt(time);
+
+        if(units == 'm') {
+            delayNum *= 60;
+        }
+
+        return delayNum * 20L;
     }
 
     /*

@@ -2,14 +2,14 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.message.Messenger;
+import com.pedestriamc.strings.api.message.Messenger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import static com.pedestriamc.strings.message.Message.*;
+import static com.pedestriamc.strings.api.message.Message.*;
 
 public final class HelpOPCommand implements CommandExecutor {
 

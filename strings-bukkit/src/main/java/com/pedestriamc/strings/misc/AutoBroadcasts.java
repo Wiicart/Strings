@@ -27,7 +27,11 @@ public class AutoBroadcasts {
         this.config = strings.getBroadcastsFileConfig();
         this.order = config.getString("sequence");
         if(config.getBoolean("enabled", false)) {
-            this.interval = calculateDelay(config.getString("delay"));
+            this.interval = Strings.calculateTicks(config.getString("delay"));
+            if(interval == -1L) {
+                Bukkit.getLogger().info("[Strings] Invalid delay for auto broadcasts. Defaulting to 3 minutes. ");
+                interval = 3600L;
+            }
             this.loadBroadcastList();
             schedule();
         }
@@ -35,23 +39,6 @@ public class AutoBroadcasts {
 
     private void schedule() {
         scheduler.runTaskTimer(strings, this::broadcastMessage, 20L, interval);
-    }
-
-    private long calculateDelay(String delay) {
-        String regex = "^[0-9]+[sm]$";
-        if(delay == null || !delay.matches(regex)) {
-            Bukkit.getLogger().info("[Strings] Invalid broadcast delay in config.  Defaulting to 3m.");
-            return 3600L;
-        }
-        char units = delay.charAt(delay.length() - 1);
-        delay = delay.substring(0, delay.length() - 1);
-        int delayNum = Integer.parseInt(delay);
-        if(units == 'm') {
-            delayNum *= 60;
-        }
-
-        return delayNum * 20L;
-
     }
 
     private void broadcastMessage() {

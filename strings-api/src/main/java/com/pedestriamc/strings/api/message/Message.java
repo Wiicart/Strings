@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.message;
+package com.pedestriamc.strings.api.message;
 
 public enum Message {
     NO_PERMS,
@@ -49,5 +49,6 @@ public enum Message {
     ALREADY_MEMBER,
     ALREADY_MEMBER_OTHER,
     ALREADY_ACTIVE,
-    ALREADY_ACTIVE_OTHER
+    ALREADY_ACTIVE_OTHER,
+    NO_REPETITION
 }

@@ -18,6 +18,7 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
 
     private final Set<Player> members;
     private final Set<World> worlds;
+    private final Set<Player> monitors;
 
     public WorldChannel(Strings strings, ChannelData data) {
 
@@ -37,6 +38,7 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
 
         this.members = ConcurrentHashMap.newKeySet();
         this.worlds = data.getWorlds();
+        this.monitors = new HashSet<>();
 
     }
 
@@ -130,6 +132,21 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
     }
 
     @Override
+    public void addMonitor(Player player) {
+        monitors.add(player);
+    }
+
+    @Override
+    public void removeMonitor(Player player) {
+        monitors.remove(player);
+    }
+
+    @Override
+    public Set<Player> getMonitors() {
+        return new HashSet<>(monitors);
+    }
+
+    @Override
     public double getProximity() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("getProximity() called on WorldChannel instance, which is unsupported.");
     }
@@ -140,3 +157,4 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
     }
 
 }
+

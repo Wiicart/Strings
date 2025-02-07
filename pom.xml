@@ -6,7 +6,7 @@
 
     <groupId>com.pedestriamc</groupId>
     <artifactId>Strings</artifactId>
-    <version>1.4</version>
+    <version>1.5</version>
     <packaging>pom</packaging>
 
     <name>Strings</name>
@@ -14,6 +14,7 @@
     <modules>
         <module>strings-api</module>
         <module>strings-bukkit</module>
+        <module>strings-moderation</module>
     </modules>
     <properties>
         <java.version>17</java.version>

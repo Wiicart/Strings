@@ -1,0 +1,6 @@
+name: StringsModeration
+version: '1.5'
+main: com.pedestriamc.strings.moderation.StringsModeration
+api-version: '1.16'
+loadbefore:
+  - Strings

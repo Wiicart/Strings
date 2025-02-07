@@ -67,12 +67,12 @@ public class User implements StringsUser {
         this.name = player != null ? player.getName() : null;
         this.activeChannel = activeChannel != null ? activeChannel : strings.getChannel("default");
         this.channels = Objects.requireNonNullElseGet(channels, HashSet::new);
-        if(channels != null){
+        if(channels != null) {
             for(Channel channel : channels){
                 channel.addPlayer(this.player);
             }
-        }else{
-            this.joinChannel(strings.getChannel("default"));
+        } else {
+            joinChannel(strings.getChannel("default"));
         }
         YamlUserUtil.saveUser(this);
         YamlUserUtil.UserMap.addUser(this);

@@ -2,6 +2,7 @@ package com.pedestriamc.strings.api;
 
 import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.api.channels.ChannelLoader;
+import com.pedestriamc.strings.api.message.Messenger;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -110,5 +111,12 @@ public interface StringsAPI {
      * @param sender The StringsUser object of the sender of the mention.
      */
     void mention(StringsUser subject, StringsUser sender);
+
+    /**
+     * Provides the Messenger instance
+     * @return The Strings Messenger instance
+     */
+    Messenger getMessenger();
+
 }
 

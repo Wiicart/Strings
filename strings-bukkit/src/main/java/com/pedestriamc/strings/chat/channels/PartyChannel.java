@@ -53,4 +53,19 @@ public class PartyChannel extends AbstractChannel {
     public Type getType() {
         return Type.PARTY;
     }
+
+    @Override
+    public void addMonitor(Player player) {
+
+    }
+
+    @Override
+    public void removeMonitor(Player player) {
+
+    }
+
+    @Override
+    public Set<Player> getMonitors() {
+        return Set.of();
+    }
 }

@@ -29,7 +29,7 @@ public abstract class CommandBase implements CommandExecutor {
     }
 
     @Override
-    public final boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args) {
         if(args.length > 0){
             String arg1 = args[0].toUpperCase();
             if(map.containsKey(arg1)){

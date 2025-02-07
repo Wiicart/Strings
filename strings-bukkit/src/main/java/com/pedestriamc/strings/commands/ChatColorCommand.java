@@ -2,7 +2,7 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.message.Messenger;
+import com.pedestriamc.strings.api.message.Messenger;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -16,7 +16,7 @@ import java.awt.Color;
 import java.util.AbstractMap;
 import java.util.Map;
 
-import static com.pedestriamc.strings.message.Message.*;
+import static com.pedestriamc.strings.api.message.Message.*;
 
 public final class ChatColorCommand implements CommandExecutor {
 
@@ -115,14 +115,15 @@ public final class ChatColorCommand implements CommandExecutor {
             } else if (arg.matches(pattern)) {
                 ChatColor color = ChatColor.of(new Color(Integer.parseInt(arg.substring(1), 16)));
                 chatColor.append(color);
+                hasColor = true;
             }
-
-            if(!hasColor) {
-                messenger.sendMessage(UNKNOWN_COLOR, sender);
-                return true;
-            }
-
         }
+
+        if(!hasColor) {
+            messenger.sendMessage(UNKNOWN_COLOR, sender);
+            return true;
+        }
+
         user.setChatColor(chatColor.toString());
         if(!player.equals(sender)) {
             messenger.sendMessage(CHATCOLOR_SET_OTHER, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), sender);

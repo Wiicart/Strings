@@ -2,8 +2,8 @@ package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.event.PlayerChatFilteredEvent;
-import com.pedestriamc.strings.message.Message;
-import com.pedestriamc.strings.message.Messenger;
+import com.pedestriamc.strings.api.message.Message;
+import com.pedestriamc.strings.api.message.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

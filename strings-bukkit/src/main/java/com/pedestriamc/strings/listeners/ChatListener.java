@@ -6,8 +6,8 @@ import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.chat.StringsChannelLoader;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.channels.Channel;
-import com.pedestriamc.strings.message.Message;
-import com.pedestriamc.strings.message.Messenger;
+import com.pedestriamc.strings.api.message.Message;
+import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.Strings;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -81,9 +81,5 @@ public class ChatListener implements Listener {
     }
 
     public record Container(Channel channel, String message) {}
-
-    public void log(Player sender, String message) {
-
-    }
 
 }

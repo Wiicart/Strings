@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.api.channels.ChannelLoader;
+import com.pedestriamc.strings.api.channels.Monitorable;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.channels.Type;
@@ -17,7 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AbstractChannel implements Channel {
+public abstract class AbstractChannel implements Channel, Monitorable {
 
     private final Strings strings;
     private final ChannelLoader channelLoader;

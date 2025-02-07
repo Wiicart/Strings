@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.message.Message;
-import com.pedestriamc.strings.message.Messenger;
+import com.pedestriamc.strings.api.message.Message;
+import com.pedestriamc.strings.api.message.Messenger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

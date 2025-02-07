@@ -1,6 +1,5 @@
-package com.pedestriamc.strings.message;
+package com.pedestriamc.strings.api.message;
 
-import com.pedestriamc.strings.Strings;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -14,8 +13,7 @@ public class Messenger {
     private static final EnumMap<Message, Object> enumMap = new EnumMap<>(Message.class);
     private static String prefix;
 
-    public Messenger(Strings strings) {
-        FileConfiguration config = strings.getMessagesFileConfig();
+    public Messenger(FileConfiguration config) {
         for(Message msg : Message.values()) {
             String configValue = msg.toString().replace("_", "-").toLowerCase();
             try {

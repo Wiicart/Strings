@@ -1,51 +1,60 @@
 package com.pedestriamc.strings.commands;
 
-import com.pedestriamc.strings.message.Messenger;
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.message.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import static com.pedestriamc.strings.message.Message.*;
+import java.util.HashMap;
 
-public final class StringsCommand implements CommandExecutor {
+public final class StringsCommand extends CommandBase {
 
-    private final Strings strings;
-    private final Messenger messenger;
-
-    public StringsCommand(@NotNull Strings strings){
-        this.strings = strings;
-        this.messenger = strings.getMessenger();
+    public StringsCommand(@NotNull Strings strings) {
+        HashMap<String, CommandComponent> map = new HashMap<>();
+        BaseCommand baseCommand = new BaseCommand(strings);
+        map.put("VERSION", baseCommand);
+        map.put("RELOAD", new ReloadCommand(strings));
+        map.put("HELP", new HelpCommand(strings));
+        initialize(map, baseCommand);
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(args.length == 0){
+
+    private record BaseCommand(Strings strings) implements CommandComponent {
+
+        @Override
+        public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[&3Strings&8] &fRunning Strings version &a" + strings.getVersion()));
             return true;
         }
-        if(args.length == 1 && args[0].equalsIgnoreCase("version")){
-            strings.reloadConfig();
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[&3Strings&8] &fRunning Strings version &a" + strings.getVersion()));
-            return true;
-        }
-        if(args.length == 1 && args[0].equalsIgnoreCase("reload")){
-            if(sender.hasPermission("strings.reload") || sender instanceof ConsoleCommandSender){
+
+    }
+
+    private record ReloadCommand(Strings strings) implements CommandComponent {
+
+        @Override
+        public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+            if(sender.hasPermission("strings.reload") || sender instanceof ConsoleCommandSender || sender.isOp()) {
                 strings.reload();
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[&3Strings&8] &fStrings version &a" + strings.getVersion() + "&f reloaded."));
-                return true;
+            } else {
+                strings.getMessenger().sendMessage(Message.NO_PERMS, sender);
             }
-            messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
-        if(args.length == 1 && args[0].equalsIgnoreCase("help") && sender.hasPermission("strings.help")){
-            messenger.sendMessage(STRINGS_HELP, sender);
-            return true;
-        }
-        messenger.sendMessage(INVALID_ARGS, sender);
-        return true;
+
     }
+
+    private record HelpCommand(Strings strings) implements CommandComponent {
+
+        @Override
+        public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+            strings.getMessenger().sendMessage(Message.STRINGS_HELP, sender);
+            return true;
+        }
+
+    }
+
 }

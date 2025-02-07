@@ -22,7 +22,9 @@ too-many-args: "&fToo many arguments!"
 insufficient-args: "&fInsufficient arguments!"
 
 # Player on cool-down:
-cool-down: "&fYou're sending messages too quickly!  Try again later."
+# Available placeholders:
+# - {cooldown_length} (cooldown length from config.yml)
+cool-down: "&fYou're can only send messages every {cooldown_length}!"
 
 # Messaging
 # This section includes messages for the /msg, /r and /socialspy commands
@@ -125,8 +127,8 @@ channel-help:
   - "&f/channel leave <channel> &7- Lets you leave a channel"
   - "&7* Add a player name at the end to modify another player"
 
-# Message that says that you can't leave the global channel
-cant-leave-global: "&fYou can't leave the global channel!"
+# Message that says that you can't leave the default channel
+cant-leave-global: "&fYou can't leave the default channel!"
 
 # Message to tell players that they can't use the /channel command with protected channels.
 # Protected channels include special channels like social spy, which have their own commands to access.

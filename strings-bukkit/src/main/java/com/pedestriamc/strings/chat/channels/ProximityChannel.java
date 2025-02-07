@@ -7,10 +7,10 @@ import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.channels.LocalChannel;
 import com.pedestriamc.strings.api.channels.data.ChannelData;
 import com.pedestriamc.strings.chat.channels.base.AbstractChannel;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,6 +25,7 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
     private final Set<Player> members;
     private double distance;
     private final Set<World> worlds;
+    private final Set<Player> monitors;
 
     public ProximityChannel(Strings strings, ChannelData data) {
 
@@ -45,11 +46,12 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
         this.members = ConcurrentHashMap.newKeySet();
         this.worlds = data.getWorlds();
         this.distance = data.getDistance();
+        this.monitors = new HashSet<>();
 
     }
 
 
-    public @NotNull HashSet<Player> getRecipients(Player sender) {
+    public Set<Player> getRecipients(Player sender) {
 
         if(sender == null) {
             return defaultSet();
@@ -57,11 +59,11 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
 
         // WORK OUT MESSAGES FOR MEMBERS OF THE CHANNEL. REVISIT WORLDCHANNEL TOO
 
-        World senderWorld = sender.getWorld();
-        if(!worlds.contains(senderWorld)) {
+        if(members.contains(sender)) {
             return defaultSet();
         }
 
+        World senderWorld = sender.getWorld();
         HashSet<Player> recipients = new HashSet<>(members);
 
         Location senderLocation = sender.getLocation();
@@ -69,7 +71,11 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
             Location pLocation = p.getLocation();
             if(senderLocation.distance(pLocation) < distance) {
                 recipients.add(p);
-            } else if(p.hasPermission("strings.channels." + getName() + ".receive")) {
+            }
+        }
+
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            if(p.hasPermission("strings.channels." + getName() + ".receive")) {
                 recipients.add(p);
             }
         }
@@ -78,7 +84,7 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
 
     }
 
-    private HashSet<Player> defaultSet() {
+    protected HashSet<Player> defaultSet() {
         HashSet<Player> set = new HashSet<>(members);
         for(World w : worlds){
             set.addAll(w.getPlayers());
@@ -167,4 +173,18 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
 
     }
 
+    @Override
+    public void addMonitor(Player player) {
+        monitors.add(player);
+    }
+
+    @Override
+    public void removeMonitor(Player player) {
+        monitors.remove(player);
+    }
+
+    @Override
+    public Set<Player> getMonitors() {
+        return new HashSet<>(monitors);
+    }
 }
