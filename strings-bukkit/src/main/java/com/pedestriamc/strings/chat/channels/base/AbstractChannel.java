@@ -51,7 +51,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     /**
-     * Determines which players messages should be sent to.
+     * Determines which player(s) messages should be sent to.
      * Must be implemented by extending classes.
      * @param sender The sender of the message.
      * @return A Set<Player> of all players who will see the message.
@@ -75,40 +75,45 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         Set<Player> recipients = getRecipients(player);
         String template = chatManager.formatMessage(player, this);
         String processedMessage = chatManager.processMessage(player, message, this);
-        String finalForm = template.replace("{message}", processedMessage);
 
         if (mentionsEnabled && player.hasPermission("strings.*") || player.hasPermission("strings.mention")) {
-            finalForm = chatManager.processMentions(player, finalForm);
+            processedMessage = chatManager.processMentions(player, processedMessage);
         }
 
         if (isCallEvent()) {
-            String finalString = finalForm;
+            String finalProcessedMessage = processedMessage;
             Bukkit.getScheduler().runTask(strings, () -> {
-                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, message, recipients, this);
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalProcessedMessage, recipients, this);
                 Bukkit.getPluginManager().callEvent(event);
                 if (!event.isCancelled()) {
+
+                    String finalForm = template.replace("{message}", event.getMessage());
+
                     for (Player p : recipients) {
-                        p.sendMessage(finalString);
+                        p.sendMessage(finalForm);
                     }
-                    Bukkit.getLogger().info(ChatColor.stripColor(finalString));
-                    chatManager.startCoolDown(player);
+
+                    Bukkit.getLogger().info(ChatColor.stripColor(finalForm));
+
                     if(!recipients.contains(player)) {
-                        player.sendMessage(finalString);
+                        player.sendMessage(finalForm);
                     }
+
                 }
             });
             return;
         }
 
+        String finalFormNonEvent = template.replace("{message}", processedMessage);
+
         for (Player p : recipients) {
-            p.sendMessage(finalForm);
+            p.sendMessage(finalFormNonEvent);
         }
         if(!recipients.contains(player)) {
-            player.sendMessage(finalForm);
+            player.sendMessage(finalFormNonEvent);
         }
 
-        Bukkit.getLogger().info(ChatColor.stripColor(finalForm));
-        chatManager.startCoolDown(player);
+        Bukkit.getLogger().info(ChatColor.stripColor(finalFormNonEvent));
 
     }
 

@@ -1,0 +1,31 @@
+# Strings - Moderation
+# (!) YOU MUST HAVE StringsModeration.jar IN YOUR PLUGIN FOLDER FOR THIS TO WORK!
+# This contains configurations for the StringsModeration expansion.
+# StringsModeration on Modrinth: https://modrinth.com/plugin/strings-moderation
+
+# Chat Cooldown Length
+# NOTE: Cooldowns are enabled per channel in channels.yml, this option individually will not enable/disable anything.
+# (Units are m and s, standing for minutes and seconds)
+# Example: 1m is one minute
+# BYPASS PERMISSION: strings.chat.bypasscooldown
+cooldown-time: 1m
+
+# Forbid Repetition
+# If enabled, players will not be allowed to send the same message twice in a row.
+# BYPASS PERMISSION: strings.repetition.bypass
+forbid-repetition: false
+
+# URL Whitelist
+# Allow these urls to bypass chat filtering
+# Enable chat filtering per channel in channels.yml
+# BYPASS PERMISSION: strings.chat.filterbypass
+url-whitelist:
+  - "minecraft.net"
+  - "apple.com"
+  - "wiicart.net"
+
+# Banned Words
+# These words will be banned from chat, regardless of channel
+# BYPASS PERMISSION: strings.chat.filterbypass
+banned-words:
+  - "%mzungu@yupo$3sfe"

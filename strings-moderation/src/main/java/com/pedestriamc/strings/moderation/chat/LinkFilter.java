@@ -1,39 +1,36 @@
-package com.pedestriamc.strings.chat;
+package com.pedestriamc.strings.moderation.chat;
 
-import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.event.PlayerChatFilteredEvent;
 import com.pedestriamc.strings.api.message.Message;
-import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.moderation.StringsModeration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ChatFilter {
+public class LinkFilter {
 
-    private final Strings strings;
-    private final String regex = "(?i)\\b((?:https?|ftp):\\/\\/|www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)";
+    private final StringsModeration stringsModeration;
+    private final String regex = "(?i)\\b((?:https?|ftp)://|www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)";
     private final Pattern pattern = Pattern.compile(regex);
     private final List<String> urlWhitelist;
-    private List<String> bannedWords;
-    private final Messenger messenger;
 
-    public ChatFilter(@NotNull Strings strings) {
-        this.strings = strings;
+    public LinkFilter(StringsModeration stringsModeration) {
+        this.stringsModeration = stringsModeration;
         this.urlWhitelist = new ArrayList<>();
-        this.messenger = strings.getMessenger();
-        List<?> tempList = strings.getConfig().getList("url-whitelist");
+        List<?> tempList = stringsModeration.getConfig().getList("url-whitelist");
         if(tempList != null)
-            for(Object obj : tempList){
+            for(Object obj : tempList) {
             if(obj instanceof String) {
                 this.urlWhitelist.add(normalizeUrl((String) obj));
             }
         }
     }
+
     private String normalizeUrl(String url) {
         if (url.startsWith("http://")) {
             url = url.substring(7);
@@ -46,41 +43,36 @@ public class ChatFilter {
         return url.toLowerCase();
     }
 
-    public String urlFilter(String msg, Player player){
+    public String filter(String msg, Player player) {
         boolean urlReplaced = false;
         String original = msg;
         List<String> filteredElements = new ArrayList<>();
         Matcher matcher = pattern.matcher(msg);
-        while(matcher.find()){
+        while(matcher.find()) {
             String match = matcher.group();
             filteredElements.add(match);
-            if(!urlWhitelist.contains(normalizeUrl(match))){
+            if(!urlWhitelist.contains(normalizeUrl(match))) {
                 msg = msg.replace(match, "");
                 urlReplaced = true;
             }
         }
-        if(urlReplaced){
 
-            messenger.sendMessage(Message.LINKS_PROHIBITED, player);
+        msg = msg.trim();
 
+        if(urlReplaced) {
+            StringsProvider.get().getMessenger().sendMessage(Message.LINKS_PROHIBITED, player);
             String finalMsg = msg;
-            Bukkit.getScheduler().runTask(strings, () -> {
-
+            Bukkit.getScheduler().runTask(stringsModeration, () -> {
                 PlayerChatFilteredEvent event = new PlayerChatFilteredEvent(
                         player,
                         original,
                         finalMsg,
                         filteredElements
                 );
-
                 Bukkit.getPluginManager().callEvent(event);
-
             });
         }
         return msg;
     }
 
-    public String profanityFilter(String msg, Player player){
-        return msg;
-    }
 }

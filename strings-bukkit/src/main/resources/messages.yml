@@ -24,7 +24,7 @@ insufficient-args: "&fInsufficient arguments!"
 # Player on cool-down:
 # Available placeholders:
 # - {cooldown_length} (cooldown length from config.yml)
-cool-down: "&fYou're can only send messages every {cooldown_length}!"
+cool-down: "&fYou can only send messages every {cooldown_length}!"
 
 # Messaging
 # This section includes messages for the /msg, /r and /socialspy commands
@@ -141,6 +141,12 @@ protected-channel: "&fYou can't use that command with that channel!"
 # Links aren't allowed message:
 links-prohibited: "&fYou're not allowed to send links in your messages!"
 
+# Banned word
+banned-word: "&fYour message had a restricted word removed."
+
+# No repetition spam
+no-repetition: "&fYou can't send the same message two times in a row."
+
 # Help OP Messages
 
 
@@ -212,3 +218,6 @@ mentions-enabled: "&fMentions enabled.  Players can now mention you."
 
 # Mentions disabled:
 mentions-disabled: "&fMentions disabled.  Players can not mention you now."
+
+
+

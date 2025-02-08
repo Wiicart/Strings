@@ -1,53 +1,84 @@
 package com.pedestriamc.strings.moderation;
 
-import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
-import com.pedestriamc.strings.moderation.spam.SpamManager;
+import com.pedestriamc.strings.moderation.chat.ChatModerationManager;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+
 public final class StringsModeration extends JavaPlugin {
 
-    private StringsAPI stringsAPI;
     private FileConfiguration config;
 
-    @SuppressWarnings("FieldCanBeLocal")
-    private SpamManager spamManager;
+    @SuppressWarnings({"FieldCanBeLocal", "unused"})
+    private ChatModerationManager chatModerationManager;
 
     @Override
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void onEnable() {
 
         try {
-            stringsAPI = StringsProvider.get();
+            StringsProvider.get();
         } catch (IllegalStateException e) {
             getLogger().info("Failed to connect to Strings API, disabling.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
-        try {
-            config = getServer().getPluginManager().getPlugin("Strings").getConfig();
-        } catch (NullPointerException e) {
+
+        Plugin plugin = getServer().getPluginManager().getPlugin("Strings");
+        if(plugin == null) {
             getLogger().info("Failed to get Strings config file, disabling.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
+        File file = new File(plugin.getDataFolder(), "moderation.yml");
+        config = YamlConfiguration.loadConfiguration(file);
+
+        instantiate();
+        getLogger().info("Enabled!");
     }
 
+    /**
+     * Instantiate files
+     */
     private void instantiate() {
-        spamManager = new SpamManager(this);
-    }
-
-    public StringsAPI getStringsAPI() {
-        return stringsAPI;
+        chatModerationManager = new ChatModerationManager(this, config);
     }
 
     @Override
     @NotNull
     public FileConfiguration getConfig() {
         return config;
+    }
+
+    /**
+     * Calculates tick equivalent of seconds or minutes. Example: 1m, 1s, etc..
+     * @param time the time to be converted
+     * @return a long of the tick value. Returns -1 if syntax is invalid.
+     */
+    public static long calculateTicks(String time) {
+
+        String regex = "^[0-9]+[sm]$";
+
+        if(time == null || !time.matches(regex)) {
+            return -1L;
+        }
+
+        char units = time.charAt(time.length() - 1);
+        time = time.substring(0, time.length() - 1);
+        int delayNum = Integer.parseInt(time);
+
+        if(units == 'm') {
+            delayNum *= 60;
+        }
+
+        return delayNum * 20L;
     }
 
 

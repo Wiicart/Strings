@@ -36,12 +36,7 @@ enable-chatcolor: true
 #  placeholders in their messages)
 process-in-chat-placeholders: true
 
-# Chat cool down length
-# Cool downs are enabled per channel in channels.yml
-# (Units are m and s, standing for minutes and seconds)
-# Example: 1m is one minute
-# (Cool down must be enabled for this to do anything)
-cooldown-time: 1m
+# COOLDOWN IS NOW FOUND IN MODERATION.YML
 
 # Message format for /msg
 # This is for outgoing messages
@@ -141,13 +136,8 @@ placeholder-api: true
 # All settings for the chat filter.
 # Filter can be bypassed with the permission strings.filter.bypass
 
-# URL whitelist
-# Allow these urls to bypass chat filtering
-# Enable chat filtering per channel in channels.yml
-url-whitelist:
-  - "minecraft.net"
-  - "apple.com"
-  - "wiicart.net"
+# URL Whitelist
+# (!) MOVED TO moderation.yml
 
 # Mentioning Options
 

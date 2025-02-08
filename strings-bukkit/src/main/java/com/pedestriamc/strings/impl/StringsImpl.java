@@ -25,7 +25,7 @@ public final class StringsImpl implements StringsAPI {
     private final Mentioner mentioner;
     private boolean apiUsed;
 
-    public StringsImpl(@NotNull com.pedestriamc.strings.Strings strings){
+    public StringsImpl(@NotNull com.pedestriamc.strings.Strings strings) {
         this.strings = strings;
         this.channelLoader = (StringsChannelLoader) strings.getChannelLoader();
         this.chatManager = strings.getChatManager();

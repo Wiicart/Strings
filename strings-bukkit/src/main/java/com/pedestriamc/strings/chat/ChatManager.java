@@ -22,7 +22,6 @@ public final class ChatManager {
     private final boolean usePAPI;
     private final boolean messagePlaceholders;
     private final boolean parseChatColors;
-    private final ChatFilter chatFilter;
     private final Set<Player> coolDownList = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final BukkitScheduler scheduler;
     private final long coolDownLength;
@@ -35,7 +34,6 @@ public final class ChatManager {
         this.usePAPI = strings.usePlaceholderAPI();
         this.parseChatColors = strings.processMessageColors();
         this.messagePlaceholders = strings.processMessagePlaceholders();
-        this.chatFilter = strings.getChatFilter();
         this.scheduler = Bukkit.getScheduler();
         long cooldown = Strings.calculateTicks(strings.getCoolDownLength());
 
@@ -72,14 +70,6 @@ public final class ChatManager {
 
     public String processMessage(Player sender, String message, Channel channel) {
 
-        if(!(sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("*") || sender.hasPermission("strings.chat.filterbypass"))) {
-            if(channel.doUrlFilter()) {
-                message = chatFilter.urlFilter(message, sender);
-            }
-            if(channel.doProfanityFilter()) {
-                message = chatFilter.profanityFilter(message, sender);
-            }
-        }
         if(usePAPI && messagePlaceholders && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.placeholdermsg"))) {
             message = PlaceholderAPI.setPlaceholders(sender, message);
         }

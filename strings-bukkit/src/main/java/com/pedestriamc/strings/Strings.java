@@ -64,14 +64,12 @@ public final class Strings extends JavaPlugin {
     private File messagesFile;
     private File usersFile;
     private File channelsFile;
-    private File logsFile;
     private FileConfiguration logsFileConfig;
     private FileConfiguration broadcastsFileConfig;
     private FileConfiguration messagesFileConfig;
     private FileConfiguration usersFileConfig;
     private FileConfiguration channelsFileConfig;
     private ChatManager chatManager;
-    private ChatFilter chatFilter;
     private boolean usingPlaceholderAPI = false;
     private boolean processPlayerMessageColors;
     private boolean processPlayerMessagePlaceholders;
@@ -83,23 +81,30 @@ public final class Strings extends JavaPlugin {
     private Messenger messenger;
     private ChannelLoader channelLoader;
     private LogManager logManager;
+    private YamlConfiguration moderationFileConfig;
+
+    @Override
+    public void onLoad() {
+        instance = this;
+        logger.info("[Strings] Loading...");
+        saveDefaultConfig();
+        setupCustomConfigs();
+        updateConfigs();
+        loadConfigOptions();
+        instantiateObjects();
+        setupAPI();
+    }
 
     @Override
     public void onEnable() {
-        instance = this;
-        logger.info("[Strings] Loading...");
-        this.saveDefaultConfig();
-        this.setupCustomConfigs();
-        this.updateConfigs();
-        this.loadConfigOptions();
-        this.instantiateObjects();
+        logManager = new LogManager(this);
         this.registerClasses();
         this.setupVault();
-        this.setupAPI();
         int pluginId = 22597;
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
         metrics.addCustomChart(new SimplePie("using_stringsapi", this::isAPIUsed));
+        metrics.addCustomChart(new SimplePie("using_stringsmoderation_expansion", this::isUsingStringsModeration));
         checkIfReload();
         checkUpdate();
         logger.info("[Strings] Enabled!");
@@ -115,7 +120,6 @@ public final class Strings extends JavaPlugin {
         this.playerDirectMessenger = null;
         this.chatManager = null;
         this.channelLoader = null;
-        this.chatFilter = null;
         this.autoBroadcasts = null;
         this.mentioner = null;
         this.logManager = null;
@@ -207,35 +211,42 @@ public final class Strings extends JavaPlugin {
         //Config updater using https://github.com/tchristofferson/Config-Updater
         File configFile = new File(this.getDataFolder(), "config.yml");
         File messageFile = new File(this.getDataFolder(), "messages.yml");
-        if(configFile.exists()){
-            try{
+        File moderationFile = new File(getDataFolder(), "moderation.yml");
+        if(configFile.exists()) {
+            try {
                 ConfigUpdater.update(this,"config.yml", configFile);
-            }catch(IOException e){
+            } catch(IOException e) {
                 Bukkit.getLogger().info("[Strings] Updating config file failed.");
                 e.printStackTrace();
             }
         }
-        if(messageFile.exists()){
+        if(messageFile.exists()) {
             try{
                 ConfigUpdater.update(this,"messages.yml", messageFile);
-            }catch(IOException e){
+            } catch(IOException e) {
                 Bukkit.getLogger().info("[Strings] Updating messages file failed.");
                 e.printStackTrace();
             }
+        }
+        if(moderationFile.exists()) {
+            try {
+                ConfigUpdater.update(this,"moderation.yml", moderationFile);
+            } catch(IOException e) {
+                Bukkit.getLogger().info("[Strings] Updating moderation file failed.");
+                e.printStackTrace();
+            }
+
         }
     }
 
     private void instantiateObjects(){
         messenger = new Messenger(getMessagesFileConfig());
-        chatFilter = new ChatFilter(this);
         chatManager = new ChatManager(this);
         playerDirectMessenger = new PlayerDirectMessenger(this);
         channelLoader = new StringsChannelLoader(this);
         autoBroadcasts = new AutoBroadcasts(this);
         serverMessages = new ServerMessages(this);
         mentioner = new Mentioner(this);
-        logManager = new LogManager(this);
-
     }
 
     private void setupVault() {
@@ -261,7 +272,8 @@ public final class Strings extends JavaPlugin {
         messagesFile = new File(getDataFolder(), "messages.yml");
         usersFile = new File(getDataFolder(), "users.yml");
         channelsFile = new File(getDataFolder(), "channels.yml");
-        logsFile = new File(getDataFolder(), "logs.yml");
+        File logsFile = new File(getDataFolder(), "logs.yml");
+        File moderationFile = new File(getDataFolder(), "moderation.yml");
 
         if(!broadcastsFile.exists()) {
             broadcastsFile.getParentFile().mkdirs();
@@ -288,12 +300,18 @@ public final class Strings extends JavaPlugin {
             saveResource("logs.yml", false);
         }
 
+        if(!moderationFile.exists()) {
+            moderationFile.getParentFile().mkdirs();
+            saveResource("moderation.yml", false);
+        }
+
 
         broadcastsFileConfig = YamlConfiguration.loadConfiguration(broadcastsFile);
         messagesFileConfig = YamlConfiguration.loadConfiguration(messagesFile);
         usersFileConfig = YamlConfiguration.loadConfiguration(usersFile);
         channelsFileConfig = YamlConfiguration.loadConfiguration(channelsFile);
         logsFileConfig = YamlConfiguration.loadConfiguration(logsFile);
+        moderationFileConfig = YamlConfiguration.loadConfiguration(moderationFile);
     }
 
     private void checkIfReload() {
@@ -375,7 +393,6 @@ public final class Strings extends JavaPlugin {
 
     public Messenger getMessenger(){ return messenger; }
 
-    public ChatFilter getChatFilter(){ return chatFilter; }
 
     public Chat getVaultChat(){ return chat; }
 
@@ -447,6 +464,7 @@ public final class Strings extends JavaPlugin {
 
     public void reload() {
         onDisable();
+        onLoad();
         onEnable();
     }
 
@@ -474,5 +492,14 @@ public final class Strings extends JavaPlugin {
 
     public String isAPIUsed() {
         return "" + stringsImpl.isApiUsed();
+    }
+
+    public YamlConfiguration getModerationFileConfig() {
+        return moderationFileConfig;
+    }
+
+    public String isUsingStringsModeration() {
+        boolean using = getServer().getPluginManager().getPlugin("StringsModeration") != null;
+        return String.valueOf(using);
     }
 }

@@ -27,10 +27,13 @@ channels:
     # BUG: This will be fixed, but currently if events are not called, cool downs will not work.
     call-event: true
     # Should chat be filtered for profanity?
+    # Requires StringsModeration expansion available on Modrinth
     filter-profanity: false
+    # Requires StringsModeration expansion available on Modrinth
     # Should chat be filtered for URLs?
-    # A URL whitelist can be found in config.yml
+    # A URL whitelist can be found in moderation.yml
     block-urls: false
+    # Requires StringsModeration expansion available on Modrinth
     # Should this channel have a message cooldown?
     # Cooldown duration is configured in config.yml
     cooldown: false
