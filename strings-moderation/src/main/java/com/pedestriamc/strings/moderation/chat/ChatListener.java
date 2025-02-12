@@ -52,7 +52,7 @@ public class ChatListener implements Listener {
         Player player = event.getPlayer();
         Channel channel = event.getChannel();
 
-        if(channel.doCooldown()) {
+        if(channel.doCooldown() && !player.hasPermission("*") && !player.hasPermission("strings.chat.bypasscooldown")) {
             if(chatModerationManager.isOnCooldown(player)) {
                 event.setCancelled(true);
                 messenger.sendMessage(Message.COOL_DOWN, cooldownPlaceholders, player);

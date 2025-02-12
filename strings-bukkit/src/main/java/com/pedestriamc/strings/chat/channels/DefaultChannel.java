@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The channel that players are assigned to by default.
- * This channel cannot process any messages, it instead determines the proper channel to be used.
+ * This channel cannot process any messages; it instead determines the proper channel to be used.
  */
 public class DefaultChannel implements Channel {
 
@@ -33,7 +33,7 @@ public class DefaultChannel implements Channel {
 
     @Override
     public void sendMessage(Player player, String message) {
-        List<Channel> worldChannels = channelLoader.getWorldPriorityChannels(player.getWorld());
+        Set<Channel> worldChannels = channelLoader.getWorldPriorityChannels(player.getWorld());
         if(!worldChannels.isEmpty()) {
             for(Channel c : worldChannels) {
                 if(c.allows(player)) {

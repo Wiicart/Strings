@@ -6,6 +6,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 public class PlayerSpamEvent extends Event {
 
     public static final HandlerList HANDLER_LIST = new HandlerList();

@@ -16,7 +16,7 @@ command-log: false
 # This will log the text content of any sign a player places or edits.
 sign-log: false
 
-# Enable logging for when players messages are filtered?
+# Enable logging for when player(s) messages are filtered?
 # NOTE: This will only apply in Channels with filtering enabled.
 filter-log: false
 
@@ -24,4 +24,4 @@ filter-log: false
 # NOTE: This will only work if you're using the Strings /msg system, otherwise nothing will be logged.
 dm-log: false
 
-# Logging for restricted words & or swearing filters will be added in a later update.
+# Logging for restricted words and or swearing filters will be added in a later update.

@@ -17,7 +17,7 @@ public class ChannelTabCompleter implements TabCompleter {
 
     private final StringsChannelLoader channelLoader;
 
-    public ChannelTabCompleter(@NotNull Strings strings){
+    public ChannelTabCompleter(@NotNull Strings strings) {
         this.channelLoader = (StringsChannelLoader) strings.getChannelLoader();
     }
 
@@ -26,25 +26,25 @@ public class ChannelTabCompleter implements TabCompleter {
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
-        if(args.length <= 1){
+        if(args.length <= 1) {
             List<String> list = new ArrayList<>(channelLoader.getNonProtectedChannelNames());
             list.add("join");
             list.add("leave");
             return list;
         }
-        if(args.length == 2){
-            if(args[0].equalsIgnoreCase("join") || args[0].equalsIgnoreCase("leave")){
+        if(args.length == 2) {
+            if(args[0].equalsIgnoreCase("join") || args[0].equalsIgnoreCase("leave")) {
                 return channelLoader.getNonProtectedChannelNames();
             }
             ArrayList<String> list = new ArrayList<>();
-            for(Player p : Bukkit.getOnlinePlayers()){
+            for(Player p : Bukkit.getOnlinePlayers()) {
                 list.add(p.getName());
             }
             return list;
         }
-        if(args.length == 3){
+        if(args.length == 3) {
             ArrayList<String> list = new ArrayList<>();
-            for(Player p : Bukkit.getOnlinePlayers()){
+            for(Player p : Bukkit.getOnlinePlayers()) {
                 list.add(p.getName());
             }
             return list;

@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * The User class is used to store information about players for the purposes of this plugin.
+ * The User class is used to store information about players for this plugin.
  * It provides the data that the plugin stores on the player, and when available provides information from other plugins.
  */
 public class User implements StringsUser {
@@ -157,7 +157,7 @@ public class User implements StringsUser {
 
     /**
      * Provides the User's suffix.
-     * * Uses Vault suffixes when available.
+     * Uses Vault suffixes when available.
      * @return The suffix.
      */
     public String getSuffix(){
@@ -189,7 +189,7 @@ public class User implements StringsUser {
      * Sets the chat color of the User.
      * @param chatColor The new chat color.
      */
-    public void setChatColor(@NotNull String chatColor){
+    public void setChatColor(String chatColor){
         this.chatColor = chatColor;
         YamlUserUtil.saveUser(this);
     }
@@ -237,7 +237,7 @@ public class User implements StringsUser {
     }
 
     /**
-     * Sets if this player will receive mentions
+     * Sets if this player receives mentions
      * @param mentionsEnabled A boolean of if the mentions should be enabled.
      */
     public void setMentionsEnabled(boolean mentionsEnabled){
@@ -318,7 +318,7 @@ public class User implements StringsUser {
     }
 
     /**
-     * Provides an ArrayList of the names of the channels the User is a member of.
+     * Provides an ArrayList of all names of the channels the User is a member of.
      * @return An {@code ArrayList} of {@code String} containing the names of the channels the user is a member of.
      */
     public ArrayList<String> getChannelNames(){

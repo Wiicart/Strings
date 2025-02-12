@@ -18,7 +18,7 @@ public final class ChannelChatEvent extends AsyncPlayerChatEvent {
      * @param async   This changes the event to a synchronous state.
      * @param who     the chat sender
      * @param message the message sent
-     * @param players the players to receive the message. This may be a lazy
+     * @param players the players to receive the message.
      * @param channel the channel which the message will be sent to
      */
     public ChannelChatEvent(boolean async, @NotNull Player who, @NotNull String message, @NotNull Set<Player> players, Channel channel) {

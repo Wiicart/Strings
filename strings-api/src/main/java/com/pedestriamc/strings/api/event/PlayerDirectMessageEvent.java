@@ -29,6 +29,7 @@ public final class PlayerDirectMessageEvent extends Event implements Cancellable
         this.message = message;
     }
 
+    @SuppressWarnings("unused")
     public static HandlerList getHandlerList(){ return HANDLER_LIST; }
 
     /**
@@ -41,7 +42,7 @@ public final class PlayerDirectMessageEvent extends Event implements Cancellable
     }
 
     /**
-     * Checks if the Event is cancelled.
+     * Checks if the Event is canceled.
      * @return A boolean.
      */
     @Override
@@ -50,8 +51,8 @@ public final class PlayerDirectMessageEvent extends Event implements Cancellable
     }
 
     /**
-     * Sets if the Event should be cancelled.
-     * @param isCancelled boolean if the event should be cancelled.
+     * Sets if the Event should be canceled.
+     * @param isCancelled boolean if the event should be canceled.
      */
     @Override
     public void setCancelled(boolean isCancelled) {

@@ -27,7 +27,6 @@ public final class ChatManager {
     private final long coolDownLength;
     private final String mentionColor;
     private final boolean mentionsEnabled;
-    private final boolean isPaper;
 
     public ChatManager(@NotNull Strings strings){
         this.strings = strings;
@@ -47,7 +46,6 @@ public final class ChatManager {
         FileConfiguration config = strings.getConfig();
         this.mentionColor = ChatColor.translateAlternateColorCodes('&', config.getString("mention-color", "&e"));
         this.mentionsEnabled = strings.getConfig().getBoolean("enable-mentions", true);
-        isPaper = strings.isPaper();
     }
 
     public @NotNull String formatMessage(Player sender, Channel channel) {

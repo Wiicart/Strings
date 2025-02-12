@@ -36,7 +36,7 @@ public interface StringsAPI {
     Set<Channel> getChannels();
 
     /**
-     * Gets the Channel with the specified name, if it exists.
+     * Gets the Channel with the specified name if it exists.
      * @param name The name of the Channel to search for.
      * @return The Channel, if it exists.
      */
@@ -62,7 +62,7 @@ public interface StringsAPI {
     Optional<StringsUser> getOptionalStringsUser(UUID uuid);
 
     /**
-     * Provides a StringsUser based off a UUID, if it exists.
+     * Provides a StringsUser based off a UUID if it exists.
      * @param uuid The UUID to search under.
      * @return A StringsUser, if it exists.
      */

@@ -20,9 +20,9 @@ public class LogDirectMessageListener implements Listener {
     public void onEvent(PlayerDirectMessageEvent event) {
         String log = "["
                 + new Date() + "] Player "
-                + event.getSender()
+                + event.getSender().getName()
                 + " sent a message to player "
-                + event.getRecipient()
+                + event.getRecipient().getName()
                 + ": \""
                 + event.getMessage()
                 + "\"";

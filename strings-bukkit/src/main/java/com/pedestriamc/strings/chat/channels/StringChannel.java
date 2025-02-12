@@ -49,7 +49,7 @@ public class StringChannel extends AbstractChannel implements Buildable {
         Set<Player> recipients = new HashSet<>(members);
         if(getMembership() == Membership.DEFAULT) {
             for(Player p : Bukkit.getOnlinePlayers()) {
-                if(p.hasPermission("strings.channels." + getName() + ".receive")){
+                if(p.hasPermission("strings.channels." + getName() + ".receive")) {
                     recipients.add(p);
                 }
             }

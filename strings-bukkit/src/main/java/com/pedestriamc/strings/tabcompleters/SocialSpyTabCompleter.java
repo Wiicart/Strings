@@ -16,7 +16,7 @@ public class SocialSpyTabCompleter implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        if(args.length <= 1){
+        if(args.length <= 1) {
             return list;
         }
         return empty;

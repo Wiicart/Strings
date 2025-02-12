@@ -107,6 +107,7 @@ public final class Strings extends JavaPlugin {
         metrics.addCustomChart(new SimplePie("using_stringsmoderation_expansion", this::isUsingStringsModeration));
         checkIfReload();
         checkUpdate();
+        instantiateObjectsTwo();
         logger.info("[Strings] Enabled!");
     }
 
@@ -244,9 +245,12 @@ public final class Strings extends JavaPlugin {
         chatManager = new ChatManager(this);
         playerDirectMessenger = new PlayerDirectMessenger(this);
         channelLoader = new StringsChannelLoader(this);
-        autoBroadcasts = new AutoBroadcasts(this);
         serverMessages = new ServerMessages(this);
         mentioner = new Mentioner(this);
+    }
+
+    private void instantiateObjectsTwo() {
+        autoBroadcasts = new AutoBroadcasts(this);
     }
 
     private void setupVault() {

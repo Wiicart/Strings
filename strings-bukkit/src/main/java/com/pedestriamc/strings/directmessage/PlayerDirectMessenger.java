@@ -59,7 +59,7 @@ public class PlayerDirectMessenger {
 
         senderString = color(senderString);
         recipientString = color(recipientString);
-        PlayerDirectMessageEvent event = new PlayerDirectMessageEvent(sender,recipient,message);
+        PlayerDirectMessageEvent event = new PlayerDirectMessageEvent(sender, recipient, message);
         Bukkit.getPluginManager().callEvent(event);
         if(!event.isCancelled()) {
             sender.sendMessage(senderString);

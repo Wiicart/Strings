@@ -39,10 +39,12 @@ public class PlayerChatFilteredEvent extends Event {
         return filteredMessage;
     }
 
+    @SuppressWarnings("unused")
     public List<String> getFilteredElements() {
         return filteredElements;
     }
 
+    @SuppressWarnings("unused")
     public static HandlerList getHandlerList(){ return HANDLER_LIST; }
 
     @Override

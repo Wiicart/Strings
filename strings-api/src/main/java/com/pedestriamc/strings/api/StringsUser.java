@@ -40,7 +40,7 @@ public interface StringsUser {
      * Sets the chat color of the User.
      * @param chatColor The new chat color.
      */
-    void setChatColor(@NotNull String chatColor);
+    void setChatColor(String chatColor);
 
     /**
      * Provides the prefix of the StringsUser, if it exists.
