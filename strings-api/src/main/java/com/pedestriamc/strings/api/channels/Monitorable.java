@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.api.channels;
 
+import com.pedestriamc.strings.api.StringsUser;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
@@ -9,6 +10,13 @@ import java.util.Set;
  * Monitors are not members of the Channel, but will receive messages from the Channel.
  */
 public interface Monitorable extends Channel {
+
+    static Monitorable of(Channel channel) {
+        if(channel instanceof Monitorable monitorable) {
+            return monitorable;
+        }
+        return null;
+    }
 
     /**
      * Adds a monitor
@@ -27,4 +35,15 @@ public interface Monitorable extends Channel {
      * @return A populated Set of Players
      */
     Set<Player> getMonitors();
+
+    @SuppressWarnings("unused")
+    default void addMonitor(StringsUser stringsUser) {
+        addMonitor(stringsUser.getPlayer());
+    }
+
+    @SuppressWarnings("unused")
+    default void removeMonitor(StringsUser stringsUser) {
+        removeMonitor(stringsUser.getPlayer());
+    }
+
 }

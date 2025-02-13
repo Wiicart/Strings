@@ -5,6 +5,7 @@ import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.api.channels.Type;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 
 import java.util.Map;
 import java.util.Set;
@@ -140,7 +141,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public boolean allows(Player player) {
+    public boolean allows(Permissible permissible) {
         return false;
     }
 

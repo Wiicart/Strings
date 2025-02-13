@@ -33,10 +33,8 @@ public class ChannelFileReader {
      * Reads the FileConfiguration and loads/registers all Channels in it
      */
     public void read() {
-
         boolean globalExists = false;
         boolean helpOpExists = false;
-
         if(!config.contains("channels")) {
             log("No Channels defined in channels.yml, disabling plugin.");
             strings.getServer().getPluginManager().disablePlugin(strings);
@@ -72,7 +70,7 @@ public class ChannelFileReader {
             ChannelData data = getChannelData(channel, channelName, type);
 
             try {
-                Channel c = channelLoader.build(data, type);
+                Channel c = channelLoader.build(data, typeString);
                 if(c == null){
                     continue;
                 }
@@ -116,7 +114,7 @@ public class ChannelFileReader {
             data.setPriority(-1);
 
             try {
-                Channel channel = channelLoader.build(data, Type.NORMAL);
+                Channel channel = channelLoader.build(data, "normal");
                 if(channel != null) {
                     channelLoader.registerChannel(channel);
                 }
@@ -199,9 +197,7 @@ public class ChannelFileReader {
     }
 
     private void loadMembership(ChannelData data, ConfigurationSection section) {
-
         String membershipString = section.getString("membership");
-
         if(membershipString == null) {
             data.setMembership(Membership.PROTECTED);
             return;
@@ -220,20 +216,18 @@ public class ChannelFileReader {
     }
 
     private Type getType(String typeString, String channelName) {
-
         switch (typeString) {
-
             case "stringchannel" -> {
                 log("Loading stringchannel '" + channelName + "'...");
                 return Type.NORMAL;
             }
 
-            case "world" -> {
+            case "world", "world_legacy" -> {
                 log("Loading world channel '" + channelName + "'...");
                 return Type.WORLD;
             }
 
-            case "proximity" -> {
+            case "proximity", "proximity_legacy" -> {
                 log("Loading proximity channel '" + channelName + "'...");
                 return Type.PROXIMITY;
             }
@@ -247,9 +241,7 @@ public class ChannelFileReader {
                 log("Failed to load Channel '" + channelName + "', invalid channel type defined.");
                 return null;
             }
-
         }
-
     }
 
     private void log(String message) {

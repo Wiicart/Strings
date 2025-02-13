@@ -2,6 +2,8 @@ package com.pedestriamc.strings.api.channels;
 
 import com.pedestriamc.strings.api.StringsUser;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Set;
@@ -9,7 +11,7 @@ import java.util.Set;
 /**
  * The interface for all Channels.
  */
-public interface Channel {
+public interface Channel extends Comparable<Channel> {
 
     /**
      * Sends a message from a player to the channel.
@@ -17,6 +19,15 @@ public interface Channel {
      * @param message The player's message.
      */
     void sendMessage(Player player, String message);
+
+    /**
+     * Compares the priorities of the Channels.
+     * @param channel the object to be compared.
+     * @return the param's priority - the channel instance priority
+     */
+    default int compareTo(@NotNull Channel channel) {
+        return channel.getPriority() - getPriority();
+    }
 
     /**
      * Broadcasts a message to a Channel.
@@ -87,13 +98,13 @@ public interface Channel {
 
     /**
      * Tells if the Channel requires a chat cool-down.
-     * @return If the Channel does a chat cool-down.
+     * @return If the Channel does a chat cooldown.
      */
     boolean doCooldown();
 
     /**
      * Sets if the Channel should do cool-downs.
-     * @param doCooldown Should the Channel do cool-downs.
+     * @param doCooldown Should the Channel do cooldowns?
      */
     void setDoCooldown(boolean doCooldown);
 
@@ -161,10 +172,10 @@ public interface Channel {
 
     /**
      * Returns if a player has permission to use the Channel.
-     * @param player The player to check
+     * @param permissible The player to check
      * @return If the player has permission
      */
-    boolean allows(Player player);
+    boolean allows(Permissible permissible);
 
     boolean isCallEvent();
 

@@ -36,7 +36,7 @@ public interface ChannelLoader {
      * @throws Exception When
      */
     @Nullable
-    Channel build(ChannelData data, Type type) throws Exception;
+    Channel build(ChannelData data, String type) throws Exception;
 
     /**
      * Provides a StringsChannel based off its name, if it exists.

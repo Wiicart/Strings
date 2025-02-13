@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.channels.LocalChannel;
 import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.channels.data.ChannelData;
 import com.pedestriamc.strings.api.channels.ChannelLoader;
@@ -8,6 +9,8 @@ import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.chat.channels.HelpOPChannel;
 import com.pedestriamc.strings.chat.channels.ProximityChannel;
+import com.pedestriamc.strings.chat.channels.StrictProximityChannel;
+import com.pedestriamc.strings.chat.channels.StrictWorldChannel;
 import com.pedestriamc.strings.chat.channels.StringChannel;
 import com.pedestriamc.strings.chat.channels.WorldChannel;
 import com.pedestriamc.strings.user.User;
@@ -63,9 +66,7 @@ public class StringsChannelLoader implements ChannelLoader {
      */
     @Override
     public void registerChannel(Channel channel) {
-
         String channelName = channel.getName();
-
         if(channels.containsKey(channelName)) {
             log("A Channel with the name '" + channelName + "' already exists, channels with the same name cannot be registered.");
             return;
@@ -76,7 +77,7 @@ public class StringsChannelLoader implements ChannelLoader {
             prioritySorted.sort(Comparator.comparingInt(Channel::getPriority).reversed());
         }
 
-        if(channel instanceof WorldChannel || channel instanceof ProximityChannel) {
+        if(channel instanceof LocalChannel) {
             worldChannels.add(channel);
         }
 
@@ -91,7 +92,6 @@ public class StringsChannelLoader implements ChannelLoader {
      * @param channel The Channel to be unregistered
      */
     public void unregisterChannel(Channel channel) {
-
         Collection<User> users = YamlUserUtil.UserMap.getUserSet();
         Channel global = strings.getChannel("global");
         for(User user : users){
@@ -119,7 +119,6 @@ public class StringsChannelLoader implements ChannelLoader {
      */
     @Override
     public void saveChannel(Channel channel) {
-
         if (channel.getType() == Type.PROTECTED) {
             log("Unable to save protected channels, they must be modified in channels.yml");
             return;
@@ -133,31 +132,20 @@ public class StringsChannelLoader implements ChannelLoader {
         }
         dataMap.forEach(channelSection::set);
         strings.saveChannelsFile();
-
     }
 
     @Override
-    public Channel build(ChannelData data, @NotNull Type type) throws UnsupportedOperationException {
-
+    public Channel build(ChannelData data, @NotNull String type) throws UnsupportedOperationException {
+        type = type.toLowerCase();
         switch(type){
-
-            case NORMAL ->  { return new StringChannel(strings, data); }
-
-            case PROXIMITY ->  { return new ProximityChannel(strings, data); }
-
-            case WORLD -> { return new WorldChannel(strings, data); }
-
-            case PROTECTED -> {
-                if(!data.getName().equals("helpop")) {
-                    throw new UnsupportedOperationException("Building with Channels that are Type PROTECTED only supports helpop channels");
-                }
-                return new HelpOPChannel(strings, data);
-            }
-
+            case "stringchannel" ->  { return new StringChannel(strings, data); }
+            case "proximity_legacy" ->  { return new ProximityChannel(strings, data); }
+            case "world_legacy" -> { return new WorldChannel(strings, data); }
+            case "proximity" -> { return new StrictProximityChannel(strings, data); }
+            case "world" -> { return new StrictWorldChannel(strings, data); }
+            case "helpop" -> { return new HelpOPChannel(strings, data); }
             default -> throw new UnsupportedOperationException("Unable to build Channels that are not Types NORMAL, PROXIMITY, WORLD. PROTECTED Channels must be HELPOP Channels");
-
         }
-
     }
 
     private void log(String message) {
@@ -275,14 +263,9 @@ public class StringsChannelLoader implements ChannelLoader {
                 world,
                 worldChannels.stream()
                         .filter(channel -> {
-                            if(channel instanceof WorldChannel w) {
-                                return w.getWorlds().contains(world);
+                            if(channel instanceof LocalChannel local) {
+                                return local.getWorlds().contains(world);
                             }
-
-                            if(channel instanceof ProximityChannel p) {
-                                return p.getWorlds().contains(world);
-                            }
-
                             return false;
                         })
                         .collect(Collectors.toSet())

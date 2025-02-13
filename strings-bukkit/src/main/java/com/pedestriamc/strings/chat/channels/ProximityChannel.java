@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -56,8 +57,6 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
         if(sender == null) {
             return defaultSet();
         }
-
-        // WORK OUT MESSAGES FOR MEMBERS OF THE CHANNEL. REVISIT WORLDCHANNEL TOO
 
         if(members.contains(sender)) {
             return defaultSet();
@@ -155,20 +154,31 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
     }
 
     @Override
-    public boolean allows(Player player) {
+    public boolean allows(Permissible permissible) {
 
-        if(getMembers().contains(player)) {
-            return true;
-        }
+        if(permissible instanceof Player player) {
+            if(getMembers().contains(player)) {
+                return true;
+            }
 
-        if(getMembership() == Membership.DEFAULT) {
-            return worlds.contains(player.getWorld());
+            if (
+                    player.hasPermission("strings.channels." + getName()) ||
+                    player.hasPermission("strings.channels.*") ||
+                    player.hasPermission("strings.*")
+            ) {
+                return true;
+            }
+
+            if(getMembership() == Membership.DEFAULT) {
+                return worlds.contains(player.getWorld());
+            }
+
         }
 
         return (
-                player.hasPermission("strings.channels." + getName()) ||
-                player.hasPermission("strings.channels.*") ||
-                player.hasPermission("strings.*")
+                permissible.hasPermission("strings.channels." + getName()) ||
+                permissible.hasPermission("strings.channels.*") ||
+                permissible.hasPermission("strings.*")
         );
 
     }

@@ -11,7 +11,7 @@ import java.util.List;
  * This Event will be called if a player's message is changed due to filtering, whether it be for containing a URL,
  * or having restricted words.
  */
-public class PlayerChatFilteredEvent extends Event {
+public final class PlayerChatFilteredEvent extends Event {
 
     public static final HandlerList HANDLER_LIST = new HandlerList();
 

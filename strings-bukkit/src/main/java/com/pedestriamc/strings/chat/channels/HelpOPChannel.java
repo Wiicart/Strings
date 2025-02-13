@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -146,8 +147,8 @@ public class HelpOPChannel extends ProtectedChannel implements Buildable {
     }
 
     @Override
-    public boolean allows(Player player) {
-        return (player.hasPermission("strings.helpop.use") ||  player.hasPermission("strings.*"));
+    public boolean allows(Permissible permissible) {
+        return (permissible.hasPermission("strings.helpop.use") ||  permissible.hasPermission("strings.*"));
     }
 
 }

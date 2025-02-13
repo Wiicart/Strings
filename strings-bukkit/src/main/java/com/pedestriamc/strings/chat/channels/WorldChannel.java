@@ -10,6 +10,7 @@ import com.pedestriamc.strings.chat.channels.base.AbstractChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,8 +43,6 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
 
     }
 
-
-
     @Override
     public Set<Player> getRecipients(Player sender) {
         HashSet<Player> recipients = new HashSet<>();
@@ -58,6 +57,7 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
                 recipients.add(p);
             }
         }
+
         return recipients;
     }
 
@@ -113,20 +113,31 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
     }
 
     @Override
-    public boolean allows(Player player) {
+    public boolean allows(Permissible permissible) {
 
-        if(getMembers().contains(player)) {
-            return true;
+        if(permissible instanceof Player player) {
+            if(getMembers().contains(player)) {
+                return true;
+            }
+
+            if (
+                    player.hasPermission("strings.channels." + getName()) ||
+                    player.hasPermission("strings.channels.*") ||
+                    player.hasPermission("strings.*")
+            ) {
+                return true;
+            }
+
+            if(getMembership() == Membership.DEFAULT) {
+                return worlds.contains(player.getWorld());
+            }
         }
 
-        if(getMembership() == Membership.DEFAULT) {
-            return worlds.contains(player.getWorld());
-        }
 
         return (
-                player.hasPermission("strings.channels." + getName()) ||
-                player.hasPermission("strings.channels.*") ||
-                player.hasPermission("strings.*")
+                permissible.hasPermission("strings.channels." + getName()) ||
+                permissible.hasPermission("strings.channels.*") ||
+                permissible.hasPermission("strings.*")
         );
 
     }

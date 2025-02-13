@@ -10,6 +10,7 @@ import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.channels.Type;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -170,7 +171,7 @@ public class DefaultChannel implements Channel {
     }
 
     @Override
-    public boolean allows(Player player) {
+    public boolean allows(Permissible permissible) {
         return true;
     }
 }

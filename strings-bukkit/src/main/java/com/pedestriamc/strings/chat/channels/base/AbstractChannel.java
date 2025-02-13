@@ -13,6 +13,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.permissions.Permissible;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -138,15 +139,18 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public boolean allows(Player player) {
-        if(getMembers().contains(player)) {
-            return true;
+    public boolean allows(Permissible permissible) {
+        if(permissible instanceof Player player) {
+            if(getMembers().contains(player)) {
+                return true;
+            }
         }
+
         return (
-                player.hasPermission("strings.channels." + getName()) ||
-                player.hasPermission("strings.channels.*") ||
-                player.hasPermission("strings.*") ||
-                player.hasPermission("*")
+                permissible.hasPermission("strings.channels." + getName()) ||
+                permissible.hasPermission("strings.channels.*") ||
+                permissible.hasPermission("strings.*") ||
+                permissible.hasPermission("*")
         );
     }
 

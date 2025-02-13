@@ -10,6 +10,10 @@ import org.bukkit.entity.Player;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A ProximityChannel that only sends messages to players close enough to the sender.
+ * Members are not sent the message by default; to moderate, this Channel can be monitored.
+ */
 public class StrictProximityChannel extends ProximityChannel {
 
     public StrictProximityChannel(Strings strings, ChannelData data) {
@@ -18,7 +22,6 @@ public class StrictProximityChannel extends ProximityChannel {
 
     @Override
     public Set<Player> getRecipients(Player sender) {
-
         if(sender == null) {
             return defaultSet();
         }
