@@ -44,12 +44,9 @@ import java.util.logging.Logger;
 
 public final class Strings extends JavaPlugin {
 
-    @SuppressWarnings("FieldCanBeLocal")
-    private final String version = "1.5";
-    @SuppressWarnings("FieldCanBeLocal")
-    private final String distributor = "github";
-    @SuppressWarnings("FieldCanBeLocal")
-    private final short pluginNum = 5;
+    private static final String VERSION = "1.5";
+    private static final String DISTRIBUTOR = "github";
+    private static final short PLUGIN_NUM = 5;
 
     @SuppressWarnings("unused")
     private AutoBroadcasts autoBroadcasts;
@@ -335,7 +332,7 @@ public final class Strings extends JavaPlugin {
             connection.setRequestMethod("GET");
             String raw = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
             short latest = Short.parseShort(raw);
-            if(latest > pluginNum) {
+            if(latest > PLUGIN_NUM) {
                 Bukkit.getLogger().info("+------------[Strings]------------+");
                 Bukkit.getLogger().info("|    A new update is available!   |");
                 Bukkit.getLogger().info("|          Download at:           |");
@@ -384,9 +381,9 @@ public final class Strings extends JavaPlugin {
     /*
     Public getter and setter methods
      */
-    public String getDistributor(){ return distributor; }
+    public String getDistributor(){ return DISTRIBUTOR; }
 
-    public String getVersion(){ return version; }
+    public String getVersion(){ return VERSION; }
 
     public String getCoolDownLength(){ return coolDownLength; }
 
@@ -425,7 +422,7 @@ public final class Strings extends JavaPlugin {
 
     public Mentioner getMentioner(){ return mentioner; }
 
-    public short getPluginNum(){ return pluginNum; }
+    public short getPluginNum(){ return PLUGIN_NUM; }
 
     public ChannelLoader getChannelLoader() { return channelLoader; }
 

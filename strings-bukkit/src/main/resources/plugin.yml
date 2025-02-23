@@ -140,3 +140,6 @@ permissions:
   strings.channels.global.receive:
     description: "Allows players to receive messages from the global channel"
     default: true
+  strings.channels.<channel>.broadcast:
+    description: "Allows players to broadcast a message to a Channel."
+    default: op

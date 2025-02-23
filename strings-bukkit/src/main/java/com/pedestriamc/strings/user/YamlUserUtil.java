@@ -11,8 +11,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
+//TODO: Refactor class
 public final class YamlUserUtil {
 
     private static final Strings strings = Strings.getInstance();
@@ -47,6 +49,7 @@ public final class YamlUserUtil {
     public static User loadUser(UUID uuid){
         String userPath = "players." + uuid;
         HashSet<Channel> channels = new HashSet<>();
+        HashSet<Channel> monitoredChannels = new HashSet<>();
         if(!config.contains(userPath)){
             return null;
         }
@@ -57,6 +60,8 @@ public final class YamlUserUtil {
         boolean mentionsEnabled = config.getBoolean(userPath + "mentions-enabled", true);
         Channel activeChannel = strings.getChannel(config.getString(userPath + ".active-channel"));
         List<?> channelNames = config.getList(userPath + ".channels");
+        List<?> monitoredChannelNames = config.getList(userPath + ".monitored-channels");
+
         if(channelNames != null){
             for(Object item : channelNames){
                 if(item instanceof String && strings.getChannel((String) item) != null){
@@ -64,7 +69,17 @@ public final class YamlUserUtil {
                 }
             }
         }
-        return new User(uuid, chatColor, prefix, suffix, displayName, channels, activeChannel, mentionsEnabled);
+
+        if(monitoredChannelNames != null) {
+            for(Object item : monitoredChannelNames) {
+                if(item instanceof String str && strings.getChannel(str) != null) {
+                    monitoredChannels.add(strings.getChannel(str));
+                }
+            }
+        }
+
+
+        return new User(uuid, chatColor, prefix, suffix, displayName, channels, activeChannel, mentionsEnabled, monitoredChannels);
     }
 
     /**

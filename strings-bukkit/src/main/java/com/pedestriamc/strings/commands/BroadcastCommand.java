@@ -28,22 +28,25 @@ public final class BroadcastCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args){
-        if(!sender.hasPermission("strings.chat.broadcast") && !sender.hasPermission("strings.chat.*") && !sender.hasPermission("strings.*")){
+        if(!sender.hasPermission("strings.chat.broadcast") && !sender.hasPermission("strings.chat.*") && !sender.hasPermission("strings.*")) {
             messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
+
         StringBuilder broadcast = new StringBuilder(broadcastFormat);
         String broadcastString;
-        if(sender.hasPermission("strings.chat.placeholdermsg") && usePAPI && (sender instanceof Player)){
-            PlaceholderAPI.setPlaceholders((Player) sender, broadcast.toString());
+        if(sender.hasPermission("strings.chat.placeholdermsg") && usePAPI && (sender instanceof Player p)) {
+            PlaceholderAPI.setPlaceholders(p, broadcast.toString());
         }
-        for(String arg : args){
+        for(String arg : args) {
             broadcast.append(arg);
             broadcast.append(" ");
         }
+
         broadcastString = broadcast.toString();
         broadcastString = ChatColor.translateAlternateColorCodes('&', broadcastString);
         Bukkit.broadcastMessage(broadcastString);
+
         return true;
     }
 }

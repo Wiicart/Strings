@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.chat.channels;
+package com.pedestriamc.strings.chat.channel.local;
 
 import com.pedestriamc.strings.api.channels.Buildable;
 import com.pedestriamc.strings.api.channels.Type;
@@ -6,7 +6,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.channels.LocalChannel;
 import com.pedestriamc.strings.api.channels.data.ChannelData;
-import com.pedestriamc.strings.chat.channels.base.AbstractChannel;
+import com.pedestriamc.strings.chat.channel.base.AbstractChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,14 +19,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ProximityChannel extends AbstractChannel implements Buildable, LocalChannel {
 
-    private final Set<Player> members;
+
     private double distance;
     private final Set<World> worlds;
-    private final Set<Player> monitors;
 
     public ProximityChannel(Strings strings, ChannelData data) {
 
@@ -41,18 +39,18 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
                 data.isDoProfanityFilter(),
                 data.isDoUrlFilter(),
                 data.isCallEvent(),
-                data.getPriority()
+                data.getPriority(),
+                data.getBroadcastFormat()
         );
 
-        this.members = ConcurrentHashMap.newKeySet();
         this.worlds = data.getWorlds();
         this.distance = data.getDistance();
-        this.monitors = new HashSet<>();
-
     }
 
 
     public Set<Player> getRecipients(Player sender) {
+
+        Set<Player> members = getMembers();
 
         if(sender == null) {
             return defaultSet();
@@ -74,7 +72,7 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
         }
 
         for(Player p : Bukkit.getOnlinePlayers()) {
-            if(p.hasPermission("strings.channels." + getName() + ".receive")) {
+            if(p.hasPermission(CHANNEL_PERMISSION + getName() + ".receive")) {
                 recipients.add(p);
             }
         }
@@ -83,27 +81,32 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
 
     }
 
+    @Override
+    public Set<Player> getPlayersInScope() {
+        switch(getMembership()) {
+            case DEFAULT -> {
+                return defaultSet();
+            }
+            case PERMISSION -> {
+                HashSet<Player> scoped = new HashSet<>(defaultSet());
+                scoped.removeIf(p -> !allows(p));
+                return scoped;
+            }
+            default -> {
+                HashSet<Player> scoped = new HashSet<>(getMembers());
+                scoped.addAll(getMonitors());
+                return scoped;
+            }
+        }
+    }
+
     protected HashSet<Player> defaultSet() {
-        HashSet<Player> set = new HashSet<>(members);
+        HashSet<Player> set = new HashSet<>(getMembers());
+        set.addAll(getMonitors());
         for(World w : worlds){
             set.addAll(w.getPlayers());
         }
         return set;
-    }
-
-    @Override
-    public void addPlayer(Player player) {
-        members.add(player);
-    }
-
-    @Override
-    public void removePlayer(Player player) {
-        members.remove(player);
-    }
-
-    @Override
-    public Set<Player> getMembers() {
-        return new HashSet<>(members);
     }
 
     @Override
@@ -145,56 +148,29 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
 
     @Override
     public List<String> getWorldNames() {
-        ArrayList<String> worlds = new ArrayList<>();
+        ArrayList<String> worldNames = new ArrayList<>();
         for (World w : getWorlds() ){
-            worlds.add(w.getName());
+            worldNames.add(w.getName());
         }
 
-        return worlds;
+        return worldNames;
     }
 
     @Override
     public boolean allows(Permissible permissible) {
-
         if(permissible instanceof Player player) {
             if(getMembers().contains(player)) {
                 return true;
             }
-
-            if (
-                    player.hasPermission("strings.channels." + getName()) ||
-                    player.hasPermission("strings.channels.*") ||
-                    player.hasPermission("strings.*")
-            ) {
-                return true;
-            }
-
-            if(getMembership() == Membership.DEFAULT) {
+            if(getMembership() == Membership.DEFAULT && worlds.contains(player.getWorld())) {
                 return worlds.contains(player.getWorld());
             }
-
         }
 
         return (
-                permissible.hasPermission("strings.channels." + getName()) ||
-                permissible.hasPermission("strings.channels.*") ||
+                permissible.hasPermission(CHANNEL_PERMISSION + getName()) ||
+                permissible.hasPermission(CHANNEL_PERMISSION + "*") ||
                 permissible.hasPermission("strings.*")
         );
-
-    }
-
-    @Override
-    public void addMonitor(Player player) {
-        monitors.add(player);
-    }
-
-    @Override
-    public void removeMonitor(Player player) {
-        monitors.remove(player);
-    }
-
-    @Override
-    public Set<Player> getMonitors() {
-        return new HashSet<>(monitors);
     }
 }

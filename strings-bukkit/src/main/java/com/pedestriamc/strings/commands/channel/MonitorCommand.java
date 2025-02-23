@@ -6,6 +6,7 @@ import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.api.channels.Monitorable;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.commands.CommandBase;
+import com.pedestriamc.strings.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,9 +17,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.pedestriamc.strings.api.message.Message.*;
+import static com.pedestriamc.strings.commands.channel.ChannelCommand.CHANNEL_PLACEHOLDER;
 
 public record MonitorCommand(Strings strings) implements CommandBase.CommandComponent {
 
+    /**
+     * /channel monitor <channel> <player>
+     */
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Messenger messenger = strings.getMessenger();
@@ -55,14 +60,13 @@ public record MonitorCommand(Strings strings) implements CommandBase.CommandComp
         Channel channel = loader.getChannel(args[1]);
         if(channel == null) {
             Map<String, String> map = new HashMap<>();
-            map.put("{channel}", args[2]);
+            map.put(CHANNEL_PLACEHOLDER, args[1]);
             messenger.sendMessage(CHANNEL_DOES_NOT_EXIST, map, sender);
             return true;
         }
 
-        if(!channel.allows(sender)) {
-            Map<String, String> map = new HashMap<>();
-            map.put("{channel}", args[1]);
+        if(!sender.hasPermission("strings.channels." + channel.getName() + ".monitor")) {
+            Map<String, String> map = generatePlaceholders(sender.getName(), channel.getName());
             messenger.sendMessage(NO_PERM_MONITOR, map, sender);
             return true;
         }
@@ -70,17 +74,20 @@ public record MonitorCommand(Strings strings) implements CommandBase.CommandComp
         Monitorable monitorable = Monitorable.of(channel);
         if(monitorable == null) {
             Map<String, String> map = new HashMap<>();
-            map.put("{channel}", args[1]);
+            map.put(CHANNEL_PLACEHOLDER, args[1]);
             messenger.sendMessage(NOT_MONITORABLE, map, sender);
             return true;
         }
 
-        monitorable.addMonitor(target);
+        User user = strings.getUser(target);
+        if(user.getMonitoredChannels().contains(channel)) {
+            messenger.sendMessage(ALREADY_MONITORING, generatePlaceholders(sender.getName(), channel.getName()), sender);
+            return true;
+        }
 
-        Map<String, String> placeholders = new HashMap<>();
-        placeholders.put("{channel}", args[1]);
-        placeholders.put("{player}", target.getName());
+        user.monitor(monitorable);
 
+        Map<String, String> placeholders = generatePlaceholders(target.getName(), args[1]);
         messenger.sendMessage(MONITOR_SUCCESS, placeholders, target);
         if(!target.equals(sender)) {
             messenger.sendMessage(MONITOR_SUCCESS_OTHER, placeholders, sender);
@@ -88,4 +95,12 @@ public record MonitorCommand(Strings strings) implements CommandBase.CommandComp
 
         return true;
     }
+
+    private Map<String, String> generatePlaceholders(String playerName, String channelName) {
+        Map<String, String> map = new HashMap<>();
+        map.put(CHANNEL_PLACEHOLDER, channelName);
+        map.put("{player}", playerName);
+        return map;
+    }
+
 }

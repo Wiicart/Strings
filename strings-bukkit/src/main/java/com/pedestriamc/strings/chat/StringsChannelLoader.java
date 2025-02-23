@@ -7,12 +7,12 @@ import com.pedestriamc.strings.api.channels.data.ChannelData;
 import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.api.channels.Channel;
-import com.pedestriamc.strings.chat.channels.HelpOPChannel;
-import com.pedestriamc.strings.chat.channels.ProximityChannel;
-import com.pedestriamc.strings.chat.channels.StrictProximityChannel;
-import com.pedestriamc.strings.chat.channels.StrictWorldChannel;
-import com.pedestriamc.strings.chat.channels.StringChannel;
-import com.pedestriamc.strings.chat.channels.WorldChannel;
+import com.pedestriamc.strings.chat.channel.HelpOPChannel;
+import com.pedestriamc.strings.chat.channel.local.ProximityChannel;
+import com.pedestriamc.strings.chat.channel.local.StrictProximityChannel;
+import com.pedestriamc.strings.chat.channel.local.StrictWorldChannel;
+import com.pedestriamc.strings.chat.channel.StringChannel;
+import com.pedestriamc.strings.chat.channel.local.WorldChannel;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.YamlUserUtil;
 import org.bukkit.Bukkit;
@@ -259,9 +259,7 @@ public class StringsChannelLoader implements ChannelLoader {
     }
 
     private void updateWorldChannelMap(World world) {
-        worldChannelMap.put(
-                world,
-                worldChannels.stream()
+        worldChannelMap.put(world, worldChannels.stream()
                         .filter(channel -> {
                             if(channel instanceof LocalChannel local) {
                                 return local.getWorlds().contains(world);

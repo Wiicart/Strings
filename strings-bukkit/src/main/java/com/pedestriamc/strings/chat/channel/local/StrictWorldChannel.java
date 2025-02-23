@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.chat.channels;
+package com.pedestriamc.strings.chat.channel.local;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channels.data.ChannelData;

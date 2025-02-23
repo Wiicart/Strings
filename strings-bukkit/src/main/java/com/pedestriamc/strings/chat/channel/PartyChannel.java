@@ -1,17 +1,13 @@
-package com.pedestriamc.strings.chat.channels;
+package com.pedestriamc.strings.chat.channel;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.StringsUser;
-import com.pedestriamc.strings.api.channels.Channel;
 import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.channels.Type;
-import com.pedestriamc.strings.chat.channels.base.AbstractChannel;
+import com.pedestriamc.strings.chat.channel.base.AbstractChannel;
 import org.bukkit.entity.Player;
 
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A Channel used for Parties, these channels cannot be saved and are deleted on reboot or when all players leave.
@@ -26,11 +22,16 @@ public class PartyChannel extends AbstractChannel {
     private ChannelLoader channelLoader;
 
     protected PartyChannel(Strings strings, ChannelLoader channelLoader, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority) {
-        super(strings, channelLoader, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doUrlFilter, callEvent, priority);
+        super(strings, channelLoader, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doUrlFilter, callEvent, priority, null);
     }
 
     @Override
     public Set<Player> getRecipients(Player sender) {
+        return Set.of();
+    }
+
+    @Override
+    public Set<Player> getPlayersInScope() {
         return Set.of();
     }
 

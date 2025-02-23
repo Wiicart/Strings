@@ -2,7 +2,6 @@ package com.pedestriamc.strings.listeners;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.chat.Mentioner;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,12 +31,11 @@ public class MentionListener implements Listener {
             }
         }
 
-        if(p.hasPermission("strings.mention.all")) {
-            if(event.getMessage().contains("@everyone")) {
+        if(p.hasPermission("strings.mention.all") && event.getMessage().contains("@everyone")) {
                 for(Player subj : Bukkit.getOnlinePlayers()) {
                     mentioner.mention(subj, p);
                 }
             }
-        }
+
     }
 }

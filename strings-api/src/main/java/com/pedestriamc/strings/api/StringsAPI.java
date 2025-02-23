@@ -94,6 +94,7 @@ public interface StringsAPI {
      * Starts a chat cool-down for a player.
      * @param player The player to start the cool-down on.
      */
+    @Deprecated
     void startCooldown(Player player);
 
     /**

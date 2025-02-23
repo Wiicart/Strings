@@ -1,11 +1,11 @@
-package com.pedestriamc.strings.chat.channels;
+package com.pedestriamc.strings.chat.channel;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channels.Buildable;
 import com.pedestriamc.strings.api.channels.data.ChannelData;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.chat.ChatManager;
-import com.pedestriamc.strings.chat.channels.base.ProtectedChannel;
+import com.pedestriamc.strings.chat.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
 import net.md_5.bungee.api.ChatColor;
@@ -59,10 +59,10 @@ public class HelpOPChannel extends ProtectedChannel implements Buildable {
     @Override
     public void sendMessage(Player player, String message) {
         Set<Player> members = getRecipients();
-        String format = chatManager.formatMessage(player, this);
+        String messageFormat = chatManager.formatMessage(player, this);
         message = chatManager.processMessage(player, message, this);
         String finalMessage = message;
-        String formattedMessage = format.replace("{message}", finalMessage);
+        String formattedMessage = messageFormat.replace("{message}", finalMessage);
         if(callEvent){
             Bukkit.getScheduler().runTask(strings, () -> {
                 AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this);

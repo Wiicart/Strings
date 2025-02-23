@@ -3,6 +3,7 @@ package com.pedestriamc.strings.user;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channels.Monitorable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -28,6 +30,7 @@ public class User implements StringsUser {
     private final Player player;
     private final String name;
     private final HashSet<Channel> channels;
+    private final HashSet<Channel> channelsMonitoring;
     private String chatColor;
     private String prefix;
     private String suffix;
@@ -41,7 +44,7 @@ public class User implements StringsUser {
      * @param uuid the User's UUID.  This should match the Player's UUID.
      */
     public User(UUID uuid){
-        this(uuid, null, null, null, null, null, null, true);
+        this(uuid, null, null, null, null, null, null, true, null);
     }
 
     /**
@@ -55,7 +58,7 @@ public class User implements StringsUser {
      * @param activeChannel The User's active channel.
      * @param mentionsEnabled If the user receives mentions or not.
      */
-    public User(UUID uuid, String chatColor, String prefix, String suffix, String displayName, HashSet<Channel> channels, Channel activeChannel, boolean mentionsEnabled){
+    public User(UUID uuid, String chatColor, String prefix, String suffix, String displayName, HashSet<Channel> channels, Channel activeChannel, boolean mentionsEnabled, HashSet<Channel> monitoredChannels){
         this.strings = Strings.getInstance();
         this.uuid = uuid;
         this.chatColor = chatColor;
@@ -67,6 +70,7 @@ public class User implements StringsUser {
         this.name = player != null ? player.getName() : null;
         this.activeChannel = activeChannel != null ? activeChannel : strings.getChannel("default");
         this.channels = Objects.requireNonNullElseGet(channels, HashSet::new);
+        this.channelsMonitoring = Objects.requireNonNullElseGet(monitoredChannels, HashSet::new);
         if(channels != null) {
             for(Channel channel : channels){
                 channel.addPlayer(this.player);
@@ -90,6 +94,7 @@ public class User implements StringsUser {
         infoMap.put("display-name", this.displayName);
         infoMap.put("active-channel", this.activeChannel.getName());
         infoMap.put("channels", this.getChannelNames());
+        infoMap.put("monitored-channels", getMonitoredChannelNames());
         infoMap.put("mentions-enabled", this.mentionsEnabled);
         return infoMap;
     }
@@ -321,7 +326,7 @@ public class User implements StringsUser {
      * Provides an ArrayList of all names of the channels the User is a member of.
      * @return An {@code ArrayList} of {@code String} containing the names of the channels the user is a member of.
      */
-    public ArrayList<String> getChannelNames(){
+    public List<String> getChannelNames(){
         ArrayList<String> names = new ArrayList<>();
         for(Channel channel : channels){
             names.add(channel.getName());
@@ -337,6 +342,35 @@ public class User implements StringsUser {
         for(Channel channel : channels){
             channel.removePlayer(this.getPlayer());
         }
+
+        for(Channel monitorable : channelsMonitoring) {
+            monitorable.removePlayer(this.getPlayer());
+        }
+    }
+
+    public void monitor(Monitorable monitorable) {
+        channelsMonitoring.add(monitorable);
+        monitorable.addMonitor(this);
+        YamlUserUtil.saveUser(this);
+    }
+
+    public void unmonitor(Monitorable monitorable) {
+        channelsMonitoring.remove(monitorable);
+        monitorable.removeMonitor(this);
+        YamlUserUtil.saveUser(this);
+    }
+
+    public List<String> getMonitoredChannelNames() {
+        List<String> set = new ArrayList<>();
+        for(Channel channel : channelsMonitoring) {
+            set.add(channel.getName());
+        }
+
+        return set;
+    }
+
+    public Set<Channel> getMonitoredChannels() {
+        return new HashSet<>(channelsMonitoring);
     }
 
     /**

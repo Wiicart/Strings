@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.chat.channels.base;
+package com.pedestriamc.strings.chat.channel.base;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.StringsUser;
@@ -7,7 +7,6 @@ import com.pedestriamc.strings.api.channels.ChannelLoader;
 import com.pedestriamc.strings.api.channels.Monitorable;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.channels.Membership;
-import com.pedestriamc.strings.api.channels.Type;
 import com.pedestriamc.strings.chat.ChatManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -15,9 +14,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.permissions.Permissible;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractChannel implements Channel, Monitorable {
 
@@ -27,6 +28,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     private String name;
     private String defaultColor;
     private String format;
+    private final String broadcastFormat;
     private final Membership membership;
     private boolean doCooldown;
     private boolean doProfanityFilter;
@@ -34,14 +36,20 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     private final boolean callEvent;
     private final int priority;
     private final boolean mentionsEnabled;
+    private final Set<Player> monitors;
+    private final Set<Player> members;
 
-    protected AbstractChannel(Strings strings, ChannelLoader channelLoader, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority) {
+    protected static final String CHANNEL_PERMISSION = "strings.channels.";
+    protected static final String MESSAGE_PLACEHOLDER = "{message}";
+
+    protected AbstractChannel(Strings strings, ChannelLoader channelLoader, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority, String broadcastFormat) {
         this.strings = strings;
         this.channelLoader = channelLoader;
         this.chatManager = strings.getChatManager();
         this.name = name;
         this.defaultColor = defaultColor != null ? defaultColor : "&f";
         this.format = format;
+        this.broadcastFormat = broadcastFormat;
         this.membership = membership;
         this.doCooldown = doCooldown;
         this.doProfanityFilter = doProfanityFilter;
@@ -49,6 +57,9 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         this.callEvent = callEvent;
         this.priority = priority;
         this.mentionsEnabled = chatManager.isMentionsEnabled();
+
+        members = ConcurrentHashMap.newKeySet();
+        monitors = ConcurrentHashMap.newKeySet();
     }
 
     /**
@@ -59,17 +70,12 @@ public abstract class AbstractChannel implements Channel, Monitorable {
      */
     public abstract Set<Player> getRecipients(Player sender);
 
-    @Override
-    public abstract Set<Player> getMembers();
-
-    @Override
-    public abstract void addPlayer(Player player);
-
-    @Override
-    public abstract void removePlayer(Player player);
-
-    @Override
-    public abstract Type getType();
+    /**
+     * Provides a Set<Player> of all Players in the Channel's scope.
+     * Used to determine who to send broadcasts to.
+     * @return A populated Set<Player>
+     */
+    public abstract Set<Player> getPlayersInScope();
 
     @Override
     public void sendMessage(Player player, String message) {
@@ -82,40 +88,43 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         }
 
         if (isCallEvent()) {
-            String finalProcessedMessage = processedMessage;
-            Bukkit.getScheduler().runTask(strings, () -> {
-                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalProcessedMessage, recipients, this);
-                Bukkit.getPluginManager().callEvent(event);
-                if (!event.isCancelled()) {
+            sendEventMessage(player, processedMessage, template, recipients);
 
-                    String finalForm = template.replace("{message}", event.getMessage());
-
-                    for (Player p : recipients) {
-                        p.sendMessage(finalForm);
-                    }
-
-                    Bukkit.getLogger().info(ChatColor.stripColor(finalForm));
-
-                    if(!recipients.contains(player)) {
-                        player.sendMessage(finalForm);
-                    }
-
-                }
-            });
-            return;
+        } else {
+            sendNonEventMessage(player, message, template, recipients);
         }
 
-        String finalFormNonEvent = template.replace("{message}", processedMessage);
+    }
 
+    private void sendEventMessage(Player player, String message, String template, Set<Player> recipients) {
+        Bukkit.getScheduler().runTask(strings, () -> {
+            AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, message, recipients, this);
+            Bukkit.getPluginManager().callEvent(event);
+            if (!event.isCancelled()) {
+                String finalForm = template.replace(MESSAGE_PLACEHOLDER, event.getMessage());
+                for (Player p : recipients) {
+                    p.sendMessage(finalForm);
+                }
+
+                Bukkit.getLogger().info(ChatColor.stripColor(finalForm));
+                if(!recipients.contains(player)) {
+                    player.sendMessage(finalForm);
+                }
+            }
+        });
+    }
+
+    private void sendNonEventMessage(Player player, String message, String template, Set<Player> recipients) {
+        String finalFormNonEvent = template.replace(MESSAGE_PLACEHOLDER, message);
         for (Player p : recipients) {
             p.sendMessage(finalFormNonEvent);
         }
+
         if(!recipients.contains(player)) {
             player.sendMessage(finalFormNonEvent);
         }
 
         Bukkit.getLogger().info(ChatColor.stripColor(finalFormNonEvent));
-
     }
 
     /**
@@ -140,15 +149,13 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     @Override
     public boolean allows(Permissible permissible) {
-        if(permissible instanceof Player player) {
-            if(getMembers().contains(player)) {
-                return true;
-            }
+        if(permissible instanceof Player player && getMembers().contains(player)) {
+            return true;
         }
 
         return (
-                permissible.hasPermission("strings.channels." + getName()) ||
-                permissible.hasPermission("strings.channels.*") ||
+                permissible.hasPermission(CHANNEL_PERMISSION + getName()) ||
+                permissible.hasPermission(CHANNEL_PERMISSION + "*") ||
                 permissible.hasPermission("strings.*") ||
                 permissible.hasPermission("*")
         );
@@ -156,8 +163,9 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     @Override
     public void broadcastMessage(String message) {
-        for (Player p : getRecipients(null)) {
-            p.sendMessage(message);
+        String finalString = broadcastFormat.replace(MESSAGE_PLACEHOLDER, message);
+        for (Player p : getPlayersInScope()) {
+            p.sendMessage(finalString);
         }
     }
 
@@ -248,6 +256,36 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     @Override
     public void setFormat(String format){
         this.format = format;
+    }
+
+    @Override
+    public void addMonitor(Player player) {
+        monitors.add(player);
+    }
+
+    @Override
+    public void removeMonitor(Player player) {
+        monitors.remove(player);
+    }
+
+    @Override
+    public Set<Player> getMonitors() {
+        return new HashSet<>(monitors);
+    }
+
+    @Override
+    public void addPlayer(Player player) {
+        members.add(player);
+    }
+
+    @Override
+    public void removePlayer(Player player) {
+        members.remove(player);
+    }
+
+    @Override
+    public Set<Player> getMembers() {
+        return new HashSet<>(members);
     }
 
 }

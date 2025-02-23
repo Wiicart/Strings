@@ -22,12 +22,13 @@ public enum Type {
      */
     WORLD,
     /**
-     * Represents the DefaultChannel, a channel that does not process any messages, instead
+     * Represents the DefaultChannel, a channel that does not process any messages; it instead
      * forwards them to a different channel.
      */
     DEFAULT,
     /**
      * Represents PartyChannels
      */
-    PARTY
+    PARTY,
+    CUSTOM
 }

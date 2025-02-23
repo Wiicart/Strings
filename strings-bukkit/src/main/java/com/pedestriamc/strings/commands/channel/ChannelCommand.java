@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 public final class ChannelCommand extends CommandBase {
 
+    public static final String CHANNEL_PLACEHOLDER = "{channel}";
 
     public ChannelCommand(Strings strings){
         super();
@@ -22,6 +23,8 @@ public final class ChannelCommand extends CommandBase {
         map.put("H", helpCommand);
         MonitorCommand monitorCommand = new MonitorCommand(strings);
         map.put("MONITOR", monitorCommand);
+        UnmonitorCommand unmonitorCommand = new UnmonitorCommand(strings);
+        map.put("UNMONITOR", unmonitorCommand);
         ChannelBroadcastCommand channelBroadcastCommand = new ChannelBroadcastCommand(strings);
         map.put("BROADCAST", channelBroadcastCommand);
         map.put("ANNOUNCE", channelBroadcastCommand);

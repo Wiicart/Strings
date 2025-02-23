@@ -52,21 +52,19 @@ public class ChatListener implements Listener {
         Player player = event.getPlayer();
         Channel channel = event.getChannel();
 
-        if(channel.doCooldown() && !player.hasPermission("*") && !player.hasPermission("strings.chat.bypasscooldown")) {
-            if(chatModerationManager.isOnCooldown(player)) {
+        if(channel.doCooldown() && !player.hasPermission("*") && !player.hasPermission("strings.chat.bypasscooldown") && chatModerationManager.isOnCooldown(player)) {
                 event.setCancelled(true);
                 messenger.sendMessage(Message.COOL_DOWN, cooldownPlaceholders, player);
                 return;
             }
-        }
 
-        if(blockDuplicates) {
-            if(chatModerationManager.isRepeating(player, event.getMessage())) {
+
+        if(blockDuplicates && chatModerationManager.isRepeating(player, event.getMessage())) {
                 event.setCancelled(true);
                 messenger.sendMessage(Message.NO_REPETITION, player);
                 return;
-            }
         }
+
 
         if(!(player.hasPermission("strings.*") || player.hasPermission("strings.chat.*") || player.hasPermission("*") || player.hasPermission("strings.chat.filterbypass"))) {
             if(channel.doUrlFilter()) {

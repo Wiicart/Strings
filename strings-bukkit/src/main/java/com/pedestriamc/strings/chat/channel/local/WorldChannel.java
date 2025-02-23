@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.chat.channels;
+package com.pedestriamc.strings.chat.channel.local;
 
 import com.pedestriamc.strings.api.channels.Buildable;
 import com.pedestriamc.strings.api.channels.Type;
@@ -6,23 +6,19 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.channels.LocalChannel;
 import com.pedestriamc.strings.api.channels.data.ChannelData;
-import com.pedestriamc.strings.chat.channels.base.AbstractChannel;
+import com.pedestriamc.strings.chat.channel.base.AbstractChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class WorldChannel extends AbstractChannel implements Buildable, LocalChannel {
 
-    private final Set<Player> members;
     private final Set<World> worlds;
-    private final Set<Player> monitors;
 
     public WorldChannel(Strings strings, ChannelData data) {
-
         super(
                 strings,
                 strings.getChannelLoader(),
@@ -34,13 +30,10 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
                 data.isDoProfanityFilter(),
                 data.isDoUrlFilter(),
                 data.isCallEvent(),
-                data.getPriority()
+                data.getPriority(),
+                data.getBroadcastFormat()
         );
-
-        this.members = ConcurrentHashMap.newKeySet();
         this.worlds = data.getWorlds();
-        this.monitors = new HashSet<>();
-
     }
 
     @Override
@@ -51,7 +44,7 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
             recipients.addAll(w.getPlayers());
         }
 
-        recipients.addAll(members);
+        recipients.addAll(getMembers());
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(p.hasPermission("strings.channels." + this.getName() + ".receive")) {
                 recipients.add(p);
@@ -62,18 +55,22 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
     }
 
     @Override
-    public void addPlayer(Player player) {
-        members.add(player);
-    }
-
-    @Override
-    public void removePlayer(Player player) {
-        members.remove(player);
-    }
-
-    @Override
-    public Set<Player> getMembers() {
-        return new HashSet<>(members);
+    public Set<Player> getPlayersInScope() {
+        switch(getMembership()) {
+            case DEFAULT -> {
+                return defaultSet();
+            }
+            case PERMISSION -> {
+                HashSet<Player> scoped = new HashSet<>(defaultSet());
+                scoped.removeIf(p -> !allows(p));
+                return scoped;
+            }
+            default -> {
+                HashSet<Player> scoped = new HashSet<>(getMembers());
+                scoped.addAll(getMonitors());
+                return scoped;
+            }
+        }
     }
 
     @Override
@@ -104,17 +101,16 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
 
     @Override
     public List<String> getWorldNames() {
-        ArrayList<String> worlds = new ArrayList<>();
+        ArrayList<String> worldNames = new ArrayList<>();
         for (World w : getWorlds() ){
-            worlds.add(w.getName());
+            worldNames.add(w.getName());
         }
 
-        return worlds;
+        return worldNames;
     }
 
     @Override
     public boolean allows(Permissible permissible) {
-
         if(permissible instanceof Player player) {
             if(getMembers().contains(player)) {
                 return true;
@@ -128,33 +124,25 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
                 return true;
             }
 
-            if(getMembership() == Membership.DEFAULT) {
-                return worlds.contains(player.getWorld());
+            if(getMembership() == Membership.DEFAULT && worlds.contains(player.getWorld())) {
+                return true;
             }
         }
 
-
         return (
-                permissible.hasPermission("strings.channels." + getName()) ||
-                permissible.hasPermission("strings.channels.*") ||
+                permissible.hasPermission(CHANNEL_PERMISSION + getName()) ||
+                permissible.hasPermission(CHANNEL_PERMISSION + "*") ||
                 permissible.hasPermission("strings.*")
         );
-
     }
 
-    @Override
-    public void addMonitor(Player player) {
-        monitors.add(player);
-    }
-
-    @Override
-    public void removeMonitor(Player player) {
-        monitors.remove(player);
-    }
-
-    @Override
-    public Set<Player> getMonitors() {
-        return new HashSet<>(monitors);
+    protected HashSet<Player> defaultSet() {
+        HashSet<Player> set = new HashSet<>(getMembers());
+        set.addAll(getMonitors());
+        for(World w : worlds){
+            set.addAll(w.getPlayers());
+        }
+        return set;
     }
 
     @Override

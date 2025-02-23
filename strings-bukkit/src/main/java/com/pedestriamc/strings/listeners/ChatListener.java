@@ -67,7 +67,7 @@ public class ChatListener implements Listener {
 
     }
 
-    public Container processSymbol(String msg, User user) {
+    private Container processSymbol(String msg, User user) {
         for (String key : symbolMap.keySet()) {
             if (msg.startsWith(key)) {
                 Channel c = symbolMap.get(key);
@@ -80,6 +80,6 @@ public class ChatListener implements Listener {
         return new Container(user.getActiveChannel(), msg);
     }
 
-    public record Container(Channel channel, String message) {}
+    private record Container(Channel channel, String message) {}
 
 }

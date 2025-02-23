@@ -16,6 +16,7 @@ public class ChannelData
     private String name;
     private String defaultColor;
     private String format;
+    private String broadcastFormat;
     private Membership membership;
     private boolean doCooldown;
     private boolean doProfanityFilter;
@@ -123,4 +124,11 @@ public class ChannelData
         this.distance = distance;
     }
 
+    public String getBroadcastFormat() {
+        return broadcastFormat;
+    }
+
+    public void setBroadcastFormat(String broadcastFormat) {
+        this.broadcastFormat = broadcastFormat;
+    }
 }

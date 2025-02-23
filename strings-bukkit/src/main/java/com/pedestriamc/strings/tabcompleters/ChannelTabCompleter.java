@@ -21,7 +21,8 @@ public class ChannelTabCompleter implements TabCompleter {
         this.channelLoader = (StringsChannelLoader) strings.getChannelLoader();
     }
 
-    private final List<String> empty = new ArrayList<>();
+    private static final List<String> empty = new ArrayList<>();
+    private static final String[] cases = {"join", "leave", "monitor", "unmonitor", "broadcast", "announce"};
 
     @Nullable
     @Override
@@ -30,10 +31,13 @@ public class ChannelTabCompleter implements TabCompleter {
             List<String> list = new ArrayList<>(channelLoader.getNonProtectedChannelNames());
             list.add("join");
             list.add("leave");
+            list.add("monitor");
+            list.add("unmonitor");
+            list.add("broadcast");
             return list;
         }
         if(args.length == 2) {
-            if(args[0].equalsIgnoreCase("join") || args[0].equalsIgnoreCase("leave")) {
+            if(anyOf(args[0])) {
                 return channelLoader.getNonProtectedChannelNames();
             }
             ArrayList<String> list = new ArrayList<>();
@@ -50,5 +54,13 @@ public class ChannelTabCompleter implements TabCompleter {
             return list;
         }
         return empty;
+    }
+
+    private boolean anyOf(String arg) {
+        boolean any = false;
+        for(String str : cases) {
+            any = any || str.equalsIgnoreCase(arg);
+        }
+        return any;
     }
 }

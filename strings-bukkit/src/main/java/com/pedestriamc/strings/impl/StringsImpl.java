@@ -80,6 +80,7 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
+    @Deprecated
     public void startCooldown(Player player) {
         chatManager.startCoolDown(player);
     }

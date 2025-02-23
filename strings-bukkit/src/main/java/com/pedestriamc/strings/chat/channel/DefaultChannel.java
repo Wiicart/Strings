@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.chat.channels;
+package com.pedestriamc.strings.chat.channel;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.StringsUser;
@@ -85,10 +85,12 @@ public class DefaultChannel implements Channel {
     }
 
     @Override
-    public void setName(String name) {}
+    public void setName(String name) { /* DefaultChannel instances are always named "default" */ }
 
     @Override
-    public void setDefaultColor(String defaultColor) {}
+    public void setDefaultColor(String defaultColor) {
+        /* As DefaultChannel does not send out messages, there is no utilization of a default color. */
+    }
 
     @Override
     public void setFormat(String format) {}
@@ -147,7 +149,7 @@ public class DefaultChannel implements Channel {
 
     @Override
     public Map<String, Object> getData() {
-        return null;
+        return Collections.emptyMap();
     }
 
     @Override

@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 import static com.pedestriamc.strings.api.message.Message.*;
 import static com.pedestriamc.strings.api.message.Message.NO_PERMS_CHANNEL;
+import static com.pedestriamc.strings.commands.channel.ChannelCommand.CHANNEL_PLACEHOLDER;
 
 public abstract class ChannelProcessor implements CommandBase.CommandComponent {
 
@@ -85,13 +86,12 @@ public abstract class ChannelProcessor implements CommandBase.CommandComponent {
             return new BaseData(null,null, null, true);
         }
 
-        if(type == Type.JOIN || type == Type.BASE){
-
-            if (
-                    forbids(sender, "strings.channels." + channel.getName()) &&
-                            forbids(sender, "strings.channels.*") &&
-                            forbids(sender, "strings.*") &&
-                            !channel.getMembers().contains(target)
+        if((
+                type == Type.JOIN ||
+                type == Type.BASE) &&
+                forbids(sender, "strings.channels." + channel.getName()) &&
+                forbids(sender, "strings.channels.*") && forbids(sender, "strings.*") &&
+                !channel.getMembers().contains(target)
             ) {
                 HashMap<String, String> map = new HashMap<>();
                 map.put("{channel}", channelName);
@@ -99,10 +99,9 @@ public abstract class ChannelProcessor implements CommandBase.CommandComponent {
                 return new BaseData(null, null, null, true);
             }
 
-        }
 
         HashMap<String, String> placeholders = new HashMap<>();
-        placeholders.put("{channel}", channelName);
+        placeholders.put(CHANNEL_PLACEHOLDER, channelName);
         placeholders.put("{player}", target.getName());
 
         return new BaseData(channel, target, placeholders, false);

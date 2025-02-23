@@ -15,16 +15,19 @@ public enum Membership {
      * message from the default channel.
      */
     DEFAULT,
+
     /**
      * Channels with this Membership are not open to all players and require permissions to join.
      * These channels are not considered when a player's channel is set to default.
      */
     PERMISSION,
+
     /**
      * Channels with this Membership are typically internal Strings channels, and this Membership basically tells
      * anything that involves Membership to ignore the channel.
      */
     PROTECTED,
+
     /**
      * Only PartyChannel(s) can have this Membership.
      */

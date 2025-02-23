@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.chat.channels.base;
+package com.pedestriamc.strings.chat.channel.base;
 
 import com.pedestriamc.strings.api.channels.Membership;
 import com.pedestriamc.strings.api.StringsUser;

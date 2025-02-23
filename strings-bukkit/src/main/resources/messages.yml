@@ -219,5 +219,27 @@ mentions-enabled: "&fMentions enabled.  Players can now mention you."
 # Mentions disabled:
 mentions-disabled: "&fMentions disabled.  Players can not mention you now."
 
+# Monitor Permissions
+
+# No perms to monitor channel
+# Available placeholders:
+# {channel} - channel name
+no-perm-monitor: "&fYou don't have permission to monitor channel &7{channel}&f!"
+
+# Monitoring channel message
+# Available placeholders:
+# {channel} - channel name
+monitor-success: "&fYou are now monitoring channel &7{channel}&f."
+
+# Other player monitoring channel message
+# Available placeholders:
+# {channel} - channel name
+# {player} - player name
+monitor-success-other: "&fUser &7{player} &fis now monitoring channel &7{channel}&f."
+
+# Channel un-monitorable message
+# Available placeholders:
+# {channel} - channel name
+not-monitorable: "&fChannel &7{channel} &fis not monitorable."
 
 

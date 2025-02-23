@@ -20,7 +20,7 @@ import static com.pedestriamc.strings.api.message.Message.*;
 
 public final class ChatColorCommand implements CommandExecutor {
 
-    private final Map<String, ChatColor> colorMap = Map.ofEntries(
+    private static final Map<String, ChatColor> colorMap = Map.ofEntries(
             new AbstractMap.SimpleEntry<>("BLACK", ChatColor.BLACK),
             new AbstractMap.SimpleEntry<>("DARKBLUE", ChatColor.DARK_BLUE),
             new AbstractMap.SimpleEntry<>("DARKGREEN", ChatColor.DARK_GREEN),
@@ -39,7 +39,7 @@ public final class ChatColorCommand implements CommandExecutor {
             new AbstractMap.SimpleEntry<>("WHITE", ChatColor.WHITE)
     );
 
-    private final Map<String, ChatColor> styleMap = Map.of(
+    private static final Map<String, ChatColor> styleMap = Map.of(
             "BOLD", ChatColor.BOLD,
             "UNDERLINE", ChatColor.UNDERLINE,
             "ITALIC", ChatColor.ITALIC,

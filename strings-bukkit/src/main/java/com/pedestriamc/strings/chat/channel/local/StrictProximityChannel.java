@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.chat.channels;
+package com.pedestriamc.strings.chat.channel.local;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channels.data.ChannelData;
@@ -38,11 +38,10 @@ public class StrictProximityChannel extends ProximityChannel {
         }
 
         for(Player p : Bukkit.getOnlinePlayers()) {
-            if(p.hasPermission("strings.channels." + getName() + ".receive")) {
+            if(p.hasPermission(CHANNEL_PERMISSION + getName() + ".receive")) {
                 recipients.add(p);
             }
         }
-
         return recipients;
     }
 
