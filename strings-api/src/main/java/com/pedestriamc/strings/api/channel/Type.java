@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.api.channels;
+package com.pedestriamc.strings.api.channel;
 
 /**
  * Represents the types of StringsChannels.

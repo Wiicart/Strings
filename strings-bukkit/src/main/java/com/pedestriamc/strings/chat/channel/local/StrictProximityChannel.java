@@ -1,13 +1,18 @@
 package com.pedestriamc.strings.chat.channel.local;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channels.data.ChannelData;
+import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.data.ChannelData;
+import com.pedestriamc.strings.api.message.Message;
+import com.pedestriamc.strings.api.message.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -16,8 +21,24 @@ import java.util.Set;
  */
 public class StrictProximityChannel extends ProximityChannel {
 
+    private final Channel defaultChannel;
+    private final Messenger messenger;
+    private final Map<String, String> placeholders = Map.of("{channel}", getName());
+
     public StrictProximityChannel(Strings strings, ChannelData data) {
         super(strings, data);
+        defaultChannel = strings.getChannelLoader().getChannel("default");
+        messenger = strings.getMessenger();
+    }
+
+    @Override
+    public void sendMessage(Player player, String message) {
+        if(isWithinScope(player)) {
+            super.sendMessage(player, message);
+        } else {
+            defaultChannel.sendMessage(player, message);
+            messenger.sendMessage(Message.INELIGIBLE_SENDER, new HashMap<>(placeholders), player);
+        }
     }
 
     @Override

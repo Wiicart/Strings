@@ -1,6 +1,6 @@
-package com.pedestriamc.strings.api.channels.data;
+package com.pedestriamc.strings.api.channel.data;
 
-import com.pedestriamc.strings.api.channels.Membership;
+import com.pedestriamc.strings.api.channel.Membership;
 import org.bukkit.World;
 
 import java.util.Set;

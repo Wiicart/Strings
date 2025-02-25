@@ -2,8 +2,8 @@ package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.StringsUser;
-import com.pedestriamc.strings.api.channels.Channel;
-import com.pedestriamc.strings.api.channels.Monitorable;
+import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.Monitorable;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -73,7 +73,7 @@ public class User implements StringsUser {
         this.channelsMonitoring = Objects.requireNonNullElseGet(monitoredChannels, HashSet::new);
         if(channels != null) {
             for(Channel channel : channels){
-                channel.addPlayer(this.player);
+                channel.addMember(this.player);
             }
         } else {
             joinChannel(strings.getChannel("default"));
@@ -268,7 +268,7 @@ public class User implements StringsUser {
         }
         this.activeChannel = channel;
         channels.add(channel);
-        channel.addPlayer(this.getPlayer());
+        channel.addMember(this.getPlayer());
         YamlUserUtil.saveUser(this);
     }
 
@@ -285,7 +285,7 @@ public class User implements StringsUser {
      * @param channel The channel to join.
      */
     public void joinChannel(@NotNull Channel channel){
-        channel.addPlayer(this.player);
+        channel.addMember(this.player);
         channels.add(channel);
         YamlUserUtil.saveUser(this);
 
@@ -301,7 +301,7 @@ public class User implements StringsUser {
             return;
         }
         channels.remove(channel);
-        channel.removePlayer(this.getPlayer());
+        channel.removeMember(this.getPlayer());
         if(activeChannel.equals(channel)){
             activeChannel = strings.getChannel("default");
         }
@@ -340,11 +340,11 @@ public class User implements StringsUser {
      */
     public void logOff(){
         for(Channel channel : channels){
-            channel.removePlayer(this.getPlayer());
+            channel.removeMember(this.getPlayer());
         }
 
         for(Channel monitorable : channelsMonitoring) {
-            monitorable.removePlayer(this.getPlayer());
+            monitorable.removeMember(this.getPlayer());
         }
     }
 

@@ -1,11 +1,11 @@
 package com.pedestriamc.strings.listeners;
 
-import com.pedestriamc.strings.api.channels.ChannelLoader;
+import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.chat.StringsChannelLoader;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.Strings;

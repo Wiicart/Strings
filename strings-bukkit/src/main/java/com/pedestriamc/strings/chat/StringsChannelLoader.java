@@ -1,12 +1,12 @@
 package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channels.LocalChannel;
-import com.pedestriamc.strings.api.channels.Membership;
-import com.pedestriamc.strings.api.channels.data.ChannelData;
-import com.pedestriamc.strings.api.channels.ChannelLoader;
-import com.pedestriamc.strings.api.channels.Type;
-import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channel.LocalChannel;
+import com.pedestriamc.strings.api.channel.Membership;
+import com.pedestriamc.strings.api.channel.data.ChannelData;
+import com.pedestriamc.strings.api.channel.ChannelLoader;
+import com.pedestriamc.strings.api.channel.Type;
+import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.chat.channel.HelpOPChannel;
 import com.pedestriamc.strings.chat.channel.local.ProximityChannel;
 import com.pedestriamc.strings.chat.channel.local.StrictProximityChannel;
@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -92,11 +93,15 @@ public class StringsChannelLoader implements ChannelLoader {
      * @param channel The Channel to be unregistered
      */
     public void unregisterChannel(Channel channel) {
+        if(!channels.containsKey(channel.getName())) {
+            throw new NoSuchElementException("Channel '" + channel.getName() + "' is not registered.");
+        }
+
         Collection<User> users = YamlUserUtil.UserMap.getUserSet();
-        Channel global = strings.getChannel("global");
+        Channel defaultChannel = strings.getChannel("default");
         for(User user : users){
             if(user.getActiveChannel().equals(channel)) {
-                user.setActiveChannel(global);
+                user.setActiveChannel(defaultChannel);
                 user.leaveChannel(channel);
             }
         }
@@ -195,7 +200,6 @@ public class StringsChannelLoader implements ChannelLoader {
 
 
     private List<String> nonProtectedChannelNames;
-
     public List<String> getNonProtectedChannelNames() {
         if(isChanged() || nonProtectedChannelNames == null) {
             nonProtectedChannelNames = getChannelList().stream()
@@ -204,12 +208,11 @@ public class StringsChannelLoader implements ChannelLoader {
                     .toList();
             datasetUpdated();
         }
-        return  nonProtectedChannelNames;
+        return new ArrayList<>(nonProtectedChannelNames);
     }
 
 
     private Set<Channel> protectedChannels;
-
     public Set<Channel> getProtectedChannels() {
         if(isChanged() || protectedChannels == null) {
             protectedChannels = getChannelList().stream()
@@ -217,12 +220,11 @@ public class StringsChannelLoader implements ChannelLoader {
                     .collect(Collectors.toSet());
             datasetUpdated();
         }
-        return protectedChannels;
+        return new HashSet<>(protectedChannels);
     }
 
 
     private final Map<World, Set<Channel>> worldPriorityChannelMap = new HashMap<>();
-
     public Set<Channel> getWorldPriorityChannels(World world) {
         if(isChanged()) {
             for(World w : Bukkit.getWorlds()) {
@@ -231,7 +233,7 @@ public class StringsChannelLoader implements ChannelLoader {
         } else if(worldPriorityChannelMap.get(world) == null) {
             updateWorldPriorityChannelMap(world);
         }
-        return worldPriorityChannelMap.get(world);
+        return new HashSet<>(worldPriorityChannelMap.get(world));
     }
 
     private void updateWorldPriorityChannelMap(World world) {
@@ -243,7 +245,6 @@ public class StringsChannelLoader implements ChannelLoader {
 
 
     private final Map<World, Set<Channel>> worldChannelMap = new HashMap<>();
-
     public Set<Channel> getChannels(World world) {
         if(isChanged()) {
             for(World w : Bukkit.getWorlds()) {
@@ -255,18 +256,19 @@ public class StringsChannelLoader implements ChannelLoader {
                 updateWorldChannelMap(world);
             }
         }
-        return worldChannelMap.get(world);
+        return new HashSet<>(worldChannelMap.get(world));
     }
 
     private void updateWorldChannelMap(World world) {
-        worldChannelMap.put(world, worldChannels.stream()
-                        .filter(channel -> {
-                            if(channel instanceof LocalChannel local) {
-                                return local.getWorlds().contains(world);
-                            }
-                            return false;
-                        })
-                        .collect(Collectors.toSet())
+        worldChannelMap.put(world, worldChannels
+                .stream()
+                .filter(channel -> {
+                    if(channel instanceof LocalChannel local) {
+                        return local.getWorlds().contains(world);
+                    }
+                    return false;
+                })
+                .collect(Collectors.toSet())
         );
     }
 

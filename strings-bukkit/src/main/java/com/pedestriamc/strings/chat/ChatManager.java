@@ -2,9 +2,8 @@ package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channel.Channel;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -67,16 +66,13 @@ public final class ChatManager {
     }
 
     public String processMessage(Player sender, String message, Channel channel) {
-
         if(usePAPI && messagePlaceholders && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.placeholdermsg"))) {
             message = PlaceholderAPI.setPlaceholders(sender, message);
         }
         if(parseChatColors && (sender.hasPermission("strings.*") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.chat.colormsg"))) {
             message = ChatColor.translateAlternateColorCodes('&', message);
         }
-
         return message;
-
     }
 
     public boolean isOnCoolDown(Player player) {

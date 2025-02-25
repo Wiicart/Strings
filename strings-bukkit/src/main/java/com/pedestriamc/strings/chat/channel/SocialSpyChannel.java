@@ -67,12 +67,12 @@ public class SocialSpyChannel extends ProtectedChannel {
     }
 
     @Override
-    public void addPlayer(Player player) {
+    public void addMember(Player player) {
         spiesList.add(player);
     }
 
     @Override
-    public void removePlayer(Player player) {
+    public void removeMember(Player player) {
         spiesList.remove(player);
     }
 

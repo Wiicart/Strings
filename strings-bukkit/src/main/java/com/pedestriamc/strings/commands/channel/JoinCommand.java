@@ -2,7 +2,7 @@ package com.pedestriamc.strings.commands.channel;
 
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.user.User;
 import org.bukkit.command.Command;

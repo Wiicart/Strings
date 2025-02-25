@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.commands.channel;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channels.Channel;
-import com.pedestriamc.strings.api.channels.Monitorable;
+import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.commands.CommandBase;
@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public record UnmonitorCommand(Strings strings) implements CommandBase.CommandComponent {
-
 
     /**
      * /channel unmonitor <channel> <player>
@@ -38,12 +37,12 @@ public record UnmonitorCommand(Strings strings) implements CommandBase.CommandCo
 
         Monitorable monitorable = Monitorable.of(channel);
         if(monitorable == null) {
-            Map<String, String> placeholders = new HashMap<>();
-            placeholders.put("{name}", channel.getName());
+            Map<String, String> placeholders = generatePlaceholders(channel.getName(), "");
             messenger.sendMessage(Message.NOT_MONITORABLE, placeholders, sender);
+            return true;
         }
 
-        Player target = (Player) sender;
+        Player target;
         if(args.length == 3) {
             Player p = Bukkit.getPlayer(args[2]);
             if(p == null) {
@@ -51,12 +50,15 @@ public record UnmonitorCommand(Strings strings) implements CommandBase.CommandCo
                 return true;
             }
             target = p;
+        } else if(sender instanceof Player p) {
+             target = p;
+        } else {
+            return true;
         }
 
         User user = strings.getUser(target);
         if(!user.getMonitoredChannels().contains(channel)) {
-            Map<String, String> placeholders = new HashMap<>();
-            placeholders.put("{name}", channel.getName());
+            Map<String, String> placeholders = generatePlaceholders(channel.getName(), target.getName());
             if(!target.equals(sender)) {
                 messenger.sendMessage(Message.NOT_MONITORING_OTHER, placeholders, sender);
             } else {
@@ -67,6 +69,19 @@ public record UnmonitorCommand(Strings strings) implements CommandBase.CommandCo
 
         user.unmonitor(monitorable);
 
+        Map<String, String> placeholders = generatePlaceholders(channel.getName(), target.getName());
+        if(!target.equals(sender)) {
+            messenger.sendMessage(Message.UN_MONITORED_OTHER, placeholders, sender);
+        }
+        messenger.sendMessage(Message.UN_MONITORED, placeholders, sender);
+
         return true;
+    }
+
+    private Map<String, String> generatePlaceholders(String channel, String player) {
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("{channel}", channel);
+        placeholders.put("{player}", player);
+        return placeholders;
     }
 }

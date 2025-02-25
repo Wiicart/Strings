@@ -1,9 +1,9 @@
 package com.pedestriamc.strings.chat.channel.base;
 
-import com.pedestriamc.strings.api.channels.Membership;
+import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.StringsUser;
-import com.pedestriamc.strings.api.channels.Channel;
-import com.pedestriamc.strings.api.channels.Type;
+import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.Type;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 
@@ -91,23 +91,23 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public void addPlayer(Player player) {
+    public void addMember(Player player) {
 
     }
 
     @Override
-    public void addPlayer(StringsUser user) {
-        addPlayer(user.getPlayer());
+    public void addMember(StringsUser user) {
+        addMember(user.getPlayer());
     }
 
     @Override
-    public void removePlayer(Player player) {
+    public void removeMember(Player player) {
 
     }
 
     @Override
-    public void removePlayer(StringsUser user) {
-        removePlayer(user.getPlayer());
+    public void removeMember(StringsUser user) {
+        removeMember(user.getPlayer());
     }
 
     @Override
@@ -116,7 +116,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public final Type getType() {
+    public Type getType() {
         return Type.PROTECTED;
     }
 

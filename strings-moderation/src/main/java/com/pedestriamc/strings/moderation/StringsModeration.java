@@ -20,7 +20,6 @@ public final class StringsModeration extends JavaPlugin {
     @Override
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void onEnable() {
-
         try {
             StringsProvider.get();
         } catch (IllegalStateException e) {
@@ -28,7 +27,6 @@ public final class StringsModeration extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-
 
         Plugin plugin = getServer().getPluginManager().getPlugin("Strings");
         if(plugin == null) {
@@ -44,9 +42,6 @@ public final class StringsModeration extends JavaPlugin {
         getLogger().info("Enabled!");
     }
 
-    /**
-     * Instantiate files
-     */
     private void instantiate() {
         chatModerationManager = new ChatModerationManager(this, config);
     }
@@ -63,7 +58,6 @@ public final class StringsModeration extends JavaPlugin {
      * @return a long of the tick value. Returns -1 if syntax is invalid.
      */
     public static long calculateTicks(String time) {
-
         String regex = "^[0-9]+[sm]$";
 
         if(time == null || !time.matches(regex)) {
@@ -80,6 +74,5 @@ public final class StringsModeration extends JavaPlugin {
 
         return delayNum * 20L;
     }
-
 
 }

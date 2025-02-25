@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class Messenger {
 
-    private static final EnumMap<Message, Object> enumMap = new EnumMap<>(Message.class);
-    private static String prefix;
+    private final EnumMap<Message, Object> enumMap = new EnumMap<>(Message.class);
+    private final String prefix;
 
     public Messenger(FileConfiguration config) {
         for(Message msg : Message.values()) {
@@ -44,8 +44,8 @@ public class Messenger {
 
     public void sendMessage(Message message, Map<String, String> placeholders, CommandSender sender) {
         Object msg = enumMap.get(message);
-        if(msg instanceof String[]) {
-            for(String str : (String[]) msg) {
+        if(msg instanceof String[] array) {
+            for(String str : array) {
                 for(Map.Entry<String, String> entry : placeholders.entrySet()) {
                     str = str.replace(entry.getKey(), entry.getValue());
                 }

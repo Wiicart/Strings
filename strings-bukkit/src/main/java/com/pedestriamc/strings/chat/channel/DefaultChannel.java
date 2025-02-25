@@ -2,12 +2,12 @@ package com.pedestriamc.strings.chat.channel;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.StringsUser;
-import com.pedestriamc.strings.api.channels.Channel;
-import com.pedestriamc.strings.api.channels.ChannelLoader;
+import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.chat.StringsChannelLoader;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.api.channels.Membership;
-import com.pedestriamc.strings.api.channels.Type;
+import com.pedestriamc.strings.api.channel.Membership;
+import com.pedestriamc.strings.api.channel.Type;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
@@ -96,20 +96,20 @@ public class DefaultChannel implements Channel {
     public void setFormat(String format) {}
 
     @Override
-    public void addPlayer(Player player) {
+    public void addMember(Player player) {
         members.add(player);
     }
 
     @Override
-    public void removePlayer(Player player) {
+    public void removeMember(Player player) {
         members.remove(player);
     }
 
     @Override
-    public void addPlayer(StringsUser user) { members.add(user.getPlayer()); }
+    public void addMember(StringsUser user) { members.add(user.getPlayer()); }
 
     @Override
-    public void removePlayer(StringsUser user) {
+    public void removeMember(StringsUser user) {
         members.remove(user.getPlayer());
     }
 

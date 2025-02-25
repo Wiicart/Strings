@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.api.channels;
+package com.pedestriamc.strings.api.channel;
 
 /**
  * Represents the default membership of a StringsChannel.
@@ -23,7 +23,7 @@ public enum Membership {
     PERMISSION,
 
     /**
-     * Channels with this Membership are typically internal Strings channels, and this Membership basically tells
+     * Channels with this Membership are typically internal Strings channels, and this Membership essentially tells
      * anything that involves Membership to ignore the channel.
      */
     PROTECTED,

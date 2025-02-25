@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.api.channels;
+package com.pedestriamc.strings.api.channel;
 
 import com.pedestriamc.strings.api.StringsUser;
 import org.bukkit.entity.Player;
@@ -11,6 +11,7 @@ import java.util.Set;
 /**
  * The interface for all Channels.
  */
+@SuppressWarnings("unused")
 public interface Channel extends Comparable<Channel> {
 
     /**
@@ -104,7 +105,7 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Sets if the Channel should do cool-downs.
-     * @param doCooldown Should the Channel do cooldowns?
+     * @param doCooldown Should the Channel do cool downs?
      */
     void setDoCooldown(boolean doCooldown);
 
@@ -112,25 +113,25 @@ public interface Channel extends Comparable<Channel> {
      * Adds a player to the Channel.
      * @param player The player to be added.
      */
-    void addPlayer(Player player);
+    void addMember(Player player);
 
     /**
      * Adds a User to the channel.
      * @param user The User to be added.
      */
-    void addPlayer(StringsUser user);
+    void addMember(StringsUser user);
 
     /**
      * Removes a player from the Channel.
      * @param player The player to be removed.
      */
-    void removePlayer(Player player);
+    void removeMember(Player player);
 
     /**
      * Removes a User from the Channel.
      * @param user The User to be removed.
      */
-    void removePlayer(StringsUser user);
+    void removeMember(StringsUser user);
 
     /**
      * Provides a Set of the members of the Channel.

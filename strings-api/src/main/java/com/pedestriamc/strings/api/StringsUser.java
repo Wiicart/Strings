@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.api;
 
-import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channel.Channel;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -102,13 +102,13 @@ public interface StringsUser {
     Set<Channel> getChannels();
 
     /**
-     * Has this StringsUser join a StringsChannel.
+     * Has this StringsUser join a Channel.
      * @param channel The channel to join.
      */
     void joinChannel(@NotNull Channel channel);
 
     /**
-     * Has this StringsUser leave a StringsChannel.
+     * Has the StringsUser leave a Channel.
      * @param channel The channel to leave.
      */
     void leaveChannel(Channel channel);

@@ -1,11 +1,11 @@
 package com.pedestriamc.strings.chat.channel.local;
 
-import com.pedestriamc.strings.api.channels.Buildable;
-import com.pedestriamc.strings.api.channels.Type;
+import com.pedestriamc.strings.api.channel.Buildable;
+import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channels.Membership;
-import com.pedestriamc.strings.api.channels.LocalChannel;
-import com.pedestriamc.strings.api.channels.data.ChannelData;
+import com.pedestriamc.strings.api.channel.Membership;
+import com.pedestriamc.strings.api.channel.LocalChannel;
+import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.chat.channel.base.AbstractChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,12 +22,10 @@ import java.util.Set;
 
 public class ProximityChannel extends AbstractChannel implements Buildable, LocalChannel {
 
-
     private double distance;
     private final Set<World> worlds;
 
     public ProximityChannel(Strings strings, ChannelData data) {
-
         super(
                 strings,
                 strings.getChannelLoader(),
@@ -42,14 +40,11 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
                 data.getPriority(),
                 data.getBroadcastFormat()
         );
-
         this.worlds = data.getWorlds();
         this.distance = data.getDistance();
     }
 
-
     public Set<Player> getRecipients(Player sender) {
-
         Set<Player> members = getMembers();
 
         if(sender == null) {
@@ -78,7 +73,6 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
         }
 
         return recipients;
-
     }
 
     @Override

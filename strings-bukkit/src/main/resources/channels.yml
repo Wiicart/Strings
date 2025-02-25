@@ -64,6 +64,11 @@ channels:
     # If used with world and proximity channels, this allows players to communicate in these channels, regardless of
     # if they are in the right world to use the channel.
     symbol: "#"
+    # Broadcast Format
+    # When a message is broadcast using the /broadcast command, what should the format be?
+    # Valid placeholders:
+    # {message} - the message being broadcast
+    broadcast-format: "&8[&2Global&8] &f{message}"
 
   # Staff channel, which by default will not call events, in order to hide messages from plugin interference.
   staff:
@@ -76,6 +81,7 @@ channels:
     type: stringchannel
     membership: permission
     symbol: "$"
+    broadcast-format: "&8[&cStaff&8] &f{message}"
 
   # Help OP channel.
   # This channel does not behave like a normal channel, as membership of the channel and

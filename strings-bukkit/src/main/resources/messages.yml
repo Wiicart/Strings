@@ -1,27 +1,25 @@
 # Strings - Messages.yml
 # Bukkit chat colors may be used
-# Note: these are only messages for commands.
-# other messages may be found in other config files.
 
 # Plugin prefix:
 prefix: "&8[&3Strings&8] &f"
 
-# No perms message:
+# Sent when a player has no permission:
 no-perms: "&fYou don't have permission!"
 
-# Cleared own chat message:
+# Message sent when a player clears their own chat:
 chat-cleared: "&fChat cleared."
 
-# Cleared all player's chat message:
+# Message sent when a player clears all players' chats:
 chat-cleared-all: "&fAll player's chats cleared."
 
-# Too many args in command:
+# Too many arguments in command message:
 too-many-args: "&fToo many arguments!"
 
-# Insufficient args:
+# Insufficient arguments message:
 insufficient-args: "&fInsufficient arguments!"
 
-# Player on cool-down:
+# Player on cool-down message:
 # Available placeholders:
 # - {cooldown_length} (cooldown length from config.yml)
 cool-down: "&fYou can only send messages every {cooldown_length}!"
@@ -32,10 +30,10 @@ cool-down: "&fYou can only send messages every {cooldown_length}!"
 # Unknown player message:
 unknown-player: "&fUnknown player!"
 
-# Player is offline:
+# Player offline message:
 player-offline: "&fThat player is offline!"
 
-# No one to reply to:
+# No one to reply to message:
 no-reply: "&fYou have no one to reply to!"
 
 # Player can't message them self
@@ -62,7 +60,7 @@ channel-active: "&fChannel &7{channel} &fset to your active channel."
 # Placeholder: {channel}
 already-active: "&fChannel &7{channel} &fis already your active channel."
 
-# Already active for other player:
+# Already active for another player:
 # Placeholders: {channel}, {player}
 already-active-other: "&fChannel &7{channel} &fis already &7{player}&f's active channel."
 
@@ -70,7 +68,7 @@ already-active-other: "&fChannel &7{channel} &fis already &7{player}&f's active 
 # Placeholder: {channel}
 channel-joined: "&fJoined channel &7{channel}&f."
 
-# Other player joined channel:
+# Other player joined channel message:
 # Placeholders: {player}, {channel}
 other-user-joined-channel: "&7{player} &fjoined the channel &7{channel}&f."
 
@@ -226,6 +224,11 @@ mentions-disabled: "&fMentions disabled.  Players can not mention you now."
 # {channel} - channel name
 no-perm-monitor: "&fYou don't have permission to monitor channel &7{channel}&f!"
 
+# Message sent when a player attempts to monitor a Channel they or their target is already monitoring.
+# Available placeholders:
+# {channel} - channel name
+already-monitoring: "&fChannel &7{channel} &fis already being monitored."
+
 # Monitoring channel message
 # Available placeholders:
 # {channel} - channel name
@@ -242,4 +245,33 @@ monitor-success-other: "&fUser &7{player} &fis now monitoring channel &7{channel
 # {channel} - channel name
 not-monitorable: "&fChannel &7{channel} &fis not monitorable."
 
+# Sent when the /channel unmonitor command is used with a Channel the sender is not monitoring.
+# Available placeholders:
+# {channel} - channel name
+not-monitoring: "&fYou aren't monitoring channel &7{channel}&f."
 
+# Sent when the /channel unmonitor command is used with a channel the target is not monitoring.
+# Available placeholders:
+# {channel} - channel name
+# {player} - the target
+not-monitoring-other: "&fPlayer &7{player} &fis not monitoring channel &7{channel}&f."
+
+# Sent when the /channel unmonitor command is used successfully.
+# Available placeholders:
+# {channel} - channel name
+un-monitored: "&fUnmonitored channel &7{channel}&f."
+
+# Sent when the /channel unmonitor command is used successfully on another player.
+# Available placeholders:
+# {channel} - channel name
+# {player} - the target
+un-monitored-other: "&fUnmonitored channel &7{channel} &ffor player &7{player}&f."
+
+# Sent when the /channel broadcast command has been used successfully.
+# Available placeholders:
+# {channel} - channel name
+broadcast-sent: "&fBroadcast sent to channel &7{channel}&f."
+
+# Message sent when a player tries to send a message in a LocalChannel that they aren't in the scope of.
+# Note: the legacy variants of LocalChannel will NOT use this message.
+ineligible-sender: "&fYou aren't in the scope of channel &7{channel}&f, it has been redirected."

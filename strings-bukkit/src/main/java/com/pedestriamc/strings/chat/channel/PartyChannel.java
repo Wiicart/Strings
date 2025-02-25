@@ -1,9 +1,9 @@
 package com.pedestriamc.strings.chat.channel;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channels.ChannelLoader;
-import com.pedestriamc.strings.api.channels.Membership;
-import com.pedestriamc.strings.api.channels.Type;
+import com.pedestriamc.strings.api.channel.ChannelLoader;
+import com.pedestriamc.strings.api.channel.Membership;
+import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.chat.channel.base.AbstractChannel;
 import org.bukkit.entity.Player;
 
@@ -41,12 +41,12 @@ public class PartyChannel extends AbstractChannel {
     }
 
     @Override
-    public void addPlayer(Player player) {
+    public void addMember(Player player) {
 
     }
 
     @Override
-    public void removePlayer(Player player) {
+    public void removeMember(Player player) {
 
     }
 

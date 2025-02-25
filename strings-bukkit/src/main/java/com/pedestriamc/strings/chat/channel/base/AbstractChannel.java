@@ -2,11 +2,11 @@ package com.pedestriamc.strings.chat.channel.base;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.StringsUser;
-import com.pedestriamc.strings.api.channels.Channel;
-import com.pedestriamc.strings.api.channels.ChannelLoader;
-import com.pedestriamc.strings.api.channels.Monitorable;
+import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.ChannelLoader;
+import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
-import com.pedestriamc.strings.api.channels.Membership;
+import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.chat.ChatManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -128,8 +128,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     /**
-     * Base-line getData() implementation.  Most subclasses should override this.
-     *
+     * Base-line getData() implementation. Most subclasses should override this.
      * @return A populated LinkedHashMap containing channel data
      */
     @Override
@@ -204,13 +203,13 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public void addPlayer(StringsUser user) {
-        addPlayer(user.getPlayer());
+    public void addMember(StringsUser user) {
+        addMember(user.getPlayer());
     }
 
     @Override
-    public void removePlayer(StringsUser user) {
-        removePlayer(user.getPlayer());
+    public void removeMember(StringsUser user) {
+        removeMember(user.getPlayer());
     }
 
     @Override
@@ -274,12 +273,12 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public void addPlayer(Player player) {
+    public void addMember(Player player) {
         members.add(player);
     }
 
     @Override
-    public void removePlayer(Player player) {
+    public void removeMember(Player player) {
         members.remove(player);
     }
 

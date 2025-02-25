@@ -45,7 +45,9 @@ public final class PlayerChatFilteredEvent extends Event {
     }
 
     @SuppressWarnings("unused")
-    public static HandlerList getHandlerList(){ return HANDLER_LIST; }
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
+    }
 
     @Override
     public @NotNull HandlerList getHandlers() {

@@ -1,7 +1,9 @@
-package com.pedestriamc.strings.api.channels;
+package com.pedestriamc.strings.api.channel;
 
-import com.pedestriamc.strings.api.channels.data.ChannelData;
+import com.pedestriamc.strings.api.channel.data.ChannelData;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.NoSuchElementException;
 
 public interface ChannelLoader {
 
@@ -16,9 +18,9 @@ public interface ChannelLoader {
      * Unregisters a Channel
      *
      * @param channel The Channel to be unregistered
-     * @throws Exception Throws an exception if the Channel is not registered.
+     * @throws NoSuchElementException Throws an exception if the Channel is not registered.
      */
-    void unregisterChannel(Channel channel) throws Exception;
+    void unregisterChannel(Channel channel) throws NoSuchElementException;
 
     /**
      * Saves a Channel
@@ -33,10 +35,10 @@ public interface ChannelLoader {
      * @param data The ChannelData object loaded with information. If making a WorldChannel or ProximityChannel, use extending classes ProximityChannelData or WorldChannelData
      * @param type The type of channel.  Must be NORMAL, WORLD, or PROXIMITY or will return null.
      * @return A new StringsChannel
-     * @throws Exception When
+     * @throws UnsupportedOperationException When the Channel type cannot be built
      */
     @Nullable
-    Channel build(ChannelData data, String type) throws Exception;
+    Channel build(ChannelData data, String type) throws UnsupportedOperationException;
 
     /**
      * Provides a StringsChannel based off its name, if it exists.

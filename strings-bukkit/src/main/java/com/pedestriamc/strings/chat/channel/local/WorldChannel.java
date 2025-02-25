@@ -1,11 +1,11 @@
 package com.pedestriamc.strings.chat.channel.local;
 
-import com.pedestriamc.strings.api.channels.Buildable;
-import com.pedestriamc.strings.api.channels.Type;
+import com.pedestriamc.strings.api.channel.Buildable;
+import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channels.Membership;
-import com.pedestriamc.strings.api.channels.LocalChannel;
-import com.pedestriamc.strings.api.channels.data.ChannelData;
+import com.pedestriamc.strings.api.channel.Membership;
+import com.pedestriamc.strings.api.channel.LocalChannel;
+import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.chat.channel.base.AbstractChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.World;

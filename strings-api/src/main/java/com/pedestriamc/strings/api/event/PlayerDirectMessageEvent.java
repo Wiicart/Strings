@@ -30,7 +30,9 @@ public final class PlayerDirectMessageEvent extends Event implements Cancellable
     }
 
     @SuppressWarnings("unused")
-    public static HandlerList getHandlerList(){ return HANDLER_LIST; }
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
+    }
 
     /**
      * Provides Handlers

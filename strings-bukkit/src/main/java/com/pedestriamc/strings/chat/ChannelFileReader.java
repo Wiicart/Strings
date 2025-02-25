@@ -1,10 +1,10 @@
 package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channels.Membership;
-import com.pedestriamc.strings.api.channels.Channel;
-import com.pedestriamc.strings.api.channels.Type;
-import com.pedestriamc.strings.api.channels.data.ChannelData;
+import com.pedestriamc.strings.api.channel.Membership;
+import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.Type;
+import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.chat.channel.DefaultChannel;
 import com.pedestriamc.strings.chat.channel.HelpOPChannel;
 import com.pedestriamc.strings.chat.channel.SocialSpyChannel;
@@ -22,6 +22,8 @@ public class ChannelFileReader {
     private final Strings strings;
     private final FileConfiguration config;
     private final StringsChannelLoader channelLoader;
+    private boolean globalExists = false;
+    private boolean helpOpExists = false;
 
     public ChannelFileReader(Strings strings, FileConfiguration config, StringsChannelLoader channelLoader) {
         this.strings = strings;
@@ -33,8 +35,6 @@ public class ChannelFileReader {
      * Reads the FileConfiguration and loads/registers all Channels in it
      */
     public void read() {
-        boolean globalExists = false;
-        boolean helpOpExists = false;
         if(!config.contains("channels")) {
             log("No Channels defined in channels.yml, disabling plugin.");
             strings.getServer().getPluginManager().disablePlugin(strings);
@@ -47,9 +47,12 @@ public class ChannelFileReader {
             strings.getServer().getPluginManager().disablePlugin(strings);
             return;
         }
+        readFile(channels);
+        loadDefaults();
+    }
 
+    private void readFile(ConfigurationSection channels) {
         for(String channelName : channels.getKeys(false)) {
-
             ConfigurationSection channel = channels.getConfigurationSection(channelName);
             if(channel == null){
                 continue;
@@ -66,7 +69,6 @@ public class ChannelFileReader {
             }
 
             String symbol = channel.getString("symbol");
-
             ChannelData data = getChannelData(channel, channelName, type);
 
             try {
@@ -76,34 +78,24 @@ public class ChannelFileReader {
                 }
 
                 channelLoader.registerChannel(c);
-
                 if(symbol != null){
                     channelLoader.addChannelSymbol(symbol, c);
                 }
-
                 if(channelName.equalsIgnoreCase("global")){
                     globalExists = true;
                 }
                 if(channelName.equalsIgnoreCase("helpop")){
                     helpOpExists = true;
                 }
-
             } catch (Exception e) {
                 log("Failed to load channel " + channelName + ", an internal error occurred.");
             }
-
         }
-
-        loadDefaults(globalExists, helpOpExists);
-
     }
 
-    private void loadDefaults(boolean globalExists, boolean helpOpExists) {
-
+    private void loadDefaults() {
         if(!globalExists) {
-
             ChannelData data = new ChannelData("global");
-
             data.setMembership(Membership.DEFAULT);
             data.setFormat("{prefix}{displayname}{suffix} &7» {message}");
             data.setDefaultColor("&f");
@@ -119,7 +111,6 @@ public class ChannelFileReader {
                     channelLoader.registerChannel(channel);
                 }
             } catch (Exception ignored) {}
-
         }
 
         if(!helpOpExists) {
@@ -146,11 +137,9 @@ public class ChannelFileReader {
         );
 
         channelLoader.registerChannel(new DefaultChannel(strings, channelLoader));
-
     }
 
     private ChannelData getChannelData(ConfigurationSection section, String channelName, Type type) {
-
         ChannelData data = new ChannelData();
         data.setName(channelName);
         data.setFormat(section.getString("format", "{prefix}{displayname}{suffix} &7» {message}"));
@@ -161,7 +150,7 @@ public class ChannelFileReader {
         data.setCallEvent(section.getBoolean("call-event", true));
         data.setPriority(section.getInt("priority", -1));
         data.setDistance(section.getDouble("distance"));
-
+        data.setBroadcastFormat(section.getString("broadcast-format"));
         loadMembership(data, section);
 
         if(type == Type.WORLD || type == Type.PROXIMITY) {
@@ -169,11 +158,11 @@ public class ChannelFileReader {
         }
 
         return data;
-
     }
 
     private void loadWorlds(ChannelData data, ConfigurationSection section) {
         Set<World> worlds = new HashSet<>();
+
         String legacyWorldName = section.getString("world");
         if(legacyWorldName != null){
             World world = Bukkit.getWorld(legacyWorldName);
@@ -181,15 +170,11 @@ public class ChannelFileReader {
                 worlds.add(world);
             }
         } else {
-            List<?> list = section.getList("worlds");
-            if(list != null){
-                for(Object obj : list) {
-                    if (obj instanceof String str) {
-                        World world = Bukkit.getWorld(str);
-                        if (world != null) {
-                            worlds.add(world);
-                        }
-                    }
+            List<String> list = section.getStringList("worlds");
+            for(String str : list) {
+                World world = Bukkit.getWorld(str);
+                if (world != null) {
+                    worlds.add(world);
                 }
             }
         }
@@ -204,15 +189,10 @@ public class ChannelFileReader {
         }
 
         switch(membershipString) {
-
             case "default" -> data.setMembership(Membership.DEFAULT);
-
             case "permission" -> data.setMembership(Membership.PERMISSION);
-
             default -> data.setMembership(Membership.PROTECTED);
-
         }
-
     }
 
     private Type getType(String typeString, String channelName) {
@@ -221,22 +201,18 @@ public class ChannelFileReader {
                 log("Loading stringchannel '" + channelName + "'...");
                 return Type.NORMAL;
             }
-
             case "world", "world_legacy" -> {
                 log("Loading world channel '" + channelName + "'...");
                 return Type.WORLD;
             }
-
             case "proximity", "proximity_legacy" -> {
                 log("Loading proximity channel '" + channelName + "'...");
                 return Type.PROXIMITY;
             }
-
             case "helpop" -> {
                 log("Loading helpop channel '" + channelName + "'...");
                 return Type.PROTECTED;
             }
-
             default -> {
                 log("Failed to load Channel '" + channelName + "', invalid channel type defined.");
                 return null;

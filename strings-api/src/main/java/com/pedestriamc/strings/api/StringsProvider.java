@@ -12,6 +12,7 @@ import java.util.UUID;
  */
 public final class StringsProvider {
 
+    private static final short VERSION = 5;
     private static StringsAPI api;
     private static UUID apiUuid;
 
@@ -66,6 +67,6 @@ public final class StringsProvider {
      * @return A short of the API version.
      */
     public static short getVersion() {
-        return 5;
+        return VERSION;
     }
 }

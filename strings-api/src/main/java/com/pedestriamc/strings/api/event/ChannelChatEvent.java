@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.api.event;
 
-import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channel.Channel;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;

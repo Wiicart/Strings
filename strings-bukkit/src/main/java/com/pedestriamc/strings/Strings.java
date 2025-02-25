@@ -2,9 +2,9 @@ package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
-import com.pedestriamc.strings.api.channels.ChannelLoader;
+import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.chat.*;
-import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.commands.channel.ChannelCommand;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.impl.StringsImpl;

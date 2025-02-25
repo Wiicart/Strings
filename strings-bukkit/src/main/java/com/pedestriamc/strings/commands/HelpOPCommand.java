@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.commands;
 
-import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.message.Messenger;
 import org.bukkit.command.Command;

@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.moderation.chat;
 
 import com.pedestriamc.strings.api.StringsProvider;
-import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.event.PlayerChatFilteredEvent;
 import com.pedestriamc.strings.api.message.Messenger;

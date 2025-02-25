@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.chat.channel;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channels.Buildable;
-import com.pedestriamc.strings.api.channels.data.ChannelData;
+import com.pedestriamc.strings.api.channel.Buildable;
+import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.chat.channel.base.ProtectedChannel;

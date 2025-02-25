@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.commands.channel;
 
-import com.pedestriamc.strings.api.channels.Channel;
+import com.pedestriamc.strings.api.channel.Channel;
 import org.bukkit.entity.Player;
 
 import java.util.Map;
