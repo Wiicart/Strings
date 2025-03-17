@@ -19,7 +19,6 @@ public class MentionListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onEvent(AsyncPlayerChatEvent event) {
-
         Player p = event.getPlayer();
         if(!(p.hasPermission("strings.*") || p.hasPermission("strings.mention") || p.hasPermission("strings.mention.all"))) {
             return;
@@ -32,10 +31,9 @@ public class MentionListener implements Listener {
         }
 
         if(p.hasPermission("strings.mention.all") && event.getMessage().contains("@everyone")) {
-                for(Player subj : Bukkit.getOnlinePlayers()) {
-                    mentioner.mention(subj, p);
-                }
+            for(Player subj : Bukkit.getOnlinePlayers()) {
+                mentioner.mention(subj, p);
             }
-
+        }
     }
 }

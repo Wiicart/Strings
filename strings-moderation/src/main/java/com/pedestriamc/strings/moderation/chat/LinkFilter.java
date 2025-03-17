@@ -25,8 +25,8 @@ public class LinkFilter {
         List<?> tempList = stringsModeration.getConfig().getList("url-whitelist");
         if(tempList != null)
             for(Object obj : tempList) {
-            if(obj instanceof String) {
-                this.urlWhitelist.add(normalizeUrl((String) obj));
+            if(obj instanceof String str) {
+                this.urlWhitelist.add(normalizeUrl(str));
             }
         }
     }

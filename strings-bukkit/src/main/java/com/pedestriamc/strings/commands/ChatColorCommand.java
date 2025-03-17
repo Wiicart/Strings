@@ -34,7 +34,7 @@ public final class ChatColorCommand implements CommandExecutor {
             new AbstractMap.SimpleEntry<>("GREEN", ChatColor.GREEN),
             new AbstractMap.SimpleEntry<>("AQUA", ChatColor.AQUA),
             new AbstractMap.SimpleEntry<>("RED", ChatColor.RED),
-            new AbstractMap.SimpleEntry<>("LIGHT_PURPLE", ChatColor.LIGHT_PURPLE),
+            new AbstractMap.SimpleEntry<>("LIGHTPURPLE", ChatColor.LIGHT_PURPLE),
             new AbstractMap.SimpleEntry<>("YELLOW", ChatColor.YELLOW),
             new AbstractMap.SimpleEntry<>("WHITE", ChatColor.WHITE)
     );

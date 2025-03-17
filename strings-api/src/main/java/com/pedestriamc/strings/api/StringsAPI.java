@@ -83,21 +83,6 @@ public interface StringsAPI {
     boolean isPaper();
 
     /**
-     * Determines if a Player is on chat cool-down.
-     * Some channels ignore this, and if the Player has the right permission, this is ignored.
-     * @param player The Player to check.
-     * @return If the player is on cool-down.
-     */
-    boolean isOnCooldown(Player player);
-
-    /**
-     * Starts a chat cool-down for a player.
-     * @param player The player to start the cool-down on.
-     */
-    @Deprecated
-    void startCooldown(Player player);
-
-    /**
      * Mentions a Player.
      * Uses the format found in the Strings config.yml
      * @param subject The player to be mentioned.

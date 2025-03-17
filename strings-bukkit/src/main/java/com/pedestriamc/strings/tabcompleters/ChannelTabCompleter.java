@@ -1,19 +1,21 @@
 package com.pedestriamc.strings.tabcompleters;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.chat.StringsChannelLoader;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-public class ChannelTabCompleter implements TabCompleter {
+/**
+ * TabCompleter for the /channel command
+ */
+public class ChannelTabCompleter extends AbstractTabCompleter {
 
     private final StringsChannelLoader channelLoader;
 
@@ -21,46 +23,44 @@ public class ChannelTabCompleter implements TabCompleter {
         this.channelLoader = (StringsChannelLoader) strings.getChannelLoader();
     }
 
-    private static final List<String> empty = new ArrayList<>();
-    private static final String[] cases = {"join", "leave", "monitor", "unmonitor", "broadcast", "announce"};
+    private static final Set<String> CASES = Set.of(
+            "join", "leave", "monitor", "unmonitor", "broadcast", "announce"
+    );
 
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
-        if(args.length <= 1) {
-            List<String> list = new ArrayList<>(channelLoader.getNonProtectedChannelNames());
-            list.add("join");
-            list.add("leave");
-            list.add("monitor");
-            list.add("unmonitor");
-            list.add("broadcast");
-            return list;
-        }
-        if(args.length == 2) {
-            if(anyOf(args[0])) {
-                return channelLoader.getNonProtectedChannelNames();
+        switch (args.length) {
+
+            case 1 -> {
+                List<String> list = new ArrayList<>(getAllowedChannels(sender));
+                list.addAll(CASES);
+                return filter(list, args[0]);
             }
-            ArrayList<String> list = new ArrayList<>();
-            for(Player p : Bukkit.getOnlinePlayers()) {
-                list.add(p.getName());
+
+            case 2 -> {
+                if(CASES.contains(args[0].toLowerCase())) {
+                    return filter(getAllowedChannels(sender), args[1]);
+                }
+                return filter(getPlayerNames(), args[1]);
             }
-            return list;
+
+            case 3 -> { return filter(getPlayerNames(), args[2]); }
+
+            default -> { return EMPTY; }
         }
-        if(args.length == 3) {
-            ArrayList<String> list = new ArrayList<>();
-            for(Player p : Bukkit.getOnlinePlayers()) {
-                list.add(p.getName());
-            }
-            return list;
-        }
-        return empty;
     }
 
-    private boolean anyOf(String arg) {
-        boolean any = false;
-        for(String str : cases) {
-            any = any || str.equalsIgnoreCase(arg);
-        }
-        return any;
+    /**
+     * Provides a List<String> of Channels a Player is allowed in
+     * @param sender The Player to check permissions with
+     * @return A List<String>
+     */
+    private List<String> getAllowedChannels(CommandSender sender) {
+        return channelLoader.getNonProtectedChannels().stream()
+                .filter(channel -> channel.allows(sender))
+                .map(Channel::getName)
+                .toList();
     }
+
 }

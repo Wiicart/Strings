@@ -2,6 +2,7 @@ package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,12 +32,16 @@ public final class YamlUserUtil {
     public static void saveUser(@NotNull User user){
         UUID uuid = user.getUuid();
         Map<String, Object> infoMap = user.getData();
-        for(Map.Entry<String, Object> element : infoMap.entrySet()){
-            if(element.getValue() != null){
-                config.set("players." + uuid + "." + element.getKey(), element.getValue());
+        async(() -> {
+            synchronized(config) {
+                for(Map.Entry<String, Object> element : infoMap.entrySet()){
+                    if(element.getValue() != null){
+                        config.set("players." + uuid + "." + element.getKey(), element.getValue());
+                    }
+                }
             }
-        }
-        strings.saveUsersFile();
+            strings.saveUsersFile();
+        });
     }
 
     /**
@@ -79,6 +84,10 @@ public final class YamlUserUtil {
 
 
         return new User(uuid, chatColor, prefix, suffix, displayName, channels, activeChannel, mentionsEnabled, monitoredChannels);
+    }
+
+    private static void async(Runnable runnable){
+        Bukkit.getScheduler().runTaskAsynchronously(strings, runnable);
     }
 
     /**

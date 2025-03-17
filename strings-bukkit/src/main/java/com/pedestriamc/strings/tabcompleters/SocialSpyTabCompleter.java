@@ -2,23 +2,19 @@ package com.pedestriamc.strings.tabcompleters;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class SocialSpyTabCompleter implements TabCompleter {
+public class SocialSpyTabCompleter extends AbstractTabCompleter {
 
-    private final List<String> list = Arrays.asList("on", "off");
-    private final List<String> empty = new ArrayList<>();
+    private static final List<String> LIST = List.of("on", "off");
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        if(args.length <= 1) {
-            return list;
+        if(args.length == 1) {
+            return filter(LIST, args[0]);
         }
-        return empty;
+        return EMPTY;
     }
 }

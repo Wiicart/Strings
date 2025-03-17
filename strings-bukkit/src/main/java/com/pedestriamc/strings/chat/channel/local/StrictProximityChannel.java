@@ -9,8 +9,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +23,6 @@ public class StrictProximityChannel extends ProximityChannel {
 
     private final Channel defaultChannel;
     private final Messenger messenger;
-    private final Map<String, String> placeholders = Map.of("{channel}", getName());
 
     public StrictProximityChannel(Strings strings, ChannelData data) {
         super(strings, data);
@@ -37,23 +36,19 @@ public class StrictProximityChannel extends ProximityChannel {
             super.sendMessage(player, message);
         } else {
             defaultChannel.sendMessage(player, message);
-            messenger.sendMessage(Message.INELIGIBLE_SENDER, new HashMap<>(placeholders), player);
+            messenger.sendMessage(Message.INELIGIBLE_SENDER, getPlaceholders(), player);
         }
     }
 
     @Override
-    public Set<Player> getRecipients(Player sender) {
-        if(sender == null) {
-            return defaultSet();
-        }
-
+    public Set<Player> getRecipients(@NotNull Player sender) {
         World senderWorld = sender.getWorld();
         HashSet<Player> recipients = new HashSet<>(getMonitors());
 
         Location senderLocation = sender.getLocation();
         for(Player p : senderWorld.getPlayers()){
             Location pLocation = p.getLocation();
-            if(senderLocation.distance(pLocation) < getProximity()) {
+            if(senderLocation.distanceSquared(pLocation) < getDistanceSquared()) {
                 recipients.add(p);
             }
         }
@@ -64,6 +59,10 @@ public class StrictProximityChannel extends ProximityChannel {
             }
         }
         return recipients;
+    }
+
+    private Map<String, String> getPlaceholders() {
+        return Map.of("{channel}", getName());
     }
 
 

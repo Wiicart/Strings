@@ -5,19 +5,14 @@ import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.chat.*;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.commands.channel.ChannelCommand;
+import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.impl.StringsImpl;
-import com.pedestriamc.strings.listeners.*;
 import com.pedestriamc.strings.log.LogManager;
-import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.managers.ClassRegistryManager;
 import com.pedestriamc.strings.misc.AutoBroadcasts;
 import com.pedestriamc.strings.misc.ServerMessages;
-import com.pedestriamc.strings.tabcompleters.*;
-import com.pedestriamc.strings.commands.BroadcastCommand;
-import com.pedestriamc.strings.commands.ClearChatCommand;
-import com.pedestriamc.strings.commands.*;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.YamlUserUtil;
 import com.tchristofferson.configupdater.ConfigUpdater;
@@ -44,6 +39,9 @@ import java.util.logging.Logger;
 
 public final class Strings extends JavaPlugin {
 
+    private static Strings instance;
+    private final Logger logger = Bukkit.getLogger();
+
     private static final String VERSION = "1.5";
     private static final String DISTRIBUTOR = "github";
     private static final short PLUGIN_NUM = 5;
@@ -51,28 +49,25 @@ public final class Strings extends JavaPlugin {
     @SuppressWarnings("unused")
     private AutoBroadcasts autoBroadcasts;
 
-    private static Strings instance;
-    private final Logger logger = Bukkit.getLogger();
-    private static Chat chat = null;
-    private String coolDownLength;
-    private final FileConfiguration config = this.getConfig();
-    private ServerMessages serverMessages;
-    private PlayerDirectMessenger playerDirectMessenger;
+    private boolean usingPlaceholderAPI = false;
+    private boolean usingVault;
+    private boolean isPaper = false;
+
     private File broadcastsFile;
     private File messagesFile;
     private File usersFile;
     private File channelsFile;
+
+    private final FileConfiguration config = this.getConfig();
     private FileConfiguration logsFileConfig;
     private FileConfiguration broadcastsFileConfig;
     private FileConfiguration messagesFileConfig;
     private FileConfiguration usersFileConfig;
     private FileConfiguration channelsFileConfig;
-    private ChatManager chatManager;
-    private boolean usingPlaceholderAPI = false;
-    private boolean processPlayerMessageColors;
-    private boolean processPlayerMessagePlaceholders;
-    private boolean usingVault;
-    private boolean isPaper = false;
+
+    private Chat chat = null;
+    private ServerMessages serverMessages;
+    private PlayerDirectMessenger playerDirectMessenger;
     private StringsImpl stringsImpl;
     private Mentioner mentioner;
     private UUID apiUUID;
@@ -80,6 +75,7 @@ public final class Strings extends JavaPlugin {
     private ChannelLoader channelLoader;
     private LogManager logManager;
     private YamlConfiguration moderationFileConfig;
+    private Configuration configClass;
 
     @Override
     public void onLoad() {
@@ -96,8 +92,8 @@ public final class Strings extends JavaPlugin {
     @Override
     public void onEnable() {
         logManager = new LogManager(this);
-        this.registerClasses();
         this.setupVault();
+        ClassRegistryManager.register(this);
         int pluginId = 22597;
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
@@ -117,7 +113,6 @@ public final class Strings extends JavaPlugin {
         YamlUserUtil.UserMap.clear();
         this.serverMessages = null;
         this.playerDirectMessenger = null;
-        this.chatManager = null;
         this.channelLoader = null;
         this.autoBroadcasts = null;
         this.mentioner = null;
@@ -132,80 +127,18 @@ public final class Strings extends JavaPlugin {
         logger.info("[Strings] Disabled");
     }
 
-    /*
-    Private methods
-     */
-    //Register commands and listeners
-
-    @SuppressWarnings("ConstantConditions")
-    private void registerClasses(){
-        this.getCommand("strings").setExecutor(new StringsCommand(this));
-        this.getCommand("broadcast").setExecutor(new BroadcastCommand(this));
-        this.getCommand("announce").setExecutor(new BroadcastCommand(this));
-        this.getCommand("clearchat").setExecutor(new ClearChatCommand(this));
-        this.getCommand("chatclear").setExecutor(new ClearChatCommand(this));
-        this.getCommand("clearchat").setTabCompleter(new ClearChatTabCompleter());
-        this.getCommand("chatclear").setTabCompleter(new ClearChatTabCompleter());
-        this.getCommand("socialspy").setExecutor(new SocialSpyCommand(this));
-        this.getCommand("socialspy").setTabCompleter(new SocialSpyTabCompleter());
-        this.getCommand("msg").setExecutor(new DirectMessageCommand(this));
-        this.getCommand("message").setExecutor(new DirectMessageCommand(this));
-        this.getCommand("msg").setTabCompleter(new MessageTabCompleter());
-        this.getCommand("message").setTabCompleter(new MessageTabCompleter());
-        this.getCommand("reply").setExecutor(new ReplyCommand(this));
-        this.getCommand("r").setExecutor(new ReplyCommand(this));
-        this.getCommand("channel").setExecutor(new ChannelCommand(this));
-        this.getCommand("c").setExecutor(new ChannelCommand(this));
-        this.getCommand("channel").setTabCompleter(new ChannelTabCompleter(this));
-        this.getCommand("c").setTabCompleter(new ChannelTabCompleter(this));
-        this.getCommand("mention").setExecutor(new MentionCommand(this));
-        this.getCommand("mentions").setExecutor(new MentionCommand(this));
-        this.getCommand("mention").setTabCompleter(new MentionCommandTabCompleter());
-        this.getCommand("mentions").setTabCompleter(new MentionCommandTabCompleter());
-
-        if(config.getBoolean("enable-helpop")) {
-            this.getCommand("helpop").setExecutor(new HelpOPCommand(this));
-        } else {
-
-            if(!config.getBoolean("other-helpop")) {
-                this.getCommand("helpop").setExecutor(new DisabledCommand(this, Message.HELPOP_DISABLED));
-            }
-
-            try {
-                Channel helpOpChannel = channelLoader.getChannel("helpop");
-                channelLoader.unregisterChannel(helpOpChannel);
-            } catch(Exception ignored) {}
-
-        }
-
-        if(config.getBoolean("enable-chatcolor")){
-            this.getCommand("chatcolor").setExecutor(new ChatColorCommand(this));
-        }
-        this.getServer().getPluginManager().registerEvents(new ChatListener(this), this);
-        this.getServer().getPluginManager().registerEvents(new JoinListener(this),this);
-        this.getServer().getPluginManager().registerEvents(new LeaveListener(this), this);
-        this.getServer().getPluginManager().registerEvents(new DirectMessageListener(this), this);
-        if(config.getBoolean("enable-mentions")){
-            this.getServer().getPluginManager().registerEvents(new MentionListener(this), this);
-        }
-    }
-
     //Load options from the config
-    private void loadConfigOptions(){
-        FileConfiguration config = this.getConfig();
-        this.processPlayerMessageColors = config.getBoolean("process-in-chat-colors", true);
-        this.processPlayerMessagePlaceholders = config.getBoolean("process-in-chat-placeholders", false);
-        this.coolDownLength = config.getString("cooldown-time", "30s");
-        if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
+    private void loadConfigOptions() {
+        if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             this.usingPlaceholderAPI = true;
-        }
-        try{
+        } try {
             Class.forName("com.destroystokyo.paper.util.VersionFetcher");
             isPaper = true;
-        } catch(ClassNotFoundException ignored) {
-        }
+        } catch(ClassNotFoundException ignored) {}
     }
+
     //Update yml files
+    @SuppressWarnings("CallToPrintStackTrace")
     private void updateConfigs(){
         //Config updater using https://github.com/tchristofferson/Config-Updater
         File configFile = new File(this.getDataFolder(), "config.yml");
@@ -238,9 +171,9 @@ public final class Strings extends JavaPlugin {
         }
     }
 
-    private void instantiateObjects(){
+    private void instantiateObjects() {
+        configClass = new Configuration(getConfig());
         messenger = new Messenger(getMessagesFileConfig());
-        chatManager = new ChatManager(this);
         playerDirectMessenger = new PlayerDirectMessenger(this);
         channelLoader = new StringsChannelLoader(this);
         serverMessages = new ServerMessages(this);
@@ -252,24 +185,24 @@ public final class Strings extends JavaPlugin {
     }
 
     private void setupVault() {
-        try{
+        try {
             RegisteredServiceProvider<Chat> serviceProvider = getServer().getServicesManager().getRegistration(Chat.class);
-            if(serviceProvider == null){
+            if(serviceProvider == null) {
                 getLogger().info("Vault not found, using built in methods.");
                 usingVault = false;
-            }else{
+            } else {
                 chat = serviceProvider.getProvider();
                 usingVault = true;
                 getLogger().info("Vault found.");
             }
-        }catch(NoClassDefFoundError a){
+        } catch(NoClassDefFoundError a) {
             getLogger().info("Vault not found, using built in methods.");
             usingVault = false;
         }
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void setupCustomConfigs(){
+    private void setupCustomConfigs() {
         broadcastsFile = new File(getDataFolder(), "broadcasts.yml");
         messagesFile = new File(getDataFolder(), "messages.yml");
         usersFile = new File(getDataFolder(), "users.yml");
@@ -355,7 +288,7 @@ public final class Strings extends JavaPlugin {
     }
 
     /**
-     * Calculates tick equivalent of seconds or minutes. Example: 1m, 1s, etc..
+     * Calculates tick equivalent of seconds or minutes. Example: 1m, 1s, etc.
      * @param time the time to be converted
      * @return a long of the tick value. Returns -1 if syntax is invalid.
      */
@@ -385,16 +318,11 @@ public final class Strings extends JavaPlugin {
 
     public String getVersion(){ return VERSION; }
 
-    public String getCoolDownLength(){ return coolDownLength; }
-
-    public ChatManager getChatManager(){ return chatManager; }
-
     public ServerMessages getServerMessages(){ return serverMessages; }
 
     public PlayerDirectMessenger getPlayerDirectMessenger(){ return playerDirectMessenger; }
 
     public Messenger getMessenger(){ return messenger; }
-
 
     public Chat getVaultChat(){ return chat; }
 
@@ -408,11 +336,7 @@ public final class Strings extends JavaPlugin {
 
     public FileConfiguration getLogsFileConfig() { return logsFileConfig; }
 
-    public boolean usePlaceholderAPI(){ return usingPlaceholderAPI; }
-
-    public boolean processMessageColors(){ return processPlayerMessageColors; }
-
-    public boolean processMessagePlaceholders(){ return processPlayerMessagePlaceholders; }
+    public boolean usePlaceholderAPI() { return usingPlaceholderAPI; }
 
     public boolean useVault(){ return usingVault; }
 
@@ -426,11 +350,17 @@ public final class Strings extends JavaPlugin {
 
     public ChannelLoader getChannelLoader() { return channelLoader; }
 
+    @SuppressWarnings("unused")
     public LogManager getLogManager() { return logManager; }
+
+    public Configuration getConfigClass() {
+        return configClass;
+    }
 
     /*
     Other methods
      */
+    @SuppressWarnings("CallToPrintStackTrace")
     public void saveUsersFile() {
         try{
             usersFileConfig.save(usersFile);
@@ -438,6 +368,8 @@ public final class Strings extends JavaPlugin {
             e.printStackTrace();
         }
     }
+
+    @SuppressWarnings("CallToPrintStackTrace")
     public void saveChannelsFile() {
         try{
             channelsFileConfig.save(channelsFile);
@@ -446,16 +378,16 @@ public final class Strings extends JavaPlugin {
         }
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "CallToPrintStackTrace"})
     public void saveMessagesFile() {
         try{
             messagesFileConfig.save(messagesFile);
-        }catch(IOException e){
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "CallToPrintStackTrace"})
     public void saveBroadcastsFile() {
         try{
             broadcastsFileConfig.save(broadcastsFile);
@@ -496,6 +428,7 @@ public final class Strings extends JavaPlugin {
         return "" + stringsImpl.isApiUsed();
     }
 
+    @SuppressWarnings("unused")
     public YamlConfiguration getModerationFileConfig() {
         return moderationFileConfig;
     }

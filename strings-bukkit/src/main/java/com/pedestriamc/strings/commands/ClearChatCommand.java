@@ -37,7 +37,6 @@ public final class ClearChatCommand implements CommandExecutor
         if(args.length > 0 && args[0].equalsIgnoreCase("all") && (sender.hasPermission("strings.chat.clear.other") || sender.hasPermission("strings.chat.*"))) {
             for(Player p : Bukkit.getOnlinePlayers()){
                 p.sendMessage(StringUtils.repeat(" \n",100));
-                messenger.sendMessage(CHAT_CLEARED, p);
             }
             messenger.sendMessage(CHAT_CLEARED_ALL, sender);
             return true;

@@ -7,6 +7,7 @@ import com.pedestriamc.strings.api.channel.Type;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -122,7 +123,7 @@ public abstract class ProtectedChannel implements Channel {
 
     @Override
     public Map<String, Object> getData() {
-        return Map.of();
+        return Collections.emptyMap();
     }
 
     @Override

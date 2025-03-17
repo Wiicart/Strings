@@ -2,18 +2,21 @@ package com.pedestriamc.strings.chat.channel;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Membership;
-import com.pedestriamc.strings.api.channel.Buildable;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.chat.channel.base.AbstractChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class StringChannel extends AbstractChannel implements Buildable {
+/**
+ * Standard Channel implementation
+ */
+public class StringChannel extends AbstractChannel {
 
     public StringChannel(Strings strings, ChannelData data) {
         super(
@@ -33,7 +36,7 @@ public class StringChannel extends AbstractChannel implements Buildable {
     }
 
     @Override
-    public Set<Player> getRecipients(Player sender) {
+    public Set<Player> getRecipients(@NotNull Player sender) {
         Set<Player> recipients = new HashSet<>(getMembers());
         recipients.addAll(getMonitors());
         if(getMembership() == Membership.DEFAULT) {

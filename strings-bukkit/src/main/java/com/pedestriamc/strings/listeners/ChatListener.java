@@ -2,12 +2,9 @@ package com.pedestriamc.strings.listeners;
 
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
-import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.chat.StringsChannelLoader;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.message.Message;
-import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.Strings;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,23 +17,18 @@ import java.util.Map;
 public class ChatListener implements Listener {
 
     private final Strings strings;
-    private final ChatManager chatManager;
     private final Channel defaultChannel;
     private final Map<String, Channel> symbolMap;
-    private final Messenger messenger;
 
     public ChatListener(Strings strings) {
         this.strings = strings;
-        chatManager = strings.getChatManager();
         ChannelLoader channelLoader = strings.getChannelLoader();
         defaultChannel = channelLoader.getChannel("default");
         symbolMap = ((StringsChannelLoader) strings.getChannelLoader()).getChannelSymbols();
-        messenger = strings.getMessenger();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEvent(AsyncPlayerChatEvent event) {
-
         if (event instanceof ChannelChatEvent) {
             return;
         } else {
@@ -57,22 +49,15 @@ public class ChatListener implements Listener {
             channel = user.getActiveChannel();
         }
 
-        if (chatManager.isOnCoolDown(playerSender) && user.getActiveChannel().doCooldown()) {
-            event.setCancelled(true);
-            messenger.sendMessage(Message.COOL_DOWN, playerSender);
-            return;
-        }
-
         channel.sendMessage(playerSender, playerMessage);
-
     }
 
     private Container processSymbol(String msg, User user) {
-        for (String key : symbolMap.keySet()) {
-            if (msg.startsWith(key)) {
-                Channel c = symbolMap.get(key);
+        for(Map.Entry<String, Channel> entry : symbolMap.entrySet()) {
+            if(msg.startsWith(entry.getKey())) {
+                Channel c = entry.getValue();
                 if (c.allows(user.getPlayer())) {
-                    msg = msg.substring(key.length());
+                    msg = msg.substring(entry.getKey().length());
                     return new Container(c, msg);
                 }
             }

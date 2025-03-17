@@ -13,6 +13,7 @@ import java.util.UUID;
 public final class StringsProvider {
 
     private static final short VERSION = 5;
+
     private static StringsAPI api;
     private static UUID apiUuid;
 
@@ -31,6 +32,7 @@ public final class StringsProvider {
 
     /**
      * For internal use only.
+     * @hidden
      * @param api API Implementation
      * @param plugin Strings plugin
      */
@@ -49,6 +51,7 @@ public final class StringsProvider {
 
     /**
      * For internal use only.
+     * @hidden
      * @param uuid UUID from Strings
      */
     public static void unregister(UUID uuid) throws IllegalStateException, SecurityException {

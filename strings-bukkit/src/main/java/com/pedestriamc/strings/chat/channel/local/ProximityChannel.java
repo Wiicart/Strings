@@ -1,6 +1,5 @@
 package com.pedestriamc.strings.chat.channel.local;
 
-import com.pedestriamc.strings.api.channel.Buildable;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Membership;
@@ -12,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,9 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ProximityChannel extends AbstractChannel implements Buildable, LocalChannel {
+public class ProximityChannel extends AbstractChannel implements LocalChannel {
 
     private double distance;
+    private double distanceSquared;
     private final Set<World> worlds;
 
     public ProximityChannel(Strings strings, ChannelData data) {
@@ -42,17 +43,13 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
         );
         this.worlds = data.getWorlds();
         this.distance = data.getDistance();
+        distanceSquared = distance * distance;
     }
 
-    public Set<Player> getRecipients(Player sender) {
+    public Set<Player> getRecipients(@NotNull Player sender) {
         Set<Player> members = getMembers();
-
-        if(sender == null) {
-            return defaultSet();
-        }
-
         if(members.contains(sender)) {
-            return defaultSet();
+            return universalSet();
         }
 
         World senderWorld = sender.getWorld();
@@ -61,7 +58,7 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
         Location senderLocation = sender.getLocation();
         for(Player p : senderWorld.getPlayers()){
             Location pLocation = p.getLocation();
-            if(senderLocation.distance(pLocation) < distance) {
+            if(senderLocation.distanceSquared(pLocation) < distanceSquared) {
                 recipients.add(p);
             }
         }
@@ -79,10 +76,10 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
     public Set<Player> getPlayersInScope() {
         switch(getMembership()) {
             case DEFAULT -> {
-                return defaultSet();
+                return universalSet();
             }
             case PERMISSION -> {
-                HashSet<Player> scoped = new HashSet<>(defaultSet());
+                HashSet<Player> scoped = new HashSet<>(universalSet());
                 scoped.removeIf(p -> !allows(p));
                 return scoped;
             }
@@ -94,13 +91,22 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
         }
     }
 
-    protected HashSet<Player> defaultSet() {
+    /**
+     * Provides a Set of all Players that can be eligible to receive messages.
+     * Intended for determining recipients for an admin.
+     * @return A populated Set
+     */
+    protected Set<Player> universalSet() {
         HashSet<Player> set = new HashSet<>(getMembers());
         set.addAll(getMonitors());
         for(World w : worlds){
             set.addAll(w.getPlayers());
         }
         return set;
+    }
+
+    protected double getDistanceSquared() {
+        return distanceSquared;
     }
 
     @Override
@@ -133,6 +139,7 @@ public class ProximityChannel extends AbstractChannel implements Buildable, Loca
     @Override
     public void setProximity(double proximity) {
         this.distance = proximity;
+        distanceSquared = distance * distance;
     }
 
     @Override

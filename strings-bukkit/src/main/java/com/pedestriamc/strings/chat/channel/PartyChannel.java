@@ -6,6 +6,7 @@ import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.chat.channel.base.AbstractChannel;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -26,7 +27,7 @@ public class PartyChannel extends AbstractChannel {
     }
 
     @Override
-    public Set<Player> getRecipients(Player sender) {
+    public Set<Player> getRecipients(@NotNull Player sender) {
         return Set.of();
     }
 

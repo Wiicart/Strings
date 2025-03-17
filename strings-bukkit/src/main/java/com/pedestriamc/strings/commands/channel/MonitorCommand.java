@@ -33,27 +33,33 @@ public record MonitorCommand(Strings strings) implements CommandBase.CommandComp
         }
 
         Player target;
-        if(args.length == 1) {
-            messenger.sendMessage(INSUFFICIENT_ARGS, sender);
-            return true;
-        } else if(args.length == 2) {
-            if(sender instanceof Player p) {
-                target = p;
-            } else {
+        switch(args.length) {
+            case 0, 1 -> {
                 messenger.sendMessage(INSUFFICIENT_ARGS, sender);
                 return true;
             }
-        } else if(args.length == 3) {
-            Player p = Bukkit.getPlayer(args[2]);
-            if(p != null) {
-                target = p;
-            } else {
-                messenger.sendMessage(INVALID_PLAYER, sender);
-                return true;
+            case 2 -> {
+                if(sender instanceof Player p) {
+                    target = p;
+                } else {
+                    messenger.sendMessage(INSUFFICIENT_ARGS, sender);
+                    return true;
+                }
             }
-        } else {
-            messenger.sendMessage(TOO_MANY_ARGS, sender);
-            return true;
+            case 3 -> {
+                Player p = Bukkit.getPlayer(args[2]);
+                if(p != null) {
+                    target = p;
+                } else {
+                    messenger.sendMessage(INVALID_PLAYER, sender);
+                    return true;
+                }
+            }
+            default -> {
+                messenger.sendMessage(TOO_MANY_ARGS, sender);
+                return true;
+
+            }
         }
 
         ChannelLoader loader = strings.getChannelLoader();

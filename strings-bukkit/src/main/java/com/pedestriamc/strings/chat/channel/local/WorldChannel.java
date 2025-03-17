@@ -1,6 +1,5 @@
 package com.pedestriamc.strings.chat.channel.local;
 
-import com.pedestriamc.strings.api.channel.Buildable;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Membership;
@@ -11,10 +10,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class WorldChannel extends AbstractChannel implements Buildable, LocalChannel {
+public class WorldChannel extends AbstractChannel implements LocalChannel {
 
     private final Set<World> worlds;
 
@@ -37,7 +37,7 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
     }
 
     @Override
-    public Set<Player> getRecipients(Player sender) {
+    public Set<Player> getRecipients(@NotNull Player sender) {
         HashSet<Player> recipients = new HashSet<>();
 
         for(World w : getWorlds()) {
@@ -50,7 +50,7 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
                 recipients.add(p);
             }
         }
-
+        
         return recipients;
     }
 
@@ -58,10 +58,10 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
     public Set<Player> getPlayersInScope() {
         switch(getMembership()) {
             case DEFAULT -> {
-                return defaultSet();
+                return universalSet();
             }
             case PERMISSION -> {
-                HashSet<Player> scoped = new HashSet<>(defaultSet());
+                HashSet<Player> scoped = new HashSet<>(universalSet());
                 scoped.removeIf(p -> !allows(p));
                 return scoped;
             }
@@ -136,7 +136,7 @@ public class WorldChannel extends AbstractChannel implements Buildable, LocalCha
         );
     }
 
-    protected HashSet<Player> defaultSet() {
+    protected Set<Player> universalSet() {
         HashSet<Player> set = new HashSet<>(getMembers());
         set.addAll(getMonitors());
         for(World w : worlds){

@@ -192,12 +192,22 @@ public class StringsChannelLoader implements ChannelLoader {
      */
     private void datasetUpdated() {
         count++;
-        if(count == 4) {
+        if(count == 5) {
             count = 0;
             changed = false;
         }
     }
 
+    private List<Channel> nonProtectedChannels = new ArrayList<>();
+    public List<Channel> getNonProtectedChannels() {
+        if(isChanged() || nonProtectedChannels == null) {
+            nonProtectedChannels = getChannelList().stream()
+                    .filter(channel -> channel.getType() != Type.PROTECTED)
+                    .toList();
+            datasetUpdated();
+        }
+        return new ArrayList<>(nonProtectedChannels);
+    }
 
     private List<String> nonProtectedChannelNames;
     public List<String> getNonProtectedChannelNames() {

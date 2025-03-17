@@ -2,7 +2,6 @@ package com.pedestriamc.strings.impl;
 
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.message.Messenger;
-import com.pedestriamc.strings.chat.ChatManager;
 import com.pedestriamc.strings.api.*;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.api.channel.Channel;
@@ -21,14 +20,12 @@ public final class StringsImpl implements StringsAPI {
 
     private final com.pedestriamc.strings.Strings strings;
     private final StringsChannelLoader channelLoader;
-    private final ChatManager chatManager;
     private final Mentioner mentioner;
     private boolean apiUsed;
 
     public StringsImpl(@NotNull com.pedestriamc.strings.Strings strings) {
         this.strings = strings;
         this.channelLoader = (StringsChannelLoader) strings.getChannelLoader();
-        this.chatManager = strings.getChatManager();
         this.mentioner = strings.getMentioner();
     }
 
@@ -72,17 +69,6 @@ public final class StringsImpl implements StringsAPI {
     public boolean isPaper() {
         this.apiUsed = true;
         return strings.isPaper();
-    }
-
-    @Override
-    public boolean isOnCooldown(Player player) {
-        return chatManager.isOnCoolDown(player);
-    }
-
-    @Override
-    @Deprecated
-    public void startCooldown(Player player) {
-        chatManager.startCoolDown(player);
     }
 
     @Override

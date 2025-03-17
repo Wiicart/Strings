@@ -7,24 +7,24 @@ import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.channel.Membership;
-import com.pedestriamc.strings.chat.ChatManager;
+import com.pedestriamc.strings.chat.MessageProcessor;
+import com.pedestriamc.strings.configuration.ConfigurationOption;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.permissions.Permissible;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractChannel implements Channel, Monitorable {
 
     private final Strings strings;
     private final ChannelLoader channelLoader;
-    private final ChatManager chatManager;
     private String name;
     private String defaultColor;
     private String format;
@@ -38,6 +38,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     private final boolean mentionsEnabled;
     private final Set<Player> monitors;
     private final Set<Player> members;
+    private final MessageProcessor messageProcessor;
 
     protected static final String CHANNEL_PERMISSION = "strings.channels.";
     protected static final String MESSAGE_PLACEHOLDER = "{message}";
@@ -45,7 +46,6 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     protected AbstractChannel(Strings strings, ChannelLoader channelLoader, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority, String broadcastFormat) {
         this.strings = strings;
         this.channelLoader = channelLoader;
-        this.chatManager = strings.getChatManager();
         this.name = name;
         this.defaultColor = defaultColor != null ? defaultColor : "&f";
         this.format = format;
@@ -56,10 +56,11 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         this.doUrlFilter = doUrlFilter;
         this.callEvent = callEvent;
         this.priority = priority;
-        this.mentionsEnabled = chatManager.isMentionsEnabled();
 
-        members = ConcurrentHashMap.newKeySet();
-        monitors = ConcurrentHashMap.newKeySet();
+        messageProcessor = new MessageProcessor(strings, this);
+        mentionsEnabled = strings.getConfigClass().getBoolean(ConfigurationOption.ENABLE_MENTIONS);
+        members = new HashSet<>();
+        monitors = new HashSet<>();
     }
 
     /**
@@ -68,7 +69,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
      * @param sender The sender of the message.
      * @return A Set<Player> of all players who will see the message.
      */
-    public abstract Set<Player> getRecipients(Player sender);
+    public abstract Set<Player> getRecipients(@NotNull Player sender);
 
     /**
      * Provides a Set<Player> of all Players in the Channel's scope.
@@ -80,11 +81,11 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     @Override
     public void sendMessage(Player player, String message) {
         Set<Player> recipients = getRecipients(player);
-        String template = chatManager.formatMessage(player, this);
-        String processedMessage = chatManager.processMessage(player, message, this);
+        String template = messageProcessor.generateTemplate(player);
+        String processedMessage = messageProcessor.processMessage(player, message);
 
         if (mentionsEnabled && player.hasPermission("strings.*") || player.hasPermission("strings.mention")) {
-            processedMessage = chatManager.processMentions(player, processedMessage);
+            processedMessage = messageProcessor.processMentions(player, processedMessage);
         }
 
         if (isCallEvent()) {

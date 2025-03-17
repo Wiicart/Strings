@@ -1,13 +1,14 @@
 package com.pedestriamc.strings.chat.channel;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channel.Buildable;
 import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
-import com.pedestriamc.strings.chat.ChatManager;
+import com.pedestriamc.strings.chat.MessageProcessor;
 import com.pedestriamc.strings.chat.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.user.User;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -19,48 +20,52 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
-public class HelpOPChannel extends ProtectedChannel implements Buildable {
+public class HelpOPChannel extends ProtectedChannel {
 
     private final Strings strings;
-    private final ChatManager chatManager;
+    private final MessageProcessor messageProcessor;
+
     private final boolean callEvent;
     private String format;
     private String defaultColor;
     private boolean urlFilter;
     private boolean profanityFilter;
     private final Messenger messenger;
+    private final boolean usePAPI;
 
     public HelpOPChannel(@NotNull Strings strings, String format, String defaultColor, boolean callEvent, boolean urlFilter, boolean profanityFilter)
     {
         super("helpop");
         this.strings = strings;
-        this.chatManager = strings.getChatManager();
         this.callEvent = callEvent;
         this.format = format;
         this.defaultColor = defaultColor;
         this.urlFilter = urlFilter;
         this.profanityFilter = profanityFilter;
         this.messenger = strings.getMessenger();
+        usePAPI = strings.usePlaceholderAPI();
+        messageProcessor = new MessageProcessor(strings, this);
     }
 
     public HelpOPChannel(Strings strings, ChannelData data)
     {
         super("helpop");
         this.strings = strings;
-        this.chatManager = strings.getChatManager();
         this.messenger = strings.getMessenger();
         this.callEvent = data.isCallEvent();
         this.format = data.getFormat();
         this.defaultColor = data.getDefaultColor();
         this.urlFilter = data.isDoUrlFilter();
         this.profanityFilter = data.isDoProfanityFilter();
+        usePAPI = strings.usePlaceholderAPI();
+        messageProcessor = new MessageProcessor(strings, this);
     }
 
     @Override
     public void sendMessage(Player player, String message) {
         Set<Player> members = getRecipients();
-        String messageFormat = chatManager.formatMessage(player, this);
-        message = chatManager.processMessage(player, message, this);
+        String messageFormat = generateTemplate(player);
+        message = messageProcessor.processMessage(player, message);
         String finalMessage = message;
         String formattedMessage = messageFormat.replace("{message}", finalMessage);
         if(callEvent){
@@ -93,12 +98,31 @@ public class HelpOPChannel extends ProtectedChannel implements Buildable {
                 }
             }
         }
+
         for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if(onlinePlayer.hasPermission("strings.helpop.receive") || onlinePlayer.hasPermission("strings.helpop.*") || onlinePlayer.hasPermission("strings.*")) {
                 members.add(onlinePlayer);
             }
         }
         return members;
+    }
+
+    private String generateTemplate(Player player) {
+        User user = strings.getUser(player);
+        String template = getFormat();
+
+        template = template
+                .replace("{prefix}", user.getPrefix())
+                .replace("{suffix}", user.getSuffix())
+                .replace("{displayname}", user.getDisplayName())
+                .replace("{message}", user.getChatColor(this) + "{message}");
+
+        if(usePAPI) {
+            template = PlaceholderAPI.setPlaceholders(player, template);
+        }
+        template = org.bukkit.ChatColor.translateAlternateColorCodes('&', template);
+
+        return template;
     }
 
     @Override

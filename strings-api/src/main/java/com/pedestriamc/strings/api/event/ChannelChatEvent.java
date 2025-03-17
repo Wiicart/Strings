@@ -30,7 +30,7 @@ public final class ChannelChatEvent extends AsyncPlayerChatEvent {
      * Provides the Channel the message is being sent to.
      * @return The Channel.
      */
-    public Channel getChannel(){
+    public Channel getChannel() {
         return channel;
     }
 

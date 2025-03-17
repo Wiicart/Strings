@@ -27,11 +27,12 @@ public class Mentioner {
         FileConfiguration config = strings.getConfig();
         pitch = (float) config.getDouble("mention-pitch", 0.594604F);
         volume = (float) config.getDouble("mention-vol", 10F);
-        format = ChatColor.translateAlternateColorCodes('&',
+        format = ChatColor.translateAlternateColorCodes(
+                '&',
                 config.getString("mention-format", "&e%sender% mentioned you."));
-        try{
+        try {
             sound = Sound.valueOf(config.getString("mention-sound"));
-        }catch(IllegalArgumentException e){
+        } catch(IllegalArgumentException e) {
             Bukkit.getLogger().info("[Strings] Invalid sound-type for mentions in config.yml, resorting to: BLOCK_NOTE_BLOCK_PLING");
             sound = Sound.BLOCK_NOTE_BLOCK_PLING;
         }

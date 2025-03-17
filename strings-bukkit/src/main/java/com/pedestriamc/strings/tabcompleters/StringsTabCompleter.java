@@ -3,15 +3,13 @@ package com.pedestriamc.strings.tabcompleters;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class MentionCommandTabCompleter extends AbstractTabCompleter {
+public class StringsTabCompleter extends AbstractTabCompleter {
 
-    private static final List<String> LIST = List.of("enable", "disable", "on", "off");
+    private static final List<String> LIST = List.of("version", "reload", "help");
 
-    @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if(args.length == 1) {
@@ -19,4 +17,5 @@ public class MentionCommandTabCompleter extends AbstractTabCompleter {
         }
         return EMPTY;
     }
+
 }

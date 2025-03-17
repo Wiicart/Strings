@@ -5,8 +5,8 @@ import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.chat.StringsChannelLoader;
+import com.pedestriamc.strings.chat.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Type;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -14,21 +14,21 @@ import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The channel that players are assigned to by default.
  * This channel cannot process any messages; it instead determines the proper channel to be used.
  */
-public class DefaultChannel implements Channel {
+public class DefaultChannel extends ProtectedChannel {
 
     private final StringsChannelLoader channelLoader;
     private final Set<Player> members;
     private final Strings strings;
 
-    public DefaultChannel(Strings strings, @NotNull ChannelLoader channelLoader){
+    public DefaultChannel(Strings strings, @NotNull ChannelLoader channelLoader) {
+        super("default");
         this.channelLoader = (StringsChannelLoader) channelLoader;
-        this.members = ConcurrentHashMap.newKeySet();
+        this.members = new HashSet<>();
         this.strings = strings;
     }
 
@@ -58,42 +58,24 @@ public class DefaultChannel implements Channel {
         Set<Channel> usersChannels = user.getChannels();
         if(!usersChannels.isEmpty()){
             Optional<Channel> optional =  usersChannels.stream().max(Comparator.comparingInt(Channel::getPriority));
-            optional.get().sendMessage(player, message);
-
+            optional.ifPresent(channel -> channel.sendMessage(player, message));
         }
 
         player.sendMessage(ChatColor.RED + "[Strings] You aren't a member of any channels.  Please contact staff for help.");
-
     }
 
     @Override
-    public void broadcastMessage(String message) {}
-
-    @Override
-    public String getFormat() {
-        return null;
+    public final Type getType() {
+        return Type.DEFAULT;
     }
 
     @Override
-    public String getDefaultColor() {
-        return null;
+    public boolean allows(Permissible permissible) {
+        return true;
     }
 
     @Override
-    public String getName() {
-        return "default";
-    }
-
-    @Override
-    public void setName(String name) { /* DefaultChannel instances are always named "default" */ }
-
-    @Override
-    public void setDefaultColor(String defaultColor) {
-        /* As DefaultChannel does not send out messages, there is no utilization of a default color. */
-    }
-
-    @Override
-    public void setFormat(String format) {}
+    public final void setName(String name) { /* DefaultChannel instances are always named "default" */ }
 
     @Override
     public void addMember(Player player) {
@@ -119,61 +101,8 @@ public class DefaultChannel implements Channel {
     }
 
     @Override
-    public boolean doUrlFilter() {
-        return false;
-    }
-
-    @Override
-    public void setUrlFilter(boolean doUrlFilter) {}
-
-    @Override
-    public boolean doProfanityFilter() {
-        return false;
-    }
-
-    @Override
-    public void setProfanityFilter(boolean doProfanityFilter) {}
-
-    @Override
-    public boolean doCooldown() {
-        return false;
-    }
-
-    @Override
-    public void setDoCooldown(boolean doCooldown) {}
-
-    @Override
-    public Type getType() {
-        return Type.DEFAULT;
-    }
-
-    @Override
-    public Map<String, Object> getData() {
-        return Collections.emptyMap();
-    }
-
-    @Override
-    public Membership getMembership() {
-        return Membership.PROTECTED;
-    }
-
-    @Override
-    public int getPriority() {
-        return -1;
-    }
-
-    @Override
     public void saveChannel() {
         channelLoader.saveChannel(this);
     }
 
-    @Override
-    public boolean isCallEvent() {
-        return true;
-    }
-
-    @Override
-    public boolean allows(Permissible permissible) {
-        return true;
-    }
 }

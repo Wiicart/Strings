@@ -34,9 +34,9 @@ public class ChatListener implements Listener {
         this.stringsModeration = stringsModeration;
         this.chatModerationManager = chatModerationManager;
         this.blockDuplicates = blockDuplicates;
+        this.bannedWords = bannedWords;
         cooldownPlaceholders = new HashMap<>();
         cooldownPlaceholders.put("{cooldown_length}", (String) stringsModeration.getConfig().get("cooldown-time"));
-        this.bannedWords = bannedWords;
         linkFilter = new LinkFilter(stringsModeration);
     }
 
@@ -52,11 +52,17 @@ public class ChatListener implements Listener {
         Player player = event.getPlayer();
         Channel channel = event.getChannel();
 
-        if(channel.doCooldown() && !player.hasPermission("*") && !player.hasPermission("strings.chat.bypasscooldown") && chatModerationManager.isOnCooldown(player)) {
+        if(
+                channel.doCooldown()
+                && !player.hasPermission("*")
+                && !player.hasPermission("strings.chat.bypasscooldown")
+                && chatModerationManager.isOnCooldown(player)
+                && !player.isOp()
+        ) {
                 event.setCancelled(true);
                 messenger.sendMessage(Message.COOL_DOWN, cooldownPlaceholders, player);
                 return;
-            }
+        }
 
 
         if(blockDuplicates && chatModerationManager.isRepeating(player, event.getMessage())) {

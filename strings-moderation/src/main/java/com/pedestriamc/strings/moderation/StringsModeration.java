@@ -46,6 +46,10 @@ public final class StringsModeration extends JavaPlugin {
         chatModerationManager = new ChatModerationManager(this, config);
     }
 
+    public ChatModerationManager getChatModerationManager() {
+        return chatModerationManager;
+    }
+
     @Override
     @NotNull
     public FileConfiguration getConfig() {

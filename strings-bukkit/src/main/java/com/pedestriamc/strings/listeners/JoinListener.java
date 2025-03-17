@@ -37,8 +37,5 @@ public class JoinListener implements Listener {
         if(doMotd) {
             serverMessages.sendMOTD(event.getPlayer());
         }
-
-
-
     }
 }
