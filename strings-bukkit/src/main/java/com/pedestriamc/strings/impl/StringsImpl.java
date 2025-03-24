@@ -25,7 +25,7 @@ public final class StringsImpl implements StringsAPI {
 
     public StringsImpl(@NotNull com.pedestriamc.strings.Strings strings) {
         this.strings = strings;
-        this.channelLoader = (StringsChannelLoader) strings.getChannelLoader();
+        this.channelLoader = strings.getChannelLoader();
         this.mentioner = strings.getMentioner();
     }
 
@@ -77,7 +77,7 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public void mention(StringsUser subject, StringsUser sender) {
+    public void mention(@NotNull StringsUser subject, @NotNull StringsUser sender) {
         mentioner.mention(subject.getPlayer(), sender.getPlayer());
     }
 

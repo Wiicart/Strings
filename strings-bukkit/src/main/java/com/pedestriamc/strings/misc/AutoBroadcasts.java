@@ -62,8 +62,8 @@ public class AutoBroadcasts {
                 List<?> messageList = section.getList(key);
                 if(messageList != null) {
                     for(Object obj : messageList) {
-                        if(obj instanceof String) {
-                            messages.add(ChatColor.translateAlternateColorCodes('&', (String) obj));
+                        if(obj instanceof String string) {
+                            messages.add(ChatColor.translateAlternateColorCodes('&', string));
                         }
                     }
                 }

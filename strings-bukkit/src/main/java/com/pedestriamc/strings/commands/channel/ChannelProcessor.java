@@ -22,7 +22,7 @@ public abstract class ChannelProcessor implements CommandBase.CommandComponent {
     private final Messenger messenger;
 
     protected ChannelProcessor(@NotNull Strings strings) {
-        this.channelLoader = (StringsChannelLoader) strings.getChannelLoader();
+        this.channelLoader = strings.getChannelLoader();
         this.messenger = strings.getMessenger();
     }
 

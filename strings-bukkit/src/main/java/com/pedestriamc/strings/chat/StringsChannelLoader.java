@@ -2,7 +2,6 @@ package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.LocalChannel;
-import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Type;
@@ -24,14 +23,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -41,23 +40,23 @@ public class StringsChannelLoader implements ChannelLoader {
     private final ConcurrentHashMap<String, Channel> channels;
     private final FileConfiguration config;
     private final HashMap<String, Channel> channelSymbols;
-    private final List<Channel> prioritySorted;
     private final Set<Channel> worldChannels;
+    private final TreeSet<Channel> priorityChannels;
 
     public StringsChannelLoader(Strings strings) {
         this.strings = strings;
         this.channels = new ConcurrentHashMap<>();
         this.config = strings.getChannelsFileConfig();
         this.channelSymbols = new HashMap<>();
-        this.prioritySorted = new ArrayList<>();
         this.worldChannels = new HashSet<>();
+        this.priorityChannels = new TreeSet<>();
 
         ChannelFileReader reader = new ChannelFileReader(strings, config, this);
         reader.read();
     }
 
     @Override
-    public @Nullable Channel getChannel(String name) {
+    public @Nullable Channel getChannel(@NotNull String name) {
         return channels.get(name);
     }
 
@@ -66,22 +65,18 @@ public class StringsChannelLoader implements ChannelLoader {
      * @param channel The channel to be registered
      */
     @Override
-    public void registerChannel(Channel channel) {
+    public void registerChannel(@NotNull Channel channel) {
         String channelName = channel.getName();
         if(channels.containsKey(channelName)) {
             log("A Channel with the name '" + channelName + "' already exists, channels with the same name cannot be registered.");
             return;
         }
 
-        if(channel.getMembership() == Membership.DEFAULT) {
-            prioritySorted.add(channel);
-            prioritySorted.sort(Comparator.comparingInt(Channel::getPriority).reversed());
-        }
-
         if(channel instanceof LocalChannel) {
             worldChannels.add(channel);
         }
 
+        priorityChannels.add(channel);
         channels.put(channel.getName(), channel);
         setToChanged();
         log("Channel '" + channel.getName() + "' registered.");
@@ -92,7 +87,8 @@ public class StringsChannelLoader implements ChannelLoader {
      * Does not persist after restart if the Channel is channels.yml
      * @param channel The Channel to be unregistered
      */
-    public void unregisterChannel(Channel channel) {
+    @Override
+    public void unregisterChannel(@NotNull Channel channel) {
         if(!channels.containsKey(channel.getName())) {
             throw new NoSuchElementException("Channel '" + channel.getName() + "' is not registered.");
         }
@@ -113,7 +109,7 @@ public class StringsChannelLoader implements ChannelLoader {
         }
 
         worldChannels.remove(channel);
-        prioritySorted.remove(channel);
+        priorityChannels.remove(channel);
         channels.remove(channel.getName());
         setToChanged();
     }
@@ -123,7 +119,7 @@ public class StringsChannelLoader implements ChannelLoader {
      * @param channel The channel to be saved
      */
     @Override
-    public void saveChannel(Channel channel) {
+    public void saveChannel(@NotNull Channel channel) {
         if (channel.getType() == Type.PROTECTED) {
             log("Unable to save protected channels, they must be modified in channels.yml");
             return;
@@ -144,10 +140,10 @@ public class StringsChannelLoader implements ChannelLoader {
         type = type.toLowerCase();
         switch(type){
             case "stringchannel" ->  { return new StringChannel(strings, data); }
-            case "proximity_legacy" ->  { return new ProximityChannel(strings, data); }
-            case "world_legacy" -> { return new WorldChannel(strings, data); }
-            case "proximity" -> { return new StrictProximityChannel(strings, data); }
-            case "world" -> { return new StrictWorldChannel(strings, data); }
+            case "proximity" ->  { return new ProximityChannel(strings, data); }
+            case "world" -> { return new WorldChannel(strings, data); }
+            case "proximity_strict" -> { return new StrictProximityChannel(strings, data); }
+            case "world_strict" -> { return new StrictWorldChannel(strings, data); }
             case "helpop" -> { return new HelpOPChannel(strings, data); }
             default -> throw new UnsupportedOperationException("Unable to build Channels that are not Types NORMAL, PROXIMITY, WORLD. PROTECTED Channels must be HELPOP Channels");
         }
@@ -192,7 +188,7 @@ public class StringsChannelLoader implements ChannelLoader {
      */
     private void datasetUpdated() {
         count++;
-        if(count == 5) {
+        if(count == 4) {
             count = 0;
             changed = false;
         }
@@ -210,6 +206,7 @@ public class StringsChannelLoader implements ChannelLoader {
     }
 
     private List<String> nonProtectedChannelNames;
+    @SuppressWarnings("unused")
     public List<String> getNonProtectedChannelNames() {
         if(isChanged() || nonProtectedChannelNames == null) {
             nonProtectedChannelNames = getChannelList().stream()
@@ -234,26 +231,6 @@ public class StringsChannelLoader implements ChannelLoader {
     }
 
 
-    private final Map<World, Set<Channel>> worldPriorityChannelMap = new HashMap<>();
-    public Set<Channel> getWorldPriorityChannels(World world) {
-        if(isChanged()) {
-            for(World w : Bukkit.getWorlds()) {
-                updateWorldPriorityChannelMap(w);
-            }
-        } else if(worldPriorityChannelMap.get(world) == null) {
-            updateWorldPriorityChannelMap(world);
-        }
-        return new HashSet<>(worldPriorityChannelMap.get(world));
-    }
-
-    private void updateWorldPriorityChannelMap(World world) {
-        worldPriorityChannelMap.put(world, getChannels(world).stream()
-                .filter(channel -> channel.getMembership() == Membership.DEFAULT)
-                .sorted(Comparator.comparingInt(Channel::getPriority).reversed())
-                .collect(Collectors.toCollection(LinkedHashSet::new)));
-    }
-
-
     private final Map<World, Set<Channel>> worldChannelMap = new HashMap<>();
     public Set<Channel> getChannels(World world) {
         if(isChanged()) {
@@ -270,8 +247,7 @@ public class StringsChannelLoader implements ChannelLoader {
     }
 
     private void updateWorldChannelMap(World world) {
-        worldChannelMap.put(world, worldChannels
-                .stream()
+        worldChannelMap.put(world, worldChannels.stream()
                 .filter(channel -> {
                     if(channel instanceof LocalChannel local) {
                         return local.getWorlds().contains(world);
@@ -282,8 +258,8 @@ public class StringsChannelLoader implements ChannelLoader {
         );
     }
 
-    public List<Channel> getChannelsByPriority() {
-        return new ArrayList<>(prioritySorted);
+    public SortedSet<Channel> getSortedChannelSet() {
+        return new TreeSet<>(priorityChannels);
     }
 
 }

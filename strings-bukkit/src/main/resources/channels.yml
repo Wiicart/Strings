@@ -1,14 +1,10 @@
 # Strings - Channels
-#
+
 # All channels are defined in this channel, and information about them is stored here.
-# No matter what, a "global" channel will be present, even if this file is empty.
-# If you want to prevent players from sending messages in this channel, you can set it to disabled.
 # Permission to join a channel is given by the permission strings.channel.<channel-name>
-# The channels a player is a member of is stored in users.yml, if none of those channels exist,
-# the player will join the default "global" channel.
-# Note: a user can be a member of and receive messages from multiple channels, but messages will
-# only be sent to the player's active channel.
-# The default channel is "global".
+# The channels a player is a member of are stored in users.yml, if none of those channels exist,
+# the player will join the channel "default" which will determine what channel to send the message to..
+
 channels:
   global:
     # The format messages should be posted as in the channel.
@@ -87,7 +83,7 @@ channels:
   # This channel does not behave like a normal channel, as membership of the channel and
   # sending messages in the channel is different.  Typical channel commands will not work with this channel,
   # everything that can be done with this channel should be done with the /helpop command.
-  # (!) WARNING: THIS CHANNEL'S OPTIONS WILL MOVE TO CONFIG.YML IN A LATER UPDATE*
+  # (!) WARNING: THIS CHANNEL'S OPTIONS WILL EVENTUALLY MOVE TO config.yml
   helpop:
     format: "&8[&4HelpOP&8] &f{displayname} &7» {message}"
     default-color: "&7"
@@ -106,9 +102,6 @@ channels:
   #
   # Proximity channels have the additional option of "distance", which is measured in blocks.  Messages sent via this type
   # of channel are only sent to players within the specified distance.
-  #
-  # Both of these channel types can be joined with the /channel join command to receive messages regardless of world or
-  # location on the server for moderation purposes.
 
   #world2:
   #  format: "{prefix}{displayname}{suffix} &7» {message}"
@@ -123,6 +116,7 @@ channels:
   #  membership: default
   #  priority: 10
   #  symbol: "^"
+  #  broadcast-format: "&8[&3World2&8] &f{message}"
 
   #proximity:
   #  format: "&8[&cProximity&8] &f{prefix}{displayname}{suffix} &7» {message}"
@@ -138,6 +132,7 @@ channels:
   #    - "world2"
   #  priority: 11
   #  symbol: "!"
+  #  broadcast-format: "&8[&cProximity&8] &f{message}"
 
   # SocialSpy also runs on a type of channel, and customizations for it are found in config.yml
   # Just as the HelpOP channel, it does not behave like a normal channel and normal channel commands will not work with it.

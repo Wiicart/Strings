@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.chat.channel.DefaultChannel;
 import com.pedestriamc.strings.commands.CommandBase;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -27,6 +28,11 @@ public record ChannelBroadcastCommand(Strings strings) implements CommandBase.Co
         if(channel == null) {
             Map<String, String> placeholders = generatePlaceholders(args[1]);
             messenger.sendMessage(Message.CHANNEL_DOES_NOT_EXIST, placeholders, sender);
+            return true;
+        }
+
+        if(channel instanceof DefaultChannel) {
+            messenger.sendMessage(Message.DEFAULT_RESTRICTED, sender);
             return true;
         }
 

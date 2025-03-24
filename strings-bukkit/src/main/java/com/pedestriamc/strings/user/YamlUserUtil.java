@@ -86,7 +86,7 @@ public final class YamlUserUtil {
         return new User(uuid, chatColor, prefix, suffix, displayName, channels, activeChannel, mentionsEnabled, monitoredChannels);
     }
 
-    private static void async(Runnable runnable){
+    private static void async(Runnable runnable) {
         Bukkit.getScheduler().runTaskAsynchronously(strings, runnable);
     }
 
@@ -94,7 +94,7 @@ public final class YamlUserUtil {
      * A class to hold a HashMap of all online Users.
      * This class is updated as players join and leave the server.
      */
-    public static class UserMap{
+    public static class UserMap {
 
         private static final HashMap<UUID, User> userHashMap = new HashMap<>();
 

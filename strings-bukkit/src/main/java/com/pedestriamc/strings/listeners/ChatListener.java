@@ -1,6 +1,5 @@
 package com.pedestriamc.strings.listeners;
 
-import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.chat.StringsChannelLoader;
 import com.pedestriamc.strings.user.User;
@@ -18,13 +17,12 @@ public class ChatListener implements Listener {
 
     private final Strings strings;
     private final Channel defaultChannel;
-    private final Map<String, Channel> symbolMap;
+    private final StringsChannelLoader channelLoader;
 
     public ChatListener(Strings strings) {
         this.strings = strings;
-        ChannelLoader channelLoader = strings.getChannelLoader();
+        channelLoader = strings.getChannelLoader();
         defaultChannel = channelLoader.getChannel("default");
-        symbolMap = ((StringsChannelLoader) strings.getChannelLoader()).getChannelSymbols();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -53,7 +51,7 @@ public class ChatListener implements Listener {
     }
 
     private Container processSymbol(String msg, User user) {
-        for(Map.Entry<String, Channel> entry : symbolMap.entrySet()) {
+        for(Map.Entry<String, Channel> entry : channelLoader.getChannelSymbols().entrySet()) {
             if(msg.startsWith(entry.getKey())) {
                 Channel c = entry.getValue();
                 if (c.allows(user.getPlayer())) {

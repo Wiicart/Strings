@@ -47,10 +47,10 @@ public class PlayerDirectMessenger {
     public void sendMessage(@NotNull Player sender, @NotNull Player recipient, @NotNull String message) {
         String senderString = messageFormatSender;
         String recipientString = messageFormatRecipient;
-        senderString = processPlaceholders(sender,recipient,senderString);
-        recipientString = processPlaceholders(sender,recipient, recipientString);
+        senderString = processPlaceholders(sender, recipient, senderString);
+        recipientString = processPlaceholders(sender, recipient, recipientString);
         senderString = senderString.replace("{message}", message);
-        recipientString = recipientString.replace("{message}",message);
+        recipientString = recipientString.replace("{message}", message);
 
         if(usePAPI) {
             senderString = PlaceholderAPI.setPlaceholders(recipient, senderString);
@@ -74,14 +74,15 @@ public class PlayerDirectMessenger {
         }
         User senderUser = strings.getUser(sender);
         User recipientUser = strings.getUser(recipient);
-        message = message.replace("{sender_username}", sender.getName());
-        message = message.replace("{sender_displayname}", sender.getDisplayName());
-        message = message.replace("{sender_prefix}", senderUser.getPrefix());
-        message = message.replace("{sender_suffix}", senderUser.getSuffix());
-        message = message.replace("{recipient_username}", recipient.getName());
-        message = message.replace("{recipient_displayname}", recipient.getDisplayName());
-        message = message.replace("{recipient_prefix}", recipientUser.getPrefix());
-        message = message.replace("{recipient_suffix}", recipientUser.getSuffix());
+        message = message
+                .replace("{sender_username}", sender.getName())
+                .replace("{sender_displayname}", sender.getDisplayName())
+                .replace("{sender_prefix}", senderUser.getPrefix())
+                .replace("{sender_suffix}", senderUser.getSuffix())
+                .replace("{recipient_username}", recipient.getName())
+                .replace("{recipient_displayname}", recipient.getDisplayName())
+                .replace("{recipient_prefix}", recipientUser.getPrefix())
+                .replace("{recipient_suffix}", recipientUser.getSuffix());
         return message;
     }
 

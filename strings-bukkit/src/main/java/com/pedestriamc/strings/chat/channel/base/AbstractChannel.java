@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public abstract class AbstractChannel implements Channel, Monitorable {
@@ -42,6 +43,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     protected static final String CHANNEL_PERMISSION = "strings.channels.";
     protected static final String MESSAGE_PLACEHOLDER = "{message}";
+    protected static final String DEFAULT_BROADCAST_FORMAT = "&8[&3Broadcast&8] &f{message}";
 
     protected AbstractChannel(Strings strings, ChannelLoader channelLoader, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority, String broadcastFormat) {
         this.strings = strings;
@@ -162,8 +164,14 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
+    public String getBroadcastFormat() {
+        return Objects.requireNonNullElse(broadcastFormat, DEFAULT_BROADCAST_FORMAT);
+    }
+
+    @Override
     public void broadcastMessage(String message) {
-        String finalString = broadcastFormat.replace(MESSAGE_PLACEHOLDER, message);
+        String finalString = getBroadcastFormat().replace(MESSAGE_PLACEHOLDER, message);
+        finalString = ChatColor.translateAlternateColorCodes('&', finalString);
         for (Player p : getPlayersInScope()) {
             p.sendMessage(finalString);
         }

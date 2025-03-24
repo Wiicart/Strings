@@ -26,7 +26,8 @@ public class ChatColorTabCompleter extends AbstractTabCompleter {
             "red",
             "lightpurple",
             "yellow",
-            "white"
+            "white",
+            "reset"
     );
 
     private static final List<String> STYLES = List.of(

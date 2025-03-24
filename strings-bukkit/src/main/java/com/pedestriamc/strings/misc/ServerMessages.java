@@ -27,8 +27,8 @@ public class ServerMessages {
         List<?> list = strings.getConfig().getList("motd");
         if(list != null){
             for(Object obj : list){
-                if(obj instanceof String){
-                    motd.add((String) obj);
+                if(obj instanceof String string){
+                    motd.add(string);
                 }
             }
         }

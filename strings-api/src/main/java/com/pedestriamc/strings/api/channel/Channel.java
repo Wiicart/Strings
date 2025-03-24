@@ -27,7 +27,7 @@ public interface Channel extends Comparable<Channel> {
      * @return the param's priority - the channel instance priority
      */
     default int compareTo(@NotNull Channel channel) {
-        return channel.getPriority() - getPriority();
+        return Integer.compare(channel.getPriority(), getPriority());
     }
 
     /**
@@ -41,6 +41,12 @@ public interface Channel extends Comparable<Channel> {
      * @return The Channel format.
      */
     String getFormat();
+
+    /**
+     * Provides the formatting for broadcasts in the Channel.
+     * @return A String of the broadcast format.
+     */
+    String getBroadcastFormat();
 
     /**
      * Sets the Channel's format.

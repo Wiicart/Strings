@@ -37,6 +37,11 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
+    public String getBroadcastFormat() {
+        return "";
+    }
+
+    @Override
     public void setFormat(String format) {
 
     }

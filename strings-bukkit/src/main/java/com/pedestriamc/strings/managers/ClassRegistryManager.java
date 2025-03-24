@@ -8,12 +8,12 @@ import com.pedestriamc.strings.commands.ChatColorCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
 import com.pedestriamc.strings.commands.DirectMessageCommand;
 import com.pedestriamc.strings.commands.DisabledCommand;
+import com.pedestriamc.strings.commands.HelpOPCommand;
 import com.pedestriamc.strings.commands.MentionCommand;
 import com.pedestriamc.strings.commands.ReplyCommand;
 import com.pedestriamc.strings.commands.SocialSpyCommand;
 import com.pedestriamc.strings.commands.StringsCommand;
 import com.pedestriamc.strings.commands.channel.ChannelCommand;
-import com.pedestriamc.strings.commands.channel.HelpCommand;
 import com.pedestriamc.strings.listeners.ChatListener;
 import com.pedestriamc.strings.listeners.DirectMessageListener;
 import com.pedestriamc.strings.listeners.JoinListener;
@@ -89,7 +89,7 @@ public class ClassRegistryManager {
         }
 
         if(strings.getConfig().getBoolean("enable-helpop")) {
-            registerCommand("helpop", new HelpCommand(strings), null);
+            registerCommand("helpop", new HelpOPCommand(strings), null);
         } else {
             if(!strings.getConfig().getBoolean("other-helpop")) {
                 registerCommand("helpop", new DisabledCommand(strings, Message.HELPOP_DISABLED), null);
@@ -97,7 +97,9 @@ public class ClassRegistryManager {
 
             try {
                 Channel helpOpChannel = strings.getChannelLoader().getChannel("helpop");
-                strings.getChannelLoader().unregisterChannel(helpOpChannel);
+                if(helpOpChannel != null) {
+                    strings.getChannelLoader().unregisterChannel(helpOpChannel);
+                }
             } catch(Exception ignored) {}
         }
     }

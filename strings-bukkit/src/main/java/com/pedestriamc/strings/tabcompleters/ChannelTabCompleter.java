@@ -20,7 +20,7 @@ public class ChannelTabCompleter extends AbstractTabCompleter {
     private final StringsChannelLoader channelLoader;
 
     public ChannelTabCompleter(@NotNull Strings strings) {
-        this.channelLoader = (StringsChannelLoader) strings.getChannelLoader();
+        this.channelLoader = strings.getChannelLoader();
     }
 
     private static final Set<String> CASES = Set.of(
@@ -35,6 +35,7 @@ public class ChannelTabCompleter extends AbstractTabCompleter {
             case 1 -> {
                 List<String> list = new ArrayList<>(getAllowedChannels(sender));
                 list.addAll(CASES);
+                list.add("help");
                 return filter(list, args[0]);
             }
 

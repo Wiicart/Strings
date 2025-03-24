@@ -3,21 +3,25 @@ package com.pedestriamc.strings.chat.channel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.channel.ChannelLoader;
+import com.pedestriamc.strings.api.channel.LocalChannel;
 import com.pedestriamc.strings.chat.StringsChannelLoader;
 import com.pedestriamc.strings.chat.channel.base.ProtectedChannel;
-import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.channel.Type;
+import com.pedestriamc.strings.user.User;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 
 /**
  * The channel that players are assigned to by default.
- * This channel cannot process any messages; it instead determines the proper channel to be used.
+ * This channel cannot process any messages; it instead determines the proper channel for a message to be sent to.
  */
 public class DefaultChannel extends ProtectedChannel {
 
@@ -25,43 +29,33 @@ public class DefaultChannel extends ProtectedChannel {
     private final Set<Player> members;
     private final Strings strings;
 
-    public DefaultChannel(Strings strings, @NotNull ChannelLoader channelLoader) {
+    public DefaultChannel(Strings strings, @NotNull StringsChannelLoader channelLoader) {
         super("default");
-        this.channelLoader = (StringsChannelLoader) channelLoader;
+        this.channelLoader = channelLoader;
         this.members = new HashSet<>();
         this.strings = strings;
     }
 
     @Override
     public void sendMessage(Player player, String message) {
-        Set<Channel> worldChannels = channelLoader.getWorldPriorityChannels(player.getWorld());
-        if(!worldChannels.isEmpty()) {
-            for(Channel c : worldChannels) {
-                if(c.allows(player)) {
-                    c.sendMessage(player, message);
-                    return;
-                }
-            }
-        }
+        SortedSet<Channel> channels = channelLoader.getSortedChannelSet();
+        channels.removeIf(channel -> !channel.allows(player));
+        channels.removeIf(channel -> channel instanceof LocalChannel local && !local.containsInScope(player));
 
-        List<Channel> defaultMembership = channelLoader.getChannelsByPriority();
-        if(!defaultMembership.isEmpty()) {
-            for(Channel c : defaultMembership) {
-                if(c.allows(player)) {
-                    c.sendMessage(player, message);
-                    return;
-                }
-            }
+        if(!channels.isEmpty()) {
+            channels.first().sendMessage(player, message);
+            return;
         }
 
         User user = strings.getUser(player);
-        Set<Channel> usersChannels = user.getChannels();
+        SortedSet<Channel> usersChannels = new TreeSet<>(user.getChannels());
+        usersChannels.remove(this);
         if(!usersChannels.isEmpty()){
-            Optional<Channel> optional =  usersChannels.stream().max(Comparator.comparingInt(Channel::getPriority));
-            optional.ifPresent(channel -> channel.sendMessage(player, message));
+            usersChannels.first().sendMessage(player, message);
+            return;
         }
 
-        player.sendMessage(ChatColor.RED + "[Strings] You aren't a member of any channels.  Please contact staff for help.");
+        player.sendMessage(ChatColor.RED + "[Strings] You aren't a member of any channels.  Please contact a server operator for help.");
     }
 
     @Override
@@ -88,7 +82,9 @@ public class DefaultChannel extends ProtectedChannel {
     }
 
     @Override
-    public void addMember(StringsUser user) { members.add(user.getPlayer()); }
+    public void addMember(StringsUser user) {
+        members.add(user.getPlayer());
+    }
 
     @Override
     public void removeMember(StringsUser user) {

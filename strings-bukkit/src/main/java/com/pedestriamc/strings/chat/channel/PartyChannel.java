@@ -13,6 +13,7 @@ import java.util.Set;
 /**
  * A Channel used for Parties, these channels cannot be saved and are deleted on reboot or when all players leave.
  */
+@SuppressWarnings("all")
 public class PartyChannel extends AbstractChannel {
 
     private String name;

@@ -21,6 +21,7 @@ public class Mentioner {
     private final String format;
     private Sound sound;
 
+    @SuppressWarnings("DataFlowIssue")
     public Mentioner(@NotNull Strings strings)
     {
         this.strings = strings;

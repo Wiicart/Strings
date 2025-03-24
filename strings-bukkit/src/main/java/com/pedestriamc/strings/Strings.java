@@ -2,7 +2,6 @@ package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
-import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.chat.*;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.configuration.Configuration;
@@ -72,7 +71,7 @@ public final class Strings extends JavaPlugin {
     private Mentioner mentioner;
     private UUID apiUUID;
     private Messenger messenger;
-    private ChannelLoader channelLoader;
+    private StringsChannelLoader channelLoader;
     private LogManager logManager;
     private YamlConfiguration moderationFileConfig;
     private Configuration configClass;
@@ -314,41 +313,41 @@ public final class Strings extends JavaPlugin {
     /*
     Public getter and setter methods
      */
-    public String getDistributor(){ return DISTRIBUTOR; }
+    public String getDistributor() { return DISTRIBUTOR; }
 
-    public String getVersion(){ return VERSION; }
+    public String getVersion() { return VERSION; }
 
-    public ServerMessages getServerMessages(){ return serverMessages; }
+    public ServerMessages getServerMessages() { return serverMessages; }
 
-    public PlayerDirectMessenger getPlayerDirectMessenger(){ return playerDirectMessenger; }
+    public PlayerDirectMessenger getPlayerDirectMessenger() { return playerDirectMessenger; }
 
-    public Messenger getMessenger(){ return messenger; }
+    public Messenger getMessenger() { return messenger; }
 
-    public Chat getVaultChat(){ return chat; }
+    public Chat getVaultChat() { return chat; }
 
-    public FileConfiguration getUsersFileConfig(){ return usersFileConfig; }
+    public FileConfiguration getUsersFileConfig() { return usersFileConfig; }
 
-    public FileConfiguration getBroadcastsFileConfig(){ return broadcastsFileConfig; }
+    public FileConfiguration getBroadcastsFileConfig() { return broadcastsFileConfig; }
 
-    public FileConfiguration getMessagesFileConfig(){ return messagesFileConfig; }
+    public FileConfiguration getMessagesFileConfig() { return messagesFileConfig; }
 
-    public FileConfiguration getChannelsFileConfig(){ return channelsFileConfig; }
+    public FileConfiguration getChannelsFileConfig() { return channelsFileConfig; }
 
     public FileConfiguration getLogsFileConfig() { return logsFileConfig; }
 
     public boolean usePlaceholderAPI() { return usingPlaceholderAPI; }
 
-    public boolean useVault(){ return usingVault; }
+    public boolean useVault() { return usingVault; }
 
-    public boolean isPaper(){ return this.isPaper; }
+    public boolean isPaper() { return isPaper; }
 
-    public static Strings getInstance(){ return instance; }
+    public static Strings getInstance() { return instance; }
 
-    public Mentioner getMentioner(){ return mentioner; }
+    public Mentioner getMentioner() { return mentioner; }
 
-    public short getPluginNum(){ return PLUGIN_NUM; }
+    public short getPluginNum() { return PLUGIN_NUM; }
 
-    public ChannelLoader getChannelLoader() { return channelLoader; }
+    public StringsChannelLoader getChannelLoader() { return channelLoader; }
 
     @SuppressWarnings("unused")
     public LogManager getLogManager() { return logManager; }
@@ -424,7 +423,7 @@ public final class Strings extends JavaPlugin {
         return channelLoader.getChannel(channel);
     }
 
-    public String isAPIUsed() {
+    public @NotNull String isAPIUsed() {
         return "" + stringsImpl.isApiUsed();
     }
 

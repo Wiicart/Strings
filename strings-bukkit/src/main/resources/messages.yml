@@ -119,11 +119,13 @@ already-member-other: "&7{player} &fis already a member of channel &7{channel}&f
 # /channel help message:
 channel-help:
   - "&8[&3Strings&8] &7| Help"
-  - "&f/channel usage"
+  - "&7/channel usage"
   - "&f/channel <active-channel> &7- Sets your active channel"
   - "&f/channel join <channel>  &7- Lets you join a channel"
   - "&f/channel leave <channel> &7- Lets you leave a channel"
-  - "&7* Add a player name at the end to modify another player"
+  - "&f/channel monitor <channel> &7- Lets you monitor a channel"
+  - "&f/channel unmonitor <channel> &7- Lets you unmonitor a channel"
+  - "&7* Add a player name at the end to use on another player"
 
 # Message that says that you can't leave the default channel
 cant-leave-global: "&fYou can't leave the default channel!"
@@ -275,3 +277,6 @@ broadcast-sent: "&fBroadcast sent to channel &7{channel}&f."
 # Message sent when a player tries to send a message in a LocalChannel that they aren't in the scope of.
 # Note: the legacy variants of LocalChannel will NOT use this message.
 ineligible-sender: "&fYou aren't in the scope of channel &7{channel}&f, it has been redirected."
+
+# Message sent when usage of a command is not supported with the channel "default".
+default-restricted: "&fYou can't use that command with the channel &7default&f."

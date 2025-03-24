@@ -32,7 +32,7 @@ public class StrictProximityChannel extends ProximityChannel {
 
     @Override
     public void sendMessage(Player player, String message) {
-        if(isWithinScope(player)) {
+        if(containsInScope(player)) {
             super.sendMessage(player, message);
         } else {
             defaultChannel.sendMessage(player, message);

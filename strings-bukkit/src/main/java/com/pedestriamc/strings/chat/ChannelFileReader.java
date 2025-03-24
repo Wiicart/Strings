@@ -201,11 +201,11 @@ public class ChannelFileReader {
                 log("Loading stringchannel '" + channelName + "'...");
                 return Type.NORMAL;
             }
-            case "world", "world_legacy" -> {
+            case "world", "world_strict" -> {
                 log("Loading world channel '" + channelName + "'...");
                 return Type.WORLD;
             }
-            case "proximity", "proximity_legacy" -> {
+            case "proximity", "proximity_strict" -> {
                 log("Loading proximity channel '" + channelName + "'...");
                 return Type.PROXIMITY;
             }
