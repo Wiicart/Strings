@@ -2,7 +2,7 @@ package com.pedestriamc.strings.tabcompleters;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.chat.StringsChannelLoader;
+import com.pedestriamc.strings.chat.ChannelManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +17,7 @@ import java.util.Set;
  */
 public class ChannelTabCompleter extends AbstractTabCompleter {
 
-    private final StringsChannelLoader channelLoader;
+    private final ChannelManager channelLoader;
 
     public ChannelTabCompleter(@NotNull Strings strings) {
         this.channelLoader = strings.getChannelLoader();

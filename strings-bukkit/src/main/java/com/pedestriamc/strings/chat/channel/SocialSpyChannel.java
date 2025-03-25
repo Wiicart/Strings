@@ -4,6 +4,7 @@ import com.pedestriamc.strings.chat.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +39,7 @@ public class SocialSpyChannel extends ProtectedChannel {
     }
 
     @Override
-    public void sendMessage(Player player, String message) {
+    public void sendMessage(@NotNull Player player, @NotNull String message) {
         for(Player p : spiesList){
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
         }

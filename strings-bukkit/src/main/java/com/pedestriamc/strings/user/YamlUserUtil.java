@@ -4,32 +4,36 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
-//TODO: Refactor class
-public final class YamlUserUtil {
+public final class YamlUserUtil implements UserUtil {
 
-    private static final Strings strings = Strings.getInstance();
-    private static final FileConfiguration config = Strings.getInstance().getUsersFileConfig();
+    private final Strings strings;
+    private final FileConfiguration config;
+    private final Map<UUID, User> map;
 
     public YamlUserUtil(Strings strings)
     {
-
+        this.strings = strings;
+        config = strings.getUsersFileConfig();
+        map = new HashMap<>();
     }
 
     /**
      * Saves a User to the users.yml file.
      * @param user the User to be saved.
      */
-    public static void saveUser(@NotNull User user){
+    @Override
+    public void saveUser(@NotNull User user) {
         UUID uuid = user.getUuid();
         Map<String, Object> infoMap = user.getData();
         async(() -> {
@@ -50,11 +54,12 @@ public final class YamlUserUtil {
      * @return The User, if data is found.
      */
     @Nullable
-    public static User loadUser(UUID uuid){
+    @Override
+    public User loadUser(UUID uuid) {
         String userPath = "players." + uuid;
         HashSet<Channel> channels = new HashSet<>();
         HashSet<Channel> monitoredChannels = new HashSet<>();
-        if(!config.contains(userPath)){
+        if(!config.contains(userPath)) {
             return null;
         }
         String suffix = config.getString(userPath + ".suffix");
@@ -66,10 +71,10 @@ public final class YamlUserUtil {
         List<?> channelNames = config.getList(userPath + ".channels");
         List<?> monitoredChannelNames = config.getList(userPath + ".monitored-channels");
 
-        if(channelNames != null){
-            for(Object item : channelNames){
-                if(item instanceof String && strings.getChannel((String) item) != null){
-                    channels.add(strings.getChannel((String) item));
+        if(channelNames != null) {
+            for(Object item : channelNames) {
+                if(item instanceof String string && strings.getChannel(string) != null){
+                    channels.add(strings.getChannel(string));
                 }
             }
         }
@@ -83,58 +88,36 @@ public final class YamlUserUtil {
         }
 
 
-        return new User(uuid, chatColor, prefix, suffix, displayName, channels, activeChannel, mentionsEnabled, monitoredChannels);
+        return new User(strings, uuid, chatColor, prefix, suffix, displayName, channels, activeChannel, mentionsEnabled, monitoredChannels);
     }
 
-    private static void async(Runnable runnable) {
+    private void async(Runnable runnable) {
         Bukkit.getScheduler().runTaskAsynchronously(strings, runnable);
     }
 
-    /**
-     * A class to hold a HashMap of all online Users.
-     * This class is updated as players join and leave the server.
-     */
-    public static class UserMap {
-
-        private static final HashMap<UUID, User> userHashMap = new HashMap<>();
-
-        /**
-         * Gets a User from the UserMap.
-         * Returns null if the User is not found.
-         * @param uuid The UUID of the User.
-         * @return The User, if the UserMap contains it.
-         */
-        public static User getUser(UUID uuid){
-            return userHashMap.get(uuid);
-        }
-
-        /**
-         * Adds a User to the UserMap.
-         * @param user The User to be added.
-         */
-        public static void addUser(@NotNull User user){
-            if(userHashMap.containsKey(user.getUuid())){
-                removeUser(user.getUuid());
-            }
-            userHashMap.put(user.getUuid(), user);
-        }
-
-        /**
-         * Removes a User from the UserMap.
-         * @param uuid The UUID of the User to be removed.
-         */
-        public static void removeUser(UUID uuid){
-            userHashMap.remove(uuid);
-        }
-
-        /**
-         * Provides a Collection of all Users in the UserMap.
-         * @return A populated Collection.
-         */
-        public static @NotNull Collection<User> getUserSet(){
-            return userHashMap.values();
-        }
-
-        public static void clear(){ userHashMap.clear(); }
+    @Override
+    public User getUser(UUID uuid) {
+        return map.get(uuid);
     }
+
+    @Override
+    public User getUser(Player player) {
+        return getUser(player.getUniqueId());
+    }
+
+    @Override
+    public void addUser(User user) {
+        map.put(user.getUuid(), user);
+    }
+
+    @Override
+    public void removeUser(UUID uuid) {
+        map.remove(uuid);
+    }
+
+    @Override
+    public Set<User> getUsers() {
+        return new HashSet<>(map.values());
+    }
+
 }

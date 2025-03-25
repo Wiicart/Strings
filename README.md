@@ -63,5 +63,6 @@ I've added a public API which will be available through Maven soon.  The API is 
 [Modrinth](https://modrinth.com/plugin/strings)\
 [Spigot](https://www.spigotmc.org/resources/strings-chat-plugin.118186/)\
 [Hangar](https://hangar.papermc.io/wiicart/Strings)\
-[bStats](https://bstats.org/plugin/bukkit/Strings/22597)
+[bStats](https://bstats.org/plugin/bukkit/Strings/22597)\
+[Discord](https://discord.gg/meYfEJcf9P)
  

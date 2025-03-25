@@ -13,7 +13,6 @@ import com.pedestriamc.strings.chat.channel.local.StrictWorldChannel;
 import com.pedestriamc.strings.chat.channel.StringChannel;
 import com.pedestriamc.strings.chat.channel.local.WorldChannel;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.YamlUserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -22,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +32,7 @@ import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public class StringsChannelLoader implements ChannelLoader {
+public class ChannelManager implements ChannelLoader {
 
     private final Strings strings;
     private final ConcurrentHashMap<String, Channel> channels;
@@ -43,7 +41,7 @@ public class StringsChannelLoader implements ChannelLoader {
     private final Set<Channel> worldChannels;
     private final TreeSet<Channel> priorityChannels;
 
-    public StringsChannelLoader(Strings strings) {
+    public ChannelManager(Strings strings) {
         this.strings = strings;
         this.channels = new ConcurrentHashMap<>();
         this.config = strings.getChannelsFileConfig();
@@ -93,7 +91,7 @@ public class StringsChannelLoader implements ChannelLoader {
             throw new NoSuchElementException("Channel '" + channel.getName() + "' is not registered.");
         }
 
-        Collection<User> users = YamlUserUtil.UserMap.getUserSet();
+        Set<User> users = strings.getUserUtil().getUsers();
         Channel defaultChannel = strings.getChannel("default");
         for(User user : users){
             if(user.getActiveChannel().equals(channel)) {

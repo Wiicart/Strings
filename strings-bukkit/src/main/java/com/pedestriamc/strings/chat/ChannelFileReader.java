@@ -21,11 +21,11 @@ public class ChannelFileReader {
 
     private final Strings strings;
     private final FileConfiguration config;
-    private final StringsChannelLoader channelLoader;
+    private final ChannelManager channelLoader;
     private boolean globalExists = false;
     private boolean helpOpExists = false;
 
-    public ChannelFileReader(Strings strings, FileConfiguration config, StringsChannelLoader channelLoader) {
+    public ChannelFileReader(Strings strings, FileConfiguration config, ChannelManager channelLoader) {
         this.strings = strings;
         this.config = config;
         this.channelLoader = channelLoader;

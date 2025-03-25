@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.listeners;
 
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
-import com.pedestriamc.strings.chat.StringsChannelLoader;
+import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.Strings;
@@ -17,7 +17,7 @@ public class ChatListener implements Listener {
 
     private final Strings strings;
     private final Channel defaultChannel;
-    private final StringsChannelLoader channelLoader;
+    private final ChannelManager channelLoader;
 
     public ChatListener(Strings strings) {
         this.strings = strings;

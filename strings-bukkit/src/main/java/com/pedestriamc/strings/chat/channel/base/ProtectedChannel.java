@@ -6,6 +6,7 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Type;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Map;
@@ -22,7 +23,7 @@ public abstract class ProtectedChannel implements Channel {
 
 
     @Override
-    public void sendMessage(Player player, String message) {
+    public void sendMessage(@NotNull Player player, @NotNull String message) {
 
     }
 
@@ -147,7 +148,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public boolean allows(Permissible permissible) {
+    public boolean allows(@NotNull Permissible permissible) {
         return false;
     }
 

@@ -19,7 +19,7 @@ public interface Channel extends Comparable<Channel> {
      * @param player The player sending the message.
      * @param message The player's message.
      */
-    void sendMessage(Player player, String message);
+    void sendMessage(@NotNull Player player, @NotNull String message);
 
     /**
      * Compares the priorities of the Channels.
@@ -182,7 +182,7 @@ public interface Channel extends Comparable<Channel> {
      * @param permissible The player to check
      * @return If the player has permission
      */
-    boolean allows(Permissible permissible);
+    boolean allows(@NotNull Permissible permissible);
 
     boolean isCallEvent();
 

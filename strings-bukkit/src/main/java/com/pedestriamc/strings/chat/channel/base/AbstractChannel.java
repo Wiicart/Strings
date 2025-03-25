@@ -81,7 +81,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     public abstract Set<Player> getPlayersInScope();
 
     @Override
-    public void sendMessage(Player player, String message) {
+    public void sendMessage(@NotNull Player player, @NotNull String message) {
         Set<Player> recipients = getRecipients(player);
         String template = messageProcessor.generateTemplate(player);
         String processedMessage = messageProcessor.processMessage(player, message);
@@ -150,7 +150,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public boolean allows(Permissible permissible) {
+    public boolean allows(@NotNull Permissible permissible) {
         if(permissible instanceof Player player && getMembers().contains(player)) {
             return true;
         }

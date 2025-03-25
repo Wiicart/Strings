@@ -3,7 +3,7 @@ package com.pedestriamc.strings.commands.channel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Messenger;
-import com.pedestriamc.strings.chat.StringsChannelLoader;
+import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.commands.CommandBase;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -18,7 +18,7 @@ import static com.pedestriamc.strings.commands.channel.ChannelCommand.CHANNEL_PL
 
 public abstract class ChannelProcessor implements CommandBase.CommandComponent {
 
-    private final StringsChannelLoader channelLoader;
+    private final ChannelManager channelLoader;
     private final Messenger messenger;
 
     protected ChannelProcessor(@NotNull Strings strings) {

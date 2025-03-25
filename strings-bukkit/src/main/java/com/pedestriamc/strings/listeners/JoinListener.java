@@ -1,31 +1,43 @@
 package com.pedestriamc.strings.listeners;
 
+import com.pedestriamc.strings.configuration.Configuration;
+import com.pedestriamc.strings.configuration.ConfigurationOption;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.YamlUserUtil;
+import com.pedestriamc.strings.user.UserUtil;
 import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.Strings;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class JoinListener implements Listener {
 
+    private final Strings strings;
+
+    private final UserUtil userUtil;
     private final boolean modifyJoinMessage;
     private final ServerMessages serverMessages;
     private final boolean doMotd;
     private final boolean doJoinLeaveMessage;
 
-    public JoinListener(Strings strings) {
-        modifyJoinMessage = strings.getConfig().getBoolean("custom-join-leave-message", false);
+    public JoinListener(@NotNull Strings strings) {
+        this.strings = strings;
+        userUtil = strings.getUserUtil();
         serverMessages = strings.getServerMessages();
-        doMotd = strings.getConfig().getBoolean("enable-motd", false);
-        doJoinLeaveMessage = strings.getConfig().getBoolean("enable-join-leave-messages");
+
+        Configuration configuration = strings.getConfigClass();
+        modifyJoinMessage = configuration.getBoolean(ConfigurationOption.CUSTOM_JOIN_LEAVE);
+        doMotd = configuration.getBoolean(ConfigurationOption.ENABLE_MOTD);
+        doJoinLeaveMessage = configuration.getBoolean(ConfigurationOption.JOIN_LEAVE);
     }
 
     @EventHandler
     public void onEvent(PlayerJoinEvent event) {
-        if(YamlUserUtil.loadUser(event.getPlayer().getUniqueId()) == null) {
-            new User(event.getPlayer().getUniqueId());
+        if(userUtil.loadUser(event.getPlayer().getUniqueId()) == null) {
+            User user = new User(strings, event.getPlayer().getUniqueId());
+            userUtil.addUser(user);
+            userUtil.saveUser(user);
         }
 
         if(!doJoinLeaveMessage) {

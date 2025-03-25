@@ -5,7 +5,7 @@ import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.*;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.chat.StringsChannelLoader;
+import com.pedestriamc.strings.chat.ChannelManager;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +19,7 @@ import java.util.UUID;
 public final class StringsImpl implements StringsAPI {
 
     private final com.pedestriamc.strings.Strings strings;
-    private final StringsChannelLoader channelLoader;
+    private final ChannelManager channelLoader;
     private final Mentioner mentioner;
     private boolean apiUsed;
 

@@ -62,7 +62,7 @@ public class HelpOPChannel extends ProtectedChannel {
     }
 
     @Override
-    public void sendMessage(Player player, String message) {
+    public void sendMessage(@NotNull Player player, @NotNull String message) {
         Set<Player> members = getRecipients();
         String messageFormat = generateTemplate(player);
         message = messageProcessor.processMessage(player, message);
@@ -171,7 +171,7 @@ public class HelpOPChannel extends ProtectedChannel {
     }
 
     @Override
-    public boolean allows(Permissible permissible) {
+    public boolean allows(@NotNull Permissible permissible) {
         return (permissible.hasPermission("strings.helpop.use") ||  permissible.hasPermission("strings.*"));
     }
 

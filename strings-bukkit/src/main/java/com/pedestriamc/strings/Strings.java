@@ -13,6 +13,7 @@ import com.pedestriamc.strings.managers.ClassRegistryManager;
 import com.pedestriamc.strings.misc.AutoBroadcasts;
 import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.UserUtil;
 import com.pedestriamc.strings.user.YamlUserUtil;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import net.milkbowl.vault.chat.Chat;
@@ -64,6 +65,7 @@ public final class Strings extends JavaPlugin {
     private FileConfiguration usersFileConfig;
     private FileConfiguration channelsFileConfig;
 
+    private UserUtil userUtil;
     private Chat chat = null;
     private ServerMessages serverMessages;
     private PlayerDirectMessenger playerDirectMessenger;
@@ -71,7 +73,7 @@ public final class Strings extends JavaPlugin {
     private Mentioner mentioner;
     private UUID apiUUID;
     private Messenger messenger;
-    private StringsChannelLoader channelLoader;
+    private ChannelManager channelLoader;
     private LogManager logManager;
     private YamlConfiguration moderationFileConfig;
     private Configuration configClass;
@@ -106,10 +108,10 @@ public final class Strings extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for(User user : YamlUserUtil.UserMap.getUserSet()){
+        for(User user : userUtil.getUsers()){
             user.logOff();
         }
-        YamlUserUtil.UserMap.clear();
+        this.userUtil = null;
         this.serverMessages = null;
         this.playerDirectMessenger = null;
         this.channelLoader = null;
@@ -171,10 +173,11 @@ public final class Strings extends JavaPlugin {
     }
 
     private void instantiateObjects() {
+        userUtil = new YamlUserUtil(this);
         configClass = new Configuration(getConfig());
         messenger = new Messenger(getMessagesFileConfig());
         playerDirectMessenger = new PlayerDirectMessenger(this);
-        channelLoader = new StringsChannelLoader(this);
+        channelLoader = new ChannelManager(this);
         serverMessages = new ServerMessages(this);
         mentioner = new Mentioner(this);
     }
@@ -251,8 +254,8 @@ public final class Strings extends JavaPlugin {
     private void checkIfReload() {
         if(!Bukkit.getOnlinePlayers().isEmpty()){
             for(Player p : Bukkit.getOnlinePlayers()){
-                if(YamlUserUtil.loadUser(p.getUniqueId()) == null){
-                    new User(p.getUniqueId());
+                if(userUtil.loadUser(p.getUniqueId()) == null){
+                    new User(this, p.getUniqueId());
                 }
             }
         }
@@ -317,6 +320,8 @@ public final class Strings extends JavaPlugin {
 
     public String getVersion() { return VERSION; }
 
+    public UserUtil getUserUtil() { return userUtil; }
+
     public ServerMessages getServerMessages() { return serverMessages; }
 
     public PlayerDirectMessenger getPlayerDirectMessenger() { return playerDirectMessenger; }
@@ -347,7 +352,7 @@ public final class Strings extends JavaPlugin {
 
     public short getPluginNum() { return PLUGIN_NUM; }
 
-    public StringsChannelLoader getChannelLoader() { return channelLoader; }
+    public ChannelManager getChannelLoader() { return channelLoader; }
 
     @SuppressWarnings("unused")
     public LogManager getLogManager() { return logManager; }
@@ -407,7 +412,7 @@ public final class Strings extends JavaPlugin {
      * @return User object of the player matching the UUID.
      */
     public User getUser(@NotNull UUID uuid) {
-        return YamlUserUtil.UserMap.getUser(uuid);
+        return userUtil.getUser(uuid);
     }
 
     /**
@@ -416,7 +421,7 @@ public final class Strings extends JavaPlugin {
      * @return User object of the player.
      */
     public User getUser(@NotNull Player player) {
-        return YamlUserUtil.UserMap.getUser(player.getUniqueId());
+        return userUtil.getUser(player.getUniqueId());
     }
 
     public Channel getChannel(String channel) {

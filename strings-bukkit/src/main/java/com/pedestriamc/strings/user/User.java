@@ -26,11 +26,13 @@ import java.util.UUID;
 public class User implements StringsUser {
 
     private final Strings strings;
+
+    private final UserUtil userUtil;
     private final UUID uuid;
     private final Player player;
     private final String name;
-    private final HashSet<Channel> channels;
-    private final HashSet<Channel> channelsMonitoring;
+    private final Set<Channel> channels;
+    private final Set<Channel> channelsMonitoring;
     private String chatColor;
     private String prefix;
     private String suffix;
@@ -43,8 +45,8 @@ public class User implements StringsUser {
      * All values are default or null.
      * @param uuid the User's UUID.  This should match the Player's UUID.
      */
-    public User(UUID uuid){
-        this(uuid, null, null, null, null, null, null, true, null);
+    public User(Strings strings, UUID uuid){
+        this(strings, uuid, null, null, null, null, null, null, true, null);
     }
 
     /**
@@ -58,8 +60,9 @@ public class User implements StringsUser {
      * @param activeChannel The User's active channel.
      * @param mentionsEnabled If the user receives mentions or not.
      */
-    public User(UUID uuid, String chatColor, String prefix, String suffix, String displayName, HashSet<Channel> channels, Channel activeChannel, boolean mentionsEnabled, HashSet<Channel> monitoredChannels){
-        this.strings = Strings.getInstance();
+    public User(Strings strings, UUID uuid, String chatColor, String prefix, String suffix, String displayName, Set<Channel> channels, Channel activeChannel, boolean mentionsEnabled, Set<Channel> monitoredChannels) {
+        this.strings = strings;
+        this.userUtil = strings.getUserUtil();
         this.uuid = uuid;
         this.chatColor = chatColor;
         this.prefix = prefix;
@@ -78,15 +81,13 @@ public class User implements StringsUser {
         } else {
             joinChannel(strings.getChannel("default"));
         }
-        YamlUserUtil.saveUser(this);
-        YamlUserUtil.UserMap.addUser(this);
     }
 
     /**
      * Provides a Map containing all the User's information.
      * @return The populated Map.
      */
-    public Map<String, Object> getData(){
+    public Map<String, Object> getData() {
         HashMap<String, Object> infoMap = new HashMap<>();
         infoMap.put("chat-color", this.chatColor);
         infoMap.put("prefix", this.prefix);
@@ -103,7 +104,7 @@ public class User implements StringsUser {
      * Provides the User's UUID.
      * @return The UUID.
      */
-    public @NotNull UUID getUuid(){
+    public @NotNull UUID getUuid() {
         return uuid;
     }
 
@@ -125,8 +126,8 @@ public class User implements StringsUser {
      * @param channel The channel to get the fallback chat color from.
      * @return A chat color.
      */
-    public String getChatColor(Channel channel){
-        if(chatColor == null){
+    public String getChatColor(Channel channel) {
+        if(chatColor == null) {
             return channel.getDefaultColor();
         }
         return ChatColor.translateAlternateColorCodes('&', chatColor);
@@ -137,8 +138,8 @@ public class User implements StringsUser {
      * If no display name is set with this plugin, it falls back to the server.
      * @return The display name.
      */
-    public @NotNull String getDisplayName(){
-        if(displayName == null){
+    public @NotNull String getDisplayName() {
+        if(displayName == null) {
             return player.getDisplayName();
         }
         return ChatColor.translateAlternateColorCodes('&', displayName);
@@ -149,11 +150,11 @@ public class User implements StringsUser {
      * Uses Vault prefixes when available.
      * @return The prefix.
      */
-    public String getPrefix(){
-        if(strings.useVault()){
+    public String getPrefix() {
+        if(strings.useVault()) {
             return ChatColor.translateAlternateColorCodes('&', strings.getVaultChat().getPlayerPrefix(player));
-        }else{
-            if(prefix == null){
+        } else {
+            if(prefix == null) {
                 return "";
             }
             return ChatColor.translateAlternateColorCodes('&', prefix);
@@ -165,11 +166,11 @@ public class User implements StringsUser {
      * Uses Vault suffixes when available.
      * @return The suffix.
      */
-    public String getSuffix(){
-        if(strings.useVault()){
+    public String getSuffix() {
+        if(strings.useVault()) {
             return ChatColor.translateAlternateColorCodes('&', strings.getVaultChat().getPlayerSuffix(player));
-        }else{
-            if(suffix == null){
+        } else {
+            if(suffix == null) {
                 return "";
             }
             return ChatColor.translateAlternateColorCodes('&', suffix);
@@ -180,7 +181,7 @@ public class User implements StringsUser {
      * Provides the Player correlated to the User.
      * @return The player.
      */
-    public Player getPlayer(){
+    public Player getPlayer() {
         return player;
     }
 
@@ -188,56 +189,56 @@ public class User implements StringsUser {
      * Provides the username of the User.
      * @return The username.
      */
-    public @NotNull String getName(){ return name; }
+    public @NotNull String getName() { return name; }
 
     /**
      * Sets the chat color of the User.
      * @param chatColor The new chat color.
      */
-    public void setChatColor(String chatColor){
+    public void setChatColor(String chatColor) {
         this.chatColor = chatColor;
-        YamlUserUtil.saveUser(this);
+        save();
     }
 
     /**
      * Sets the User's prefix.
      * @param prefix The new prefix.
      */
-    public void setPrefix(@NotNull String prefix){
+    public void setPrefix(@NotNull String prefix) {
         this.prefix = prefix;
         if(strings.useVault()){
             strings.getVaultChat().setPlayerPrefix(player, prefix);
         }
-        YamlUserUtil.saveUser(this);
+        save();
     }
 
     /**
      * Sets the User's suffix.
      * @param suffix The new suffix.
      */
-    public void setSuffix(@NotNull String suffix){
+    public void setSuffix(@NotNull String suffix) {
         this.suffix = suffix;
         if(strings.useVault()){
             strings.getVaultChat().setPlayerSuffix(player, suffix);
         }
-        YamlUserUtil.saveUser(this);
+        save();
     }
 
     /**
      * Sets the player's display name and updates the User, so it's saved.
      * @param displayName The new display name.
      */
-    public void setDisplayName(@NotNull String displayName){
+    public void setDisplayName(@NotNull String displayName) {
         this.displayName = displayName;
         this.player.setDisplayName(displayName);
-        YamlUserUtil.saveUser(this);
+        save();
     }
 
     /**
      * Provides a boolean of if the player wants to receive messages.
      * @return A boolean.
      */
-    public boolean isMentionsEnabled(){
+    public boolean isMentionsEnabled() {
         return this.mentionsEnabled;
     }
 
@@ -245,16 +246,16 @@ public class User implements StringsUser {
      * Sets if this player receives mentions
      * @param mentionsEnabled A boolean of if the mentions should be enabled.
      */
-    public void setMentionsEnabled(boolean mentionsEnabled){
+    public void setMentionsEnabled(boolean mentionsEnabled) {
         this.mentionsEnabled = mentionsEnabled;
-        YamlUserUtil.saveUser(this);
+        save();
     }
 
     /**
      * Provides the player's active channel.
      * @return The active channel.
      */
-    public @NotNull Channel getActiveChannel(){
+    public @NotNull Channel getActiveChannel() {
         return activeChannel;
     }
 
@@ -262,21 +263,21 @@ public class User implements StringsUser {
      * Sets the User's active channel where the User will send messages to.
      * @param channel The channel to be set as the active channel.
      */
-    public void setActiveChannel(@NotNull Channel channel){
-        if(channel.getName().equals("helpop")){
+    public void setActiveChannel(@NotNull Channel channel) {
+        if(channel.getName().equals("helpop")) {
             return;
         }
         this.activeChannel = channel;
         channels.add(channel);
         channel.addMember(this.getPlayer());
-        YamlUserUtil.saveUser(this);
+        save();
     }
 
     /**
      * Provides a Set of the channels the User is a member of.
      * @return A populated set of channels.
      */
-    public Set<Channel> getChannels(){
+    public Set<Channel> getChannels() {
         return channels;
     }
 
@@ -284,28 +285,27 @@ public class User implements StringsUser {
      * Adds the User to a channel.
      * @param channel The channel to join.
      */
-    public void joinChannel(@NotNull Channel channel){
+    public void joinChannel(@NotNull Channel channel) {
         channel.addMember(this.player);
         channels.add(channel);
-        YamlUserUtil.saveUser(this);
-
+        save();
     }
 
     /**
      * Removes the User from a channel by updating the channel and user.
      * @param channel the channel to leave
      */
-    public void leaveChannel(@NotNull Channel channel){
+    public void leaveChannel(@NotNull Channel channel) {
         if(channel.equals(strings.getChannel("default"))){
             Bukkit.getLogger().info("[Strings] Player " + player.getName() + " just tried to leave channel global!  Cancelled leaving channel.");
             return;
         }
         channels.remove(channel);
         channel.removeMember(this.getPlayer());
-        if(activeChannel.equals(channel)){
+        if(activeChannel.equals(channel)) {
             activeChannel = strings.getChannel("default");
         }
-        YamlUserUtil.saveUser(this);
+        save();
     }
 
     /**
@@ -313,7 +313,7 @@ public class User implements StringsUser {
      * @param channel The channel to check
      * @return If the player is a member of the specified channel.
      */
-    public boolean memberOf(Channel channel){
+    public boolean memberOf(Channel channel) {
         return channels.contains(channel);
     }
 
@@ -326,9 +326,9 @@ public class User implements StringsUser {
      * Provides an ArrayList of all names of the channels the User is a member of.
      * @return An {@code ArrayList} of {@code String} containing the names of the channels the user is a member of.
      */
-    public List<String> getChannelNames(){
+    public List<String> getChannelNames() {
         ArrayList<String> names = new ArrayList<>();
-        for(Channel channel : channels){
+        for(Channel channel : channels) {
             names.add(channel.getName());
         }
         return names;
@@ -338,8 +338,8 @@ public class User implements StringsUser {
      * Removes the User from channels because the player is going offline.
      * The User will rejoin the channels when they log back on.
      */
-    public void logOff(){
-        for(Channel channel : channels){
+    public void logOff() {
+        for(Channel channel : channels) {
             channel.removeMember(this.getPlayer());
         }
 
@@ -351,13 +351,13 @@ public class User implements StringsUser {
     public void monitor(Monitorable monitorable) {
         channelsMonitoring.add(monitorable);
         monitorable.addMonitor(this);
-        YamlUserUtil.saveUser(this);
+        save();
     }
 
     public void unmonitor(Monitorable monitorable) {
         channelsMonitoring.remove(monitorable);
         monitorable.removeMonitor(this);
-        YamlUserUtil.saveUser(this);
+        save();
     }
 
     public List<String> getMonitoredChannelNames() {
@@ -373,13 +373,17 @@ public class User implements StringsUser {
         return new HashSet<>(channelsMonitoring);
     }
 
+    private void save() {
+        userUtil.saveUser(this);
+    }
+
     /**
      * Provides a String representation of the getData HashMap.
      * All data that the User has will be given.
      * @return String with information on this User.
      */
     @Override
-    public String toString(){
+    public String toString() {
         return getData().toString();
     }
 

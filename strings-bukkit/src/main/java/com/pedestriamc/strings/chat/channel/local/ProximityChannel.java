@@ -158,7 +158,7 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
     }
 
     @Override
-    public boolean allows(Permissible permissible) {
+    public boolean allows(@NotNull Permissible permissible) {
         if(permissible instanceof Player player) {
             if(getMembers().contains(player)) {
                 return true;
