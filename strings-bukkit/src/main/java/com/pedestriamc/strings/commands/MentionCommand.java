@@ -38,7 +38,7 @@ public final class MentionCommand implements CommandExecutor {
 
         if(args.length == 0) {
             boolean isEnabled = user.isMentionsEnabled();
-            if(isEnabled){
+            if(isEnabled) {
                 disable(player, user);
             }else{
                 enable(player, user);

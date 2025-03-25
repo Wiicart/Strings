@@ -23,7 +23,7 @@ public final class PlayerDirectMessageEvent extends Event implements Cancellable
      * @param recipient The recipient of the direct message.
      * @param message The message being sent.
      */
-    public PlayerDirectMessageEvent(Player sender, Player recipient, String message){
+    public PlayerDirectMessageEvent(Player sender, Player recipient, String message) {
         this.sender = sender;
         this.recipient = recipient;
         this.message = message;

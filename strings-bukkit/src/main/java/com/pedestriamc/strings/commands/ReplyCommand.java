@@ -29,7 +29,7 @@ public final class ReplyCommand implements CommandExecutor {
             return true;
         }
 
-        if(!(sender instanceof Player)){
+        if(!(sender instanceof Player)) {
             sender.sendMessage("[Strings] This command can only be used by players!");
             return true;
         }

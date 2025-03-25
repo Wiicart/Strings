@@ -262,7 +262,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public void setFormat(String format){
+    public void setFormat(String format) {
         this.format = format;
     }
 

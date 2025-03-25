@@ -16,31 +16,31 @@ public final class SocialSpyCommand implements CommandExecutor {
     private final Strings strings;
     private final Messenger messenger;
 
-    public SocialSpyCommand(@NotNull Strings strings){
+    public SocialSpyCommand(@NotNull Strings strings) {
         this.strings = strings;
         this.messenger = strings.getMessenger();
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args){
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         Channel socialSpy = strings.getChannel("socialspy");
-        if(!(sender.hasPermission("strings.*") || sender.hasPermission("strings.socialspy"))){
+        if(!(sender.hasPermission("strings.*") || sender.hasPermission("strings.socialspy"))) {
             messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
-        if(args.length == 0){
+        if(args.length == 0) {
             noArgs(sender, socialSpy);
             return true;
         }
-        if(!(sender instanceof Player)){
+        if(!(sender instanceof Player)) {
             sender.sendMessage("[Strings] This command can only be used by players");
             return true;
         }
-        if(args.length > 1){
+        if(args.length > 1) {
             messenger.sendMessage(TOO_MANY_ARGS, sender);
             return true;
         }
-        switch(args[0]){
+        switch(args[0]) {
             case "on", "true" -> {
                 enableSocialSpy(sender, socialSpy);
                 return true;
@@ -56,18 +56,18 @@ public final class SocialSpyCommand implements CommandExecutor {
         }
     }
 
-    public void enableSocialSpy(CommandSender sender, Channel channel){
+    public void enableSocialSpy(CommandSender sender, Channel channel) {
         strings.getUser((Player) sender).joinChannel(channel);
         messenger.sendMessage(SOCIAL_SPY_ON, sender);
     }
 
-    public void disableSocialSpy(CommandSender sender, Channel channel){
+    public void disableSocialSpy(CommandSender sender, Channel channel) {
         strings.getUser((Player) sender).leaveChannel(channel);
         messenger.sendMessage(SOCIAL_SPY_OFF, sender);
     }
 
-    public void noArgs(CommandSender sender, Channel channel){
-        if(strings.getUser((Player) sender).memberOf(channel)){
+    public void noArgs(CommandSender sender, Channel channel) {
+        if(strings.getUser((Player) sender).memberOf(channel)) {
             disableSocialSpy(sender, channel);
             return;
         }

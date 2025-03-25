@@ -74,15 +74,15 @@ public class MessageProcessor {
 
     public String processMentions(Player sender, @NotNull String str)
     {
-        if(!str.contains("@")){
+        if(!str.contains("@")) {
             return str;
         }
 
         String[] splitStr = str.split("((?=@))"); //https://www.baeldung.com/java-split-string-keep-delimiters
         StringBuilder sb = new StringBuilder();
         String color = "";
-        for(String segment : splitStr){
-            if(!segment.contains("@")){
+        for(String segment : splitStr) {
+            if(!segment.contains("@") ) {
                 color = ChatColor.getLastColors(segment);
                 sb.append(segment);
                 continue;

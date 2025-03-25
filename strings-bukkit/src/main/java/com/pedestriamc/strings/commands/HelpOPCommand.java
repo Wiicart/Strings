@@ -41,7 +41,7 @@ public final class HelpOPCommand implements CommandExecutor {
             return true;
         }
 
-        if(args.length == 0){
+        if(args.length == 0) {
             messenger.sendMessage(INSUFFICIENT_ARGS, sender);
             return true;
         }

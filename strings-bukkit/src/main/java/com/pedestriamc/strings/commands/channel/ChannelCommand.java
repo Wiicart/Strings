@@ -9,7 +9,7 @@ public final class ChannelCommand extends CommandBase {
 
     public static final String CHANNEL_PLACEHOLDER = "{channel}";
 
-    public ChannelCommand(Strings strings){
+    public ChannelCommand(Strings strings) {
         super();
         HashMap<String, CommandComponent> map = new HashMap<>();
 

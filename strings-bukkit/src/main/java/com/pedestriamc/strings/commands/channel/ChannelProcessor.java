@@ -48,7 +48,7 @@ public abstract class ChannelProcessor implements CommandBase.CommandComponent {
             case 3 -> {
                 target = Bukkit.getPlayer(args[2]);
                 modifyingOther = true;
-                if(target == null){
+                if(target == null) {
                     HashMap<String, String> map = new HashMap<>();
                     map.put("{player}", args[2]);
                     messenger.sendMessage(INVALID_PLAYER, map, sender);

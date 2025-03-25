@@ -39,7 +39,6 @@ import java.util.logging.Logger;
 
 public final class Strings extends JavaPlugin {
 
-    private static Strings instance;
     private final Logger logger = Bukkit.getLogger();
 
     private static final String VERSION = "1.5";
@@ -80,7 +79,6 @@ public final class Strings extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        instance = this;
         logger.info("[Strings] Loading...");
         saveDefaultConfig();
         setupCustomConfigs();
@@ -108,7 +106,7 @@ public final class Strings extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        for(User user : userUtil.getUsers()){
+        for(User user : userUtil.getUsers()) {
             user.logOff();
         }
         this.userUtil = null;
@@ -140,7 +138,7 @@ public final class Strings extends JavaPlugin {
 
     //Update yml files
     @SuppressWarnings("CallToPrintStackTrace")
-    private void updateConfigs(){
+    private void updateConfigs() {
         //Config updater using https://github.com/tchristofferson/Config-Updater
         File configFile = new File(this.getDataFolder(), "config.yml");
         File messageFile = new File(this.getDataFolder(), "messages.yml");
@@ -154,7 +152,7 @@ public final class Strings extends JavaPlugin {
             }
         }
         if(messageFile.exists()) {
-            try{
+            try {
                 ConfigUpdater.update(this,"messages.yml", messageFile);
             } catch(IOException e) {
                 Bukkit.getLogger().info("[Strings] Updating messages file failed.");
@@ -252,9 +250,9 @@ public final class Strings extends JavaPlugin {
     }
 
     private void checkIfReload() {
-        if(!Bukkit.getOnlinePlayers().isEmpty()){
-            for(Player p : Bukkit.getOnlinePlayers()){
-                if(userUtil.loadUser(p.getUniqueId()) == null){
+        if(!Bukkit.getOnlinePlayers().isEmpty()) {
+            for(Player p : Bukkit.getOnlinePlayers()) {
+                if(userUtil.loadUser(p.getUniqueId()) == null) {
                     new User(this, p.getUniqueId());
                 }
             }
@@ -346,8 +344,6 @@ public final class Strings extends JavaPlugin {
 
     public boolean isPaper() { return isPaper; }
 
-    public static Strings getInstance() { return instance; }
-
     public Mentioner getMentioner() { return mentioner; }
 
     public short getPluginNum() { return PLUGIN_NUM; }
@@ -368,7 +364,7 @@ public final class Strings extends JavaPlugin {
     public void saveUsersFile() {
         try{
             usersFileConfig.save(usersFile);
-        }catch(IOException e){
+        }catch(IOException e) {
             e.printStackTrace();
         }
     }
@@ -377,7 +373,7 @@ public final class Strings extends JavaPlugin {
     public void saveChannelsFile() {
         try{
             channelsFileConfig.save(channelsFile);
-        }catch(IOException e){
+        }catch(IOException e) {
             e.printStackTrace();
         }
     }
@@ -395,7 +391,7 @@ public final class Strings extends JavaPlugin {
     public void saveBroadcastsFile() {
         try{
             broadcastsFileConfig.save(broadcastsFile);
-        }catch(IOException e){
+        }catch(IOException e) {
             e.printStackTrace();
         }
     }

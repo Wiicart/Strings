@@ -13,7 +13,7 @@ public class HelpCommand implements CommandBase.CommandComponent {
 
     private final Messenger messenger;
 
-    public HelpCommand(Strings strings){
+    public HelpCommand(Strings strings) {
         this.messenger = strings.getMessenger();
     }
 

@@ -46,7 +46,7 @@ public class StrictProximityChannel extends ProximityChannel {
         HashSet<Player> recipients = new HashSet<>(getMonitors());
 
         Location senderLocation = sender.getLocation();
-        for(Player p : senderWorld.getPlayers()){
+        for(Player p : senderWorld.getPlayers()) {
             Location pLocation = p.getLocation();
             if(senderLocation.distanceSquared(pLocation) < getDistanceSquared()) {
                 recipients.add(p);

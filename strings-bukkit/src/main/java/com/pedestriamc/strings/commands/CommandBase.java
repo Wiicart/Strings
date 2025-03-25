@@ -23,16 +23,16 @@ public abstract class CommandBase implements CommandExecutor {
      * @param baseCommand The BaseCommand that is called when none of the subcommands are eligible to be called.
      */
     @Contract(pure = true)
-    protected final void initialize(@NotNull Map<String, CommandComponent> map, @NotNull CommandComponent baseCommand){
+    protected final void initialize(@NotNull Map<String, CommandComponent> map, @NotNull CommandComponent baseCommand) {
         this.map = map;
         this.baseCommand = baseCommand;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args) {
-        if(args.length > 0){
+        if(args.length > 0) {
             String arg1 = args[0].toUpperCase();
-            if(map.containsKey(arg1)){
+            if(map.containsKey(arg1)) {
                 return map.get(arg1).onCommand(sender, command, label, args);
             }
         }

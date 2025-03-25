@@ -38,8 +38,8 @@ public final class YamlUserUtil implements UserUtil {
         Map<String, Object> infoMap = user.getData();
         async(() -> {
             synchronized(config) {
-                for(Map.Entry<String, Object> element : infoMap.entrySet()){
-                    if(element.getValue() != null){
+                for(Map.Entry<String, Object> element : infoMap.entrySet()) {
+                    if(element.getValue() != null) {
                         config.set("players." + uuid + "." + element.getKey(), element.getValue());
                     }
                 }
@@ -73,7 +73,7 @@ public final class YamlUserUtil implements UserUtil {
 
         if(channelNames != null) {
             for(Object item : channelNames) {
-                if(item instanceof String string && strings.getChannel(string) != null){
+                if(item instanceof String string && strings.getChannel(string) != null) {
                     channels.add(strings.getChannel(string));
                 }
             }

@@ -32,7 +32,7 @@ public class Messenger {
     public void sendMessage(Message message, CommandSender sender) {
         Object msgObject = enumMap.get(message);
         if(msgObject instanceof String[] msg) {
-            for(String str : msg){
+            for(String str : msg) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', str));
             }
         } else if(msgObject instanceof String) {

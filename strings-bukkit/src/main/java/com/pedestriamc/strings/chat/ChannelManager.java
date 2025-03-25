@@ -93,7 +93,7 @@ public class ChannelManager implements ChannelLoader {
 
         Set<User> users = strings.getUserUtil().getUsers();
         Channel defaultChannel = strings.getChannel("default");
-        for(User user : users){
+        for(User user : users) {
             if(user.getActiveChannel().equals(channel)) {
                 user.setActiveChannel(defaultChannel);
                 user.leaveChannel(channel);
@@ -136,7 +136,7 @@ public class ChannelManager implements ChannelLoader {
     @Override
     public Channel build(ChannelData data, @NotNull String type) throws UnsupportedOperationException {
         type = type.toLowerCase();
-        switch(type){
+        switch(type) {
             case "stringchannel" ->  { return new StringChannel(strings, data); }
             case "proximity" ->  { return new ProximityChannel(strings, data); }
             case "world" -> { return new WorldChannel(strings, data); }
@@ -155,7 +155,7 @@ public class ChannelManager implements ChannelLoader {
         return new HashMap<>(channelSymbols);
     }
 
-    public void addChannelSymbol(String symbol, Channel channel){
+    public void addChannelSymbol(String symbol, Channel channel) {
         channelSymbols.put(symbol, channel);
     }
 

@@ -17,7 +17,7 @@ public final class ClearChatCommand implements CommandExecutor
 
     private final Messenger messenger;
 
-    public ClearChatCommand(Strings strings){
+    public ClearChatCommand(Strings strings) {
         messenger = strings.getMessenger();
     }
 
@@ -29,13 +29,13 @@ public final class ClearChatCommand implements CommandExecutor
             return true;
         }
 
-        if(args.length > 1){
+        if(args.length > 1) {
             messenger.sendMessage(TOO_MANY_ARGS, sender);
             return true;
         }
 
         if(args.length > 0 && args[0].equalsIgnoreCase("all") && (sender.hasPermission("strings.chat.clear.other") || sender.hasPermission("strings.chat.*"))) {
-            for(Player p : Bukkit.getOnlinePlayers()){
+            for(Player p : Bukkit.getOnlinePlayers()) {
                 p.sendMessage(StringUtils.repeat(" \n",100));
             }
             messenger.sendMessage(CHAT_CLEARED_ALL, sender);

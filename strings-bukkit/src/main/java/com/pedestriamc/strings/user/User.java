@@ -45,7 +45,7 @@ public class User implements StringsUser {
      * All values are default or null.
      * @param uuid the User's UUID.  This should match the Player's UUID.
      */
-    public User(Strings strings, UUID uuid){
+    public User(Strings strings, UUID uuid) {
         this(strings, uuid, null, null, null, null, null, null, true, null);
     }
 
@@ -75,7 +75,7 @@ public class User implements StringsUser {
         this.channels = Objects.requireNonNullElseGet(channels, HashSet::new);
         this.channelsMonitoring = Objects.requireNonNullElseGet(monitoredChannels, HashSet::new);
         if(channels != null) {
-            for(Channel channel : channels){
+            for(Channel channel : channels) {
                 channel.addMember(this.player);
             }
         } else {
@@ -113,7 +113,7 @@ public class User implements StringsUser {
      * @return A chat color.
      */
     @Nullable
-    public String getChatColor(){
+    public String getChatColor() {
         if(chatColor != null && !chatColor.isEmpty()) {
             return ChatColor.translateAlternateColorCodes('&', chatColor);
         }
@@ -206,7 +206,7 @@ public class User implements StringsUser {
      */
     public void setPrefix(@NotNull String prefix) {
         this.prefix = prefix;
-        if(strings.useVault()){
+        if(strings.useVault()) {
             strings.getVaultChat().setPlayerPrefix(player, prefix);
         }
         save();
@@ -218,7 +218,7 @@ public class User implements StringsUser {
      */
     public void setSuffix(@NotNull String suffix) {
         this.suffix = suffix;
-        if(strings.useVault()){
+        if(strings.useVault()) {
             strings.getVaultChat().setPlayerSuffix(player, suffix);
         }
         save();
@@ -296,7 +296,7 @@ public class User implements StringsUser {
      * @param channel the channel to leave
      */
     public void leaveChannel(@NotNull Channel channel) {
-        if(channel.equals(strings.getChannel("default"))){
+        if(channel.equals(strings.getChannel("default"))) {
             Bukkit.getLogger().info("[Strings] Player " + player.getName() + " just tried to leave channel global!  Cancelled leaving channel.");
             return;
         }

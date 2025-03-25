@@ -33,7 +33,7 @@ public class LeaveCommand extends ChannelProcessor {
         boolean modifyingOther = !sender.equals(data.target());
 
         if(!user.getChannels().contains(channel)) {
-            if(modifyingOther){
+            if(modifyingOther) {
                 messenger.sendMessage(NOT_CHANNEL_MEMBER_OTHER, data.placeholders(), sender);
             }else{
                 messenger.sendMessage(NOT_CHANNEL_MEMBER, data.placeholders(), data.target());
@@ -41,7 +41,7 @@ public class LeaveCommand extends ChannelProcessor {
             return true;
         }
 
-        if(channel.getName().equals("default")){
+        if(channel.getName().equals("default")) {
             messenger.sendMessage(CANT_LEAVE_GLOBAL, sender);
             return true;
         }

@@ -101,14 +101,14 @@ public class WorldChannel extends AbstractChannel implements LocalChannel {
     }
 
     @Override
-    public Set<World> getWorlds(){
+    public Set<World> getWorlds() {
         return worlds;
     }
 
     @Override
     public List<String> getWorldNames() {
         ArrayList<String> worldNames = new ArrayList<>();
-        for (World w : getWorlds() ){
+        for (World w : getWorlds()) {
             worldNames.add(w.getName());
         }
 
@@ -145,7 +145,7 @@ public class WorldChannel extends AbstractChannel implements LocalChannel {
     protected Set<Player> universalSet() {
         HashSet<Player> set = new HashSet<>(getMembers());
         set.addAll(getMonitors());
-        for(World w : worlds){
+        for(World w : worlds) {
             set.addAll(w.getPlayers());
         }
         return set;

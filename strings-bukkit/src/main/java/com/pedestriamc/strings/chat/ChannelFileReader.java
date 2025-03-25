@@ -42,7 +42,7 @@ public class ChannelFileReader {
         }
 
         ConfigurationSection channels = config.getConfigurationSection("channels");
-        if(channels == null){
+        if(channels == null) {
             log("An error occurred while loading channels, disabling plugin.");
             strings.getServer().getPluginManager().disablePlugin(strings);
             return;
@@ -54,17 +54,17 @@ public class ChannelFileReader {
     private void readFile(ConfigurationSection channels) {
         for(String channelName : channels.getKeys(false)) {
             ConfigurationSection channel = channels.getConfigurationSection(channelName);
-            if(channel == null){
+            if(channel == null) {
                 continue;
             }
 
             String typeString = channel.getString("type");
-            if(typeString == null){
+            if(typeString == null) {
                 typeString = "stringchannel";
             }
 
             Type type = getType(typeString, channelName);
-            if(type == null){
+            if(type == null) {
                 continue;
             }
 
@@ -73,18 +73,18 @@ public class ChannelFileReader {
 
             try {
                 Channel c = channelLoader.build(data, typeString);
-                if(c == null){
+                if(c == null) {
                     continue;
                 }
 
                 channelLoader.registerChannel(c);
-                if(symbol != null){
+                if(symbol != null) {
                     channelLoader.addChannelSymbol(symbol, c);
                 }
-                if(channelName.equalsIgnoreCase("global")){
+                if(channelName.equalsIgnoreCase("global")) {
                     globalExists = true;
                 }
-                if(channelName.equalsIgnoreCase("helpop")){
+                if(channelName.equalsIgnoreCase("helpop")) {
                     helpOpExists = true;
                 }
             } catch (Exception e) {
@@ -164,7 +164,7 @@ public class ChannelFileReader {
         Set<World> worlds = new HashSet<>();
 
         String legacyWorldName = section.getString("world");
-        if(legacyWorldName != null){
+        if(legacyWorldName != null) {
             World world = Bukkit.getWorld(legacyWorldName);
             if(world != null) {
                 worlds.add(world);

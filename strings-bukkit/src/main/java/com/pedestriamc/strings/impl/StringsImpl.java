@@ -54,7 +54,7 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public @Nullable StringsUser getStringsUser(UUID uuid){
+    public @Nullable StringsUser getStringsUser(UUID uuid) {
         this.apiUsed = true;
         return strings.getUser(uuid);
     }
@@ -86,12 +86,12 @@ public final class StringsImpl implements StringsAPI {
         return strings.getChannelLoader();
     }
 
-    public short getVersion(){
+    public short getVersion() {
         this.apiUsed = true;
         return strings.getPluginNum();
     }
 
-    public boolean isApiUsed(){
+    public boolean isApiUsed() {
         return apiUsed;
     }
 

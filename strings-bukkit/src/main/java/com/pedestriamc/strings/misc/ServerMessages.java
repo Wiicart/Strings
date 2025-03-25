@@ -25,9 +25,9 @@ public class ServerMessages {
         this.usePAPI = strings.usePlaceholderAPI();
         this.motd = new ArrayList<>();
         List<?> list = strings.getConfig().getList("motd");
-        if(list != null){
-            for(Object obj : list){
-                if(obj instanceof String string){
+        if(list != null) {
+            for(Object obj : list) {
+                if(obj instanceof String string) {
                     motd.add(string);
                 }
             }

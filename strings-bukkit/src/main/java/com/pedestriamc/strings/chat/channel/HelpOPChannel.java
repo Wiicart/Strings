@@ -68,7 +68,7 @@ public class HelpOPChannel extends ProtectedChannel {
         message = messageProcessor.processMessage(player, message);
         String finalMessage = message;
         String formattedMessage = messageFormat.replace("{message}", finalMessage);
-        if(callEvent){
+        if(callEvent) {
             Bukkit.getScheduler().runTask(strings, () -> {
                 AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this);
                 Bukkit.getPluginManager().callEvent(event);

@@ -15,7 +15,7 @@ public class DistributorImpl implements Distributor {
     private final Strings strings;
     private final HashMap<StringsReceiver, Channel> receiverMap;
 
-    public DistributorImpl(Strings strings){
+    public DistributorImpl(Strings strings) {
         this.strings = strings;
         this.receiverMap = new HashMap<>();
     }
@@ -24,19 +24,19 @@ public class DistributorImpl implements Distributor {
     @Override
     public void registerReceiver(StringsReceiver receiver) {
         Class<?> receiverClass = receiver.getClass();
-        if(!receiverClass.isAnnotationPresent(StringsDistributor.class)){
+        if(!receiverClass.isAnnotationPresent(StringsDistributor.class)) {
             Bukkit.getLogger().info("[Strings] Unable to register StringsReceiver " + receiver.getClass().getName() + ".  No annotation present.");
             return;
         }
-        for(Method method : receiverClass.getDeclaredMethods()){
+        for(Method method : receiverClass.getDeclaredMethods()) {
             boolean isAnnotationPresent = method.isAnnotationPresent(StringsDistributor.class);
             boolean isProperlyDefined = false;
 
-            if(isAnnotationPresent && isProperlyDefined){
+            if(isAnnotationPresent && isProperlyDefined) {
                 StringsDistributor distributor = method.getAnnotation(StringsDistributor.class);
                 String channelName = distributor.channelName();
                 Channel channel = strings.getChannel(channelName);
-                if(channel == null){
+                if(channel == null) {
                     Bukkit.getLogger().info("[Strings] Unable to register StringsReceiver" + receiver.getClass().getName() + ". Invalid channel defined.");
                 }else{
                     receiverMap.put(receiver, channel);

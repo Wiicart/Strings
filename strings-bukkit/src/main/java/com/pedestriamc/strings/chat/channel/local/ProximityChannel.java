@@ -56,7 +56,7 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
         HashSet<Player> recipients = new HashSet<>(members);
 
         Location senderLocation = sender.getLocation();
-        for(Player p : senderWorld.getPlayers()){
+        for(Player p : senderWorld.getPlayers()) {
             Location pLocation = p.getLocation();
             if(senderLocation.distanceSquared(pLocation) < distanceSquared) {
                 recipients.add(p);
@@ -99,7 +99,7 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
     protected Set<Player> universalSet() {
         HashSet<Player> set = new HashSet<>(getMembers());
         set.addAll(getMonitors());
-        for(World w : worlds){
+        for(World w : worlds) {
             set.addAll(w.getPlayers());
         }
         return set;
@@ -150,7 +150,7 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
     @Override
     public List<String> getWorldNames() {
         ArrayList<String> worldNames = new ArrayList<>();
-        for (World w : getWorlds() ){
+        for (World w : getWorlds()) {
             worldNames.add(w.getName());
         }
 

@@ -16,7 +16,7 @@ public class BaseCommand extends ChannelProcessor {
     private final Strings strings;
     private final Messenger messenger;
 
-    public BaseCommand(Strings strings){
+    public BaseCommand(Strings strings) {
         super(strings);
         this.strings = strings;
         this.messenger = strings.getMessenger();
@@ -54,7 +54,7 @@ public class BaseCommand extends ChannelProcessor {
 
         BaseData data = process(sender, newArgs, Type.BASE);
 
-        if(data.shouldReturn()){
+        if(data.shouldReturn()) {
             return true;
         }
 
