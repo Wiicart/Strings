@@ -101,7 +101,7 @@ public final class YamlUserUtil implements UserUtil {
     }
 
     @Override
-    public User getUser(Player player) {
+    public User getUser(@NotNull Player player) {
         return getUser(player.getUniqueId());
     }
 

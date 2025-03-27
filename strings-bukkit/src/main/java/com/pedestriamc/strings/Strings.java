@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Collection;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -41,6 +42,7 @@ public final class Strings extends JavaPlugin {
 
     private final Logger logger = Bukkit.getLogger();
 
+    private static final int METRICS_ID = 22597;
     private static final String VERSION = "1.5";
     private static final String DISTRIBUTOR = "github";
     private static final short PLUGIN_NUM = 5;
@@ -93,22 +95,17 @@ public final class Strings extends JavaPlugin {
         logManager = new LogManager(this);
         this.setupVault();
         ClassRegistryManager.register(this);
-        int pluginId = 22597;
-        Metrics metrics = new Metrics(this, pluginId);
-        metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
-        metrics.addCustomChart(new SimplePie("using_stringsapi", this::isAPIUsed));
-        metrics.addCustomChart(new SimplePie("using_stringsmoderation_expansion", this::isUsingStringsModeration));
+        channelLoader.loadChannels();
         checkIfReload();
         checkUpdate();
         instantiateObjectsTwo();
+        loadMetrics();
         logger.info("[Strings] Enabled!");
     }
 
     @Override
     public void onDisable() {
-        for(User user : userUtil.getUsers()) {
-            user.logOff();
-        }
+        logOutAll();
         this.userUtil = null;
         this.serverMessages = null;
         this.playerDirectMessenger = null;
@@ -116,19 +113,35 @@ public final class Strings extends JavaPlugin {
         this.autoBroadcasts = null;
         this.mentioner = null;
         this.logManager = null;
+
         HandlerList.unregisterAll(this);
-        this.getServer().getScheduler().cancelTasks(this);
-        this.getServer().getServicesManager().unregister(StringsAPI.class, stringsImpl);
+        getServer().getScheduler().cancelTasks(this);
+        getServer().getServicesManager().unregister(StringsAPI.class, stringsImpl);
+
         try {
             StringsProvider.unregister(apiUUID);
         } catch(IllegalStateException | SecurityException ignored) {}
         this.stringsImpl = null;
+
         logger.info("[Strings] Disabled");
+    }
+
+    private void loadMetrics() {
+        Metrics metrics = new Metrics(this, METRICS_ID);
+        metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
+        metrics.addCustomChart(new SimplePie("using_stringsapi", this::isAPIUsed));
+        metrics.addCustomChart(new SimplePie("using_stringsmoderation_expansion", this::isUsingStringsModeration));
+    }
+
+    private void logOutAll() {
+        for(User user : userUtil.getUsers()) {
+            user.logOff();
+        }
     }
 
     //Load options from the config
     private void loadConfigOptions() {
-        if(config.getBoolean("placeholder-api") && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+        if(config.getBoolean("placeholder-api") && getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             this.usingPlaceholderAPI = true;
         } try {
             Class.forName("com.destroystokyo.paper.util.VersionFetcher");
@@ -136,10 +149,12 @@ public final class Strings extends JavaPlugin {
         } catch(ClassNotFoundException ignored) {}
     }
 
-    //Update yml files
+    /**
+     * Updates YML files
+     * <a href="https://github.com/tchristofferson/Config-Updater">...</a>
+     */
     @SuppressWarnings("CallToPrintStackTrace")
     private void updateConfigs() {
-        //Config updater using https://github.com/tchristofferson/Config-Updater
         File configFile = new File(this.getDataFolder(), "config.yml");
         File messageFile = new File(this.getDataFolder(), "messages.yml");
         File moderationFile = new File(getDataFolder(), "moderation.yml");
@@ -151,6 +166,7 @@ public final class Strings extends JavaPlugin {
                 e.printStackTrace();
             }
         }
+
         if(messageFile.exists()) {
             try {
                 ConfigUpdater.update(this,"messages.yml", messageFile);
@@ -159,6 +175,7 @@ public final class Strings extends JavaPlugin {
                 e.printStackTrace();
             }
         }
+
         if(moderationFile.exists()) {
             try {
                 ConfigUpdater.update(this,"moderation.yml", moderationFile);
@@ -166,7 +183,6 @@ public final class Strings extends JavaPlugin {
                 Bukkit.getLogger().info("[Strings] Updating moderation file failed.");
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -250,11 +266,15 @@ public final class Strings extends JavaPlugin {
     }
 
     private void checkIfReload() {
-        if(!Bukkit.getOnlinePlayers().isEmpty()) {
-            for(Player p : Bukkit.getOnlinePlayers()) {
-                if(userUtil.loadUser(p.getUniqueId()) == null) {
-                    new User(this, p.getUniqueId());
+        Collection<? extends Player> players = getServer().getOnlinePlayers();
+        if(!players.isEmpty()) {
+            for(Player p : players) {
+                UUID uuid = p.getUniqueId();
+                User user = userUtil.loadUser(uuid);
+                if(user == null) {
+                    user = new User(this, uuid);
                 }
+                userUtil.addUser(user);
             }
         }
     }
@@ -293,7 +313,6 @@ public final class Strings extends JavaPlugin {
      * @return a long of the tick value. Returns -1 if syntax is invalid.
      */
     public static long calculateTicks(String time) {
-
         String regex = "^[0-9]+[sm]$";
 
         if(time == null || !time.matches(regex)) {
@@ -314,44 +333,82 @@ public final class Strings extends JavaPlugin {
     /*
     Public getter and setter methods
      */
-    public String getDistributor() { return DISTRIBUTOR; }
+    public String getDistributor() {
+        return DISTRIBUTOR;
+    }
 
-    public String getVersion() { return VERSION; }
+    public String getVersion() {
+        return VERSION;
+    }
 
-    public UserUtil getUserUtil() { return userUtil; }
+    public UserUtil getUserUtil() {
+        return userUtil;
+    }
 
-    public ServerMessages getServerMessages() { return serverMessages; }
+    public ServerMessages getServerMessages() {
+        return serverMessages;
+    }
 
-    public PlayerDirectMessenger getPlayerDirectMessenger() { return playerDirectMessenger; }
+    public PlayerDirectMessenger getPlayerDirectMessenger() {
+        return playerDirectMessenger;
+    }
 
-    public Messenger getMessenger() { return messenger; }
+    public Messenger getMessenger() {
+        return messenger;
+    }
 
-    public Chat getVaultChat() { return chat; }
+    public Chat getVaultChat() {
+        return chat;
+    }
 
-    public FileConfiguration getUsersFileConfig() { return usersFileConfig; }
+    public FileConfiguration getUsersFileConfig() {
+        return usersFileConfig;
+    }
 
-    public FileConfiguration getBroadcastsFileConfig() { return broadcastsFileConfig; }
+    public FileConfiguration getBroadcastsFileConfig() {
+        return broadcastsFileConfig;
+    }
 
-    public FileConfiguration getMessagesFileConfig() { return messagesFileConfig; }
+    public FileConfiguration getMessagesFileConfig() {
+        return messagesFileConfig;
+    }
 
-    public FileConfiguration getChannelsFileConfig() { return channelsFileConfig; }
+    public FileConfiguration getChannelsFileConfig() {
+        return channelsFileConfig;
+    }
 
-    public FileConfiguration getLogsFileConfig() { return logsFileConfig; }
+    public FileConfiguration getLogsFileConfig() {
+        return logsFileConfig;
+    }
 
-    public boolean usePlaceholderAPI() { return usingPlaceholderAPI; }
+    public boolean usePlaceholderAPI() {
+        return usingPlaceholderAPI;
+    }
 
-    public boolean useVault() { return usingVault; }
+    public boolean useVault() {
+        return usingVault;
+    }
 
-    public boolean isPaper() { return isPaper; }
+    public boolean isPaper() {
+        return isPaper;
+    }
 
-    public Mentioner getMentioner() { return mentioner; }
+    public Mentioner getMentioner() {
+        return mentioner;
+    }
 
-    public short getPluginNum() { return PLUGIN_NUM; }
+    public short getPluginNum() {
+        return PLUGIN_NUM;
+    }
 
-    public ChannelManager getChannelLoader() { return channelLoader; }
+    public ChannelManager getChannelLoader() {
+        return channelLoader;
+    }
 
     @SuppressWarnings("unused")
-    public LogManager getLogManager() { return logManager; }
+    public LogManager getLogManager() {
+        return logManager;
+    }
 
     public Configuration getConfigClass() {
         return configClass;
@@ -362,7 +419,7 @@ public final class Strings extends JavaPlugin {
      */
     @SuppressWarnings("CallToPrintStackTrace")
     public void saveUsersFile() {
-        try{
+        try {
             usersFileConfig.save(usersFile);
         }catch(IOException e) {
             e.printStackTrace();
@@ -371,7 +428,7 @@ public final class Strings extends JavaPlugin {
 
     @SuppressWarnings("CallToPrintStackTrace")
     public void saveChannelsFile() {
-        try{
+        try {
             channelsFileConfig.save(channelsFile);
         }catch(IOException e) {
             e.printStackTrace();
@@ -380,7 +437,7 @@ public final class Strings extends JavaPlugin {
 
     @SuppressWarnings({"unused", "CallToPrintStackTrace"})
     public void saveMessagesFile() {
-        try{
+        try {
             messagesFileConfig.save(messagesFile);
         } catch(IOException e) {
             e.printStackTrace();
@@ -389,7 +446,7 @@ public final class Strings extends JavaPlugin {
 
     @SuppressWarnings({"unused", "CallToPrintStackTrace"})
     public void saveBroadcastsFile() {
-        try{
+        try {
             broadcastsFileConfig.save(broadcastsFile);
         }catch(IOException e) {
             e.printStackTrace();

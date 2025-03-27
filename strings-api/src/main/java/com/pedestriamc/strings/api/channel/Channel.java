@@ -34,7 +34,7 @@ public interface Channel extends Comparable<Channel> {
      * Broadcasts a message to a Channel.
      * @param message The broadcast message.
      */
-    void broadcastMessage(String message);
+    void broadcast(String message);
 
     /**
      * Provides the formatting of the Channel.

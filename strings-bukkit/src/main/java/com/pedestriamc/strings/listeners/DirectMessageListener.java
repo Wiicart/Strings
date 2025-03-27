@@ -5,17 +5,18 @@ import com.pedestriamc.strings.api.event.PlayerDirectMessageEvent;
 import com.pedestriamc.strings.Strings;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 
 public class DirectMessageListener implements Listener {
 
     private final SocialSpyChannel socialSpy;
 
-    public DirectMessageListener(Strings strings) {
+    public DirectMessageListener(@NotNull Strings strings) {
         socialSpy = (SocialSpyChannel) strings.getChannel("socialspy");
     }
 
     @EventHandler
-    public void onEvent(PlayerDirectMessageEvent event) {
+    public void onEvent(@NotNull PlayerDirectMessageEvent event) {
         socialSpy.sendOutMessage(
                 event.getSender(),
                 event.getRecipient(),

@@ -169,7 +169,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public void broadcastMessage(String message) {
+    public void broadcast(String message) {
         String finalString = getBroadcastFormat().replace(MESSAGE_PLACEHOLDER, message);
         finalString = ChatColor.translateAlternateColorCodes('&', finalString);
         for (Player p : getPlayersInScope()) {

@@ -6,13 +6,19 @@ import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.user.User;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.awt.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.pedestriamc.strings.configuration.ConfigurationOption.*;
 
 public class MessageProcessor {
+
+    private static final Pattern HEX_PATTERN = Pattern.compile("&#[0-9A-Fa-f]{6}");
 
     private final Strings strings;
     private final Channel channel;
@@ -51,7 +57,9 @@ public class MessageProcessor {
         if(usingPlaceholderAPI) {
             template = setPlaceholders(player, template);
         }
-        template = org.bukkit.ChatColor.translateAlternateColorCodes('&', template);
+
+        template = setHex(template);
+        template = ChatColor.translateAlternateColorCodes('&', template);
 
         return template;
     }
@@ -83,7 +91,7 @@ public class MessageProcessor {
         String color = "";
         for(String segment : splitStr) {
             if(!segment.contains("@") ) {
-                color = ChatColor.getLastColors(segment);
+                color = org.bukkit.ChatColor.getLastColors(segment);
                 sb.append(segment);
                 continue;
             }
@@ -98,6 +106,31 @@ public class MessageProcessor {
             }
             sb.append(segment);
         }
+        return sb.toString();
+    }
+
+    /**
+     * Translates any HEX color codes (formatted &#<HEX> to ChatColor).
+     * @param string The String to translate
+     * @return A translated String;
+     */
+    private String setHex(@NotNull String string) {
+        Matcher matcher = HEX_PATTERN.matcher(string);
+        StringBuilder sb = new StringBuilder();
+
+        while(matcher.find()) {
+            try {
+                String stringHex = matcher.group();
+                net.md_5.bungee.api.ChatColor colorCode;
+                Color color = Color.decode(stringHex.substring(1));
+                colorCode = net.md_5.bungee.api.ChatColor.of(color);
+                matcher.appendReplacement(sb, colorCode.toString());
+            } catch(NumberFormatException e) {
+                matcher.appendReplacement(sb, matcher.group());
+            }
+        }
+
+        matcher.appendTail(sb);
         return sb.toString();
     }
 

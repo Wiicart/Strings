@@ -48,7 +48,9 @@ public class ChannelManager implements ChannelLoader {
         this.channelSymbols = new HashMap<>();
         this.worldChannels = new HashSet<>();
         this.priorityChannels = new TreeSet<>();
+    }
 
+    public void loadChannels() {
         ChannelFileReader reader = new ChannelFileReader(strings, config, this);
         reader.read();
     }

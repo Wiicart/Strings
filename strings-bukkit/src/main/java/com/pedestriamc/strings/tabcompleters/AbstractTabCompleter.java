@@ -3,6 +3,7 @@ package com.pedestriamc.strings.tabcompleters;
 import org.bukkit.Bukkit;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ public abstract class AbstractTabCompleter implements TabCompleter {
         return list;
     }
 
-    protected List<String> filter(List<String> list, String input) {
+    protected List<String> filter(@NotNull List<String> list, String input) {
         return list.stream()
                 .filter(arg -> arg.toLowerCase().startsWith(input.toLowerCase()))
                 .toList();

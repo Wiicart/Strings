@@ -8,7 +8,7 @@ enabled: false
 sequence: ordered
 
 # How often should broadcasts be posted?
-# Type a number, followed by units
+# Type a number, followed by unit
 # s - seconds, m - minutes
 # Example: 3m is 3 minutes
 delay: 3m

@@ -127,7 +127,7 @@ public class User implements StringsUser {
      * @return A chat color.
      */
     public String getChatColor(Channel channel) {
-        if(chatColor == null) {
+        if(chatColor == null || chatColor.isEmpty()) {
             return channel.getDefaultColor();
         }
         return ChatColor.translateAlternateColorCodes('&', chatColor);
@@ -189,7 +189,9 @@ public class User implements StringsUser {
      * Provides the username of the User.
      * @return The username.
      */
-    public @NotNull String getName() { return name; }
+    public @NotNull String getName() {
+        return name;
+    }
 
     /**
      * Sets the chat color of the User.

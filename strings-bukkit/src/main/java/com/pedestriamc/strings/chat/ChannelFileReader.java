@@ -68,8 +68,9 @@ public class ChannelFileReader {
                 continue;
             }
 
+            boolean local = type == Type.WORLD || type == Type.PROXIMITY;
+            ChannelData data = getChannelData(channel, channelName, local);
             String symbol = channel.getString("symbol");
-            ChannelData data = getChannelData(channel, channelName, type);
 
             try {
                 Channel c = channelLoader.build(data, typeString);
@@ -139,7 +140,7 @@ public class ChannelFileReader {
         channelLoader.registerChannel(new DefaultChannel(strings, channelLoader));
     }
 
-    private ChannelData getChannelData(ConfigurationSection section, String channelName, Type type) {
+    private ChannelData getChannelData(ConfigurationSection section, String channelName, boolean local) {
         ChannelData data = new ChannelData();
         data.setName(channelName);
         data.setFormat(section.getString("format", "{prefix}{displayname}{suffix} &7» {message}"));
@@ -153,32 +154,32 @@ public class ChannelFileReader {
         data.setBroadcastFormat(section.getString("broadcast-format"));
         loadMembership(data, section);
 
-        if(type == Type.WORLD || type == Type.PROXIMITY) {
-            loadWorlds(data, section);
+        if(local) {
+            data.setWorlds(loadWorlds(section));
         }
 
         return data;
     }
 
-    private void loadWorlds(ChannelData data, ConfigurationSection section) {
+    private Set<World> loadWorlds(ConfigurationSection section) {
         Set<World> worlds = new HashSet<>();
-
         String legacyWorldName = section.getString("world");
         if(legacyWorldName != null) {
             World world = Bukkit.getWorld(legacyWorldName);
             if(world != null) {
                 worlds.add(world);
             }
-        } else {
-            List<String> list = section.getStringList("worlds");
-            for(String str : list) {
-                World world = Bukkit.getWorld(str);
-                if (world != null) {
-                    worlds.add(world);
-                }
+        }
+
+        List<String> list = section.getStringList("worlds");
+        for(String str : list) {
+            World world = Bukkit.getWorld(str);
+            if (world != null) {
+                worlds.add(world);
             }
         }
-        data.setWorlds(worlds);
+
+        return worlds;
     }
 
     private void loadMembership(ChannelData data, ConfigurationSection section) {

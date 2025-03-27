@@ -20,10 +20,10 @@ public class ServerMessages {
 
     public ServerMessages(@NotNull Strings strings) {
         this.strings = strings;
-        this.joinMessageTemplate = strings.getConfig().getString("join-message");
-        this.leaveMessageTemplate = strings.getConfig().getString("leave-message");
-        this.usePAPI = strings.usePlaceholderAPI();
-        this.motd = new ArrayList<>();
+        joinMessageTemplate = strings.getConfig().getString("join-message");
+        leaveMessageTemplate = strings.getConfig().getString("leave-message");
+        usePAPI = strings.usePlaceholderAPI();
+        motd = new ArrayList<>();
         List<?> list = strings.getConfig().getList("motd");
         if(list != null) {
             for(Object obj : list) {
@@ -40,10 +40,12 @@ public class ServerMessages {
         if(usePAPI) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
-        message = message.replace("{displayname}", player.getName());
-        message = message.replace("{username}", player.getName());
-        message = message.replace("{prefix}", user.getPrefix());
-        message = message.replace("{suffix}", user.getSuffix());
+        message = message
+                .replace("{displayname}", player.getDisplayName())
+                .replace("{username}", player.getName())
+                .replace("{prefix}", user.getPrefix())
+                .replace("{suffix}", user.getSuffix());
+
         return ChatColor.translateAlternateColorCodes('&',message);
     }
 
@@ -53,10 +55,12 @@ public class ServerMessages {
         if(usePAPI) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
-        message = message.replace("{displayname}", player.getName());
-        message = message.replace("{username}", player.getName());
-        message = message.replace("{prefix}", user.getPrefix());
-        message = message.replace("{suffix}", user.getSuffix());
+        message = message
+                .replace("{displayname}", player.getDisplayName())
+                .replace("{username}", player.getName())
+                .replace("{prefix}", user.getPrefix())
+                .replace("{suffix}", user.getSuffix());
+
         return ChatColor.translateAlternateColorCodes('&',message);
     }
 
@@ -64,10 +68,12 @@ public class ServerMessages {
         ArrayList<String> playerMOTD = new ArrayList<>(motd);
         User user = strings.getUser(player);
         for(String message: playerMOTD) {
-            message = message.replace("{displayname}", player.getName());
-            message = message.replace("{username}", player.getName());
-            message = message.replace("{prefix}", user.getPrefix());
-            message = message.replace("{suffix}", user.getSuffix());
+            message = message
+                    .replace("{displayname}", player.getDisplayName())
+                    .replace("{username}", player.getName())
+                    .replace("{prefix}", user.getPrefix())
+                    .replace("{suffix}", user.getSuffix());
+
             if(usePAPI) {
                 message = PlaceholderAPI.setPlaceholders(player, message);
             }
@@ -75,5 +81,4 @@ public class ServerMessages {
             player.sendMessage(message);
         }
     }
-
 }

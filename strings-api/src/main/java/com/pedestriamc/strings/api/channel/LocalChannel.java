@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.api.channel;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -35,13 +36,7 @@ public interface LocalChannel extends Channel {
      * @return If the Player is in scope
      */
     default boolean containsInScope(@NotNull Player player) {
-        World senderWorld = player.getWorld();
-        for(World world : getWorlds()) {
-            if(senderWorld.equals(world)) {
-                return true;
-            }
-        }
-        return false;
+        return getWorlds().contains(player.getWorld());
     }
 
     /**

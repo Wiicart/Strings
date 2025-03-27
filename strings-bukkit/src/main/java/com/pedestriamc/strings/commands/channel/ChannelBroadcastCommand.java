@@ -46,7 +46,7 @@ public record ChannelBroadcastCommand(Strings strings) implements CommandBase.Co
         for(int i = 2; i < args.length; i++) {
             builder.append(args[i]);
         }
-        channel.broadcastMessage(builder.toString());
+        channel.broadcast(builder.toString());
 
         Map<String, String> placeholders = generatePlaceholders(channel.getName());
         messenger.sendMessage(Message.BROADCAST_SENT, placeholders, sender);

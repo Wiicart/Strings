@@ -24,15 +24,16 @@ public class AutoBroadcasts {
 
     public AutoBroadcasts(@NotNull Strings strings) {
         this.strings = strings;
-        this.config = strings.getBroadcastsFileConfig();
-        this.order = config.getString("sequence");
+        config = strings.getBroadcastsFileConfig();
+        order = config.getString("sequence");
         if(config.getBoolean("enabled", false)) {
-            this.interval = Strings.calculateTicks(config.getString("delay"));
+            interval = Strings.calculateTicks(config.getString("delay"));
             if(interval == -1L) {
                 Bukkit.getLogger().info("[Strings] Invalid delay for auto broadcasts. Defaulting to 3 minutes. ");
                 interval = 3600L;
             }
-            this.loadBroadcastList();
+
+            loadBroadcastList();
             schedule();
         }
     }
@@ -48,9 +49,11 @@ public class AutoBroadcasts {
                 Collections.shuffle(broadcastList);
             }
         }
+
         for(int i=0; i<broadcastList.get(pos).length; i++) {
             Bukkit.broadcastMessage(broadcastList.get(pos)[i]);
         }
+
         pos++;
     }
 

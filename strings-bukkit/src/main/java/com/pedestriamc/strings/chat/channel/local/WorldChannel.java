@@ -39,7 +39,7 @@ public class WorldChannel extends AbstractChannel implements LocalChannel {
                 data.getPriority(),
                 data.getBroadcastFormat()
         );
-        this.worlds = data.getWorlds();
+        this.worlds = new HashSet<>(data.getWorlds());
     }
 
     @Override
@@ -102,7 +102,7 @@ public class WorldChannel extends AbstractChannel implements LocalChannel {
 
     @Override
     public Set<World> getWorlds() {
-        return worlds;
+        return new HashSet<>(worlds);
     }
 
     @Override

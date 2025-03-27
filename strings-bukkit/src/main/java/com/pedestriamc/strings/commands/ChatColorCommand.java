@@ -94,7 +94,7 @@ public final class ChatColorCommand implements CommandExecutor {
         User user = strings.getUser(player);
 
         if(args.length == 1 && args[0].equalsIgnoreCase("reset")) {
-            user.setChatColor(null);
+            user.setChatColor("");
             messenger.sendMessage(CHATCOLOR_SET, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), player);
             return true;
         }

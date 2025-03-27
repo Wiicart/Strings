@@ -34,11 +34,12 @@ public class JoinListener implements Listener {
 
     @EventHandler
     public void onEvent(PlayerJoinEvent event) {
-        if(userUtil.loadUser(event.getPlayer().getUniqueId()) == null) {
-            User user = new User(strings, event.getPlayer().getUniqueId());
-            userUtil.addUser(user);
+        User user = userUtil.loadUser(event.getPlayer().getUniqueId());
+        if(user == null) {
+            user = new User(strings, event.getPlayer().getUniqueId());
             userUtil.saveUser(user);
         }
+        userUtil.addUser(user);
 
         if(!doJoinLeaveMessage) {
             event.setJoinMessage(null);

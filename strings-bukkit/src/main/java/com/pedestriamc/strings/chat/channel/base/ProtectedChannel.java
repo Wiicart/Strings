@@ -28,7 +28,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public void broadcastMessage(String message) {
+    public void broadcast(String message) {
 
     }
 

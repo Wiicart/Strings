@@ -41,7 +41,7 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
                 data.getPriority(),
                 data.getBroadcastFormat()
         );
-        this.worlds = data.getWorlds();
+        this.worlds = new HashSet<>(data.getWorlds());
         this.distance = data.getDistance();
         distanceSquared = distance * distance;
     }
