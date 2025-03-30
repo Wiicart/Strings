@@ -94,8 +94,8 @@ public final class Strings extends JavaPlugin {
     public void onEnable() {
         logManager = new LogManager(this);
         this.setupVault();
-        ClassRegistryManager.register(this);
         channelLoader.loadChannels();
+        ClassRegistryManager.register(this);
         checkIfReload();
         checkUpdate();
         instantiateObjectsTwo();

@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channel.LocalChannel;
 import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Type;
@@ -13,8 +12,7 @@ import com.pedestriamc.strings.chat.channel.local.StrictWorldChannel;
 import com.pedestriamc.strings.chat.channel.StringChannel;
 import com.pedestriamc.strings.chat.channel.local.WorldChannel;
 import com.pedestriamc.strings.user.User;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
+import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -29,25 +27,27 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/**
+ * Stores Channels
+ */
 public class ChannelManager implements ChannelLoader {
 
     private final Strings strings;
-    private final ConcurrentHashMap<String, Channel> channels;
+    private final HashMap<String, Channel> channels;
     private final FileConfiguration config;
     private final HashMap<String, Channel> channelSymbols;
-    private final Set<Channel> worldChannels;
     private final TreeSet<Channel> priorityChannels;
+    private final UserUtil userUtil;
 
     public ChannelManager(Strings strings) {
         this.strings = strings;
-        this.channels = new ConcurrentHashMap<>();
-        this.config = strings.getChannelsFileConfig();
-        this.channelSymbols = new HashMap<>();
-        this.worldChannels = new HashSet<>();
-        this.priorityChannels = new TreeSet<>();
+        channels = new HashMap<>();
+        config = strings.getChannelsFileConfig();
+        channelSymbols = new HashMap<>();
+        priorityChannels = new TreeSet<>();
+        userUtil = strings.getUserUtil();
     }
 
     public void loadChannels() {
@@ -58,6 +58,10 @@ public class ChannelManager implements ChannelLoader {
     @Override
     public @Nullable Channel getChannel(@NotNull String name) {
         return channels.get(name);
+    }
+
+    public Set<Channel> getChannels() {
+        return new HashSet<>(channels.values());
     }
 
     /**
@@ -72,11 +76,10 @@ public class ChannelManager implements ChannelLoader {
             return;
         }
 
-        if(channel instanceof LocalChannel) {
-            worldChannels.add(channel);
+        if(channel.getPriority() > -1) {
+            priorityChannels.add(channel);
         }
 
-        priorityChannels.add(channel);
         channels.put(channel.getName(), channel);
         setToChanged();
         log("Channel '" + channel.getName() + "' registered.");
@@ -99,6 +102,7 @@ public class ChannelManager implements ChannelLoader {
             if(user.getActiveChannel().equals(channel)) {
                 user.setActiveChannel(defaultChannel);
                 user.leaveChannel(channel);
+                userUtil.saveUser(user);
             }
         }
 
@@ -108,7 +112,6 @@ public class ChannelManager implements ChannelLoader {
             }
         }
 
-        worldChannels.remove(channel);
         priorityChannels.remove(channel);
         channels.remove(channel.getName());
         setToChanged();
@@ -161,11 +164,6 @@ public class ChannelManager implements ChannelLoader {
         channelSymbols.put(symbol, channel);
     }
 
-    public List<Channel> getChannelList() {
-        return new ArrayList<>(channels.values());
-    }
-
-
     private boolean changed = false;
 
     /**
@@ -188,16 +186,20 @@ public class ChannelManager implements ChannelLoader {
      */
     private void datasetUpdated() {
         count++;
-        if(count == 4) {
+        if(count == 3) {
             count = 0;
             changed = false;
         }
     }
 
+    public SortedSet<Channel> getSortedChannelSet() {
+        return new TreeSet<>(priorityChannels);
+    }
+
     private List<Channel> nonProtectedChannels = new ArrayList<>();
     public List<Channel> getNonProtectedChannels() {
         if(isChanged() || nonProtectedChannels == null) {
-            nonProtectedChannels = getChannelList().stream()
+            nonProtectedChannels = getChannels().stream()
                     .filter(channel -> channel.getType() != Type.PROTECTED)
                     .toList();
             datasetUpdated();
@@ -209,7 +211,7 @@ public class ChannelManager implements ChannelLoader {
     @SuppressWarnings("unused")
     public List<String> getNonProtectedChannelNames() {
         if(isChanged() || nonProtectedChannelNames == null) {
-            nonProtectedChannelNames = getChannelList().stream()
+            nonProtectedChannelNames = getChannels().stream()
                     .filter(channel -> channel.getType() != Type.PROTECTED)
                     .map(Channel::getName)
                     .toList();
@@ -222,44 +224,11 @@ public class ChannelManager implements ChannelLoader {
     private Set<Channel> protectedChannels;
     public Set<Channel> getProtectedChannels() {
         if(isChanged() || protectedChannels == null) {
-            protectedChannels = getChannelList().stream()
+            protectedChannels = getChannels().stream()
                     .filter(channel -> channel.getType() == Type.PROTECTED)
                     .collect(Collectors.toSet());
             datasetUpdated();
         }
         return new HashSet<>(protectedChannels);
     }
-
-
-    private final Map<World, Set<Channel>> worldChannelMap = new HashMap<>();
-    public Set<Channel> getChannels(World world) {
-        if(isChanged()) {
-            for(World w : Bukkit.getWorlds()) {
-                updateWorldChannelMap(w);
-            }
-            datasetUpdated();
-        } else {
-            if(worldChannelMap.get(world) == null) {
-                updateWorldChannelMap(world);
-            }
-        }
-        return new HashSet<>(worldChannelMap.get(world));
-    }
-
-    private void updateWorldChannelMap(World world) {
-        worldChannelMap.put(world, worldChannels.stream()
-                .filter(channel -> {
-                    if(channel instanceof LocalChannel local) {
-                        return local.getWorlds().contains(world);
-                    }
-                    return false;
-                })
-                .collect(Collectors.toSet())
-        );
-    }
-
-    public SortedSet<Channel> getSortedChannelSet() {
-        return new TreeSet<>(priorityChannels);
-    }
-
 }

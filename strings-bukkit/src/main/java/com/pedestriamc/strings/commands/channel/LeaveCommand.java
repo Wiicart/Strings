@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -14,11 +15,13 @@ public class LeaveCommand extends ChannelProcessor {
 
     private final Strings strings;
     private final Messenger messenger;
+    private final UserUtil userUtil;
 
     public LeaveCommand(Strings strings) {
         super(strings);
         this.strings = strings;
-        this.messenger = strings.getMessenger();
+        messenger = strings.getMessenger();
+        userUtil = strings.getUserUtil();
     }
 
     @Override
@@ -47,6 +50,7 @@ public class LeaveCommand extends ChannelProcessor {
         }
 
         user.leaveChannel(channel);
+        userUtil.saveUser(user);
         if(modifyingOther) {
             messenger.sendMessage(OTHER_USER_LEFT_CHANNEL, data.placeholders(), sender);
         }

@@ -3,6 +3,7 @@ package com.pedestriamc.strings.commands;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,10 +16,12 @@ public final class MentionCommand implements CommandExecutor {
 
     private final Strings strings;
     private final Messenger messenger;
+    private final UserUtil userUtil;
 
     public MentionCommand(Strings strings) {
         this.strings = strings;
-        this.messenger = strings.getMessenger();
+        messenger = strings.getMessenger();
+        userUtil = strings.getUserUtil();
     }
 
     @Override
@@ -65,12 +68,14 @@ public final class MentionCommand implements CommandExecutor {
 
     private void enable(CommandSender sender, @NotNull User user) {
         user.setMentionsEnabled(true);
+        userUtil.saveUser(user);
         messenger.sendMessage(MENTIONS_ENABLED, sender);
 
     }
 
     private void disable(CommandSender sender, @NotNull User user) {
         user.setMentionsEnabled(false);
+        userUtil.saveUser(user);
         messenger.sendMessage(MENTIONS_DISABLED, sender);
     }
 

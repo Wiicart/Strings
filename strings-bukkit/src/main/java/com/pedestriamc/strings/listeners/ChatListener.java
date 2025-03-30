@@ -5,11 +5,13 @@ import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -18,14 +20,16 @@ public class ChatListener implements Listener {
     private final Strings strings;
     private final Channel defaultChannel;
     private final ChannelManager channelLoader;
+    private final UserUtil userUtil;
 
-    public ChatListener(Strings strings) {
+    public ChatListener(@NotNull Strings strings) {
         this.strings = strings;
         channelLoader = strings.getChannelLoader();
         defaultChannel = channelLoader.getChannel("default");
+        userUtil = strings.getUserUtil();
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEvent(AsyncPlayerChatEvent event) {
         if (event instanceof ChannelChatEvent) {
             return;
@@ -44,6 +48,7 @@ public class ChatListener implements Listener {
 
         if (channel == null) {
             user.setActiveChannel(defaultChannel);
+            userUtil.saveUser(user);
             channel = user.getActiveChannel();
         }
 

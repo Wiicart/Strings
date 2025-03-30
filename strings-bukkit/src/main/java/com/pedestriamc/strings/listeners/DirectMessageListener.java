@@ -7,12 +7,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class DirectMessageListener implements Listener {
 
     private final SocialSpyChannel socialSpy;
 
     public DirectMessageListener(@NotNull Strings strings) {
-        socialSpy = (SocialSpyChannel) strings.getChannel("socialspy");
+        socialSpy = (SocialSpyChannel) Objects.requireNonNull(strings.getChannel("socialspy"));
     }
 
     @EventHandler

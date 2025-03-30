@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -15,11 +16,13 @@ public class BaseCommand extends ChannelProcessor {
 
     private final Strings strings;
     private final Messenger messenger;
+    private final UserUtil userUtil;
 
     public BaseCommand(Strings strings) {
         super(strings);
         this.strings = strings;
-        this.messenger = strings.getMessenger();
+        messenger = strings.getMessenger();
+        userUtil = strings.getUserUtil();
     }
 
     @Override
@@ -64,6 +67,7 @@ public class BaseCommand extends ChannelProcessor {
 
         if(!user.memberOf(channel)) {
             user.joinChannel(channel);
+            userUtil.saveUser(user);
         }
 
         if(user.getActiveChannel().equals(channel)) {
@@ -76,6 +80,7 @@ public class BaseCommand extends ChannelProcessor {
         }
 
         user.setActiveChannel(channel);
+        userUtil.saveUser(user);
 
         if(modifyingOther) {
             messenger.sendMessage(OTHER_PLAYER_CHANNEL_ACTIVE, data.placeholders(), sender);

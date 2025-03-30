@@ -87,8 +87,11 @@ public final class YamlUserUtil implements UserUtil {
             }
         }
 
+        User user = new User(strings, uuid, chatColor, prefix, suffix, displayName, channels, activeChannel, mentionsEnabled, monitoredChannels);
+        saveUser(user);
+        addUser(user);
 
-        return new User(strings, uuid, chatColor, prefix, suffix, displayName, channels, activeChannel, mentionsEnabled, monitoredChannels);
+        return user;
     }
 
     private void async(Runnable runnable) {

@@ -3,6 +3,7 @@ package com.pedestriamc.strings.commands;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.user.UserUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -50,11 +51,13 @@ public final class ChatColorCommand implements CommandExecutor {
     );
 
     private final Strings strings;
+    private final UserUtil userUtil;
     private final Messenger messenger;
 
     public ChatColorCommand(@NotNull Strings strings) {
         this.strings = strings;
-        this.messenger = strings.getMessenger();
+        userUtil = strings.getUserUtil();
+        messenger = strings.getMessenger();
     }
 
     @Override
@@ -95,6 +98,7 @@ public final class ChatColorCommand implements CommandExecutor {
 
         if(args.length == 1 && args[0].equalsIgnoreCase("reset")) {
             user.setChatColor("");
+            userUtil.saveUser(user);
             messenger.sendMessage(CHATCOLOR_SET, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), player);
             return true;
         }
@@ -125,6 +129,7 @@ public final class ChatColorCommand implements CommandExecutor {
         }
 
         user.setChatColor(chatColor.toString());
+        userUtil.saveUser(user);
         if(!player.equals(sender)) {
             messenger.sendMessage(CHATCOLOR_SET_OTHER, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), sender);
         }

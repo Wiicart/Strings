@@ -3,7 +3,7 @@ package com.pedestriamc.strings.api;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.message.Messenger;
-import org.bukkit.World;
+import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,11 +70,19 @@ public interface StringsAPI {
     StringsUser getStringsUser(UUID uuid);
 
     /**
-     * Provides an Array of StringsChannels that are for a specific world.
-     * @param world The World to search with.
-     * @return An Array of StringsChannels.
+     * Provides a StringsUser based off a Player if it exists.
+     * @param player The Player to search under.
+     * @return A StringsUser, if it exists.
      */
-    Set<Channel> getWorldChannels(World world);
+    @Nullable
+    StringsUser getStringsUser(Player player);
+
+    /**
+     * Saves a StringsUser
+     * Modifications to Users do not persist by default, you must save it to persist.
+     * @param user The user to be saved.
+     */
+    void saveStringsUser(StringsUser user);
 
     /**
      * Returns true if the server is running Paper or a fork.

@@ -90,7 +90,7 @@ channel-does-not-exist: "&fChannel &7{channel} &fdoes not exist!"
 
 # No perms to join channel:
 # Placeholder: {channel}
-no-perms-channel: "&fYou don't have permission to join channel &7{channel}&f."
+no-perms-channel: "&fYou don't have permission to use that command on channel &7{channel}&f."
 
 # Other player doesn't have perms to join channel:
 # Placeholders: {player}, {channel}

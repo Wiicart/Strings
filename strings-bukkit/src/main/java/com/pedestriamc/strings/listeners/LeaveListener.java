@@ -39,7 +39,7 @@ public class LeaveListener implements Listener {
             event.setQuitMessage(serverMessages.leaveMessage(event.getPlayer()));
         }
 
-        userUtil.removeUser(event.getPlayer().getUniqueId());
+        userUtil.removeUser(user.getUuid());
         user.logOff();
     }
 }

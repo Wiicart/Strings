@@ -1,17 +1,19 @@
 package com.pedestriamc.strings.impl;
 
+import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.*;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.chat.ChannelManager;
-import org.bukkit.World;
+import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -21,18 +23,20 @@ public final class StringsImpl implements StringsAPI {
     private final com.pedestriamc.strings.Strings strings;
     private final ChannelManager channelLoader;
     private final Mentioner mentioner;
+    private final UserUtil userUtil;
     private boolean apiUsed;
 
-    public StringsImpl(@NotNull com.pedestriamc.strings.Strings strings) {
+    public StringsImpl(@NotNull Strings strings) {
         this.strings = strings;
-        this.channelLoader = strings.getChannelLoader();
-        this.mentioner = strings.getMentioner();
+        channelLoader = strings.getChannelLoader();
+        mentioner = strings.getMentioner();
+        userUtil = strings.getUserUtil();
     }
 
     @Override
     public Set<Channel> getChannels() {
         this.apiUsed = true;
-        return new HashSet<>(channelLoader.getChannelList());
+        return channelLoader.getChannels();
     }
 
     @Override
@@ -60,9 +64,15 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public Set<Channel> getWorldChannels(World world) {
-        this.apiUsed = true;
-        return channelLoader.getChannels(world);
+    public @Nullable StringsUser getStringsUser(Player player) {
+        return getStringsUser(player.getUniqueId());
+    }
+
+    @Override
+    public void saveStringsUser(StringsUser user) {
+        if(user instanceof User u) {
+            userUtil.saveUser(u);
+        }
     }
 
     @Override

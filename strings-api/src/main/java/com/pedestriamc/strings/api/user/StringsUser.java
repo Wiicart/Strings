@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.api;
+package com.pedestriamc.strings.api.user;
 
 import com.pedestriamc.strings.api.channel.Channel;
 import org.bukkit.entity.Player;
@@ -10,6 +10,7 @@ import java.util.UUID;
 
 /**
  * This represents the Strings internal User object which stores data on individual players.
+ * Changes are not saved by default, you must use StringsAPI.saveStringsUser() to save.
  */
 @SuppressWarnings("unused")
 public interface StringsUser {

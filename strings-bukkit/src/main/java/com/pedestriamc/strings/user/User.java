@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.StringsUser;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import org.bukkit.Bukkit;
@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -27,7 +26,6 @@ public class User implements StringsUser {
 
     private final Strings strings;
 
-    private final UserUtil userUtil;
     private final UUID uuid;
     private final Player player;
     private final String name;
@@ -62,7 +60,6 @@ public class User implements StringsUser {
      */
     public User(Strings strings, UUID uuid, String chatColor, String prefix, String suffix, String displayName, Set<Channel> channels, Channel activeChannel, boolean mentionsEnabled, Set<Channel> monitoredChannels) {
         this.strings = strings;
-        this.userUtil = strings.getUserUtil();
         this.uuid = uuid;
         this.chatColor = chatColor;
         this.prefix = prefix;
@@ -88,16 +85,16 @@ public class User implements StringsUser {
      * @return The populated Map.
      */
     public Map<String, Object> getData() {
-        HashMap<String, Object> infoMap = new HashMap<>();
-        infoMap.put("chat-color", this.chatColor);
-        infoMap.put("prefix", this.prefix);
-        infoMap.put("suffix", this.suffix);
-        infoMap.put("display-name", this.displayName);
-        infoMap.put("active-channel", this.activeChannel.getName());
-        infoMap.put("channels", this.getChannelNames());
-        infoMap.put("monitored-channels", getMonitoredChannelNames());
-        infoMap.put("mentions-enabled", this.mentionsEnabled);
-        return infoMap;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("chat-color", Objects.requireNonNullElse(chatColor, ""));
+        map.put("prefix", Objects.requireNonNullElse(prefix, ""));
+        map.put("suffix", Objects.requireNonNullElse(suffix, ""));
+        map.put("display-name", Objects.requireNonNullElse(displayName, ""));
+        map.put("active-channel", activeChannel == null ? "default" : activeChannel.getName());
+        map.put("channels", new ArrayList<>(getChannelNames()));
+        map.put("monitored-channels", new ArrayList<>(getMonitoredChannelNames()));
+        map.put("mentions-enabled", mentionsEnabled);
+        return map;
     }
 
     /**
@@ -199,7 +196,6 @@ public class User implements StringsUser {
      */
     public void setChatColor(String chatColor) {
         this.chatColor = chatColor;
-        save();
     }
 
     /**
@@ -211,7 +207,6 @@ public class User implements StringsUser {
         if(strings.useVault()) {
             strings.getVaultChat().setPlayerPrefix(player, prefix);
         }
-        save();
     }
 
     /**
@@ -223,7 +218,6 @@ public class User implements StringsUser {
         if(strings.useVault()) {
             strings.getVaultChat().setPlayerSuffix(player, suffix);
         }
-        save();
     }
 
     /**
@@ -233,7 +227,6 @@ public class User implements StringsUser {
     public void setDisplayName(@NotNull String displayName) {
         this.displayName = displayName;
         this.player.setDisplayName(displayName);
-        save();
     }
 
     /**
@@ -250,7 +243,6 @@ public class User implements StringsUser {
      */
     public void setMentionsEnabled(boolean mentionsEnabled) {
         this.mentionsEnabled = mentionsEnabled;
-        save();
     }
 
     /**
@@ -272,7 +264,6 @@ public class User implements StringsUser {
         this.activeChannel = channel;
         channels.add(channel);
         channel.addMember(this.getPlayer());
-        save();
     }
 
     /**
@@ -290,7 +281,6 @@ public class User implements StringsUser {
     public void joinChannel(@NotNull Channel channel) {
         channel.addMember(this.player);
         channels.add(channel);
-        save();
     }
 
     /**
@@ -307,7 +297,6 @@ public class User implements StringsUser {
         if(activeChannel.equals(channel)) {
             activeChannel = strings.getChannel("default");
         }
-        save();
     }
 
     /**
@@ -328,8 +317,8 @@ public class User implements StringsUser {
      * Provides an ArrayList of all names of the channels the User is a member of.
      * @return An {@code ArrayList} of {@code String} containing the names of the channels the user is a member of.
      */
-    public List<String> getChannelNames() {
-        ArrayList<String> names = new ArrayList<>();
+    public Set<String> getChannelNames() {
+        Set<String> names = new HashSet<>();
         for(Channel channel : channels) {
             names.add(channel.getName());
         }
@@ -353,17 +342,15 @@ public class User implements StringsUser {
     public void monitor(Monitorable monitorable) {
         channelsMonitoring.add(monitorable);
         monitorable.addMonitor(this);
-        save();
     }
 
     public void unmonitor(Monitorable monitorable) {
         channelsMonitoring.remove(monitorable);
         monitorable.removeMonitor(this);
-        save();
     }
 
-    public List<String> getMonitoredChannelNames() {
-        List<String> set = new ArrayList<>();
+    public Set<String> getMonitoredChannelNames() {
+        Set<String> set = new HashSet<>();
         for(Channel channel : channelsMonitoring) {
             set.add(channel.getName());
         }
@@ -373,10 +360,6 @@ public class User implements StringsUser {
 
     public Set<Channel> getMonitoredChannels() {
         return new HashSet<>(channelsMonitoring);
-    }
-
-    private void save() {
-        userUtil.saveUser(this);
     }
 
     /**

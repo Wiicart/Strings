@@ -119,6 +119,9 @@ permissions:
   strings.chat.filterbypass:
     description: "Allows bypassing the chat filter"
     default: false
+  strings.chat.bypassrepetition:
+    description: "Allows bypassing repetition checks"
+    default: false
   strings.channels.*:
     description: "channels perms"
     default: false

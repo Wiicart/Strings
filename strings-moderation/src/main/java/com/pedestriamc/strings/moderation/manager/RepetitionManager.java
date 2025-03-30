@@ -112,7 +112,8 @@ public class RepetitionManager {
          * @param message The previous message
          */
         public void removeIfCurrent(String message) {
-            if(getPrevious().equals(message)) {
+            String prev = getPrevious();
+            if(prev != null && prev.equals(message)) {
                 previous = null;
             }
         }

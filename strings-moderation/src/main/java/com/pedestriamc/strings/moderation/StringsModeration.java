@@ -6,7 +6,6 @@ import com.pedestriamc.strings.moderation.manager.CooldownManager;
 import com.pedestriamc.strings.moderation.manager.LinkFilter;
 import com.pedestriamc.strings.moderation.manager.RepetitionManager;
 import com.pedestriamc.strings.moderation.listener.ChatListener;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
@@ -58,7 +57,7 @@ public final class StringsModeration extends JavaPlugin {
     }
 
     public void registerListener(Listener listener) {
-        Bukkit.getServer().getPluginManager().registerEvents(listener, this);
+        getServer().getPluginManager().registerEvents(listener, this);
     }
 
     @Override

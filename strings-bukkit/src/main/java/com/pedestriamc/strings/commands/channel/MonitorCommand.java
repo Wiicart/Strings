@@ -7,6 +7,7 @@ import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.commands.CommandBase;
 import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -27,6 +28,7 @@ public record MonitorCommand(Strings strings) implements CommandBase.CommandComp
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Messenger messenger = strings.getMessenger();
+        UserUtil userUtil = strings.getUserUtil();
         if(!sender.hasPermission("strings.channels.monitor")) {
             messenger.sendMessage(NO_PERMS, sender);
             return true;
@@ -92,6 +94,7 @@ public record MonitorCommand(Strings strings) implements CommandBase.CommandComp
         }
 
         user.monitor(monitorable);
+        userUtil.saveUser(user);
 
         Map<String, String> placeholders = generatePlaceholders(target.getName(), args[1]);
         messenger.sendMessage(MONITOR_SUCCESS, placeholders, target);

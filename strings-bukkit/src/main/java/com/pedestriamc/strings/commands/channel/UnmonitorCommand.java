@@ -7,6 +7,7 @@ import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.commands.CommandBase;
 import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -24,6 +25,7 @@ public record UnmonitorCommand(Strings strings) implements CommandBase.CommandCo
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Messenger messenger = strings.getMessenger();
+        UserUtil userUtil = strings.getUserUtil();
         if(args.length < 2 || (args.length < 3 && !(sender instanceof Player))) {
             messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
             return true;
@@ -68,6 +70,7 @@ public record UnmonitorCommand(Strings strings) implements CommandBase.CommandCo
         }
 
         user.unmonitor(monitorable);
+        userUtil.saveUser(user);
 
         Map<String, String> placeholders = generatePlaceholders(channel.getName(), target.getName());
         if(!target.equals(sender)) {

@@ -8,6 +8,7 @@ import com.pedestriamc.strings.chat.channel.base.AbstractChannel;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -22,6 +23,7 @@ public class PartyChannel extends AbstractChannel {
     private String format;
     private String color;
     private ChannelLoader channelLoader;
+    private Set<Player> monitors;
 
     protected PartyChannel(Strings strings, ChannelLoader channelLoader, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority) {
         super(strings, channelLoader, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doUrlFilter, callEvent, priority, null);
@@ -44,12 +46,12 @@ public class PartyChannel extends AbstractChannel {
 
     @Override
     public void addMember(Player player) {
-
+        members.add(player);
     }
 
     @Override
     public void removeMember(Player player) {
-
+        members.remove(player);
     }
 
     @Override
@@ -59,16 +61,16 @@ public class PartyChannel extends AbstractChannel {
 
     @Override
     public void addMonitor(Player player) {
-
+        monitors.add(player);
     }
 
     @Override
     public void removeMonitor(Player player) {
-
+        monitors.remove(player);
     }
 
     @Override
     public Set<Player> getMonitors() {
-        return Set.of();
+        return new HashSet<>(monitors);
     }
 }

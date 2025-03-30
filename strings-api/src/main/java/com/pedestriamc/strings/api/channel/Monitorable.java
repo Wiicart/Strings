@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.api.channel;
 
-import com.pedestriamc.strings.api.StringsUser;
+import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.entity.Player;
 
 import java.util.Set;

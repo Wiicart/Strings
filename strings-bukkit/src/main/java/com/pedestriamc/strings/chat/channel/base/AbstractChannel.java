@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.chat.channel.base;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.StringsUser;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Monitorable;

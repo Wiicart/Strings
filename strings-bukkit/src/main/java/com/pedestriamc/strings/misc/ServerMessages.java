@@ -40,13 +40,8 @@ public class ServerMessages {
         if(usePAPI) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
-        message = message
-                .replace("{displayname}", player.getDisplayName())
-                .replace("{username}", player.getName())
-                .replace("{prefix}", user.getPrefix())
-                .replace("{suffix}", user.getSuffix());
-
-        return ChatColor.translateAlternateColorCodes('&',message);
+        message = applyPlaceholders(message, user);
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 
     public String leaveMessage(Player player) {
@@ -55,12 +50,7 @@ public class ServerMessages {
         if(usePAPI) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
-        message = message
-                .replace("{displayname}", player.getDisplayName())
-                .replace("{username}", player.getName())
-                .replace("{prefix}", user.getPrefix())
-                .replace("{suffix}", user.getSuffix());
-
+        message = applyPlaceholders(message, user);
         return ChatColor.translateAlternateColorCodes('&',message);
     }
 
@@ -68,17 +58,21 @@ public class ServerMessages {
         ArrayList<String> playerMOTD = new ArrayList<>(motd);
         User user = strings.getUser(player);
         for(String message: playerMOTD) {
-            message = message
-                    .replace("{displayname}", player.getDisplayName())
-                    .replace("{username}", player.getName())
-                    .replace("{prefix}", user.getPrefix())
-                    .replace("{suffix}", user.getSuffix());
-
+            message = applyPlaceholders(message, user);
             if(usePAPI) {
                 message = PlaceholderAPI.setPlaceholders(player, message);
             }
             message = ChatColor.translateAlternateColorCodes('&', message);
             player.sendMessage(message);
         }
+    }
+
+    private String applyPlaceholders(@NotNull String message, User user) {
+        Player player = user.getPlayer();
+        return message
+                .replace("{displayname}", player.getDisplayName())
+                .replace("{username}", player.getName())
+                .replace("{prefix}", user.getPrefix())
+                .replace("{suffix}", user.getSuffix());
     }
 }

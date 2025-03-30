@@ -53,10 +53,9 @@ public class ChatListener implements Listener {
         String message = event.getMessage();
         if(
                 channel.doCooldown()
-                && !player.hasPermission("*")
-                && !player.hasPermission("strings.chat.bypasscooldown")
+                && !player.hasPermission("strings.chat.bypasscooldown") &&
+                noPermOrAdmin(player, "strings.chat.bypasscooldown")
                 && cooldownManager.isOnCooldown(player)
-                && !player.isOp()
         ) {
                 event.setCancelled(true);
                 messenger.sendMessage(Message.COOL_DOWN, cooldownPlaceholders, player);
@@ -64,14 +63,14 @@ public class ChatListener implements Listener {
         }
 
 
-        if(repetitionManager.isRepeating(player, message)) {
-                event.setCancelled(true);
-                messenger.sendMessage(Message.NO_REPETITION, player);
-                return;
+        if(noPermOrAdmin(player, "strings.chat.bypassrepetition") && repetitionManager.isRepeating(player, message)) {
+            event.setCancelled(true);
+            messenger.sendMessage(Message.NO_REPETITION, player);
+            return;
         }
 
 
-        if(!(player.hasPermission("strings.*") || player.hasPermission("strings.chat.*") || player.hasPermission("*") || player.hasPermission("strings.chat.filterbypass"))) {
+        if(noPermOrAdmin(player, "strings.chat.filterbypass")) {
             String original = message;
             if(channel.doUrlFilter()) {
                 message = linkFilter.filter(event.getMessage(), player);
@@ -98,5 +97,14 @@ public class ChatListener implements Listener {
         repetitionManager.setPreviousMessage(player, event.getMessage());
         cooldownManager.startCooldown(player);
         event.setMessage(message);
+    }
+
+    private boolean noPermOrAdmin(Player player, String perm) {
+        return
+                !player.hasPermission(perm) &&
+                !player.hasPermission("*") &&
+                !player.hasPermission("strings.*") &&
+                !player.isOp() &&
+                !player.hasPermission("strings.chat.*");
     }
 }
