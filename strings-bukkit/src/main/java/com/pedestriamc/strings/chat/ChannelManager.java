@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -70,6 +71,7 @@ public class ChannelManager implements ChannelLoader {
      */
     @Override
     public void registerChannel(@NotNull Channel channel) {
+        Objects.requireNonNull(channel, "Channel cannot be null");
         String channelName = channel.getName();
         if(channels.containsKey(channelName)) {
             log("A Channel with the name '" + channelName + "' already exists, channels with the same name cannot be registered.");
@@ -92,6 +94,7 @@ public class ChannelManager implements ChannelLoader {
      */
     @Override
     public void unregisterChannel(@NotNull Channel channel) {
+        Objects.requireNonNull(channel, "Channel cannot be null");
         if(!channels.containsKey(channel.getName())) {
             throw new NoSuchElementException("Channel '" + channel.getName() + "' is not registered.");
         }
@@ -123,6 +126,7 @@ public class ChannelManager implements ChannelLoader {
      */
     @Override
     public void saveChannel(@NotNull Channel channel) {
+        Objects.requireNonNull(channel, "Cannot save null channel");
         if (channel.getType() == Type.PROTECTED) {
             log("Unable to save protected channels, they must be modified in channels.yml");
             return;

@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class StringChannel extends AbstractChannel {
 
-    public StringChannel(Strings strings, ChannelData data) {
+    public StringChannel(@NotNull Strings strings, @NotNull ChannelData data) {
         super(
                 strings,
                 strings.getChannelLoader(),

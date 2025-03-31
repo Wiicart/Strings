@@ -44,7 +44,7 @@ public final class Strings extends JavaPlugin {
 
     private static final int METRICS_ID = 22597;
     private static final String VERSION = "1.5";
-    private static final String DISTRIBUTOR = "github";
+    private static final String DISTRIBUTOR = "modrinth";
     private static final short PLUGIN_NUM = 5;
 
     @SuppressWarnings("unused")

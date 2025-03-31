@@ -30,7 +30,7 @@ public class User implements StringsUser {
     private final Player player;
     private final String name;
     private final Set<Channel> channels;
-    private final Set<Channel> channelsMonitoring;
+    private final Set<Channel> monitoredChannels;
     private String chatColor;
     private String prefix;
     private String suffix;
@@ -70,7 +70,7 @@ public class User implements StringsUser {
         this.name = player != null ? player.getName() : null;
         this.activeChannel = activeChannel != null ? activeChannel : strings.getChannel("default");
         this.channels = Objects.requireNonNullElseGet(channels, HashSet::new);
-        this.channelsMonitoring = Objects.requireNonNullElseGet(monitoredChannels, HashSet::new);
+        this.monitoredChannels = Objects.requireNonNullElseGet(monitoredChannels, HashSet::new);
         if(channels != null) {
             for(Channel channel : channels) {
                 channel.addMember(this.player);
@@ -136,7 +136,7 @@ public class User implements StringsUser {
      * @return The display name.
      */
     public @NotNull String getDisplayName() {
-        if(displayName == null) {
+        if(displayName == null || displayName.isEmpty()) {
             return player.getDisplayName();
         }
         return ChatColor.translateAlternateColorCodes('&', displayName);
@@ -151,7 +151,7 @@ public class User implements StringsUser {
         if(strings.useVault()) {
             return ChatColor.translateAlternateColorCodes('&', strings.getVaultChat().getPlayerPrefix(player));
         } else {
-            if(prefix == null) {
+            if(prefix == null || prefix.isEmpty()) {
                 return "";
             }
             return ChatColor.translateAlternateColorCodes('&', prefix);
@@ -167,7 +167,7 @@ public class User implements StringsUser {
         if(strings.useVault()) {
             return ChatColor.translateAlternateColorCodes('&', strings.getVaultChat().getPlayerSuffix(player));
         } else {
-            if(suffix == null) {
+            if(suffix == null || suffix.isEmpty()) {
                 return "";
             }
             return ChatColor.translateAlternateColorCodes('&', suffix);
@@ -258,6 +258,7 @@ public class User implements StringsUser {
      * @param channel The channel to be set as the active channel.
      */
     public void setActiveChannel(@NotNull Channel channel) {
+        Objects.requireNonNull(channel);
         if(channel.getName().equals("helpop")) {
             return;
         }
@@ -279,6 +280,7 @@ public class User implements StringsUser {
      * @param channel The channel to join.
      */
     public void joinChannel(@NotNull Channel channel) {
+        Objects.requireNonNull(channel);
         channel.addMember(this.player);
         channels.add(channel);
     }
@@ -288,6 +290,7 @@ public class User implements StringsUser {
      * @param channel the channel to leave
      */
     public void leaveChannel(@NotNull Channel channel) {
+        Objects.requireNonNull(channel);
         if(channel.equals(strings.getChannel("default"))) {
             Bukkit.getLogger().info("[Strings] Player " + player.getName() + " just tried to leave channel global!  Cancelled leaving channel.");
             return;
@@ -319,8 +322,13 @@ public class User implements StringsUser {
      */
     public Set<String> getChannelNames() {
         Set<String> names = new HashSet<>();
-        for(Channel channel : channels) {
-            names.add(channel.getName());
+        for(Channel channel : getChannels()) {
+            if(channel != null) {
+                String channelName = channel.getName();
+                if(channelName != null) {
+                    names.add(channelName);
+                }
+            }
         }
         return names;
     }
@@ -334,32 +342,38 @@ public class User implements StringsUser {
             channel.removeMember(this.getPlayer());
         }
 
-        for(Channel monitorable : channelsMonitoring) {
+        for(Channel monitorable : monitoredChannels) {
             monitorable.removeMember(this.getPlayer());
         }
     }
 
-    public void monitor(Monitorable monitorable) {
-        channelsMonitoring.add(monitorable);
+    public void monitor(@NotNull Monitorable monitorable) {
+        Objects.requireNonNull(monitorable);
+        monitoredChannels.add(monitorable);
         monitorable.addMonitor(this);
     }
 
-    public void unmonitor(Monitorable monitorable) {
-        channelsMonitoring.remove(monitorable);
+    public void unmonitor(@NotNull Monitorable monitorable) {
+        Objects.requireNonNull(monitorable);
+        monitoredChannels.remove(monitorable);
         monitorable.removeMonitor(this);
     }
 
     public Set<String> getMonitoredChannelNames() {
-        Set<String> set = new HashSet<>();
-        for(Channel channel : channelsMonitoring) {
-            set.add(channel.getName());
+        Set<String> names = new HashSet<>();
+        for(Channel channel : getMonitoredChannels()) {
+            if(channel != null) {
+                String channelName = channel.getName();
+                if(channelName != null) {
+                    names.add(channelName);
+                }
+            }
         }
-
-        return set;
+        return names;
     }
 
     public Set<Channel> getMonitoredChannels() {
-        return new HashSet<>(channelsMonitoring);
+        return new HashSet<>(monitoredChannels);
     }
 
     /**
