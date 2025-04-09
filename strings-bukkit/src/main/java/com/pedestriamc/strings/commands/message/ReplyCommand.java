@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.commands;
+package com.pedestriamc.strings.commands.message;
 
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.Strings;

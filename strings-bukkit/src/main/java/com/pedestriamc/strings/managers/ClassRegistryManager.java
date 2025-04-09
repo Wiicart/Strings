@@ -6,14 +6,15 @@ import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.commands.BroadcastCommand;
 import com.pedestriamc.strings.commands.ChatColorCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
-import com.pedestriamc.strings.commands.DirectMessageCommand;
+import com.pedestriamc.strings.commands.message.DirectMessageCommand;
 import com.pedestriamc.strings.commands.DisabledCommand;
 import com.pedestriamc.strings.commands.HelpOPCommand;
 import com.pedestriamc.strings.commands.MentionCommand;
-import com.pedestriamc.strings.commands.ReplyCommand;
+import com.pedestriamc.strings.commands.message.ReplyCommand;
 import com.pedestriamc.strings.commands.SocialSpyCommand;
 import com.pedestriamc.strings.commands.StringsCommand;
 import com.pedestriamc.strings.commands.channel.ChannelCommand;
+import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.listeners.ChatListener;
 import com.pedestriamc.strings.listeners.DirectMessageListener;
 import com.pedestriamc.strings.listeners.JoinListener;
@@ -29,6 +30,8 @@ import com.pedestriamc.strings.tabcompleters.StringsTabCompleter;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.event.Listener;
+
+import static com.pedestriamc.strings.configuration.ConfigurationOption.*;
 
 /**
  * Registers CommandExecutors and Listeners
@@ -52,6 +55,8 @@ public class ClassRegistryManager {
     }
 
     private void registerCommands() {
+        Configuration config = strings.getConfigClass();
+
         registerCommand("strings", new StringsCommand(strings), new StringsTabCompleter());
 
         BroadcastCommand broadcastCommand = new BroadcastCommand(strings);
@@ -65,15 +70,6 @@ public class ClassRegistryManager {
 
         registerCommand("socialspy", new SocialSpyCommand(strings), new SocialSpyTabCompleter());
 
-        DirectMessageCommand directMessageCommand = new DirectMessageCommand(strings);
-        MessageTabCompleter messageTabCompleter = new MessageTabCompleter();
-        registerCommand("msg", directMessageCommand, messageTabCompleter);
-        registerCommand("message", directMessageCommand, messageTabCompleter);
-
-        ReplyCommand replyCommand = new ReplyCommand(strings);
-        registerCommand("reply", replyCommand, null);
-        registerCommand("r", replyCommand, null);
-
         ChannelCommand channelCommand = new ChannelCommand(strings);
         ChannelTabCompleter channelTabCompleter = new ChannelTabCompleter(strings);
         registerCommand("channel", channelCommand, channelTabCompleter);
@@ -84,14 +80,25 @@ public class ClassRegistryManager {
         registerCommand("mention", mentionCommand, mentionCommandTabCompleter);
         registerCommand("mentions", mentionCommand, mentionCommandTabCompleter);
 
-        if(strings.getConfig().getBoolean("enable-chatcolor")) {
+        if(config.getBoolean(MSG_ENABLED)) {
+            DirectMessageCommand directMessageCommand = new DirectMessageCommand(strings);
+            MessageTabCompleter messageTabCompleter = new MessageTabCompleter();
+            registerCommand("msg", directMessageCommand, messageTabCompleter);
+            registerCommand("message", directMessageCommand, messageTabCompleter);
+
+            ReplyCommand replyCommand = new ReplyCommand(strings);
+            registerCommand("reply", replyCommand, null);
+            registerCommand("r", replyCommand, null);
+        }
+
+        if(config.getBoolean(ENABLE_CHATCOLOR_COMMAND)) {
             registerCommand("chatcolor", new ChatColorCommand(strings), new ChatColorTabCompleter());
         }
 
-        if(strings.getConfig().getBoolean("enable-helpop")) {
+        if(config.getBoolean(ENABLE_HELPOP)) {
             registerCommand("helpop", new HelpOPCommand(strings), null);
         } else {
-            if(!strings.getConfig().getBoolean("other-helpop")) {
+            if(!config.getBoolean(DISABLE_HELPOP_COMMAND)) {
                 registerCommand("helpop", new DisabledCommand(strings, Message.HELPOP_DISABLED), null);
             }
 

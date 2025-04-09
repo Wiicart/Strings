@@ -131,12 +131,12 @@ public class HelpOPChannel extends ProtectedChannel {
     }
 
     @Override
-    public String getFormat() {
+    public @NotNull String getFormat() {
         return format;
     }
 
     @Override
-    public void setFormat(String format) {
+    public void setFormat(@NotNull String format) {
         this.format = format;
     }
 

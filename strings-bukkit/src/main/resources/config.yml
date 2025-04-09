@@ -36,7 +36,9 @@ enable-chatcolor: true
 #  placeholders in their messages)
 process-in-chat-placeholders: true
 
-# COOLDOWN IS NOW FOUND IN MODERATION.YML
+# Enable direct messages:
+# Should the Strings /msg system be enabled?
+msg-enabled: true
 
 # Message format for /msg
 # This is for outgoing messages

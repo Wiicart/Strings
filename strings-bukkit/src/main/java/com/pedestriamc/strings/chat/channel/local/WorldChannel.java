@@ -80,7 +80,7 @@ public class WorldChannel extends AbstractChannel implements LocalChannel {
     }
 
     @Override
-    public Type getType() {
+    public @NotNull Type getType() {
         return Type.WORLD;
     }
 

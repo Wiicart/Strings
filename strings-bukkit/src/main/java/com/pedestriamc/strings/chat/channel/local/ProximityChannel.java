@@ -110,7 +110,7 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
     }
 
     @Override
-    public Type getType() {
+    public @NotNull Type getType() {
         return Type.PROXIMITY;
     }
 

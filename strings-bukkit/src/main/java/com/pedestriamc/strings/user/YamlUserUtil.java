@@ -2,18 +2,19 @@ package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static com.pedestriamc.strings.Strings.async;
 
 public final class YamlUserUtil implements UserUtil {
 
@@ -25,7 +26,7 @@ public final class YamlUserUtil implements UserUtil {
     {
         this.strings = strings;
         config = strings.getUsersFileConfig();
-        map = new HashMap<>();
+        map = new ConcurrentHashMap<>();
     }
 
     /**
@@ -33,19 +34,38 @@ public final class YamlUserUtil implements UserUtil {
      * @param user the User to be saved.
      */
     @Override
-    public void saveUser(@NotNull User user) {
+    public void saveUser(@NotNull User user)
+    {
         UUID uuid = user.getUuid();
         Map<String, Object> infoMap = user.getData();
         async(() -> {
             synchronized(config) {
                 for(Map.Entry<String, Object> element : infoMap.entrySet()) {
-                    if(element.getValue() != null) {
-                        config.set("players." + uuid + "." + element.getKey(), element.getValue());
+                    Object value = element.getValue();
+                    if(element.getKey() != null && value != null) {
+                        config.set("players." + uuid + "." + element.getKey(), value);
                     }
                 }
+                strings.saveUsersFile();
             }
-            strings.saveUsersFile();
         });
+    }
+
+    @Override
+    public @NotNull CompletableFuture<User> loadUserAsync(@NotNull UUID uuid)
+    {
+        CompletableFuture<User> future = new CompletableFuture<>();
+        async(() -> {
+            try {
+                synchronized(config) {
+                    User user = loadUser(uuid);
+                    future.complete(user);
+                }
+            } catch(Exception ex) {
+                future.completeExceptionally(ex);
+            }
+        });
+        return future;
     }
 
     /**
@@ -53,58 +73,66 @@ public final class YamlUserUtil implements UserUtil {
      * @param uuid The UUID of the User.
      * @return The User, if data is found.
      */
-    @Nullable
+    @NotNull
     @Override
-    public User loadUser(UUID uuid) {
-        String userPath = "players." + uuid;
-        HashSet<Channel> channels = new HashSet<>();
-        HashSet<Channel> monitoredChannels = new HashSet<>();
-        if(!config.contains(userPath)) {
-            return null;
-        }
-        String suffix = config.getString(userPath + ".suffix");
-        String prefix = config.getString(userPath + ".prefix");
-        String displayName = config.getString(userPath + ".display-name");
-        String chatColor = config.getString(userPath + ".chat-color");
-        boolean mentionsEnabled = config.getBoolean(userPath + "mentions-enabled", true);
-        Channel activeChannel = strings.getChannel(config.getString(userPath + ".active-channel"));
-        List<?> channelNames = config.getList(userPath + ".channels");
-        List<?> monitoredChannelNames = config.getList(userPath + ".monitored-channels");
+    public User loadUser(UUID uuid)
+    {
+        synchronized(config) {
+            String userPath = "players." + uuid;
+            if(!config.contains(userPath)) {
+                User user = new User(strings, uuid, true);
+                addUser(user);
+                return user;
+            }
 
-        if(channelNames != null) {
-            for(Object item : channelNames) {
-                if(item instanceof String string && strings.getChannel(string) != null) {
-                    channels.add(strings.getChannel(string));
-                }
+            Set<Channel> channels;
+            Set<Channel> monitoredChannels;
+
+            String suffix = config.getString(userPath + ".suffix");
+            String prefix = config.getString(userPath + ".prefix");
+            String displayName = config.getString(userPath + ".display-name");
+            String chatColor = config.getString(userPath + ".chat-color");
+            boolean mentionsEnabled = config.getBoolean(userPath + "mentions-enabled", true);
+            Channel activeChannel = strings.getChannel(config.getString(userPath + ".active-channel"));
+            List<?> channelNames = config.getList(userPath + ".channels");
+            List<?> monitoredChannelNames = config.getList(userPath + ".monitored-channels");
+
+            channels = getChannels(channelNames);
+            monitoredChannels = getChannels(monitoredChannelNames);
+
+            User user = new User(strings, uuid, chatColor, prefix, suffix, displayName, channels, activeChannel, mentionsEnabled, monitoredChannels, true);
+            addUser(user);
+
+            return user;
+        }
+    }
+
+    private Set<Channel> getChannels(List<?> list) {
+        if(list == null) {
+            return new HashSet<>();
+        }
+
+        Set<Channel> channels = new HashSet<>();
+        for(Object item : list) {
+            if(item instanceof String string && strings.getChannel(string) != null) {
+                channels.add(strings.getChannel(string));
             }
         }
 
-        if(monitoredChannelNames != null) {
-            for(Object item : monitoredChannelNames) {
-                if(item instanceof String str && strings.getChannel(str) != null) {
-                    monitoredChannels.add(strings.getChannel(str));
-                }
-            }
+        return channels;
+    }
+
+    @Override
+    public @NotNull User getUser(UUID uuid) {
+        User user = map.get(uuid);
+        if(user == null) {
+            return new User(strings, uuid, false);
         }
-
-        User user = new User(strings, uuid, chatColor, prefix, suffix, displayName, channels, activeChannel, mentionsEnabled, monitoredChannels);
-        saveUser(user);
-        addUser(user);
-
         return user;
     }
 
-    private void async(Runnable runnable) {
-        Bukkit.getScheduler().runTaskAsynchronously(strings, runnable);
-    }
-
     @Override
-    public User getUser(UUID uuid) {
-        return map.get(uuid);
-    }
-
-    @Override
-    public User getUser(@NotNull Player player) {
+    public @NotNull User getUser(@NotNull Player player) {
         return getUser(player.getUniqueId());
     }
 

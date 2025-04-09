@@ -69,7 +69,7 @@ public class StringChannel extends AbstractChannel {
     }
 
     @Override
-    public Type getType() {
+    public @NotNull Type getType() {
         return Type.NORMAL;
     }
 

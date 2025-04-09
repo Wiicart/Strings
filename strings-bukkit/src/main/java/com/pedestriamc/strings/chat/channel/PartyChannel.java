@@ -45,17 +45,17 @@ public class PartyChannel extends AbstractChannel {
     }
 
     @Override
-    public void addMember(Player player) {
+    public void addMember(@NotNull Player player) {
         members.add(player);
     }
 
     @Override
-    public void removeMember(Player player) {
+    public void removeMember(@NotNull Player player) {
         members.remove(player);
     }
 
     @Override
-    public Type getType() {
+    public @NotNull Type getType() {
         return Type.PARTY;
     }
 

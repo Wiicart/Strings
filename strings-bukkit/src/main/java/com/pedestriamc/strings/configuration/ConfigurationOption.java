@@ -27,7 +27,8 @@ public enum ConfigurationOption {
     MENTION_PITCH("mention-pitch", 0.594604, Double.class),
     MENTION_VOLUME("mention-vol", 10D, Double.class),
     ENABLE_HELPOP("enable-helpop", true, Boolean.class),
-    DISABLE_HELPOP_COMMAND("other-helpop", false, Boolean.class);
+    DISABLE_HELPOP_COMMAND("other-helpop", false, Boolean.class),
+    MSG_ENABLED("msg-enabled", true, Boolean.class);
 
 
     private final String option;

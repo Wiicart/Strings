@@ -4,6 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -23,6 +24,7 @@ public abstract class CommandBase implements CommandExecutor {
      * @param baseCommand The BaseCommand that is called when none of the subcommands are eligible to be called.
      */
     @Contract(pure = true)
+    @MustBeInvokedByOverriders
     protected final void initialize(@NotNull Map<String, CommandComponent> map, @NotNull CommandComponent baseCommand) {
         this.map = map;
         this.baseCommand = baseCommand;

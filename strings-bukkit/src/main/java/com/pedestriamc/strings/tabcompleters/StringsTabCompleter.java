@@ -17,5 +17,4 @@ public class StringsTabCompleter extends AbstractTabCompleter {
         }
         return EMPTY;
     }
-
 }

@@ -74,7 +74,7 @@ public class DefaultChannel extends ProtectedChannel {
     }
 
     @Override
-    public final Type getType() {
+    public final @NotNull Type getType() {
         return Type.DEFAULT;
     }
 
@@ -84,25 +84,25 @@ public class DefaultChannel extends ProtectedChannel {
     }
 
     @Override
-    public final void setName(String name) { /* DefaultChannel instances are always named "default" */ }
+    public final void setName(@NotNull String name) { /* DefaultChannel instances are always named "default" */ }
 
     @Override
-    public void addMember(Player player) {
+    public void addMember(@NotNull Player player) {
         members.add(player);
     }
 
     @Override
-    public void removeMember(Player player) {
+    public void removeMember(@NotNull Player player) {
         members.remove(player);
     }
 
     @Override
-    public void addMember(StringsUser user) {
+    public void addMember(@NotNull StringsUser user) {
         members.add(user.getPlayer());
     }
 
     @Override
-    public void removeMember(StringsUser user) {
+    public void removeMember(@NotNull StringsUser user) {
         members.remove(user.getPlayer());
     }
 

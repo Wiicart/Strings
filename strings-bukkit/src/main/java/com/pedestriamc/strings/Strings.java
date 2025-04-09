@@ -42,6 +42,8 @@ public final class Strings extends JavaPlugin {
 
     private final Logger logger = Bukkit.getLogger();
 
+    private static Strings instance;
+
     private static final int METRICS_ID = 22597;
     private static final String VERSION = "1.5";
     private static final String DISTRIBUTOR = "modrinth";
@@ -81,6 +83,7 @@ public final class Strings extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        instance = this;
         logger.info("[Strings] Loading...");
         saveDefaultConfig();
         setupCustomConfigs();
@@ -123,6 +126,7 @@ public final class Strings extends JavaPlugin {
         } catch(IllegalStateException | SecurityException ignored) {}
         this.stringsImpl = null;
 
+        instance = null;
         logger.info("[Strings] Disabled");
     }
 
@@ -269,12 +273,7 @@ public final class Strings extends JavaPlugin {
         Collection<? extends Player> players = getServer().getOnlinePlayers();
         if(!players.isEmpty()) {
             for(Player p : players) {
-                UUID uuid = p.getUniqueId();
-                User user = userUtil.loadUser(uuid);
-                if(user == null) {
-                    user = new User(this, uuid);
-                }
-                userUtil.addUser(user);
+                userUtil.loadUser(p.getUniqueId());
             }
         }
     }
@@ -328,6 +327,10 @@ public final class Strings extends JavaPlugin {
         }
 
         return delayNum * 20L;
+    }
+
+    public static void async(Runnable runnable) {
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(instance, runnable);
     }
 
     /*
@@ -417,20 +420,26 @@ public final class Strings extends JavaPlugin {
     /*
     Other methods
      */
-    @SuppressWarnings("CallToPrintStackTrace")
+
+    private static final Object lock = new Object();
+
     public void saveUsersFile() {
-        try {
-            usersFileConfig.save(usersFile);
-        }catch(IOException e) {
-            e.printStackTrace();
-        }
+        async(() -> {
+            synchronized(lock) {
+                try {
+                    usersFileConfig.save(usersFile);
+                } catch(Exception e) {
+                    Bukkit.getLogger().info("An error occurred while saving the users file: " + e.getMessage());
+                }
+            }
+        });
     }
 
     @SuppressWarnings("CallToPrintStackTrace")
-    public void saveChannelsFile() {
+    public synchronized void saveChannelsFile() {
         try {
             channelsFileConfig.save(channelsFile);
-        }catch(IOException e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }
@@ -448,7 +457,7 @@ public final class Strings extends JavaPlugin {
     public void saveBroadcastsFile() {
         try {
             broadcastsFileConfig.save(broadcastsFile);
-        }catch(IOException e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }

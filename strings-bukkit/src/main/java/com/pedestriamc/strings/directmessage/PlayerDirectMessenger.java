@@ -86,7 +86,7 @@ public class PlayerDirectMessenger {
         return message;
     }
 
-    public String color(String string) {
+    private String color(String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 }

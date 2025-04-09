@@ -40,6 +40,7 @@ public interface Channel extends Comparable<Channel> {
      * Provides the formatting of the Channel.
      * @return The Channel format.
      */
+    @NotNull
     String getFormat();
 
     /**
@@ -52,19 +53,20 @@ public interface Channel extends Comparable<Channel> {
      * Sets the Channel's format.
      * @param format The new format.
      */
-    void setFormat(String format);
+    void setFormat(@NotNull String format);
 
     /**
      * Provides the Channel's name.
      * @return The Channel name.
      */
+    @NotNull
     String getName();
 
     /**
      * Sets the Channel's name.
      * @param name The new name.
      */
-    void setName(String name);
+    void setName(@NotNull String name);
 
     /**
      * Provides the default chat color of the Channel.
@@ -119,25 +121,25 @@ public interface Channel extends Comparable<Channel> {
      * Adds a player to the Channel.
      * @param player The player to be added.
      */
-    void addMember(Player player);
+    void addMember(@NotNull Player player);
 
     /**
      * Adds a User to the channel.
      * @param user The User to be added.
      */
-    void addMember(StringsUser user);
+    void addMember(@NotNull StringsUser user);
 
     /**
      * Removes a player from the Channel.
      * @param player The player to be removed.
      */
-    void removeMember(Player player);
+    void removeMember(@NotNull Player player);
 
     /**
      * Removes a User from the Channel.
      * @param user The User to be removed.
      */
-    void removeMember(StringsUser user);
+    void removeMember(@NotNull StringsUser user);
 
     /**
      * Provides a Set of the members of the Channel.
@@ -149,6 +151,7 @@ public interface Channel extends Comparable<Channel> {
      * Provides the Channel's Type.
      * @return The Channel's Type.
      */
+    @NotNull
     Type getType();
 
 
@@ -171,7 +174,7 @@ public interface Channel extends Comparable<Channel> {
     int getPriority();
 
     /**
-     * Deprecated - use ChannelLoader#saveChannel(Channel channel) instead
+     * Deprecated - use ChannelLoader.saveChannel(Channel channel) instead
      * Saves the Channel to channels.yml
      */
     @Deprecated

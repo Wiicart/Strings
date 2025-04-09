@@ -33,7 +33,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public String getFormat() {
+    public @NotNull String getFormat() {
         return "";
     }
 
@@ -43,17 +43,17 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public void setFormat(String format) {
+    public void setFormat(@NotNull String format) {
 
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 
     @Override
-    public void setName(String name) {
+    public void setName(@NotNull String name) {
         this.name = name;
     }
 
@@ -98,22 +98,22 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public void addMember(Player player) {
+    public void addMember(@NotNull Player player) {
 
     }
 
     @Override
-    public void addMember(StringsUser user) {
+    public void addMember(@NotNull StringsUser user) {
         addMember(user.getPlayer());
     }
 
     @Override
-    public void removeMember(Player player) {
+    public void removeMember(@NotNull Player player) {
 
     }
 
     @Override
-    public void removeMember(StringsUser user) {
+    public void removeMember(@NotNull StringsUser user) {
         removeMember(user.getPlayer());
     }
 
@@ -123,7 +123,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public Type getType() {
+    public @NotNull Type getType() {
         return Type.PROTECTED;
     }
 

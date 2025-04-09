@@ -37,14 +37,15 @@ public class User implements StringsUser {
     private String displayName;
     private Channel activeChannel;
     private boolean mentionsEnabled;
+    private final boolean retain;
 
     /**
      * The constructor for a User with no stored data.
      * All values are default or null.
      * @param uuid the User's UUID.  This should match the Player's UUID.
      */
-    public User(Strings strings, UUID uuid) {
-        this(strings, uuid, null, null, null, null, null, null, true, null);
+    public User(Strings strings, UUID uuid, boolean retained) {
+        this(strings, uuid, null, null, null, null, null, null, true, null, retained);
     }
 
     /**
@@ -58,19 +59,20 @@ public class User implements StringsUser {
      * @param activeChannel The User's active channel.
      * @param mentionsEnabled If the user receives mentions or not.
      */
-    public User(Strings strings, UUID uuid, String chatColor, String prefix, String suffix, String displayName, Set<Channel> channels, Channel activeChannel, boolean mentionsEnabled, Set<Channel> monitoredChannels) {
+    public User(Strings strings, UUID uuid, String chatColor, String prefix, String suffix, String displayName, Set<Channel> channels, Channel activeChannel, boolean mentionsEnabled, Set<Channel> monitoredChannels,  boolean retained) {
         this.strings = strings;
         this.uuid = uuid;
+        this.player = Objects.requireNonNull(Bukkit.getPlayer(uuid));
         this.chatColor = chatColor;
         this.prefix = prefix;
         this.suffix = suffix;
         this.displayName = displayName;
-        this.player = Bukkit.getPlayer(uuid);
         this.mentionsEnabled = mentionsEnabled;
-        this.name = player != null ? player.getName() : null;
+        this.name = player.getName();
         this.activeChannel = activeChannel != null ? activeChannel : strings.getChannel("default");
         this.channels = Objects.requireNonNullElseGet(channels, HashSet::new);
         this.monitoredChannels = Objects.requireNonNullElseGet(monitoredChannels, HashSet::new);
+        retain = retained;
         if(channels != null) {
             for(Channel channel : channels) {
                 channel.addMember(this.player);
@@ -85,16 +87,18 @@ public class User implements StringsUser {
      * @return The populated Map.
      */
     public Map<String, Object> getData() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("chat-color", Objects.requireNonNullElse(chatColor, ""));
-        map.put("prefix", Objects.requireNonNullElse(prefix, ""));
-        map.put("suffix", Objects.requireNonNullElse(suffix, ""));
-        map.put("display-name", Objects.requireNonNullElse(displayName, ""));
-        map.put("active-channel", activeChannel == null ? "default" : activeChannel.getName());
-        map.put("channels", new ArrayList<>(getChannelNames()));
-        map.put("monitored-channels", new ArrayList<>(getMonitoredChannelNames()));
-        map.put("mentions-enabled", mentionsEnabled);
-        return map;
+        synchronized(this) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("chat-color", Objects.requireNonNullElse(chatColor, ""));
+            map.put("prefix", Objects.requireNonNullElse(prefix, ""));
+            map.put("suffix", Objects.requireNonNullElse(suffix, ""));
+            map.put("display-name", Objects.requireNonNullElse(displayName, ""));
+            map.put("active-channel", activeChannel == null ? "default" : activeChannel.getName());
+            map.put("channels", new ArrayList<>(getChannelNames()));
+            map.put("monitored-channels", new ArrayList<>(getMonitoredChannelNames()));
+            map.put("mentions-enabled", mentionsEnabled);
+            return map;
+        }
     }
 
     /**
@@ -325,9 +329,7 @@ public class User implements StringsUser {
         for(Channel channel : getChannels()) {
             if(channel != null) {
                 String channelName = channel.getName();
-                if(channelName != null) {
-                    names.add(channelName);
-                }
+                names.add(channelName);
             }
         }
         return names;
@@ -364,9 +366,7 @@ public class User implements StringsUser {
         for(Channel channel : getMonitoredChannels()) {
             if(channel != null) {
                 String channelName = channel.getName();
-                if(channelName != null) {
-                    names.add(channelName);
-                }
+                names.add(channelName);
             }
         }
         return names;
@@ -374,6 +374,15 @@ public class User implements StringsUser {
 
     public Set<Channel> getMonitoredChannels() {
         return new HashSet<>(monitoredChannels);
+    }
+
+    /**
+     * Returns if this User instance is reattained.
+     * @return True if the user is retained, false otherwise.
+     */
+    @SuppressWarnings("unused")
+    public boolean isRetained() {
+        return retain;
     }
 
     /**

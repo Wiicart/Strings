@@ -36,12 +36,12 @@ public class LogChannel extends ProtectedChannel implements Monitorable {
     }
 
     @Override
-    public void addMember(Player player) {
+    public void addMember(@NotNull Player player) {
         members.add(player);
     }
 
     @Override
-    public void removeMember(Player player) {
+    public void removeMember(@NotNull Player player) {
         members.remove(player);
     }
 

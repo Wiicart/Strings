@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("unused")
 public interface UserUtil {
@@ -23,10 +24,31 @@ public interface UserUtil {
      * @return The User if present, otherwise null.
      */
     @Nullable
+    @SuppressWarnings("UnusedReturnValue")
     User loadUser(UUID uuid);
 
+    /**
+     * Asynchronously loads a User
+     * @param uuid the UUID of the User to load
+     * @return A CompletableFuture<User>
+     */
+    @SuppressWarnings("UnusedReturnValue")
+    CompletableFuture<User> loadUserAsync(@NotNull UUID uuid);
+
+    /**
+     * Provides a User base off UUID. If there is no record of the User, a new User object will be returned.
+     * @param uuid The UUID of the Player
+     * @return A User
+     */
+    @NotNull
     User getUser(UUID uuid);
 
+    /**
+     * Provides a User base off Player. If there is no record of the User, a new User object will be returned.
+     * @param player The Player
+     * @return A User
+     */
+    @NotNull
     User getUser(Player player);
 
     void addUser(User user);
