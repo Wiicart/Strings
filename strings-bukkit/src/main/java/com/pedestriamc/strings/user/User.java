@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
@@ -25,6 +26,7 @@ import java.util.UUID;
 public class User implements StringsUser {
 
     private final Strings strings;
+    private final ChannelLoader channelLoader;
 
     private final UUID uuid;
     private final Player player;
@@ -61,6 +63,7 @@ public class User implements StringsUser {
      */
     public User(Strings strings, UUID uuid, String chatColor, String prefix, String suffix, String displayName, Set<Channel> channels, Channel activeChannel, boolean mentionsEnabled, Set<Channel> monitoredChannels,  boolean retained) {
         this.strings = strings;
+        channelLoader = strings.getChannelLoader();
         this.uuid = uuid;
         this.player = Objects.requireNonNull(Bukkit.getPlayer(uuid));
         this.chatColor = chatColor;
@@ -69,7 +72,7 @@ public class User implements StringsUser {
         this.displayName = displayName;
         this.mentionsEnabled = mentionsEnabled;
         this.name = player.getName();
-        this.activeChannel = activeChannel != null ? activeChannel : strings.getChannel("default");
+        this.activeChannel = activeChannel != null ? activeChannel : channelLoader.getChannel("default");
         this.channels = Objects.requireNonNullElseGet(channels, HashSet::new);
         this.monitoredChannels = Objects.requireNonNullElseGet(monitoredChannels, HashSet::new);
         retain = retained;
@@ -78,7 +81,7 @@ public class User implements StringsUser {
                 channel.addMember(this.player);
             }
         } else {
-            joinChannel(strings.getChannel("default"));
+            joinChannel(channelLoader.getChannel("default"));
         }
     }
 
@@ -295,14 +298,14 @@ public class User implements StringsUser {
      */
     public void leaveChannel(@NotNull Channel channel) {
         Objects.requireNonNull(channel);
-        if(channel.equals(strings.getChannel("default"))) {
+        if(channel.equals(channelLoader.getChannel("default"))) {
             Bukkit.getLogger().info("[Strings] Player " + player.getName() + " just tried to leave channel global!  Cancelled leaving channel.");
             return;
         }
         channels.remove(channel);
         channel.removeMember(this.getPlayer());
         if(activeChannel.equals(channel)) {
-            activeChannel = strings.getChannel("default");
+            activeChannel = channelLoader.getChannel("default");
         }
     }
 

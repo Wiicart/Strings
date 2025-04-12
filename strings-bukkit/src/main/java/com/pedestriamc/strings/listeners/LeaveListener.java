@@ -42,4 +42,5 @@ public class LeaveListener implements Listener {
         userUtil.removeUser(user.getUuid());
         user.logOff();
     }
+
 }

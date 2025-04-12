@@ -8,7 +8,9 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-@SuppressWarnings("unused")
+/**
+ * Loads and stores all Users for Strings
+ */
 public interface UserUtil {
 
     /**
@@ -18,8 +20,8 @@ public interface UserUtil {
     void saveUser(@NotNull User user);
 
     /**
-     * Loads a User either from a file or database.
-     * Does not save the User to the Map<User>
+     * Synchronously loads a User from a file or database.
+     * Automatically saves the User to the Map
      * @param uuid The UUID of the User to load.
      * @return The User if present, otherwise null.
      */
@@ -28,7 +30,8 @@ public interface UserUtil {
     User loadUser(UUID uuid);
 
     /**
-     * Asynchronously loads a User
+     * Asynchronously loads a User from a file or database.
+     * Automatically saves the User to the Map
      * @param uuid the UUID of the User to load
      * @return A CompletableFuture<User>
      */

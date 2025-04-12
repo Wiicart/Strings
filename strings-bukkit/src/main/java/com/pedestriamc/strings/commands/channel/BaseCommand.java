@@ -83,7 +83,7 @@ public class BaseCommand extends ChannelProcessor {
         userUtil.saveUser(user);
 
         if(modifyingOther) {
-            messenger.sendMessage(OTHER_PLAYER_CHANNEL_ACTIVE, data.placeholders(), sender);
+            messenger.sendMessage(CHANNEL_ACTIVE_OTHER, data.placeholders(), sender);
         }
         messenger.sendMessage(CHANNEL_ACTIVE, data.placeholders(), data.target());
 

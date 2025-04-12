@@ -77,7 +77,6 @@ public interface StringsUser {
 
     /**
      * Sets the StringsUser's display name.
-     *
      * @param displayName The new display name.
      */
     void setDisplayName(@NotNull String displayName);

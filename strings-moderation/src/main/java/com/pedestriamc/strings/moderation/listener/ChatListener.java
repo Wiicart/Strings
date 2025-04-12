@@ -58,7 +58,7 @@ public class ChatListener implements Listener {
                 && cooldownManager.isOnCooldown(player)
         ) {
                 event.setCancelled(true);
-                messenger.sendMessage(Message.COOL_DOWN, cooldownPlaceholders, player);
+                messenger.sendMessage(Message.COOLDOWN, cooldownPlaceholders, player);
                 return;
         }
 

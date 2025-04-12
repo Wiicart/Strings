@@ -45,8 +45,8 @@ public final class Strings extends JavaPlugin {
     private static Strings instance;
 
     private static final int METRICS_ID = 22597;
-    private static final String VERSION = "1.5";
-    private static final String DISTRIBUTOR = "modrinth";
+    private static final String VERSION = "1.5.1";
+    private static final String DISTRIBUTOR = "github";
     private static final short PLUGIN_NUM = 5;
 
     @SuppressWarnings("unused")
@@ -88,7 +88,7 @@ public final class Strings extends JavaPlugin {
         saveDefaultConfig();
         setupCustomConfigs();
         updateConfigs();
-        loadConfigOptions();
+        checkEnvironment();
         instantiateObjects();
         setupAPI();
     }
@@ -100,7 +100,7 @@ public final class Strings extends JavaPlugin {
         channelLoader.loadChannels();
         ClassRegistryManager.register(this);
         checkIfReload();
-        checkUpdate();
+        checkForUpdate();
         instantiateObjectsTwo();
         loadMetrics();
         logger.info("[Strings] Enabled!");
@@ -130,6 +130,12 @@ public final class Strings extends JavaPlugin {
         logger.info("[Strings] Disabled");
     }
 
+    public void reload() {
+        onDisable();
+        onLoad();
+        onEnable();
+    }
+
     private void loadMetrics() {
         Metrics metrics = new Metrics(this, METRICS_ID);
         metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
@@ -138,13 +144,10 @@ public final class Strings extends JavaPlugin {
     }
 
     private void logOutAll() {
-        for(User user : userUtil.getUsers()) {
-            user.logOff();
-        }
+        userUtil.getUsers().forEach(User::logOff);
     }
 
-    //Load options from the config
-    private void loadConfigOptions() {
+    private void checkEnvironment() {
         if(config.getBoolean("placeholder-api") && getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             this.usingPlaceholderAPI = true;
         } try {
@@ -157,35 +160,19 @@ public final class Strings extends JavaPlugin {
      * Updates YML files
      * <a href="https://github.com/tchristofferson/Config-Updater">...</a>
      */
-    @SuppressWarnings("CallToPrintStackTrace")
     private void updateConfigs() {
-        File configFile = new File(this.getDataFolder(), "config.yml");
-        File messageFile = new File(this.getDataFolder(), "messages.yml");
-        File moderationFile = new File(getDataFolder(), "moderation.yml");
-        if(configFile.exists()) {
-            try {
-                ConfigUpdater.update(this,"config.yml", configFile);
-            } catch(IOException e) {
-                Bukkit.getLogger().info("[Strings] Updating config file failed.");
-                e.printStackTrace();
-            }
-        }
+        updateIfPresent("config.yml");
+        updateIfPresent("messages.yml");
+        updateIfPresent("moderation.yml");
+    }
 
-        if(messageFile.exists()) {
+    private void updateIfPresent(String resourceName) {
+        File file = new File(getDistributor(), resourceName);
+        if(file.exists()) {
             try {
-                ConfigUpdater.update(this,"messages.yml", messageFile);
+                ConfigUpdater.update(this, resourceName, file);
             } catch(IOException e) {
-                Bukkit.getLogger().info("[Strings] Updating messages file failed.");
-                e.printStackTrace();
-            }
-        }
-
-        if(moderationFile.exists()) {
-            try {
-                ConfigUpdater.update(this,"moderation.yml", moderationFile);
-            } catch(IOException e) {
-                Bukkit.getLogger().info("[Strings] Updating moderation file failed.");
-                e.printStackTrace();
+                Bukkit.getLogger().warning("[Strings] Failed to update file " + resourceName + ". " + e.getMessage());
             }
         }
     }
@@ -221,7 +208,6 @@ public final class Strings extends JavaPlugin {
         }
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void setupCustomConfigs() {
         broadcastsFile = new File(getDataFolder(), "broadcasts.yml");
         messagesFile = new File(getDataFolder(), "messages.yml");
@@ -230,36 +216,12 @@ public final class Strings extends JavaPlugin {
         File logsFile = new File(getDataFolder(), "logs.yml");
         File moderationFile = new File(getDataFolder(), "moderation.yml");
 
-        if(!broadcastsFile.exists()) {
-            broadcastsFile.getParentFile().mkdirs();
-            saveResource("broadcasts.yml", false);
-        }
-
-        if(!messagesFile.exists()) {
-            messagesFile.getParentFile().mkdirs();
-            saveResource("messages.yml", false);
-        }
-
-        if(!usersFile.exists()) {
-            usersFile.getParentFile().mkdirs();
-            saveResource("users.yml", false);
-        }
-
-        if(!channelsFile.exists()) {
-            channelsFile.getParentFile().mkdirs();
-            saveResource("channels.yml", false);
-        }
-
-        if(!logsFile.exists()) {
-            logsFile.getParentFile().mkdirs();
-            saveResource("logs.yml", false);
-        }
-
-        if(!moderationFile.exists()) {
-            moderationFile.getParentFile().mkdirs();
-            saveResource("moderation.yml", false);
-        }
-
+        createIfDoesNotExist(broadcastsFile, "broadcasts.yml");
+        createIfDoesNotExist(messagesFile, "messages.yml");
+        createIfDoesNotExist(usersFile, "users.yml");
+        createIfDoesNotExist(channelsFile, "channels.yml");
+        createIfDoesNotExist(logsFile, "logs.yml");
+        createIfDoesNotExist(moderationFile, "moderation.yml");
 
         broadcastsFileConfig = YamlConfiguration.loadConfiguration(broadcastsFile);
         messagesFileConfig = YamlConfiguration.loadConfiguration(messagesFile);
@@ -267,6 +229,14 @@ public final class Strings extends JavaPlugin {
         channelsFileConfig = YamlConfiguration.loadConfiguration(channelsFile);
         logsFileConfig = YamlConfiguration.loadConfiguration(logsFile);
         moderationFileConfig = YamlConfiguration.loadConfiguration(moderationFile);
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void createIfDoesNotExist(@NotNull File file, @NotNull String resourcePath) {
+        if(!file.exists()) {
+            file.getParentFile().mkdirs();
+            saveResource(resourcePath, false);
+        }
     }
 
     private void checkIfReload() {
@@ -278,7 +248,7 @@ public final class Strings extends JavaPlugin {
         }
     }
 
-    private void checkUpdate() {
+    private void checkForUpdate() {
         try {
             HttpsURLConnection connection = (HttpsURLConnection) new URL("https://www.wiicart.net/strings/version.txt").openConnection();
             connection.setRequestMethod("GET");
@@ -330,18 +300,26 @@ public final class Strings extends JavaPlugin {
     }
 
     public static void async(Runnable runnable) {
+        if(instance == null) {
+            throw new IllegalStateException("Strings instance not initialized");
+        }
         Bukkit.getServer().getScheduler().runTaskAsynchronously(instance, runnable);
     }
 
     /*
     Public getter and setter methods
      */
+
     public String getDistributor() {
         return DISTRIBUTOR;
     }
 
     public String getVersion() {
         return VERSION;
+    }
+
+    public short getPluginNum() {
+        return PLUGIN_NUM;
     }
 
     public UserUtil getUserUtil() {
@@ -384,6 +362,11 @@ public final class Strings extends JavaPlugin {
         return logsFileConfig;
     }
 
+    @SuppressWarnings("unused")
+    public FileConfiguration getModerationFileConfig() {
+        return moderationFileConfig;
+    }
+
     public boolean usePlaceholderAPI() {
         return usingPlaceholderAPI;
     }
@@ -398,10 +381,6 @@ public final class Strings extends JavaPlugin {
 
     public Mentioner getMentioner() {
         return mentioner;
-    }
-
-    public short getPluginNum() {
-        return PLUGIN_NUM;
     }
 
     public ChannelManager getChannelLoader() {
@@ -462,20 +441,6 @@ public final class Strings extends JavaPlugin {
         }
     }
 
-    public void reload() {
-        onDisable();
-        onLoad();
-        onEnable();
-    }
-
-    /**
-     * Returns a User object that contains info Strings uses.
-     * @param uuid The uuid of the player to get the User of.
-     * @return User object of the player matching the UUID.
-     */
-    public User getUser(@NotNull UUID uuid) {
-        return userUtil.getUser(uuid);
-    }
 
     /**
      * Returns a User object that contains info Strings uses.
@@ -490,13 +455,9 @@ public final class Strings extends JavaPlugin {
         return channelLoader.getChannel(channel);
     }
 
+
     public @NotNull String isAPIUsed() {
         return "" + stringsImpl.isApiUsed();
-    }
-
-    @SuppressWarnings("unused")
-    public YamlConfiguration getModerationFileConfig() {
-        return moderationFileConfig;
     }
 
     public String isUsingStringsModeration() {

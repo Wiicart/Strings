@@ -5,6 +5,7 @@ import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.chat.channel.DefaultChannel;
 import com.pedestriamc.strings.chat.channel.HelpOPChannel;
 import com.pedestriamc.strings.chat.channel.local.ProximityChannel;
 import com.pedestriamc.strings.chat.channel.local.StrictProximityChannel;
@@ -100,7 +101,13 @@ public class ChannelManager implements ChannelLoader {
         }
 
         Set<User> users = strings.getUserUtil().getUsers();
-        Channel defaultChannel = strings.getChannel("default");
+
+        Channel defaultChannel = Objects.requireNonNullElseGet(getChannel("default"), () -> {
+            Channel c = new DefaultChannel(strings, this);
+            registerChannel(c);
+            return c;
+        });
+
         for(User user : users) {
             if(user.getActiveChannel().equals(channel)) {
                 user.setActiveChannel(defaultChannel);
@@ -118,6 +125,15 @@ public class ChannelManager implements ChannelLoader {
         priorityChannels.remove(channel);
         channels.remove(channel.getName());
         setToChanged();
+    }
+
+    //TODO implement
+    public Channel getDefaultChannel() {
+        Channel defaultChannel = channels.get("default");
+        if(defaultChannel == null) {
+
+        }
+        return null;
     }
 
     /**

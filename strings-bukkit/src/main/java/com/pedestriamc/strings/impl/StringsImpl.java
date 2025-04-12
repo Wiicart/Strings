@@ -54,17 +54,17 @@ public final class StringsImpl implements StringsAPI {
     @Override
     public Optional<StringsUser> getOptionalStringsUser(UUID uuid) {
         this.apiUsed = true;
-        return Optional.ofNullable(strings.getUser(uuid));
+        return Optional.of(userUtil.getUser(uuid));
     }
 
     @Override
-    public @Nullable StringsUser getStringsUser(UUID uuid) {
+    public StringsUser getStringsUser(UUID uuid) {
         this.apiUsed = true;
-        return strings.getUser(uuid);
+        return userUtil.getUser(uuid);
     }
 
     @Override
-    public @Nullable StringsUser getStringsUser(Player player) {
+    public StringsUser getStringsUser(Player player) {
         return getStringsUser(player.getUniqueId());
     }
 

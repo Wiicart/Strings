@@ -27,7 +27,8 @@ public final class SocialSpyCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        Channel socialSpy = strings.getChannel("socialspy");
+        //TODO Review if social spy channel can be instance method
+        Channel socialSpy = strings.getChannelLoader().getChannel("socialspy");
         if(!(sender.hasPermission("strings.*") || sender.hasPermission("strings.socialspy"))) {
             messenger.sendMessage(NO_PERMS, sender);
             return true;

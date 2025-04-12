@@ -57,10 +57,8 @@ public final class YamlUserUtil implements UserUtil {
         CompletableFuture<User> future = new CompletableFuture<>();
         async(() -> {
             try {
-                synchronized(config) {
-                    User user = loadUser(uuid);
-                    future.complete(user);
-                }
+                User user = loadUser(uuid);
+                future.complete(user);
             } catch(Exception ex) {
                 future.completeExceptionally(ex);
             }
@@ -93,7 +91,7 @@ public final class YamlUserUtil implements UserUtil {
             String displayName = config.getString(userPath + ".display-name");
             String chatColor = config.getString(userPath + ".chat-color");
             boolean mentionsEnabled = config.getBoolean(userPath + "mentions-enabled", true);
-            Channel activeChannel = strings.getChannel(config.getString(userPath + ".active-channel"));
+            Channel activeChannel = strings.getChannelLoader().getChannel(config.getString(userPath + ".active-channel"));
             List<?> channelNames = config.getList(userPath + ".channels");
             List<?> monitoredChannelNames = config.getList(userPath + ".monitored-channels");
 
@@ -115,7 +113,7 @@ public final class YamlUserUtil implements UserUtil {
         Set<Channel> channels = new HashSet<>();
         for(Object item : list) {
             if(item instanceof String string && strings.getChannel(string) != null) {
-                channels.add(strings.getChannel(string));
+                channels.add(strings.getChannelLoader().getChannel(string));
             }
         }
 

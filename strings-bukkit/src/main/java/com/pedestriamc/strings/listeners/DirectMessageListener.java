@@ -14,7 +14,7 @@ public class DirectMessageListener implements Listener {
     private final SocialSpyChannel socialSpy;
 
     public DirectMessageListener(@NotNull Strings strings) {
-        socialSpy = (SocialSpyChannel) Objects.requireNonNull(strings.getChannel("socialspy"));
+        socialSpy = (SocialSpyChannel) Objects.requireNonNull(strings.getChannelLoader().getChannel("socialspy"));
     }
 
     @EventHandler

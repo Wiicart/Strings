@@ -6,7 +6,7 @@
 
   <groupId>com.pedestriamc</groupId>
   <artifactId>strings-moderation</artifactId>
-  <version>1.5</version>
+  <version>1.5.1</version>
   <packaging>jar</packaging>
 
   <name>strings-moderation</name>
@@ -71,7 +71,7 @@
     <dependency>
       <groupId>com.pedestriamc.strings</groupId>
       <artifactId>strings-api</artifactId>
-      <version>1.5</version>
+      <version>1.5.1</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

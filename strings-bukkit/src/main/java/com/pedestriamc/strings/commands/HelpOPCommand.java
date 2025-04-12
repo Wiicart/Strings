@@ -19,7 +19,7 @@ public final class HelpOPCommand implements CommandExecutor {
 
     public HelpOPCommand(@NotNull Strings strings) {
         this.strings = strings;
-        this.helpOPChannel = strings.getChannel("helpop");
+        this.helpOPChannel = strings.getChannelLoader().getChannel("helpop");
         this.messenger = strings.getMessenger();
     }
 
@@ -31,7 +31,8 @@ public final class HelpOPCommand implements CommandExecutor {
             return true;
         }
 
-        if(strings.getChannel("helpop") == null) {
+        //TODO Review if this block necessary.
+        if(strings.getChannelLoader().getChannel("helpop") == null) {
             messenger.sendMessage(HELPOP_DISABLED, sender);
             return true;
         }

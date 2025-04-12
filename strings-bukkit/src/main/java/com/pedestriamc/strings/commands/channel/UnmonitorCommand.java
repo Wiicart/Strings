@@ -31,7 +31,7 @@ public record UnmonitorCommand(Strings strings) implements CommandBase.CommandCo
             return true;
         }
 
-        Channel channel = strings.getChannel(args[1]);
+        Channel channel = strings.getChannelLoader().getChannel(args[1]);
         if(channel == null) {
             messenger.sendMessage(Message.CHANNEL_DOES_NOT_EXIST, sender);
             return true;
@@ -74,9 +74,9 @@ public record UnmonitorCommand(Strings strings) implements CommandBase.CommandCo
 
         Map<String, String> placeholders = generatePlaceholders(channel.getName(), target.getName());
         if(!target.equals(sender)) {
-            messenger.sendMessage(Message.UN_MONITORED_OTHER, placeholders, sender);
+            messenger.sendMessage(Message.UNMONITORED_OTHER, placeholders, sender);
         }
-        messenger.sendMessage(Message.UN_MONITORED, placeholders, sender);
+        messenger.sendMessage(Message.UNMONITORED, placeholders, sender);
 
         return true;
     }

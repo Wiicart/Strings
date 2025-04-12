@@ -45,14 +45,14 @@ public class LeaveCommand extends ChannelProcessor {
         }
 
         if(channel.getName().equals("default")) {
-            messenger.sendMessage(CANT_LEAVE_GLOBAL, sender);
+            messenger.sendMessage(CANT_LEAVE_DEFAULT, sender);
             return true;
         }
 
         user.leaveChannel(channel);
         userUtil.saveUser(user);
         if(modifyingOther) {
-            messenger.sendMessage(OTHER_USER_LEFT_CHANNEL, data.placeholders(), sender);
+            messenger.sendMessage(LEFT_CHANNEL_OTHER, data.placeholders(), sender);
         }
         messenger.sendMessage(LEFT_CHANNEL, data.placeholders(), data.target());
 

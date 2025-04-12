@@ -8,19 +8,19 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class Messenger {
+public final class Messenger {
 
     private final EnumMap<Message, Object> enumMap = new EnumMap<>(Message.class);
     private final String prefix;
 
     public Messenger(FileConfiguration config) {
         for(Message msg : Message.values()) {
-            String configValue = msg.toString().replace("_", "-").toLowerCase();
+            String key = msg.getKey();
             try {
-                if(config.isList(configValue)) {
-                    enumMap.put(msg, config.getStringList(configValue).toArray(new String[0]));
+                if(config.isList(key)) {
+                    enumMap.put(msg, config.getStringList(key).toArray(new String[0]));
                 } else {
-                    enumMap.put(msg, config.getString(configValue));
+                    enumMap.put(msg, config.getString(key));
                 }
             } catch(NullPointerException e) {
                 Bukkit.getLogger().warning("[Strings] Unable to find message for " + msg);
@@ -37,9 +37,9 @@ public class Messenger {
             }
         } else if(msgObject instanceof String) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + enumMap.get(message)));
-        } else {
-            Bukkit.getLogger().info("[Strings] Unknown object type or value not found for message " + message.toString());
+            return;
         }
+        warn(message);
     }
 
     public void sendMessage(Message message, Map<String, String> placeholders, CommandSender sender) {
@@ -53,6 +53,7 @@ public class Messenger {
             }
             return;
         }
+
         if(msg instanceof String str) {
             for(Map.Entry<String, String> entry : placeholders.entrySet()) {
                 str = str.replace(entry.getKey(), entry.getValue());
@@ -60,6 +61,10 @@ public class Messenger {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + str));
             return;
         }
-        Bukkit.getLogger().info("[Strings] Unknown object type or value not found for message " + message.toString());
+        warn(message);
+    }
+
+    private void warn(Message message) {
+        Bukkit.getLogger().warning("[Strings] Unknown object type or value not found for message " + message.toString());
     }
 }

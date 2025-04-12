@@ -69,7 +69,7 @@ public abstract class ChannelProcessor implements CommandBase.CommandComponent {
         }
 
         if(channelName.equalsIgnoreCase("helpop")) {
-            messenger.sendMessage(HELPOP_NOT_CHANNEL, sender);
+            messenger.sendMessage(HELPOP_UNSUPPORTED_OPERATION, sender);
             return new BaseData(null,null, null, true);
         }
 
@@ -82,7 +82,7 @@ public abstract class ChannelProcessor implements CommandBase.CommandComponent {
         }
 
         if(channelLoader.getProtectedChannels().contains(channel)) {
-            messenger.sendMessage(PROTECTED_CHANNEL, sender);
+            messenger.sendMessage(PROTECTED_CHANNEL_UNSUPPORTED_OPERATION, sender);
             return new BaseData(null,null, null, true);
         }
 

@@ -117,7 +117,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         });
     }
 
-    private void sendNonEventMessage(Player player, String message, String template, Set<Player> recipients) {
+    private void sendNonEventMessage(Player player, String message, @NotNull String template, Set<Player> recipients) {
         String finalFormNonEvent = template.replace(MESSAGE_PLACEHOLDER, message);
         for (Player p : recipients) {
             p.sendMessage(finalFormNonEvent);
