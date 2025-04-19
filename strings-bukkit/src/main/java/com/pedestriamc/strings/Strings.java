@@ -9,19 +9,17 @@ import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.impl.StringsImpl;
 import com.pedestriamc.strings.log.LogManager;
 import com.pedestriamc.strings.api.message.Messenger;
-import com.pedestriamc.strings.managers.ClassRegistryManager;
+import com.pedestriamc.strings.manager.ClassRegistryManager;
+import com.pedestriamc.strings.manager.FileManager;
 import com.pedestriamc.strings.misc.AutoBroadcasts;
 import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.UserUtil;
 import com.pedestriamc.strings.user.YamlUserUtil;
-import com.tchristofferson.configupdater.ConfigUpdater;
 import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -30,7 +28,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -41,8 +38,6 @@ import java.util.logging.Logger;
 public final class Strings extends JavaPlugin {
 
     private final Logger logger = Bukkit.getLogger();
-
-    private static Strings instance;
 
     private static final int METRICS_ID = 22597;
     private static final String VERSION = "1.5.1";
@@ -56,18 +51,7 @@ public final class Strings extends JavaPlugin {
     private boolean usingVault;
     private boolean isPaper = false;
 
-    private File broadcastsFile;
-    private File messagesFile;
-    private File usersFile;
-    private File channelsFile;
-
-    private final FileConfiguration config = this.getConfig();
-    private FileConfiguration logsFileConfig;
-    private FileConfiguration broadcastsFileConfig;
-    private FileConfiguration messagesFileConfig;
-    private FileConfiguration usersFileConfig;
-    private FileConfiguration channelsFileConfig;
-
+    private FileManager fileManager;
     private UserUtil userUtil;
     private Chat chat = null;
     private ServerMessages serverMessages;
@@ -78,16 +62,12 @@ public final class Strings extends JavaPlugin {
     private Messenger messenger;
     private ChannelManager channelLoader;
     private LogManager logManager;
-    private YamlConfiguration moderationFileConfig;
     private Configuration configClass;
 
     @Override
     public void onLoad() {
-        instance = this;
         logger.info("[Strings] Loading...");
-        saveDefaultConfig();
-        setupCustomConfigs();
-        updateConfigs();
+        fileManager = new FileManager(this);
         checkEnvironment();
         instantiateObjects();
         setupAPI();
@@ -103,7 +83,7 @@ public final class Strings extends JavaPlugin {
         checkForUpdate();
         instantiateObjectsTwo();
         loadMetrics();
-        logger.info("[Strings] Enabled!");
+        logger.info("[Strings] Enabled");
     }
 
     @Override
@@ -116,6 +96,7 @@ public final class Strings extends JavaPlugin {
         this.autoBroadcasts = null;
         this.mentioner = null;
         this.logManager = null;
+        this.fileManager = null;
 
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
@@ -125,8 +106,6 @@ public final class Strings extends JavaPlugin {
             StringsProvider.unregister(apiUUID);
         } catch(IllegalStateException | SecurityException ignored) {}
         this.stringsImpl = null;
-
-        instance = null;
         logger.info("[Strings] Disabled");
     }
 
@@ -148,7 +127,7 @@ public final class Strings extends JavaPlugin {
     }
 
     private void checkEnvironment() {
-        if(config.getBoolean("placeholder-api") && getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+        if(getConfig().getBoolean("placeholder-api") && getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             this.usingPlaceholderAPI = true;
         } try {
             Class.forName("com.destroystokyo.paper.util.VersionFetcher");
@@ -156,31 +135,11 @@ public final class Strings extends JavaPlugin {
         } catch(ClassNotFoundException ignored) {}
     }
 
-    /**
-     * Updates YML files
-     * <a href="https://github.com/tchristofferson/Config-Updater">...</a>
-     */
-    private void updateConfigs() {
-        updateIfPresent("config.yml");
-        updateIfPresent("messages.yml");
-        updateIfPresent("moderation.yml");
-    }
-
-    private void updateIfPresent(String resourceName) {
-        File file = new File(getDistributor(), resourceName);
-        if(file.exists()) {
-            try {
-                ConfigUpdater.update(this, resourceName, file);
-            } catch(IOException e) {
-                Bukkit.getLogger().warning("[Strings] Failed to update file " + resourceName + ". " + e.getMessage());
-            }
-        }
-    }
 
     private void instantiateObjects() {
         userUtil = new YamlUserUtil(this);
         configClass = new Configuration(getConfig());
-        messenger = new Messenger(getMessagesFileConfig());
+        messenger = new Messenger(fileManager.getMessagesFileConfig());
         playerDirectMessenger = new PlayerDirectMessenger(this);
         channelLoader = new ChannelManager(this);
         serverMessages = new ServerMessages(this);
@@ -205,37 +164,6 @@ public final class Strings extends JavaPlugin {
         } catch(NoClassDefFoundError a) {
             getLogger().info("Vault not found, using built in methods.");
             usingVault = false;
-        }
-    }
-
-    private void setupCustomConfigs() {
-        broadcastsFile = new File(getDataFolder(), "broadcasts.yml");
-        messagesFile = new File(getDataFolder(), "messages.yml");
-        usersFile = new File(getDataFolder(), "users.yml");
-        channelsFile = new File(getDataFolder(), "channels.yml");
-        File logsFile = new File(getDataFolder(), "logs.yml");
-        File moderationFile = new File(getDataFolder(), "moderation.yml");
-
-        createIfDoesNotExist(broadcastsFile, "broadcasts.yml");
-        createIfDoesNotExist(messagesFile, "messages.yml");
-        createIfDoesNotExist(usersFile, "users.yml");
-        createIfDoesNotExist(channelsFile, "channels.yml");
-        createIfDoesNotExist(logsFile, "logs.yml");
-        createIfDoesNotExist(moderationFile, "moderation.yml");
-
-        broadcastsFileConfig = YamlConfiguration.loadConfiguration(broadcastsFile);
-        messagesFileConfig = YamlConfiguration.loadConfiguration(messagesFile);
-        usersFileConfig = YamlConfiguration.loadConfiguration(usersFile);
-        channelsFileConfig = YamlConfiguration.loadConfiguration(channelsFile);
-        logsFileConfig = YamlConfiguration.loadConfiguration(logsFile);
-        moderationFileConfig = YamlConfiguration.loadConfiguration(moderationFile);
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void createIfDoesNotExist(@NotNull File file, @NotNull String resourcePath) {
-        if(!file.exists()) {
-            file.getParentFile().mkdirs();
-            saveResource(resourcePath, false);
         }
     }
 
@@ -276,39 +204,11 @@ public final class Strings extends JavaPlugin {
         }
     }
 
-    /**
-     * Calculates tick equivalent of seconds or minutes. Example: 1m, 1s, etc.
-     * @param time the time to be converted
-     * @return a long of the tick value. Returns -1 if syntax is invalid.
-     */
-    public static long calculateTicks(String time) {
-        String regex = "^[0-9]+[sm]$";
-
-        if(time == null || !time.matches(regex)) {
-            return -1L;
-        }
-
-        char units = time.charAt(time.length() - 1);
-        time = time.substring(0, time.length() - 1);
-        int delayNum = Integer.parseInt(time);
-
-        if(units == 'm') {
-            delayNum *= 60;
-        }
-
-        return delayNum * 20L;
+    public void async(Runnable runnable) {
+        getServer().getScheduler().runTaskAsynchronously(this, runnable);
     }
 
-    public static void async(Runnable runnable) {
-        if(instance == null) {
-            throw new IllegalStateException("Strings instance not initialized");
-        }
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(instance, runnable);
-    }
-
-    /*
-    Public getter and setter methods
-     */
+    /* Public getter and setter methods */
 
     public String getDistributor() {
         return DISTRIBUTOR;
@@ -324,6 +224,10 @@ public final class Strings extends JavaPlugin {
 
     public UserUtil getUserUtil() {
         return userUtil;
+    }
+
+    public FileManager files() {
+        return fileManager;
     }
 
     public ServerMessages getServerMessages() {
@@ -342,36 +246,11 @@ public final class Strings extends JavaPlugin {
         return chat;
     }
 
-    public FileConfiguration getUsersFileConfig() {
-        return usersFileConfig;
-    }
-
-    public FileConfiguration getBroadcastsFileConfig() {
-        return broadcastsFileConfig;
-    }
-
-    public FileConfiguration getMessagesFileConfig() {
-        return messagesFileConfig;
-    }
-
-    public FileConfiguration getChannelsFileConfig() {
-        return channelsFileConfig;
-    }
-
-    public FileConfiguration getLogsFileConfig() {
-        return logsFileConfig;
-    }
-
-    @SuppressWarnings("unused")
-    public FileConfiguration getModerationFileConfig() {
-        return moderationFileConfig;
-    }
-
-    public boolean usePlaceholderAPI() {
+    public boolean usingPlaceholderAPI() {
         return usingPlaceholderAPI;
     }
 
-    public boolean useVault() {
+    public boolean usingVault() {
         return usingVault;
     }
 
@@ -396,58 +275,12 @@ public final class Strings extends JavaPlugin {
         return configClass;
     }
 
-    /*
-    Other methods
-     */
-
-    private static final Object lock = new Object();
-
-    public void saveUsersFile() {
-        async(() -> {
-            synchronized(lock) {
-                try {
-                    usersFileConfig.save(usersFile);
-                } catch(Exception e) {
-                    Bukkit.getLogger().info("An error occurred while saving the users file: " + e.getMessage());
-                }
-            }
-        });
-    }
-
-    @SuppressWarnings("CallToPrintStackTrace")
-    public synchronized void saveChannelsFile() {
-        try {
-            channelsFileConfig.save(channelsFile);
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @SuppressWarnings({"unused", "CallToPrintStackTrace"})
-    public void saveMessagesFile() {
-        try {
-            messagesFileConfig.save(messagesFile);
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @SuppressWarnings({"unused", "CallToPrintStackTrace"})
-    public void saveBroadcastsFile() {
-        try {
-            broadcastsFileConfig.save(broadcastsFile);
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     /**
      * Returns a User object that contains info Strings uses.
      * @param player the player to get the User of.
      * @return User object of the player.
      */
-    public User getUser(@NotNull Player player) {
+    public @NotNull User getUser(@NotNull Player player) {
         return userUtil.getUser(player.getUniqueId());
     }
 
@@ -460,7 +293,7 @@ public final class Strings extends JavaPlugin {
         return "" + stringsImpl.isApiUsed();
     }
 
-    public String isUsingStringsModeration() {
+    public @NotNull String isUsingStringsModeration() {
         boolean using = getServer().getPluginManager().getPlugin("StringsModeration") != null;
         return String.valueOf(using);
     }

@@ -43,7 +43,7 @@ public class WorldChannel extends AbstractChannel implements LocalChannel {
     }
 
     @Override
-    public Set<Player> getRecipients(@NotNull Player sender) {
+    public @NotNull Set<Player> getRecipients(@NotNull Player sender) {
         HashSet<Player> recipients = new HashSet<>();
 
         for(World w : getWorlds()) {
@@ -61,7 +61,7 @@ public class WorldChannel extends AbstractChannel implements LocalChannel {
     }
 
     @Override
-    public Set<Player> getPlayersInScope() {
+    public @NotNull Set<Player> getPlayersInScope() {
         switch(getMembership()) {
             case DEFAULT -> {
                 return universalSet();

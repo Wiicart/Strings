@@ -6,7 +6,6 @@ import com.pedestriamc.strings.chat.ChannelManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,6 @@ public class ChannelTabCompleter extends AbstractTabCompleter {
             "join", "leave", "monitor", "unmonitor", "broadcast", "announce"
     );
 
-    @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
         switch (args.length) {

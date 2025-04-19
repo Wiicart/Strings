@@ -25,21 +25,28 @@ import java.util.Set;
 public abstract class AbstractChannel implements Channel, Monitorable {
 
     private final Strings strings;
+
     private final ChannelLoader channelLoader;
+    private final MessageProcessor messageProcessor;
+
     private String name;
     private String defaultColor;
     private String format;
+
     private final String broadcastFormat;
     private final Membership membership;
+
     private boolean doCooldown;
     private boolean doProfanityFilter;
     private boolean doUrlFilter;
+
     private final boolean callEvent;
-    private final int priority;
     private final boolean mentionsEnabled;
+
+    private final int priority;
+
     private final Set<Player> monitors;
     private final Set<Player> members;
-    private final MessageProcessor messageProcessor;
 
     protected static final String CHANNEL_PERMISSION = "strings.channels.";
     protected static final String MESSAGE_PLACEHOLDER = "{message}";
@@ -71,6 +78,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
      * @param sender The sender of the message.
      * @return A Set<Player> of all players who will see the message.
      */
+    @NotNull
     public abstract Set<Player> getRecipients(@NotNull Player sender);
 
     /**
@@ -78,6 +86,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
      * Used to determine who to send broadcasts to.
      * @return A populated Set<Player>
      */
+    @NotNull
     public abstract Set<Player> getPlayersInScope();
 
     @Override
@@ -99,7 +108,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     }
 
-    private void sendEventMessage(Player player, String message, String template, Set<Player> recipients) {
+    private void sendEventMessage(@NotNull Player player, @NotNull String message, @NotNull String template, @NotNull Set<Player> recipients) {
         Bukkit.getScheduler().runTask(strings, () -> {
             AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, message, recipients, this);
             Bukkit.getPluginManager().callEvent(event);
@@ -117,7 +126,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         });
     }
 
-    private void sendNonEventMessage(Player player, String message, @NotNull String template, Set<Player> recipients) {
+    private void sendNonEventMessage(@NotNull Player player, @NotNull String message, @NotNull String template, @NotNull Set<Player> recipients) {
         String finalFormNonEvent = template.replace(MESSAGE_PLACEHOLDER, message);
         for (Player p : recipients) {
             p.sendMessage(finalFormNonEvent);
@@ -178,13 +187,9 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
+    @Deprecated
     public void saveChannel() {
         channelLoader.saveChannel(this);
-    }
-
-    @Override
-    public @NotNull String getFormat() {
-        return format;
     }
 
     @Override
@@ -252,32 +257,33 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public Membership getMembership() {
-        return membership;
-    }
-
-    @Override
     public int getPriority() {
         return priority;
     }
 
     @Override
     public void setFormat(@NotNull String format) {
+        Objects.requireNonNull(format);
         this.format = format;
     }
 
     @Override
-    public void addMonitor(Player player) {
+    public @NotNull String getFormat() {
+        return format;
+    }
+
+    @Override
+    public void addMonitor(@NotNull Player player) {
         monitors.add(player);
     }
 
     @Override
-    public void removeMonitor(Player player) {
+    public void removeMonitor(@NotNull Player player) {
         monitors.remove(player);
     }
 
     @Override
-    public Set<Player> getMonitors() {
+    public @NotNull Set<Player> getMonitors() {
         return new HashSet<>(monitors);
     }
 
@@ -294,6 +300,11 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     @Override
     public Set<Player> getMembers() {
         return new HashSet<>(members);
+    }
+
+    @Override
+    public Membership getMembership() {
+        return membership;
     }
 
 }

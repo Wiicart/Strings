@@ -14,8 +14,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.pedestriamc.strings.Strings.async;
-
 public final class YamlUserUtil implements UserUtil {
 
     private final Strings strings;
@@ -25,7 +23,7 @@ public final class YamlUserUtil implements UserUtil {
     public YamlUserUtil(Strings strings)
     {
         this.strings = strings;
-        config = strings.getUsersFileConfig();
+        config = strings.files().getUsersFileConfig();
         map = new ConcurrentHashMap<>();
     }
 
@@ -38,7 +36,7 @@ public final class YamlUserUtil implements UserUtil {
     {
         UUID uuid = user.getUuid();
         Map<String, Object> infoMap = user.getData();
-        async(() -> {
+        strings.async(() -> {
             synchronized(config) {
                 for(Map.Entry<String, Object> element : infoMap.entrySet()) {
                     Object value = element.getValue();
@@ -46,7 +44,7 @@ public final class YamlUserUtil implements UserUtil {
                         config.set("players." + uuid + "." + element.getKey(), value);
                     }
                 }
-                strings.saveUsersFile();
+                strings.files().saveUsersFile();
             }
         });
     }
@@ -55,12 +53,12 @@ public final class YamlUserUtil implements UserUtil {
     public @NotNull CompletableFuture<User> loadUserAsync(@NotNull UUID uuid)
     {
         CompletableFuture<User> future = new CompletableFuture<>();
-        async(() -> {
+        strings.async(() -> {
             try {
                 User user = loadUser(uuid);
                 future.complete(user);
-            } catch(Exception ex) {
-                future.completeExceptionally(ex);
+            } catch(Exception e) {
+                future.completeExceptionally(e);
             }
         });
         return future;
@@ -91,7 +89,14 @@ public final class YamlUserUtil implements UserUtil {
             String displayName = config.getString(userPath + ".display-name");
             String chatColor = config.getString(userPath + ".chat-color");
             boolean mentionsEnabled = config.getBoolean(userPath + "mentions-enabled", true);
-            Channel activeChannel = strings.getChannelLoader().getChannel(config.getString(userPath + ".active-channel"));
+
+            String activeChannelName = config.getString(userPath + ".active-channel");
+            if(activeChannelName == null) {
+                activeChannelName = "default";
+            }
+
+            Channel activeChannel = strings.getChannelLoader().getChannel(activeChannelName);
+
             List<?> channelNames = config.getList(userPath + ".channels");
             List<?> monitoredChannelNames = config.getList(userPath + ".monitored-channels");
 

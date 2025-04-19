@@ -46,7 +46,7 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
         distanceSquared = distance * distance;
     }
 
-    public Set<Player> getRecipients(@NotNull Player sender) {
+    public @NotNull Set<Player> getRecipients(@NotNull Player sender) {
         Set<Player> members = getMembers();
         if(members.contains(sender)) {
             return universalSet();
@@ -73,7 +73,7 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
     }
 
     @Override
-    public Set<Player> getPlayersInScope() {
+    public @NotNull Set<Player> getPlayersInScope() {
         switch(getMembership()) {
             case DEFAULT -> {
                 return universalSet();

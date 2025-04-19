@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ChannelFileReader {
+public final class ChannelFileReader {
 
     private final Strings strings;
     private final FileConfiguration config;
@@ -74,9 +74,6 @@ public class ChannelFileReader {
 
             try {
                 Channel c = channelLoader.build(data, typeString);
-                if(c == null) {
-                    continue;
-                }
 
                 channelLoader.registerChannel(c);
                 if(symbol != null) {
@@ -108,9 +105,7 @@ public class ChannelFileReader {
 
             try {
                 Channel channel = channelLoader.build(data, "normal");
-                if(channel != null) {
-                    channelLoader.registerChannel(channel);
-                }
+                channelLoader.registerChannel(channel);
             } catch (Exception ignored) {}
         }
 

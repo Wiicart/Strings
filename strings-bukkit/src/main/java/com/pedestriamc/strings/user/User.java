@@ -1,15 +1,14 @@
 package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
+import com.pedestriamc.strings.chat.ChannelManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,10 +22,10 @@ import java.util.UUID;
  * The User class is used to store information about players for this plugin.
  * It provides the data that the plugin stores on the player, and when available provides information from other plugins.
  */
-public class User implements StringsUser {
+public final class User implements StringsUser {
 
     private final Strings strings;
-    private final ChannelLoader channelLoader;
+    private final ChannelManager channelLoader;
 
     private final UUID uuid;
     private final Player player;
@@ -72,16 +71,17 @@ public class User implements StringsUser {
         this.displayName = displayName;
         this.mentionsEnabled = mentionsEnabled;
         this.name = player.getName();
-        this.activeChannel = activeChannel != null ? activeChannel : channelLoader.getChannel("default");
+        this.activeChannel = activeChannel != null ? activeChannel : channelLoader.getDefaultChannel();
         this.channels = Objects.requireNonNullElseGet(channels, HashSet::new);
         this.monitoredChannels = Objects.requireNonNullElseGet(monitoredChannels, HashSet::new);
         retain = retained;
+
         if(channels != null) {
             for(Channel channel : channels) {
                 channel.addMember(this.player);
             }
         } else {
-            joinChannel(channelLoader.getChannel("default"));
+            joinChannel(channelLoader.getDefaultChannel());
         }
     }
 
@@ -116,7 +116,7 @@ public class User implements StringsUser {
      * Provides the User's chat color.
      * @return A chat color.
      */
-    @Nullable
+    @NotNull
     public String getChatColor() {
         if(chatColor != null && !chatColor.isEmpty()) {
             return ChatColor.translateAlternateColorCodes('&', chatColor);
@@ -155,7 +155,7 @@ public class User implements StringsUser {
      * @return The prefix.
      */
     public String getPrefix() {
-        if(strings.useVault()) {
+        if(strings.usingVault()) {
             return ChatColor.translateAlternateColorCodes('&', strings.getVaultChat().getPlayerPrefix(player));
         } else {
             if(prefix == null || prefix.isEmpty()) {
@@ -171,7 +171,7 @@ public class User implements StringsUser {
      * @return The suffix.
      */
     public String getSuffix() {
-        if(strings.useVault()) {
+        if(strings.usingVault()) {
             return ChatColor.translateAlternateColorCodes('&', strings.getVaultChat().getPlayerSuffix(player));
         } else {
             if(suffix == null || suffix.isEmpty()) {
@@ -211,7 +211,7 @@ public class User implements StringsUser {
      */
     public void setPrefix(@NotNull String prefix) {
         this.prefix = prefix;
-        if(strings.useVault()) {
+        if(strings.usingVault()) {
             strings.getVaultChat().setPlayerPrefix(player, prefix);
         }
     }
@@ -222,7 +222,7 @@ public class User implements StringsUser {
      */
     public void setSuffix(@NotNull String suffix) {
         this.suffix = suffix;
-        if(strings.useVault()) {
+        if(strings.usingVault()) {
             strings.getVaultChat().setPlayerSuffix(player, suffix);
         }
     }
@@ -344,11 +344,12 @@ public class User implements StringsUser {
      */
     public void logOff() {
         for(Channel channel : channels) {
-            channel.removeMember(this.getPlayer());
+            channel.removeMember(getPlayer());
         }
 
-        for(Channel monitorable : monitoredChannels) {
-            monitorable.removeMember(this.getPlayer());
+        for(Channel channel : monitoredChannels) {
+            Monitorable monitorable = Monitorable.of(channel);
+            monitorable.removeMonitor(getPlayer());
         }
     }
 

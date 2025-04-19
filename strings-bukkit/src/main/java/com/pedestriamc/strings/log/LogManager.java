@@ -32,7 +32,7 @@ public class LogManager {
     public LogManager(Strings strings) {
 
         this.strings = strings;
-        FileConfiguration config = strings.getLogsFileConfig();
+        FileConfiguration config = strings.files().getLogsFileConfig();
 
         doChatLogging = load(config, "chat-log", LogType.CHAT);
         if(doChatLogging) {

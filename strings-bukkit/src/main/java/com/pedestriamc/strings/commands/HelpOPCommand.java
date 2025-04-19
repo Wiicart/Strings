@@ -13,27 +13,18 @@ import static com.pedestriamc.strings.api.message.Message.*;
 
 public final class HelpOPCommand implements CommandExecutor {
 
-    private final Strings strings;
     private final Channel helpOPChannel;
     private final Messenger messenger;
 
     public HelpOPCommand(@NotNull Strings strings) {
-        this.strings = strings;
         this.helpOPChannel = strings.getChannelLoader().getChannel("helpop");
         this.messenger = strings.getMessenger();
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-
         if(!sender.hasPermission("strings.helpop.use")) {
             messenger.sendMessage(NO_PERMS, sender);
-            return true;
-        }
-
-        //TODO Review if this block necessary.
-        if(strings.getChannelLoader().getChannel("helpop") == null) {
-            messenger.sendMessage(HELPOP_DISABLED, sender);
             return true;
         }
 
@@ -52,6 +43,7 @@ public final class HelpOPCommand implements CommandExecutor {
             builder.append(arg);
             builder.append(" ");
         }
+
         helpOPChannel.sendMessage((Player) sender, builder.toString());
         return true;
     }

@@ -33,7 +33,7 @@ public record UnmonitorCommand(Strings strings) implements CommandBase.CommandCo
 
         Channel channel = strings.getChannelLoader().getChannel(args[1]);
         if(channel == null) {
-            messenger.sendMessage(Message.CHANNEL_DOES_NOT_EXIST, sender);
+            messenger.sendMessage(Message.UNKNOWN_CHANNEL, sender);
             return true;
         }
 

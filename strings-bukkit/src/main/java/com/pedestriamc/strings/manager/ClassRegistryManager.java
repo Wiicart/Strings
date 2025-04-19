@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.managers;
+package com.pedestriamc.strings.manager;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;

@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 /**
  * Stores Channels
  */
-public class ChannelManager implements ChannelLoader {
+public final class ChannelManager implements ChannelLoader {
 
     private final Strings strings;
     private final HashMap<String, Channel> channels;
@@ -46,7 +46,7 @@ public class ChannelManager implements ChannelLoader {
     public ChannelManager(Strings strings) {
         this.strings = strings;
         channels = new HashMap<>();
-        config = strings.getChannelsFileConfig();
+        config = strings.files().getChannelsFileConfig();
         channelSymbols = new HashMap<>();
         priorityChannels = new TreeSet<>();
         userUtil = strings.getUserUtil();
@@ -127,13 +127,14 @@ public class ChannelManager implements ChannelLoader {
         setToChanged();
     }
 
-    //TODO implement
+    @SuppressWarnings("unused")
     public Channel getDefaultChannel() {
         Channel defaultChannel = channels.get("default");
         if(defaultChannel == null) {
-
+            defaultChannel = new DefaultChannel(strings, this);
+            registerChannel(defaultChannel);
         }
-        return null;
+        return defaultChannel;
     }
 
     /**
@@ -155,7 +156,7 @@ public class ChannelManager implements ChannelLoader {
             channelSection = config.createSection("channels." + channelName);
         }
         dataMap.forEach(channelSection::set);
-        strings.saveChannelsFile();
+        strings.files().saveChannelsFile();
     }
 
     @Override

@@ -77,7 +77,7 @@ public abstract class ChannelProcessor implements CommandBase.CommandComponent {
         if(channel == null) {
             HashMap<String, String> placeholders = new HashMap<>();
             placeholders.put("{channel}", channelName);
-            messenger.sendMessage(CHANNEL_DOES_NOT_EXIST, placeholders,  sender);
+            messenger.sendMessage(UNKNOWN_CHANNEL, placeholders,  sender);
             return new BaseData(null,null, null, true);
         }
 

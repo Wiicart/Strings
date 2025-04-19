@@ -24,10 +24,10 @@ public class AutoBroadcasts {
 
     public AutoBroadcasts(@NotNull Strings strings) {
         this.strings = strings;
-        config = strings.getBroadcastsFileConfig();
+        config = strings.files().getBroadcastsFileConfig();
         order = config.getString("sequence");
         if(config.getBoolean("enabled", false)) {
-            interval = Strings.calculateTicks(config.getString("delay"));
+            interval = calculateTicks(config.getString("delay"));
             if(interval == -1L) {
                 Bukkit.getLogger().info("[Strings] Invalid delay for auto broadcasts. Defaulting to 3 minutes. ");
                 interval = 3600L;
@@ -76,5 +76,28 @@ public class AutoBroadcasts {
         if(broadcastList.isEmpty()) {
             Bukkit.getLogger().warning("[Strings] No broadcasts found in broadcasts.yml");
         }
+    }
+
+    /**
+     * Calculates tick equivalent of seconds or minutes. Example: 1m, 1s, etc.
+     * @param time the time to be converted
+     * @return a long of the tick value. Returns -1 if syntax is invalid.
+     */
+    public static long calculateTicks(String time) {
+        String regex = "^[0-9]+[sm]$";
+
+        if(time == null || !time.matches(regex)) {
+            return -1L;
+        }
+
+        char units = time.charAt(time.length() - 1);
+        time = time.substring(0, time.length() - 1);
+        int delayNum = Integer.parseInt(time);
+
+        if(units == 'm') {
+            delayNum *= 60;
+        }
+
+        return delayNum * 20L;
     }
 }

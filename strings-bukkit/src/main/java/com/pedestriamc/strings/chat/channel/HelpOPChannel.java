@@ -43,7 +43,7 @@ public class HelpOPChannel extends ProtectedChannel {
         this.urlFilter = urlFilter;
         this.profanityFilter = profanityFilter;
         this.messenger = strings.getMessenger();
-        usePAPI = strings.usePlaceholderAPI();
+        usePAPI = strings.usingPlaceholderAPI();
         messageProcessor = new MessageProcessor(strings, this);
     }
 
@@ -57,7 +57,7 @@ public class HelpOPChannel extends ProtectedChannel {
         this.defaultColor = data.getDefaultColor();
         this.urlFilter = data.isDoUrlFilter();
         this.profanityFilter = data.isDoProfanityFilter();
-        usePAPI = strings.usePlaceholderAPI();
+        usePAPI = strings.usingPlaceholderAPI();
         messageProcessor = new MessageProcessor(strings, this);
     }
 

@@ -3,7 +3,6 @@ package com.pedestriamc.strings.tabcompleters;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
 public class IgnoreTabCompleter extends AbstractTabCompleter {
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
         if(args.length == 0) {
             return getPlayerNames();
         }

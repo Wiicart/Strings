@@ -3,7 +3,6 @@ package com.pedestriamc.strings.tabcompleters;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,7 @@ public class ChatColorTabCompleter extends AbstractTabCompleter {
     );
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         switch (args.length) {
             case 1 -> {
                 return filter(COLORS, args[0]);

@@ -69,7 +69,7 @@ public record MonitorCommand(Strings strings) implements CommandBase.CommandComp
         if(channel == null) {
             Map<String, String> map = new HashMap<>();
             map.put(CHANNEL_PLACEHOLDER, args[1]);
-            messenger.sendMessage(CHANNEL_DOES_NOT_EXIST, map, sender);
+            messenger.sendMessage(UNKNOWN_CHANNEL, map, sender);
             return true;
         }
 

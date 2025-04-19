@@ -16,7 +16,7 @@ import java.util.Set;
 /**
  * Standard Channel implementation
  */
-public class StringChannel extends AbstractChannel {
+public final class StringChannel extends AbstractChannel {
 
     public StringChannel(@NotNull Strings strings, @NotNull ChannelData data) {
         super(
@@ -36,7 +36,7 @@ public class StringChannel extends AbstractChannel {
     }
 
     @Override
-    public Set<Player> getRecipients(@NotNull Player sender) {
+    public @NotNull Set<Player> getRecipients(@NotNull Player sender) {
         Set<Player> recipients = new HashSet<>(getMembers());
         recipients.addAll(getMonitors());
         if(getMembership() == Membership.DEFAULT) {
@@ -50,7 +50,7 @@ public class StringChannel extends AbstractChannel {
     }
 
     @Override
-    public Set<Player> getPlayersInScope() {
+    public @NotNull Set<Player> getPlayersInScope() {
         switch (getMembership()) {
             case DEFAULT -> { return new HashSet<>(Bukkit.getOnlinePlayers()); }
             case PROTECTED -> { return getMembers(); }

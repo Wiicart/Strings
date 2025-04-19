@@ -26,7 +26,7 @@ public class PlayerDirectMessenger {
         this.strings = strings;
         this.messageFormatSender = strings.getConfig().getString("msg-format-outgoing");
         this.messageFormatRecipient = strings.getConfig().getString("msg-format-receiving");
-        this.usePAPI = strings.usePlaceholderAPI();
+        this.usePAPI = strings.usingPlaceholderAPI();
         this.messenger = strings.getMessenger();
 
     }

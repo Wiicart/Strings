@@ -27,7 +27,7 @@ public record ChannelBroadcastCommand(Strings strings) implements CommandBase.Co
         Channel channel = strings.getChannelLoader().getChannel(args[1]);
         if(channel == null) {
             Map<String, String> placeholders = generatePlaceholders(args[1]);
-            messenger.sendMessage(Message.CHANNEL_DOES_NOT_EXIST, placeholders, sender);
+            messenger.sendMessage(Message.UNKNOWN_CHANNEL, placeholders, sender);
             return true;
         }
 

@@ -30,12 +30,12 @@ public class PartyChannel extends AbstractChannel {
     }
 
     @Override
-    public Set<Player> getRecipients(@NotNull Player sender) {
+    public @NotNull Set<Player> getRecipients(@NotNull Player sender) {
         return Set.of();
     }
 
     @Override
-    public Set<Player> getPlayersInScope() {
+    public @NotNull Set<Player> getPlayersInScope() {
         return Set.of();
     }
 
@@ -60,17 +60,17 @@ public class PartyChannel extends AbstractChannel {
     }
 
     @Override
-    public void addMonitor(Player player) {
+    public void addMonitor(@NotNull Player player) {
         monitors.add(player);
     }
 
     @Override
-    public void removeMonitor(Player player) {
+    public void removeMonitor(@NotNull Player player) {
         monitors.remove(player);
     }
 
     @Override
-    public Set<Player> getMonitors() {
+    public @NotNull Set<Player> getMonitors() {
         return new HashSet<>(monitors);
     }
 }

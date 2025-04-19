@@ -51,17 +51,17 @@ public class LogChannel extends ProtectedChannel implements Monitorable {
     }
 
     @Override
-    public Set<Player> getMonitors() {
+    public @NotNull Set<Player> getMonitors() {
         return new HashSet<>(monitors);
     }
 
     @Override
-    public void addMonitor(Player player) {
+    public void addMonitor(@NotNull Player player) {
         monitors.add(player);
     }
 
     @Override
-    public void removeMonitor(Player player) {
+    public void removeMonitor(@NotNull Player player) {
         monitors.remove(player);
     }
 

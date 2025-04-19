@@ -24,7 +24,7 @@ import java.util.TreeSet;
  * The channel that players are assigned to by default.
  * This channel cannot process any messages; it instead determines the proper channel for a message to be sent to.
  */
-public class DefaultChannel extends ProtectedChannel {
+public final class DefaultChannel extends ProtectedChannel {
 
     private final ChannelManager channelManager;
     private final Set<Player> members;
@@ -74,7 +74,7 @@ public class DefaultChannel extends ProtectedChannel {
     }
 
     @Override
-    public final @NotNull Type getType() {
+    public @NotNull Type getType() {
         return Type.DEFAULT;
     }
 
@@ -84,7 +84,7 @@ public class DefaultChannel extends ProtectedChannel {
     }
 
     @Override
-    public final void setName(@NotNull String name) { /* DefaultChannel instances are always named "default" */ }
+    public void setName(@NotNull String name) { /* DefaultChannel instances are always named "default" */ }
 
     @Override
     public void addMember(@NotNull Player player) {

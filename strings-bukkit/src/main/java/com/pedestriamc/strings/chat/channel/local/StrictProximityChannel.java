@@ -41,7 +41,7 @@ public class StrictProximityChannel extends ProximityChannel {
     }
 
     @Override
-    public Set<Player> getRecipients(@NotNull Player sender) {
+    public @NotNull Set<Player> getRecipients(@NotNull Player sender) {
         World senderWorld = sender.getWorld();
         HashSet<Player> recipients = new HashSet<>(getMonitors());
 

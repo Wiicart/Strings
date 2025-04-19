@@ -20,9 +20,9 @@ public class ServerMessages {
 
     public ServerMessages(@NotNull Strings strings) {
         this.strings = strings;
-        joinMessageTemplate = strings.getConfig().getString("join-message");
-        leaveMessageTemplate = strings.getConfig().getString("leave-message");
-        usePAPI = strings.usePlaceholderAPI();
+        joinMessageTemplate = strings.getConfig().getString("join-message", "&8[&a+&8] &f{username} &7has joined the server.");
+        leaveMessageTemplate = strings.getConfig().getString("leave-message", "&8[&4-&8] &f{username} &7has left the server.");
+        usePAPI = strings.usingPlaceholderAPI();
         motd = new ArrayList<>();
         List<?> list = strings.getConfig().getList("motd");
         if(list != null) {

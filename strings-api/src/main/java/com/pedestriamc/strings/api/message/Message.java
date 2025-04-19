@@ -20,7 +20,7 @@ public enum Message {
     CHANNEL_ACTIVE_OTHER("other-player-channel-active"),
     INVALID_USE_CHANNEL("invalid-use-channel"),
     INVALID_PLAYER("invalid-player"),
-    CHANNEL_DOES_NOT_EXIST("channel-does-not-exist"),
+    UNKNOWN_CHANNEL("channel-does-not-exist"),
     OTHER_PLAYER_NO_PERMS("other-player-no-perms"),
     OTHER_USER_JOINED_CHANNEL("other-user-joined-channel"),
     LEFT_CHANNEL("left-channel"),

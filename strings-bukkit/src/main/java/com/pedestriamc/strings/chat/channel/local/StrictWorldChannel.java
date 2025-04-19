@@ -40,7 +40,7 @@ public class StrictWorldChannel extends WorldChannel {
     }
 
     @Override
-    public Set<Player> getRecipients(@NotNull Player sender) {
+    public @NotNull Set<Player> getRecipients(@NotNull Player sender) {
         HashSet<Player> recipients = new HashSet<>(getMonitors());
         for(World w : getWorlds()) {
             recipients.addAll(w.getPlayers());
