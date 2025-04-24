@@ -1,14 +1,18 @@
 ```
- ____    __                                         
-/\  _`\ /\ \__         __                           
-\ \,\L\_\ \ ,_\  _ __ /\_\    ___      __     ____  
- \/_\__ \\ \ \/ /\`'__\/\ \ /' _ `\  /'_ `\  /',__\ 
-   /\ \L\ \ \ \_\ \ \/ \ \ \/\ \/\ \/\ \L\ \/\__, `\
-   \ `\____\ \__\\ \_\  \ \_\ \_\ \_\ \____ \/\____/
-    \/_____/\/__/ \/_/   \/_/\/_/\/_/\/___L\ \/___/ 
-                                       /\____/      
-                                       \_/__/
-               Minecraft Chat Plugin
+
+      ___           ___           ___                       ___           ___           ___     
+     /\  \         /\  \         /\  \          ___        /\__\         /\  \         /\  \    
+    /::\  \        \:\  \       /::\  \        /\  \      /::|  |       /::\  \       /::\  \   
+   /:/\ \  \        \:\  \     /:/\:\  \       \:\  \    /:|:|  |      /:/\:\  \     /:/\ \  \  
+  _\:\~\ \  \       /::\  \   /::\~\:\  \      /::\__\  /:/|:|  |__   /:/  \:\  \   _\:\~\ \  \ 
+ /\ \:\ \ \__\     /:/\:\__\ /:/\:\ \:\__\  __/:/\/__/ /:/ |:| /\__\ /:/__/_\:\__\ /\ \:\ \ \__\
+ \:\ \:\ \/__/    /:/  \/__/ \/_|::\/:/  / /\/:/  /    \/__|:|/:/  / \:\  /\ \/__/ \:\ \:\ \/__/
+  \:\ \:\__\     /:/  /         |:|::/  /  \::/__/         |:/:/  /   \:\ \:\__\    \:\ \:\__\  
+   \:\/:/  /     \/__/          |:|\/__/    \:\__\         |::/  /     \:\/:/  /     \:\/:/  /  
+    \::/  /                     |:|  |       \/__/         /:/  /       \::/  /       \::/  /   
+     \/__/                       \|__|                     \/__/         \/__/         \/__/    
+
+                                         Minecraft Chat Plugin
 ```
 ## Information
 Strings is a Minecraft chat plugin written with the Spigot API, bringing lots of customizability to your Minecraft server's chat.
@@ -25,7 +29,9 @@ Strings is a Minecraft chat plugin written with the Spigot API, bringing lots of
 - Auto Broadcasts
 - Direct Messaging
 - Vault Support
-- Placeholder API Support
+- PlaceholderAPI Support
+- Moderation 
+- Mentions
 
 And much more!
 

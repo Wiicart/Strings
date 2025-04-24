@@ -10,7 +10,7 @@ import java.util.Set;
  * None of the constructors will create an object sufficient to create a Channel.
  * Enter all data by using all the set methods, with the exceptions of setDistance() and setWorld() if not applicable.
  */
-public class ChannelData
+public final class ChannelData
 {
 
     private String name;
