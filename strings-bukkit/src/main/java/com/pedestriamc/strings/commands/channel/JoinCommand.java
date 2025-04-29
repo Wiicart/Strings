@@ -99,7 +99,7 @@ public class JoinCommand implements CommandBase.CommandComponent {
      */
     private void joinIfEligible(CommandSender sender, Channel channel, Player target) {
         boolean modifyingOther = !sender.equals(target);
-        User user = strings.getUser(target);
+        User user = userUtil.getUser(target);
         Map<String, String> placeholders = getPlaceholders(target, channel);
 
         if(user.memberOf(channel)) {

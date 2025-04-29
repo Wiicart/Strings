@@ -13,14 +13,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class LeaveListener implements Listener {
 
-    private final Strings strings;
     private final UserUtil userUtil;
     private final boolean modifyLeaveMessage;
     private final ServerMessages serverMessages;
     private final boolean doJoinLeaveMessage;
 
     public LeaveListener(@NotNull Strings strings) {
-        this.strings = strings;
         userUtil = strings.getUserUtil();
         serverMessages = strings.getServerMessages();
 
@@ -31,7 +29,7 @@ public class LeaveListener implements Listener {
 
     @EventHandler
     public void onEvent(@NotNull PlayerQuitEvent event) {
-        User user = strings.getUser(event.getPlayer());
+        User user = userUtil.getUser(event.getPlayer());
 
         if(!doJoinLeaveMessage) {
             event.setQuitMessage(null);

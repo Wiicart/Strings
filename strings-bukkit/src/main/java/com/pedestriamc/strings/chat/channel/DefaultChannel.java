@@ -19,9 +19,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-
 /**
- * The channel that players are assigned to by default.
+ * Players are assigned to this Channel by default.
  * This channel cannot process any messages; it instead determines the proper channel for a message to be sent to.
  */
 public final class DefaultChannel extends ProtectedChannel {
@@ -63,7 +62,7 @@ public final class DefaultChannel extends ProtectedChannel {
             return channels.first();
         }
 
-        User user = strings.getUser(player);
+        User user = strings.getUserUtil().getUser(player);
         SortedSet<Channel> usersChannels = new TreeSet<>(user.getChannels());
         usersChannels.remove(this);
         if(!usersChannels.isEmpty()) {

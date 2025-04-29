@@ -13,13 +13,11 @@ import static com.pedestriamc.strings.api.message.Message.*;
 
 public class LeaveCommand extends ChannelProcessor {
 
-    private final Strings strings;
     private final Messenger messenger;
     private final UserUtil userUtil;
 
     public LeaveCommand(Strings strings) {
         super(strings);
-        this.strings = strings;
         messenger = strings.getMessenger();
         userUtil = strings.getUserUtil();
     }
@@ -31,7 +29,7 @@ public class LeaveCommand extends ChannelProcessor {
             return true;
         }
 
-        User user = strings.getUser(data.target());
+        User user = userUtil.getUser(data.target());
         Channel channel = data.channel();
         boolean modifyingOther = !sender.equals(data.target());
 

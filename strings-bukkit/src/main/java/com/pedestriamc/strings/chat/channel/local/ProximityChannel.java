@@ -74,21 +74,19 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
 
     @Override
     public @NotNull Set<Player> getPlayersInScope() {
-        switch(getMembership()) {
-            case DEFAULT -> {
-                return universalSet();
-            }
+        return switch(getMembership()) {
+            case DEFAULT -> universalSet();
             case PERMISSION -> {
                 HashSet<Player> scoped = new HashSet<>(universalSet());
                 scoped.removeIf(p -> !allows(p));
-                return scoped;
+                yield scoped;
             }
             default -> {
                 HashSet<Player> scoped = new HashSet<>(getMembers());
                 scoped.addAll(getMonitors());
-                return scoped;
+                yield scoped;
             }
-        }
+        };
     }
 
     /**

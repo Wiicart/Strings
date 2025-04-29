@@ -14,19 +14,16 @@ import static com.pedestriamc.strings.api.message.Message.*;
 
 public final class MentionCommand implements CommandExecutor {
 
-    private final Strings strings;
     private final Messenger messenger;
     private final UserUtil userUtil;
 
     public MentionCommand(Strings strings) {
-        this.strings = strings;
         messenger = strings.getMessenger();
         userUtil = strings.getUserUtil();
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-
         if(!(sender instanceof Player player)) {
             sender.sendMessage("[Strings] This command can only be used by players!");
             return true;
@@ -37,13 +34,13 @@ public final class MentionCommand implements CommandExecutor {
             return true;
         }
 
-        User user = strings.getUser(player);
+        User user = userUtil.getUser(player);
 
         if(args.length == 0) {
             boolean isEnabled = user.isMentionsEnabled();
             if(isEnabled) {
                 disable(player, user);
-            }else{
+            } else {
                 enable(player, user);
             }
             return true;
@@ -70,7 +67,6 @@ public final class MentionCommand implements CommandExecutor {
         user.setMentionsEnabled(true);
         userUtil.saveUser(user);
         messenger.sendMessage(MENTIONS_ENABLED, sender);
-
     }
 
     private void disable(CommandSender sender, @NotNull User user) {

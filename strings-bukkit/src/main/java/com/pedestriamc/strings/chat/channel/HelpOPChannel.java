@@ -108,7 +108,7 @@ public class HelpOPChannel extends ProtectedChannel {
     }
 
     private String generateTemplate(Player player) {
-        User user = strings.getUser(player);
+        User user = strings.getUserUtil().getUser(player);
         String template = getFormat();
 
         template = template

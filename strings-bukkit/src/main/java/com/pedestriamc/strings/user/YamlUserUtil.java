@@ -14,6 +14,9 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * YAML UserUtil implementation
+ */
 public final class YamlUserUtil implements UserUtil {
 
     private final Strings strings;
@@ -117,7 +120,7 @@ public final class YamlUserUtil implements UserUtil {
 
         Set<Channel> channels = new HashSet<>();
         for(Object item : list) {
-            if(item instanceof String string && strings.getChannel(string) != null) {
+            if(item instanceof String string && strings.getChannelLoader().getChannel(string) != null) {
                 channels.add(strings.getChannelLoader().getChannel(string));
             }
         }

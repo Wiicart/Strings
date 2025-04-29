@@ -2,6 +2,7 @@ package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.UserUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -15,7 +16,8 @@ import java.util.Set;
 
 public class Mentioner {
 
-    private final Strings strings;
+    private final UserUtil userUtil;
+
     private final float pitch;
     private final float volume;
     private final String format;
@@ -24,7 +26,8 @@ public class Mentioner {
     @SuppressWarnings("DataFlowIssue")
     public Mentioner(@NotNull Strings strings)
     {
-        this.strings = strings;
+        this.userUtil = strings.getUserUtil();
+
         FileConfiguration config = strings.getConfig();
         pitch = (float) config.getDouble("mention-pitch", 0.594604F);
         volume = (float) config.getDouble("mention-vol", 10F);
@@ -41,7 +44,7 @@ public class Mentioner {
 
     public void mention(@NotNull Player player, @NotNull Player sender)
     {
-        if(!strings.getUser(player).isMentionsEnabled()) {
+        if(!userUtil.getUser(player).isMentionsEnabled()) {
             return;
         }
         String str = format;
@@ -55,7 +58,7 @@ public class Mentioner {
 
     public void mention(Set<Player> group, Player sender)
     {
-        group.removeIf(p -> !strings.getUser(p).isMentionsEnabled());
+        group.removeIf(p -> !userUtil.getUser(p).isMentionsEnabled());
 
         String str = format;
         str = str.replace("%sender%", sender.getName());

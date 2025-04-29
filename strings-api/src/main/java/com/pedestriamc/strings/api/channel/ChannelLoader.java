@@ -1,9 +1,11 @@
 package com.pedestriamc.strings.api.channel;
 
 import com.pedestriamc.strings.api.channel.data.ChannelData;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 public interface ChannelLoader {
 
@@ -48,5 +50,12 @@ public interface ChannelLoader {
      */
     @Nullable
     Channel getChannel(String name);
+
+    /**
+     * Provides a Set of all registered Channels
+     * @return A populated Set
+     */
+    @NotNull
+    Set<Channel> getChannels();
 
 }

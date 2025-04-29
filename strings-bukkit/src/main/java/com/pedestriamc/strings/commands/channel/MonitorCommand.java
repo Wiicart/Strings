@@ -87,7 +87,7 @@ public record MonitorCommand(Strings strings) implements CommandBase.CommandComp
             return true;
         }
 
-        User user = strings.getUser(target);
+        User user = strings.getUserUtil().getUser(target);
         if(user.getMonitoredChannels().contains(channel)) {
             messenger.sendMessage(ALREADY_MONITORING, generatePlaceholders(sender.getName(), channel.getName()), sender);
             return true;

@@ -5,25 +5,27 @@ import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.event.PlayerDirectMessageEvent;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.user.UserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerDirectMessenger {
 
-    private final Strings strings;
-    private final ConcurrentHashMap<Player, Player> replyList = new ConcurrentHashMap<>();
+    private final UserUtil userUtil;
+    private final Map<Player, Player> replyList = new ConcurrentHashMap<>();
     private final String messageFormatSender;
     private final String messageFormatRecipient;
     private final boolean usePAPI;
     private final Messenger messenger;
 
     public PlayerDirectMessenger(@NotNull Strings strings) {
-        this.strings = strings;
+        this.userUtil = strings.getUserUtil();
         this.messageFormatSender = strings.getConfig().getString("msg-format-outgoing");
         this.messageFormatRecipient = strings.getConfig().getString("msg-format-receiving");
         this.usePAPI = strings.usingPlaceholderAPI();
@@ -72,8 +74,8 @@ public class PlayerDirectMessenger {
         if(message == null) {
             return null;
         }
-        User senderUser = strings.getUser(sender);
-        User recipientUser = strings.getUser(recipient);
+        User senderUser = userUtil.getUser(sender);
+        User recipientUser = userUtil.getUser(recipient);
         message = message
                 .replace("{sender_username}", sender.getName())
                 .replace("{sender_displayname}", sender.getDisplayName())

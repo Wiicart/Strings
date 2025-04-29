@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.moderation;
 
 import com.pedestriamc.strings.api.StringsProvider;
+import com.pedestriamc.strings.moderation.listener.ReloadListener;
 import com.pedestriamc.strings.moderation.manager.ChatFilter;
 import com.pedestriamc.strings.moderation.manager.CooldownManager;
 import com.pedestriamc.strings.moderation.manager.LinkFilter;
@@ -8,6 +9,7 @@ import com.pedestriamc.strings.moderation.manager.RepetitionManager;
 import com.pedestriamc.strings.moderation.listener.ChatListener;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,19 +26,18 @@ public final class StringsModeration extends JavaPlugin {
     private RepetitionManager repetitionManager;
 
     @Override
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void onEnable() {
         try {
             StringsProvider.get();
         } catch (IllegalStateException e) {
-            getLogger().info("Failed to connect to Strings API, disabling.");
+            info("Failed to connect to Strings API, disabling.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
         Plugin plugin = getServer().getPluginManager().getPlugin("Strings");
         if(plugin == null) {
-            getLogger().info("Failed to get Strings config file, disabling.");
+            info("Failed to get Strings config file, disabling.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -45,7 +46,26 @@ public final class StringsModeration extends JavaPlugin {
         config = YamlConfiguration.loadConfiguration(file);
 
         instantiate();
-        getLogger().info("Enabled!");
+        info("StringsModeration enabled.");
+    }
+
+    @Override
+    public void onDisable() {
+        config = null;
+        chatFilter = null;
+        cooldownManager = null;
+        linkFilter = null;
+        repetitionManager = null;
+        info("StringsModeration disabled.");
+    }
+
+    public void reload() {
+        onDisable();
+        onLoad();
+        onEnable();
+        HandlerList.unregisterAll(this);
+        getServer().getScheduler().cancelTasks(this);
+
     }
 
     private void instantiate() {
@@ -54,6 +74,7 @@ public final class StringsModeration extends JavaPlugin {
         linkFilter = new LinkFilter(this);
         repetitionManager = new RepetitionManager(this);
         registerListener(new ChatListener(this));
+        registerListener(new ReloadListener(this));
     }
 
     public void registerListener(Listener listener) {
@@ -103,6 +124,10 @@ public final class StringsModeration extends JavaPlugin {
         }
 
         return delayNum * 20L;
+    }
+
+    public void info(String message) {
+        getLogger().info(message);
     }
 
 }

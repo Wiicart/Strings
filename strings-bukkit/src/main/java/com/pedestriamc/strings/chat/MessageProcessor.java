@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.UserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import net.md_5.bungee.api.ChatColor;
@@ -20,7 +21,7 @@ public class MessageProcessor {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("&#[0-9A-Fa-f]{6}");
 
-    private final Strings strings;
+    private final UserUtil userUtil;
     private final Channel channel;
 
     private final boolean usingPlaceholderAPI;
@@ -29,8 +30,8 @@ public class MessageProcessor {
     private final String mentionColor;
 
     public MessageProcessor(@NotNull Strings strings, Channel channel) {
-        this.strings = strings;
         this.channel = channel;
+        userUtil = strings.getUserUtil();
         Configuration config = strings.getConfigClass();
         usingPlaceholderAPI = strings.usingPlaceholderAPI();
         processingMessagePlaceholders = config.getBoolean(PROCESS_PLACEHOLDERS) && usingPlaceholderAPI;
@@ -45,7 +46,7 @@ public class MessageProcessor {
      * @return A formatted String
      */
     public String generateTemplate(Player player) {
-        User user = strings.getUser(player);
+        User user = userUtil.getUser(player);
         String template = channel.getFormat();
 
         template = template
@@ -96,7 +97,7 @@ public class MessageProcessor {
                 continue;
             }
             for(Player p : Bukkit.getOnlinePlayers()) {
-                if(!strings.getUser(p).isMentionsEnabled() || !segment.contains(p.getName())) {
+                if(!userUtil.getUser(p).isMentionsEnabled() || !segment.contains(p.getName())) {
                     continue;
                 }
                 segment = segment.replace("@" + p.getName(), mentionColor + "@" + p.getName() + ChatColor.RESET + color);

@@ -4,6 +4,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -64,7 +65,7 @@ public final class Messenger {
         warn(message);
     }
 
-    private void warn(Message message) {
-        Bukkit.getLogger().warning("[Strings] Unknown object type or value not found for message " + message.toString());
+    private void warn(@NotNull Message message) {
+        Bukkit.getLogger().warning("[Strings] Unknown object type or value not found for message " + message);
     }
 }

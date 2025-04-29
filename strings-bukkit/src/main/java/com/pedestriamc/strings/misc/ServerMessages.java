@@ -1,7 +1,10 @@
 package com.pedestriamc.strings.misc;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.configuration.Configuration;
+import com.pedestriamc.strings.configuration.ConfigurationOption;
 import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.UserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,17 +15,19 @@ import java.util.List;
 
 public class ServerMessages {
 
-    private final Strings strings;
+    private final UserUtil userUtil;
     private final String joinMessageTemplate;
     private final String leaveMessageTemplate;
     private final ArrayList<String> motd;
     private final boolean usePAPI;
 
     public ServerMessages(@NotNull Strings strings) {
-        this.strings = strings;
-        joinMessageTemplate = strings.getConfig().getString("join-message", "&8[&a+&8] &f{username} &7has joined the server.");
-        leaveMessageTemplate = strings.getConfig().getString("leave-message", "&8[&4-&8] &f{username} &7has left the server.");
+        userUtil = strings.getUserUtil();
         usePAPI = strings.usingPlaceholderAPI();
+
+        Configuration config = strings.getConfigClass();
+        joinMessageTemplate = config.getString(ConfigurationOption.JOIN_MESSAGE);
+        leaveMessageTemplate = config.getString(ConfigurationOption.LEAVE_MESSAGE);
         motd = new ArrayList<>();
         List<?> list = strings.getConfig().getList("motd");
         if(list != null) {
@@ -36,7 +41,7 @@ public class ServerMessages {
 
     public String joinMessage(Player player) {
         String message = joinMessageTemplate;
-        User user = strings.getUser(player);
+        User user = userUtil.getUser(player);
         if(usePAPI) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
@@ -46,7 +51,7 @@ public class ServerMessages {
 
     public String leaveMessage(Player player) {
         String message = leaveMessageTemplate;
-        User user = strings.getUser(player);
+        User user = userUtil.getUser(player);
         if(usePAPI) {
             message = PlaceholderAPI.setPlaceholders(player, message);
         }
@@ -56,7 +61,7 @@ public class ServerMessages {
 
     public void sendMOTD(Player player) {
         ArrayList<String> playerMOTD = new ArrayList<>(motd);
-        User user = strings.getUser(player);
+        User user = userUtil.getUser(player);
         for(String message: playerMOTD) {
             message = applyPlaceholders(message, user);
             if(usePAPI) {
@@ -67,7 +72,7 @@ public class ServerMessages {
         }
     }
 
-    private String applyPlaceholders(@NotNull String message, User user) {
+    private @NotNull String applyPlaceholders(@NotNull String message, User user) {
         Player player = user.getPlayer();
         return message
                 .replace("{displayname}", player.getDisplayName())

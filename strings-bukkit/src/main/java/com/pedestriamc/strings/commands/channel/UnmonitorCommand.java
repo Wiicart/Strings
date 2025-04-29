@@ -58,7 +58,7 @@ public record UnmonitorCommand(Strings strings) implements CommandBase.CommandCo
             return true;
         }
 
-        User user = strings.getUser(target);
+        User user = strings.getUserUtil().getUser(target);
         if(!user.getMonitoredChannels().contains(channel)) {
             Map<String, String> placeholders = generatePlaceholders(channel.getName(), target.getName());
             if(!target.equals(sender)) {

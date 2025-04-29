@@ -33,6 +33,7 @@ public interface StringsAPI {
      * Provides a Set of all registered Channels.
      * @return A populated Set.
      */
+    @Deprecated
     Set<Channel> getChannels();
 
     /**
@@ -44,7 +45,7 @@ public interface StringsAPI {
     Optional<Channel> getOptionalChannel(String name);
 
     /**
-     * Provides a Channel based off its name, if it exists.
+     * Provides a Channel based off its name if it exists.
      * Deprecated - use ChannelLoader#getChannel() instead.
      * @param name The name to search under.
      * @return A StringsChannel, if it exists.

@@ -17,13 +17,11 @@ import java.util.Map;
 
 public class ChatListener implements Listener {
 
-    private final Strings strings;
     private final Channel defaultChannel;
     private final ChannelManager channelLoader;
     private final UserUtil userUtil;
 
     public ChatListener(@NotNull Strings strings) {
-        this.strings = strings;
         channelLoader = strings.getChannelLoader();
         defaultChannel = channelLoader.getChannel("default");
         userUtil = strings.getUserUtil();
@@ -40,7 +38,7 @@ public class ChatListener implements Listener {
         Player playerSender = event.getPlayer();
         String playerMessage = event.getMessage();
 
-        User user = strings.getUser(playerSender);
+        User user = userUtil.getUser(playerSender);
 
         Container container = processSymbol(playerMessage, user);
         Channel channel = container.channel();

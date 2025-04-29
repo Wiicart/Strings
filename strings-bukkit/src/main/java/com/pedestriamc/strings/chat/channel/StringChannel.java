@@ -51,9 +51,9 @@ public final class StringChannel extends AbstractChannel {
 
     @Override
     public @NotNull Set<Player> getPlayersInScope() {
-        switch (getMembership()) {
-            case DEFAULT -> { return new HashSet<>(Bukkit.getOnlinePlayers()); }
-            case PROTECTED -> { return getMembers(); }
+        return switch (getMembership()) {
+            case DEFAULT -> new HashSet<>(Bukkit.getOnlinePlayers());
+            case PROTECTED -> getMembers();
             case PERMISSION -> {
                 HashSet<Player> scoped = new HashSet<>(getMembers());
                 scoped.addAll(getMonitors());
@@ -62,10 +62,10 @@ public final class StringChannel extends AbstractChannel {
                         scoped.add(p);
                     }
                 }
-                return scoped;
+                yield scoped;
             }
-            default -> { return Collections.emptySet(); }
-        }
+            default -> Collections.emptySet();
+        };
     }
 
     @Override

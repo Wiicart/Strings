@@ -16,6 +16,7 @@ import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,7 +63,8 @@ public final class ChannelManager implements ChannelLoader {
         return channels.get(name);
     }
 
-    public Set<Channel> getChannels() {
+    @Override
+    public @NotNull Set<Channel> getChannels() {
         return new HashSet<>(channels.values());
     }
 
@@ -177,7 +179,8 @@ public final class ChannelManager implements ChannelLoader {
         strings.getLogger().info(message);
     }
 
-    public Map<String, Channel> getChannelSymbols() {
+    @Contract(value = " -> new", pure = true)
+    public @NotNull Map<String, Channel> getChannelSymbols() {
         return new HashMap<>(channelSymbols);
     }
 
@@ -213,12 +216,14 @@ public final class ChannelManager implements ChannelLoader {
         }
     }
 
-    public SortedSet<Channel> getSortedChannelSet() {
+    @Contract(value = " -> new", pure = true)
+    public @NotNull SortedSet<Channel> getSortedChannelSet() {
         return new TreeSet<>(priorityChannels);
     }
 
     private List<Channel> nonProtectedChannels = new ArrayList<>();
-    public List<Channel> getNonProtectedChannels() {
+    @Contract(" -> new")
+    public @NotNull List<Channel> getNonProtectedChannels() {
         if(isChanged() || nonProtectedChannels == null) {
             nonProtectedChannels = getChannels().stream()
                     .filter(channel -> channel.getType() != Type.PROTECTED)

@@ -14,13 +14,11 @@ import static com.pedestriamc.strings.api.message.Message.CHANNEL_ACTIVE;
 
 public class BaseCommand extends ChannelProcessor {
 
-    private final Strings strings;
     private final Messenger messenger;
     private final UserUtil userUtil;
 
     public BaseCommand(Strings strings) {
         super(strings);
-        this.strings = strings;
         messenger = strings.getMessenger();
         userUtil = strings.getUserUtil();
     }
@@ -62,7 +60,7 @@ public class BaseCommand extends ChannelProcessor {
         }
 
         boolean modifyingOther = !sender.equals(data.target());
-        User user = strings.getUser(data.target());
+        User user = userUtil.getUser(data.target());
         Channel channel = data.channel();
 
         if(!user.memberOf(channel)) {

@@ -20,4 +20,5 @@ public final class StringsReloadEvent extends Event {
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
+
 }

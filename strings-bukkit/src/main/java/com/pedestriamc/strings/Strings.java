@@ -2,8 +2,9 @@ package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
-import com.pedestriamc.strings.chat.*;
-import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.event.StringsReloadEvent;
+import com.pedestriamc.strings.chat.ChannelManager;
+import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.impl.StringsImpl;
@@ -39,10 +40,10 @@ public final class Strings extends JavaPlugin {
 
     private final Logger logger = Bukkit.getLogger();
 
-    private static final int METRICS_ID = 22597;
-    private static final String VERSION = "1.5.1";
-    private static final String DISTRIBUTOR = "github";
-    private static final short PLUGIN_NUM = 5;
+    public static final int METRICS_ID = 22597;
+    public static final String VERSION = "1.5.1";
+    public static final String DISTRIBUTOR = "github";
+    public static final short PLUGIN_NUM = 5;
 
     @SuppressWarnings("unused")
     private AutoBroadcasts autoBroadcasts;
@@ -113,6 +114,7 @@ public final class Strings extends JavaPlugin {
         onDisable();
         onLoad();
         onEnable();
+        getServer().getPluginManager().callEvent(new StringsReloadEvent());
     }
 
     private void loadMetrics() {
@@ -208,24 +210,6 @@ public final class Strings extends JavaPlugin {
         getServer().getScheduler().runTaskAsynchronously(this, runnable);
     }
 
-    /* Public getter and setter methods */
-
-    public String getDistributor() {
-        return DISTRIBUTOR;
-    }
-
-    public String getVersion() {
-        return VERSION;
-    }
-
-    public short getPluginNum() {
-        return PLUGIN_NUM;
-    }
-
-    public UserUtil getUserUtil() {
-        return userUtil;
-    }
-
     public FileManager files() {
         return fileManager;
     }
@@ -266,6 +250,10 @@ public final class Strings extends JavaPlugin {
         return channelLoader;
     }
 
+    public UserUtil getUserUtil() {
+        return userUtil;
+    }
+
     @SuppressWarnings("unused")
     public LogManager getLogManager() {
         return logManager;
@@ -275,22 +263,20 @@ public final class Strings extends JavaPlugin {
         return configClass;
     }
 
-    /**
-     * Returns a User object that contains info Strings uses.
-     * @param player the player to get the User of.
-     * @return User object of the player.
-     */
-    public @NotNull User getUser(@NotNull Player player) {
-        return userUtil.getUser(player.getUniqueId());
+    public String getVersion() {
+        return VERSION;
     }
 
-    public Channel getChannel(String channel) {
-        return channelLoader.getChannel(channel);
+    public short getPluginNum() {
+        return PLUGIN_NUM;
     }
 
+    public String getDistributor() {
+        return DISTRIBUTOR;
+    }
 
     public @NotNull String isAPIUsed() {
-        return "" + stringsImpl.isApiUsed();
+        return String.valueOf(StringsProvider.isInvoked());
     }
 
     public @NotNull String isUsingStringsModeration() {

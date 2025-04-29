@@ -12,11 +12,13 @@ import java.util.UUID;
  */
 public final class StringsProvider {
 
-    private static final short VERSION = 5;
+    static final short VERSION = 5;
 
     private static StringsAPI api;
     private static UUID apiUuid;
+    private static boolean invoked = false;
 
+    // Class should not be instantiated.
     private StringsProvider() {}
 
     /**
@@ -27,6 +29,7 @@ public final class StringsProvider {
         if(api == null) {
             throw new IllegalStateException("Strings API not initialized.");
         }
+        invoked = true;
         return StringsProvider.api;
     }
 
@@ -71,5 +74,9 @@ public final class StringsProvider {
      */
     public static short getVersion() {
         return VERSION;
+    }
+
+    public static boolean isInvoked() {
+        return invoked;
     }
 }

@@ -62,41 +62,33 @@ public class LogManager {
     }
 
     public void log(LogType logType, String log) {
-
         switch(logType) {
-
             case CHAT -> {
                 if(doChatLogging) {
                     write(chatFile, log);
                 }
             }
-
             case FILTER -> {
                 if(doFilterLogging) {
                     write(filterFile, log);
                 }
             }
-
             case SIGN -> {
                 if(doSignLogging) {
                     write(signFile, log);
                 }
             }
-
             case COMMAND -> {
                 if(doCommandLogging) {
                     write(commandFile, log);
                 }
             }
-
             case DIRECT_MESSAGE -> {
                 if(doDirectMessageLogging) {
                     write(directMessageFile, log);
                 }
             }
-
         }
-
     }
 
     private void write(File file, String log) {
