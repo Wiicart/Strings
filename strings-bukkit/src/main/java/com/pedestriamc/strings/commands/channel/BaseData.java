@@ -5,4 +5,5 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
+@Deprecated
 public record BaseData(Channel channel, Player target, Map<String, String> placeholders, boolean shouldReturn) {}

@@ -2,6 +2,7 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.message.Message;
+import com.pedestriamc.strings.commands.base.CommandBase;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

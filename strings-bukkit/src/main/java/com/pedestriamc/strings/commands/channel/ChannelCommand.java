@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.commands.channel;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.commands.CommandBase;
+import com.pedestriamc.strings.commands.base.CommandBase;
 
 import java.util.HashMap;
 
@@ -35,7 +35,7 @@ public final class ChannelCommand extends CommandBase {
         map.put("BROADCAST", channelBroadcastCommand);
         map.put("ANNOUNCE", channelBroadcastCommand);
 
-        BaseCommand baseCommand = new BaseCommand(strings);
+        ChannelBaseCommand baseCommand = new ChannelBaseCommand(strings);
         initialize(map, baseCommand);
     }
 

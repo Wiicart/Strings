@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.commands;
+package com.pedestriamc.strings.commands.base;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

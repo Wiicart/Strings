@@ -5,7 +5,7 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.channel.DefaultChannel;
-import com.pedestriamc.strings.commands.CommandBase;
+import com.pedestriamc.strings.commands.base.CommandBase;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +13,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public record ChannelBroadcastCommand(Strings strings) implements CommandBase.CommandComponent {
+public class ChannelBroadcastCommand implements CommandBase.CommandComponent {
+
+    private final Strings strings;
+
+    public ChannelBroadcastCommand(Strings strings) {
+        this.strings = strings;
+    }
 
     // /channel broadcast <channel> <message>
     @Override

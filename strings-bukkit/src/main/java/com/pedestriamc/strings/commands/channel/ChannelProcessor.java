@@ -4,7 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.chat.ChannelManager;
-import com.pedestriamc.strings.commands.CommandBase;
+import com.pedestriamc.strings.commands.base.CommandBase;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -85,7 +85,7 @@ public abstract class ChannelProcessor implements CommandBase.CommandComponent {
         if(channelLoader.getProtectedChannels().contains(channel)) {
             messenger.sendMessage(PROTECTED_CHANNEL_UNSUPPORTED_OPERATION, sender);
             return new BaseData(null,null, null, true);
-        }
+       }
 
         if((
                 type == Type.JOIN ||

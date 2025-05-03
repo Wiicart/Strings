@@ -5,7 +5,7 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.message.Messenger;
-import com.pedestriamc.strings.commands.CommandBase;
+import com.pedestriamc.strings.commands.base.CommandBase;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.Bukkit;
@@ -20,7 +20,13 @@ import java.util.Map;
 import static com.pedestriamc.strings.api.message.Message.*;
 import static com.pedestriamc.strings.commands.channel.ChannelCommand.CHANNEL_PLACEHOLDER;
 
-public record MonitorCommand(Strings strings) implements CommandBase.CommandComponent {
+public class MonitorCommand implements CommandBase.CommandComponent {
+
+    private final Strings strings;
+
+    public MonitorCommand(Strings strings) {
+        this.strings = strings;
+    }
 
     /**
      * /channel monitor <channel> <player>

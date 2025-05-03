@@ -5,7 +5,7 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
-import com.pedestriamc.strings.commands.CommandBase;
+import com.pedestriamc.strings.commands.base.CommandBase;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.Bukkit;
@@ -17,7 +17,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public record UnmonitorCommand(Strings strings) implements CommandBase.CommandComponent {
+public class UnmonitorCommand implements CommandBase.CommandComponent {
+
+    private final Strings strings;
+
+    public UnmonitorCommand(Strings strings) {
+        this.strings = strings;
+    }
 
     /**
      * /channel unmonitor <channel> <player>

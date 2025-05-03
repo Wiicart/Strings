@@ -90,7 +90,7 @@ channel-does-not-exist: "&fChannel &7{channel} &fdoes not exist!"
 
 # No perms to join channel:
 # Placeholder: {channel}
-no-perms-channel: "&fYou don't have permission to use that command on channel &7{channel}&f."
+no-perms-channel: "&fYou don't have permission to use channel &7{channel}&f."
 
 # Other player doesn't have perms to join channel:
 # Placeholders: {player}, {channel}
@@ -133,7 +133,7 @@ cant-leave-global: "&fYou can't leave the default channel!"
 # Message to tell players that they can't use the /channel command with protected channels.
 # Protected channels include special channels like social spy, which have their own commands to access.
 # As they don't function like typical channels, these channels are accessed in different ways.
-protected-channel: "&fYou can't use that command with that channel!"
+protected-channel: "&fYou can't use that command with protected channels."
 
 
 # Chat Filter Messages:
@@ -280,3 +280,9 @@ ineligible-sender: "&fYou aren't in the scope of channel &7{channel}&f, it has b
 
 # Message sent when usage of a command is not supported with the channel "default".
 default-restricted: "&fYou can't use that command with the channel &7default&f."
+
+# Sent when a player attempts to use a command on another player without permission.
+no-perms-other: "&fYou don't have permission to use that command on another player."
+
+# Sent when a player tries to run a command, defining themselves as the target.
+use-on-other: "&fYou cannot use that command on yourself."

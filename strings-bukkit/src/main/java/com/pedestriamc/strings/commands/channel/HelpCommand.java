@@ -2,7 +2,7 @@ package com.pedestriamc.strings.commands.channel;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.message.Messenger;
-import com.pedestriamc.strings.commands.CommandBase;
+import com.pedestriamc.strings.commands.base.CommandBase;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;

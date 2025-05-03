@@ -65,7 +65,9 @@ public enum Message {
     ALREADY_MONITORING("already-monitoring"),
     BROADCAST_SENT("broadcast-sent"),
     INELIGIBLE_SENDER("ineligible-sender"),
-    DEFAULT_RESTRICTED("default-restricted"),;
+    DEFAULT_RESTRICTED("default-restricted"),
+    NO_PERMS_MODIFY_OTHER("no-perms-other"),
+    CANNOT_USE_ON_SELF("use-on-other");
 
     private final String key;
 
