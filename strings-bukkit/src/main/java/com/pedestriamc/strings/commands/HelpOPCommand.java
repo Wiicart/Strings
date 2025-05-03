@@ -23,12 +23,12 @@ public final class HelpOPCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(!sender.hasPermission("strings.helpop.use")) {
+        if(noPermission(sender)) {
             messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
 
-        if(!(sender instanceof Player)) {
+        if(!(sender instanceof Player player)) {
             sender.sendMessage("[Strings] This command can only be used by players.");
             return true;
         }
@@ -44,7 +44,15 @@ public final class HelpOPCommand implements CommandExecutor {
             builder.append(" ");
         }
 
-        helpOPChannel.sendMessage((Player) sender, builder.toString());
+        helpOPChannel.sendMessage(player, builder.toString());
         return true;
+    }
+
+    private boolean noPermission(CommandSender sender) {
+        return !sender.isOp() &&
+                !sender.hasPermission("*") &&
+                !sender.hasPermission("strings.*") &&
+                !sender.hasPermission("strings.helpop.*") &&
+                !sender.hasPermission("strings.helpop.use");
     }
 }

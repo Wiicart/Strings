@@ -23,7 +23,7 @@ public enum Membership {
     PERMISSION,
 
     /**
-     * Channels with this Membership are typically internal Strings channels, and this Membership essentially tells
+     * Channels with this Membership are typically internal Channels, and this Membership essentially tells
      * anything that involves Membership to ignore the channel.
      */
     PROTECTED,

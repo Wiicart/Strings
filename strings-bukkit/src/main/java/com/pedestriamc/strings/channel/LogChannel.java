@@ -1,7 +1,7 @@
-package com.pedestriamc.strings.chat.channel;
+package com.pedestriamc.strings.channel;
 
 import com.pedestriamc.strings.api.channel.Monitorable;
-import com.pedestriamc.strings.chat.channel.base.ProtectedChannel;
+import com.pedestriamc.strings.channel.base.ProtectedChannel;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;

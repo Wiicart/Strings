@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.*;
+import com.pedestriamc.strings.api.platform.Platform;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.api.channel.Channel;
@@ -20,11 +21,10 @@ import java.util.UUID;
 
 public final class StringsImpl implements StringsAPI {
 
-    private final com.pedestriamc.strings.Strings strings;
+    private final Strings strings;
     private final ChannelManager channelLoader;
     private final Mentioner mentioner;
     private final UserUtil userUtil;
-    private boolean apiUsed;
 
     public StringsImpl(@NotNull Strings strings) {
         this.strings = strings;
@@ -35,31 +35,26 @@ public final class StringsImpl implements StringsAPI {
 
     @Override
     public Set<Channel> getChannels() {
-        this.apiUsed = true;
         return channelLoader.getChannels();
     }
 
     @Override
     public Optional<Channel> getOptionalChannel(String name) {
-        this.apiUsed = true;
         return Optional.ofNullable(this.getChannel(name));
     }
 
     @Override
     public @Nullable Channel getChannel(String name) {
-        this.apiUsed = true;
         return channelLoader.getChannel(name);
     }
 
     @Override
     public Optional<StringsUser> getOptionalStringsUser(UUID uuid) {
-        this.apiUsed = true;
         return Optional.of(userUtil.getUser(uuid));
     }
 
     @Override
     public StringsUser getStringsUser(UUID uuid) {
-        this.apiUsed = true;
         return userUtil.getUser(uuid);
     }
 
@@ -77,7 +72,6 @@ public final class StringsImpl implements StringsAPI {
 
     @Override
     public boolean isPaper() {
-        this.apiUsed = true;
         return strings.isPaper();
     }
 
@@ -97,15 +91,15 @@ public final class StringsImpl implements StringsAPI {
     }
 
     public short getVersion() {
-        this.apiUsed = true;
         return strings.getPluginNum();
-    }
-
-    public boolean isApiUsed() {
-        return apiUsed;
     }
 
     public Messenger getMessenger() {
         return strings.getMessenger();
+    }
+
+    @Override
+    public Platform getPlatform() {
+        return Platform.BUKKIT;
     }
 }

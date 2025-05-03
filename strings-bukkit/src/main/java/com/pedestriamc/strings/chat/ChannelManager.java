@@ -5,13 +5,13 @@ import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.chat.channel.DefaultChannel;
-import com.pedestriamc.strings.chat.channel.HelpOPChannel;
-import com.pedestriamc.strings.chat.channel.local.ProximityChannel;
-import com.pedestriamc.strings.chat.channel.local.StrictProximityChannel;
-import com.pedestriamc.strings.chat.channel.local.StrictWorldChannel;
-import com.pedestriamc.strings.chat.channel.StringChannel;
-import com.pedestriamc.strings.chat.channel.local.WorldChannel;
+import com.pedestriamc.strings.channel.DefaultChannel;
+import com.pedestriamc.strings.channel.HelpOPChannel;
+import com.pedestriamc.strings.channel.local.ProximityChannel;
+import com.pedestriamc.strings.channel.local.StrictProximityChannel;
+import com.pedestriamc.strings.channel.local.StrictWorldChannel;
+import com.pedestriamc.strings.channel.StringChannel;
+import com.pedestriamc.strings.channel.local.WorldChannel;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.configuration.ConfigurationSection;
@@ -111,7 +111,8 @@ public final class ChannelManager implements ChannelLoader {
         });
 
         for(User user : users) {
-            if(user.getActiveChannel().equals(channel)) {
+            Channel active = user.getActiveChannel();
+            if(active != null && active.equals(channel)) {
                 user.setActiveChannel(defaultChannel);
                 user.leaveChannel(channel);
                 userUtil.saveUser(user);
@@ -171,7 +172,7 @@ public final class ChannelManager implements ChannelLoader {
             case "proximity_strict" -> { return new StrictProximityChannel(strings, data); }
             case "world_strict" -> { return new StrictWorldChannel(strings, data); }
             case "helpop" -> { return new HelpOPChannel(strings, data); }
-            default -> throw new UnsupportedOperationException("Unable to build Channels that are not Types NORMAL, PROXIMITY, WORLD. PROTECTED Channels must be HELPOP Channels");
+            default -> throw new UnsupportedOperationException("Unknown channel type: " + type + ".");
         }
     }
 

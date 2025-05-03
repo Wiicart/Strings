@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +24,7 @@ public class MessageProcessor {
 
     private final UserUtil userUtil;
     private final Channel channel;
+    private final Logger logger;
 
     private final boolean usingPlaceholderAPI;
     private final boolean processingMessagePlaceholders;
@@ -32,6 +34,7 @@ public class MessageProcessor {
     public MessageProcessor(@NotNull Strings strings, Channel channel) {
         this.channel = channel;
         userUtil = strings.getUserUtil();
+        logger = strings.getLogger();
         Configuration config = strings.getConfigClass();
         usingPlaceholderAPI = strings.usingPlaceholderAPI();
         processingMessagePlaceholders = config.getBoolean(PROCESS_PLACEHOLDERS) && usingPlaceholderAPI;
@@ -146,6 +149,7 @@ public class MessageProcessor {
         try {
             return PlaceholderAPI.setPlaceholders(sender, str);
         } catch (NoClassDefFoundError e) {
+            logger.warning("Failed to set placeholders for message from " + sender.getName() + ".");
             return str;
         }
     }
@@ -154,6 +158,8 @@ public class MessageProcessor {
     private boolean shouldReplacePlaceholders(Player sender) {
         if(processingMessagePlaceholders) {
             return (
+                    sender.isOp() ||
+                    sender.hasPermission("*") ||
                     sender.hasPermission("strings.*") ||
                     sender.hasPermission("strings.chat.*") ||
                     sender.hasPermission("strings.chat.placeholdermsg")
@@ -165,6 +171,8 @@ public class MessageProcessor {
     private boolean shouldColorMessage(Player sender) {
         if(parsingMessageChatColors) {
             return (
+                    sender.isOp() ||
+                    sender.hasPermission("*") ||
                     sender.hasPermission("strings.*") ||
                     sender.hasPermission("strings.chat.*") ||
                     sender.hasPermission("strings.chat.colormsg")
@@ -172,5 +180,4 @@ public class MessageProcessor {
         }
         return false;
     }
-
 }

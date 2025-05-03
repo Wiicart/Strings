@@ -123,7 +123,7 @@ permissions:
     description: "Allows bypassing repetition checks"
     default: false
   strings.channels.*:
-    description: "channels perms"
+    description: "Permission to use all Channels."
     default: false
   strings.channels.default:
     description: "Allows use of default channels! It is strongly encouraged that all players have this permission."

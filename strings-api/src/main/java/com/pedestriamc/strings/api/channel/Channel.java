@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.api.channel;
 
+import com.pedestriamc.strings.api.platform.Platform;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
@@ -188,5 +189,7 @@ public interface Channel extends Comparable<Channel> {
     boolean allows(@NotNull Permissible permissible);
 
     boolean isCallEvent();
+
+    Platform getPlatform();
 
 }

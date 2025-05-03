@@ -1,6 +1,8 @@
 package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.channel.local.Locality;
+import com.pedestriamc.strings.api.platform.Platform;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
@@ -9,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +42,14 @@ public final class User implements StringsUser {
     private Channel activeChannel;
     private boolean mentionsEnabled;
     private final boolean retain;
+
+    @Nullable
+    public static User of(StringsUser user) {
+        if(user instanceof User u) {
+            return u;
+        }
+        return null;
+    }
 
     /**
      * The constructor for a User with no stored data.
@@ -83,6 +94,10 @@ public final class User implements StringsUser {
         } else {
             joinChannel(channelLoader.getDefaultChannel());
         }
+    }
+
+    public void message(@NotNull String message) {
+        getPlayer().sendMessage(message);
     }
 
     /**
@@ -252,11 +267,21 @@ public final class User implements StringsUser {
         this.mentionsEnabled = mentionsEnabled;
     }
 
+    @Override
+    public Platform getPlatform() {
+        return Platform.BUKKIT;
+    }
+
+    @Override
+    public Locality getLocality() {
+        return null;
+    }
+
     /**
      * Provides the player's active channel.
      * @return The active channel.
      */
-    public @NotNull Channel getActiveChannel() {
+    public Channel getActiveChannel() {
         return activeChannel;
     }
 

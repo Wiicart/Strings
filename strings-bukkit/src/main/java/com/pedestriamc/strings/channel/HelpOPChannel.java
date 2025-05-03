@@ -1,10 +1,10 @@
-package com.pedestriamc.strings.chat.channel;
+package com.pedestriamc.strings.channel;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.chat.MessageProcessor;
-import com.pedestriamc.strings.chat.channel.base.ProtectedChannel;
+import com.pedestriamc.strings.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.user.User;
@@ -172,7 +172,11 @@ public class HelpOPChannel extends ProtectedChannel {
 
     @Override
     public boolean allows(@NotNull Permissible permissible) {
-        return (permissible.hasPermission("strings.helpop.use") ||  permissible.hasPermission("strings.*"));
+        return (permissible.isOp() ||
+                permissible.hasPermission("*") ||
+                permissible.hasPermission("strings.*") ||
+                permissible.hasPermission("strings.helpop.use")
+        );
     }
 
 }

@@ -1,6 +1,6 @@
-package com.pedestriamc.strings.chat.channel;
+package com.pedestriamc.strings.channel;
 
-import com.pedestriamc.strings.chat.channel.base.ProtectedChannel;
+import com.pedestriamc.strings.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

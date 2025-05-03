@@ -32,8 +32,8 @@ public interface ChannelLoader {
     void saveChannel(Channel channel);
 
     /**
-     * Builds and returns a Channel
-     *
+     * Builds and returns a Channel.
+     * Acceptable types: stringchannel, proximity, world, proximity_strict, world_strict, helpop
      * @param data The ChannelData object loaded with information. If making a WorldChannel or ProximityChannel, use extending classes ProximityChannelData or WorldChannelData
      * @param type The type of channel.  Must be NORMAL, WORLD, or PROXIMITY or will return null.
      * @return A new StringsChannel

@@ -1,11 +1,11 @@
-package com.pedestriamc.strings.chat.channel;
+package com.pedestriamc.strings.channel;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.channel.LocalChannel;
+import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.chat.ChannelManager;
-import com.pedestriamc.strings.chat.channel.base.ProtectedChannel;
+import com.pedestriamc.strings.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.user.User;
 import org.bukkit.ChatColor;

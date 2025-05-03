@@ -3,6 +3,7 @@ package com.pedestriamc.strings;
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.event.StringsReloadEvent;
+import com.pedestriamc.strings.placeholder.StringsPlaceholderExpansion;
 import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.configuration.Configuration;
@@ -83,6 +84,7 @@ public final class Strings extends JavaPlugin {
         checkIfReload();
         checkForUpdate();
         instantiateObjectsTwo();
+        registerPlaceholders();
         loadMetrics();
         logger.info("[Strings] Enabled");
     }
@@ -130,7 +132,8 @@ public final class Strings extends JavaPlugin {
 
     private void checkEnvironment() {
         if(getConfig().getBoolean("placeholder-api") && getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            this.usingPlaceholderAPI = true;
+            getLogger().info("PlaceholderAPI detected.");
+            usingPlaceholderAPI = true;
         } try {
             Class.forName("com.destroystokyo.paper.util.VersionFetcher");
             isPaper = true;
@@ -175,6 +178,12 @@ public final class Strings extends JavaPlugin {
             for(Player p : players) {
                 userUtil.loadUser(p.getUniqueId());
             }
+        }
+    }
+
+    private void registerPlaceholders() {
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new StringsPlaceholderExpansion(this).register();
         }
     }
 

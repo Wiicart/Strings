@@ -3,6 +3,7 @@ package com.pedestriamc.strings.api;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.api.platform.Platform;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -112,6 +113,8 @@ public interface StringsAPI {
      * @return The Strings Messenger instance
      */
     Messenger getMessenger();
+
+    Platform getPlatform();
 
 }
 

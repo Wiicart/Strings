@@ -8,7 +8,7 @@ public enum Type {
     /**
      * Represents Channels for internal plugin use
      */
-    PROTECTED,
+    PROTECTED(),
 
     /**
      * Represents "normal" channels such as StringChannels
@@ -16,25 +16,25 @@ public enum Type {
     NORMAL(),
 
     /**
-     * Represents ProximityChannels
+     * Represents all types of ProximityChannels, which are instances of LocalChannel
      */
-    PROXIMITY,
+    PROXIMITY(),
 
     /**
-     * Represents WorldChannels
+     * Represents all types of WorldChannels, which are instances of LocalChannel
      */
-    WORLD,
+    WORLD(),
 
     /**
      * Represents the DefaultChannel, a channel that does not process any messages; it instead
      * forwards them to a different channel.
      */
-    DEFAULT,
+    DEFAULT(),
 
     /**
      * Represents PartyChannels
      */
-    PARTY,
+    PARTY(),
 
-    CUSTOM
+    CUSTOM()
 }

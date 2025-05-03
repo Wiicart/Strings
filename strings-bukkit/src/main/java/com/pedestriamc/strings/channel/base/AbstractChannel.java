@@ -1,6 +1,7 @@
-package com.pedestriamc.strings.chat.channel.base;
+package com.pedestriamc.strings.channel.base;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.platform.Platform;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
@@ -305,6 +306,11 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     @Override
     public Membership getMembership() {
         return membership;
+    }
+
+    @Override
+    public Platform getPlatform() {
+        return Platform.BUKKIT;
     }
 
 }

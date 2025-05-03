@@ -1,11 +1,11 @@
-package com.pedestriamc.strings.chat.channel.local;
+package com.pedestriamc.strings.channel.local;
 
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Membership;
-import com.pedestriamc.strings.api.channel.LocalChannel;
+import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.api.channel.data.ChannelData;
-import com.pedestriamc.strings.chat.channel.base.AbstractChannel;
+import com.pedestriamc.strings.channel.base.AbstractChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -26,7 +26,7 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
     private double distanceSquared;
     private final Set<World> worlds;
 
-    public ProximityChannel(Strings strings, ChannelData data) {
+    public ProximityChannel(@NotNull Strings strings, @NotNull ChannelData data) {
         super(
                 strings,
                 strings.getChannelLoader(),

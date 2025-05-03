@@ -1,6 +1,8 @@
 package com.pedestriamc.strings.api.user;
 
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.local.Locality;
+import com.pedestriamc.strings.api.platform.Platform;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,6 +23,8 @@ public interface StringsUser {
      */
     @NotNull
     UUID getUuid();
+
+    void message(@NotNull String message);
 
     /**
      * Provides the StringsUser's name.
@@ -85,7 +89,7 @@ public interface StringsUser {
      * Provides the active StringsChannel of the StringsUser.
      * @return The active StringsChannel.
      */
-    @NotNull
+    @Nullable
     Channel getActiveChannel();
 
     /**
@@ -132,5 +136,10 @@ public interface StringsUser {
      */
     void setMentionsEnabled(boolean mentionsEnabled);
 
+    Platform getPlatform();
+
+    Locality getLocality();
+
     Player getPlayer();
+
 }

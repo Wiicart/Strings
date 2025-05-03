@@ -16,6 +16,7 @@ import static com.pedestriamc.strings.api.message.Message.*;
 import static com.pedestriamc.strings.api.message.Message.NO_PERMS_CHANNEL;
 import static com.pedestriamc.strings.commands.channel.ChannelCommand.CHANNEL_PLACEHOLDER;
 
+@Deprecated
 public abstract class ChannelProcessor implements CommandBase.CommandComponent {
 
     private final ChannelManager channelLoader;

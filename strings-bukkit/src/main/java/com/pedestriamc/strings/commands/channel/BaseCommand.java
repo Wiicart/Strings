@@ -68,7 +68,8 @@ public class BaseCommand extends ChannelProcessor {
             userUtil.saveUser(user);
         }
 
-        if(user.getActiveChannel().equals(channel)) {
+        Channel active = user.getActiveChannel();
+        if(active != null && active.equals(channel)) {
             if(modifyingOther) {
                 messenger.sendMessage(ALREADY_ACTIVE_OTHER, data.placeholders(), sender);
             } else {

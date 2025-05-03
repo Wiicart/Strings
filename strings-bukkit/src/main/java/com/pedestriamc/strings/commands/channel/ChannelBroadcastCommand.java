@@ -4,7 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
-import com.pedestriamc.strings.chat.channel.DefaultChannel;
+import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.commands.CommandBase;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

@@ -1,10 +1,10 @@
-package com.pedestriamc.strings.chat.channel;
+package com.pedestriamc.strings.channel;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Type;
-import com.pedestriamc.strings.chat.channel.base.AbstractChannel;
+import com.pedestriamc.strings.channel.base.AbstractChannel;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

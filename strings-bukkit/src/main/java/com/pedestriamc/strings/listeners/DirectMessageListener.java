@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.listeners;
 
-import com.pedestriamc.strings.chat.channel.SocialSpyChannel;
+import com.pedestriamc.strings.channel.SocialSpyChannel;
 import com.pedestriamc.strings.api.event.PlayerDirectMessageEvent;
 import com.pedestriamc.strings.Strings;
 import org.bukkit.event.EventHandler;

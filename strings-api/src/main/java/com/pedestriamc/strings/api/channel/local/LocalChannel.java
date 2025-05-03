@@ -1,5 +1,6 @@
-package com.pedestriamc.strings.api.channel;
+package com.pedestriamc.strings.api.channel.local;
 
+import com.pedestriamc.strings.api.channel.Channel;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
