@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.channel.base;
 
 import com.pedestriamc.strings.api.channel.Membership;
-import com.pedestriamc.strings.api.platform.Platform;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Type;
@@ -156,11 +155,6 @@ public abstract class ProtectedChannel implements Channel {
     @Override
     public boolean isCallEvent() {
         return false;
-    }
-
-    @Override
-    public Platform getPlatform() {
-        return Platform.BUKKIT;
     }
 
 }

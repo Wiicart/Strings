@@ -18,7 +18,7 @@ public class DirectMessageListener implements Listener {
     }
 
     @EventHandler
-    public void onEvent(@NotNull PlayerDirectMessageEvent event) {
+    void onEvent(@NotNull PlayerDirectMessageEvent event) {
         socialSpy.sendOutMessage(
                 event.getSender(),
                 event.getRecipient(),

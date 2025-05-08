@@ -10,17 +10,17 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Locale;
+
 /**
  * PlaceholderAPI expansion for Strings
  * Valid Placeholders: %strings_active_channel%, %strings_chat_color%
  */
 public final class StringsPlaceholderExpansion extends PlaceholderExpansion {
 
-    private final String version;
     private final UserUtil userUtil;
 
     public StringsPlaceholderExpansion(Strings strings) {
-        version = strings.getDescription().getVersion();
         userUtil = strings.getUserUtil();
     }
 
@@ -37,7 +37,7 @@ public final class StringsPlaceholderExpansion extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return version;
+        return Strings.VERSION;
     }
 
     @Override
@@ -48,8 +48,9 @@ public final class StringsPlaceholderExpansion extends PlaceholderExpansion {
     @Override
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
         StringsUser user = getUser(player);
-        return switch(params.toUpperCase()) {
-            case "ACTIVE_CHANNEL" -> determineChannel(user, player);
+        return switch(params.toUpperCase(Locale.ROOT)) {
+            case "CURRENT_CHANNEL" -> determineChannel(user, player);
+            case "ACTIVE_CHANNEL" -> determineActive(user);
             case "CHAT_COLOR" -> user.getChatColor();
             default -> null;
         };
@@ -68,6 +69,14 @@ public final class StringsPlaceholderExpansion extends PlaceholderExpansion {
             return c.getName();
         }
 
+        return null;
+    }
+
+    private String determineActive(StringsUser user) {
+        Channel c = user.getActiveChannel();
+        if(c != null) {
+            return c.getName();
+        }
         return null;
     }
 

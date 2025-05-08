@@ -3,14 +3,18 @@ package com.pedestriamc.strings.commands.channel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
+import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.channel.HelpOPChannel;
 import com.pedestriamc.strings.commands.base.CommandBase;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Map;
 
@@ -27,7 +31,7 @@ public class JoinCommand implements CommandBase.CommandComponent {
     private final UserUtil userUtil;
     private final ChannelLoader channelLoader;
 
-    public JoinCommand(Strings strings) {
+    public JoinCommand(@NotNull Strings strings) {
         this.strings = strings;
         messenger = strings.getMessenger();
         userUtil = strings.getUserUtil();
@@ -37,17 +41,17 @@ public class JoinCommand implements CommandBase.CommandComponent {
     //Syntax: /channel join <channel> <user>
     @Override
     @SuppressWarnings("ConstantConditions")
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         Channel channel;
         Player target;
         switch(args.length) {
-            case 0, 1, 2 -> {
+            case 0, 1 -> {
                 messenger.sendMessage(INSUFFICIENT_ARGS, sender);
                 return true;
             }
 
             // /channel join <channel>
-            case 3 -> {
+            case 2 -> {
                 if(sender instanceof Player p) {
                     target = p;
                 } else {
@@ -55,27 +59,27 @@ public class JoinCommand implements CommandBase.CommandComponent {
                     return true;
                 }
 
-                channel = channelLoader.getChannel(args[2]);
-                if(shouldRejectChannel(sender, channel)) {
+                channel = channelLoader.getChannel(args[1]);
+                if(shouldRejectChannel(sender, channel, args[1])) {
                     return true;
                 }
             }
 
             // /channel join <channel> <player>
-            case 4 -> {
+            case 3 -> {
                 if(!sender.hasPermission("strings.channels.modifyplayers")){
                     messenger.sendMessage(NO_PERMS, sender);
                     return true;
                 }
 
-                target = strings.getServer().getPlayer(args[3]);
+                target = strings.getServer().getPlayer(args[2]);
                 if(target == null) {
                     messenger.sendMessage(UNKNOWN_PLAYER, sender);
                     return true;
                 }
 
-                channel = channelLoader.getChannel(args[2]);
-                if(shouldRejectChannel(sender, channel)) {
+                channel = channelLoader.getChannel(args[1]);
+                if(shouldRejectChannel(sender, channel, args[1])) {
                     return true;
                 }
             }
@@ -97,7 +101,7 @@ public class JoinCommand implements CommandBase.CommandComponent {
      * @param channel The Channel used
      * @param target The Player that would join the channel
      */
-    private void joinIfEligible(CommandSender sender, Channel channel, Player target) {
+    private void joinIfEligible(@NotNull CommandSender sender, Channel channel, Player target) {
         boolean modifyingOther = !sender.equals(target);
         User user = userUtil.getUser(target);
         Map<String, String> placeholders = getPlaceholders(target, channel);
@@ -112,6 +116,7 @@ public class JoinCommand implements CommandBase.CommandComponent {
         }
 
         user.joinChannel(channel);
+        user.setActiveChannel(channel);
         userUtil.saveUser(user);
 
         if(modifyingOther) {
@@ -120,7 +125,8 @@ public class JoinCommand implements CommandBase.CommandComponent {
         messenger.sendMessage(CHANNEL_JOINED, placeholders, target);
     }
 
-    private Map<String, String> getPlaceholders(@NotNull Player target, @NotNull Channel channel) {
+    @Contract("_, _ -> new")
+    private @NotNull @Unmodifiable Map<String, String> getPlaceholders(@NotNull Player target, @NotNull Channel channel) {
         return Map.of(
                 "{channel}", channel.getName(),
                 "{player}", target.getName()
@@ -133,15 +139,20 @@ public class JoinCommand implements CommandBase.CommandComponent {
      * @param channel The Channel to check against
      * @return False if the command should return, true if the command should not.
      */
-    private boolean shouldRejectChannel(CommandSender sender, Channel channel) {
+    private boolean shouldRejectChannel(CommandSender sender, Channel channel, String channelName) {
         if(channel == null) {
-            messenger.sendMessage(UNKNOWN_CHANNEL, sender);
+            messenger.sendMessage(UNKNOWN_CHANNEL, Map.of("{channel}", channelName), sender);
             return true;
         }
 
         if(!channel.allows(sender)) {
             Map<String, String> placeholders = Map.of("{channel}", channel.getName());
             messenger.sendMessage(NO_PERMS_CHANNEL, placeholders, sender);
+            return true;
+        }
+
+        if(channel.getType() == Type.PROTECTED && !(channel instanceof HelpOPChannel)) {
+            messenger.sendMessage(PROTECTED_CHANNEL_UNSUPPORTED_OPERATION, sender);
             return true;
         }
 

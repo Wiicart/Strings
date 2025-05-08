@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -28,7 +29,7 @@ public class ChatListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onEvent(AsyncPlayerChatEvent event) {
+    void onEvent(AsyncPlayerChatEvent event) {
         if (event instanceof ChannelChatEvent) {
             return;
         } else {
@@ -53,7 +54,8 @@ public class ChatListener implements Listener {
         channel.sendMessage(playerSender, playerMessage);
     }
 
-    private Container processSymbol(String msg, User user) {
+    @Contract("_, _ -> new")
+    private @NotNull Container processSymbol(String msg, User user) {
         for(Map.Entry<String, Channel> entry : channelLoader.getChannelSymbols().entrySet()) {
             if(msg.startsWith(entry.getKey())) {
                 Channel c = entry.getValue();

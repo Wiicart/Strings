@@ -1,8 +1,6 @@
 package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channel.local.Locality;
-import com.pedestriamc.strings.api.platform.Platform;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
@@ -267,22 +265,13 @@ public final class User implements StringsUser {
         this.mentionsEnabled = mentionsEnabled;
     }
 
-    @Override
-    public Platform getPlatform() {
-        return Platform.BUKKIT;
-    }
-
-    @Override
-    public Locality getLocality() {
-        return null;
-    }
-
     /**
      * Provides the player's active channel.
      * @return The active channel.
      */
+    @NotNull
     public Channel getActiveChannel() {
-        return activeChannel;
+        return activeChannel != null ? activeChannel : channelLoader.getDefaultChannel();
     }
 
     /**
@@ -295,8 +284,7 @@ public final class User implements StringsUser {
             return;
         }
         this.activeChannel = channel;
-        channels.add(channel);
-        channel.addMember(this.getPlayer());
+        joinChannel(channel);
     }
 
     /**

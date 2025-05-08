@@ -28,7 +28,7 @@ public class LeaveListener implements Listener {
     }
 
     @EventHandler
-    public void onEvent(@NotNull PlayerQuitEvent event) {
+    void onEvent(@NotNull PlayerQuitEvent event) {
         User user = userUtil.getUser(event.getPlayer());
 
         if(!doJoinLeaveMessage) {

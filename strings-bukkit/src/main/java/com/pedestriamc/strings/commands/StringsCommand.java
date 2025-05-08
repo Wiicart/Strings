@@ -27,7 +27,7 @@ public final class StringsCommand extends CommandBase {
 
         @Override
         public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[&3Strings&8] &fRunning Strings version &a" + strings.getVersion()));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[&3Strings&8] &fRunning Strings version &a" + Strings.VERSION));
             return true;
         }
 
@@ -39,7 +39,7 @@ public final class StringsCommand extends CommandBase {
         public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
             if(sender.hasPermission("strings.reload") || sender instanceof ConsoleCommandSender || sender.isOp()) {
                 strings.reload();
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[&3Strings&8] &fStrings version &a" + strings.getVersion() + "&f reloaded."));
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[&3Strings&8] &fStrings version &a" + Strings.VERSION + "&f reloaded."));
             } else {
                 strings.getMessenger().sendMessage(Message.NO_PERMS, sender);
             }

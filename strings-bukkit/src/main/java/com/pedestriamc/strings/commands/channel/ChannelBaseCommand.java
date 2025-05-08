@@ -49,8 +49,8 @@ public class ChannelBaseCommand implements CommandBase.CommandComponent {
             return;
         }
 
-        Channel channel = channelLoader.getChannel(args[1]);
-        if(unsatisfiedConditions(sender, channel, args[1])) {
+        Channel channel = channelLoader.getChannel(args[0]);
+        if(unsatisfiedConditions(sender, channel, args[0])) {
             return;
         }
         Objects.requireNonNull(channel);
@@ -58,7 +58,7 @@ public class ChannelBaseCommand implements CommandBase.CommandComponent {
         User user = userUtil.getUser(player.getUniqueId());
         Channel active = user.getActiveChannel();
 
-        if(active != null && active.equals(channel)) {
+        if(active.equals(channel)) {
             messenger.sendMessage(ALREADY_ACTIVE, channelPlaceholders(active.getName()), sender);
             return;
         }
@@ -75,13 +75,13 @@ public class ChannelBaseCommand implements CommandBase.CommandComponent {
             messenger.sendMessage(NO_PERMS_MODIFY_OTHER, sender);
         }
 
-        Channel channel = channelLoader.getChannel(args[1]);
-        if(unsatisfiedConditions(sender, channel, args[1])) {
+        Channel channel = channelLoader.getChannel(args[0]);
+        if(unsatisfiedConditions(sender, channel, args[0])) {
             return;
         }
         Objects.requireNonNull(channel);
 
-        User target = getUser(sender, args[2]);
+        User target = getUser(sender, args[1]);
         if(target == null) {
             return;
         }
@@ -93,7 +93,7 @@ public class ChannelBaseCommand implements CommandBase.CommandComponent {
 
         Channel active = target.getActiveChannel();
 
-        if(active != null && active.equals(channel)) {
+        if(active.equals(channel)) {
             messenger.sendMessage(ALREADY_ACTIVE_OTHER, channelPlaceholders(active.getName()), sender);
             return;
         }
@@ -128,7 +128,7 @@ public class ChannelBaseCommand implements CommandBase.CommandComponent {
     private User getUser(CommandSender sender, String name) {
         Player p = Bukkit.getPlayer(name);
         if(p == null) {
-            messenger.sendMessage(INVALID_PLAYER, Map.of("{player}",name), sender);
+            messenger.sendMessage(INVALID_PLAYER, Map.of("{player}", name), sender);
             return null;
         }
         return userUtil.getUser(p);

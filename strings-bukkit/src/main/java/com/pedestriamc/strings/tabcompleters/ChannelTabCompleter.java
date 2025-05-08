@@ -2,6 +2,7 @@ package com.pedestriamc.strings.tabcompleters;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.chat.ChannelManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -52,7 +53,8 @@ public class ChannelTabCompleter extends AbstractTabCompleter {
      * @return A List<String>
      */
     private List<String> getAllowedChannels(CommandSender sender) {
-        return channelLoader.getNonProtectedChannels().stream()
+        return channelLoader.getChannels().stream()
+                .filter(channel -> channel.getType() != Type.PROTECTED)
                 .filter(channel -> channel.allows(sender))
                 .map(Channel::getName)
                 .toList();

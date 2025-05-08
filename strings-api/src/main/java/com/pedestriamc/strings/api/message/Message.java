@@ -35,7 +35,7 @@ public enum Message {
     CHANNEL_HELP("channel-help"),
     HELPOP_SENT("helpop-sent"),
     HELPOP_UNSUPPORTED_OPERATION("helpop-not-channel"),
-    CANT_LEAVE_DEFAULT("can-leave-global"),
+    CANT_LEAVE_DEFAULT("cant-leave-global"),
     PROTECTED_CHANNEL_UNSUPPORTED_OPERATION("protected-channel"),
     SERVER_MUST_SPECIFY_PLAYER("server-must-specify-player"),
     UNKNOWN_STYLE_COLOR("unknown-style-color"),

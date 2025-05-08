@@ -83,7 +83,7 @@ public class AutoBroadcasts {
      * @param time the time to be converted
      * @return a long of the tick value. Returns -1 if syntax is invalid.
      */
-    public static long calculateTicks(String time) {
+    private static long calculateTicks(String time) {
         String regex = "^[0-9]+[sm]$";
 
         if(time == null || !time.matches(regex)) {

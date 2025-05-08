@@ -1,8 +1,6 @@
 package com.pedestriamc.strings.api.user;
 
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.channel.local.Locality;
-import com.pedestriamc.strings.api.platform.Platform;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -135,10 +133,6 @@ public interface StringsUser {
      * @param mentionsEnabled true/false if the StringsUser should have mentions enabled.
      */
     void setMentionsEnabled(boolean mentionsEnabled);
-
-    Platform getPlatform();
-
-    Locality getLocality();
 
     Player getPlayer();
 

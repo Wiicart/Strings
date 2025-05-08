@@ -36,6 +36,7 @@ public final class Messenger {
             for(String str : msg) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', str));
             }
+            return;
         } else if(msgObject instanceof String) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + enumMap.get(message)));
             return;
@@ -62,6 +63,7 @@ public final class Messenger {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + str));
             return;
         }
+
         warn(message);
     }
 

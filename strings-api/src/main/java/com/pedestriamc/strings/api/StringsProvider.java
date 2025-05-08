@@ -39,7 +39,7 @@ public final class StringsProvider {
      * @param api API Implementation
      * @param plugin Strings plugin
      */
-    public static void register(@NotNull StringsAPI api, JavaPlugin plugin, UUID uuid) throws IllegalStateException, SecurityException {
+    public static void register(@NotNull final StringsAPI api, final JavaPlugin plugin, final UUID uuid) throws IllegalStateException, SecurityException {
         if(StringsProvider.api != null) {
             throw new IllegalStateException("StringsProvider already initialized.");
         }
@@ -57,7 +57,7 @@ public final class StringsProvider {
      * @hidden
      * @param uuid UUID from Strings
      */
-    public static void unregister(UUID uuid) throws IllegalStateException, SecurityException {
+    public static void unregister(final UUID uuid) throws IllegalStateException, SecurityException {
         if(StringsProvider.api == null) {
             throw new IllegalStateException("StringsProvider uninitialized.");
         }
@@ -76,7 +76,7 @@ public final class StringsProvider {
         return VERSION;
     }
 
-    public static boolean isInvoked() {
+    public static boolean isUsed() {
         return invoked;
     }
 }

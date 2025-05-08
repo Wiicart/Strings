@@ -21,12 +21,10 @@ import com.pedestriamc.strings.user.YamlUserUtil;
 import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -35,16 +33,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public final class Strings extends JavaPlugin {
 
-    private final Logger logger = Bukkit.getLogger();
-
     public static final int METRICS_ID = 22597;
-    public static final String VERSION = "1.5.1";
+    public static final String VERSION = "1.6";
     public static final String DISTRIBUTOR = "github";
-    public static final short PLUGIN_NUM = 5;
+    public static final short PLUGIN_NUM = 6;
 
     @SuppressWarnings("unused")
     private AutoBroadcasts autoBroadcasts;
@@ -68,9 +63,9 @@ public final class Strings extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        logger.info("[Strings] Loading...");
+        info("[Strings] Loading...");
         fileManager = new FileManager(this);
-        checkEnvironment();
+        determineEnvironment();
         instantiateObjects();
         setupAPI();
     }
@@ -86,7 +81,7 @@ public final class Strings extends JavaPlugin {
         instantiateObjectsTwo();
         registerPlaceholders();
         loadMetrics();
-        logger.info("[Strings] Enabled");
+        info("[Strings] Enabled");
     }
 
     @Override
@@ -109,7 +104,7 @@ public final class Strings extends JavaPlugin {
             StringsProvider.unregister(apiUUID);
         } catch(IllegalStateException | SecurityException ignored) {}
         this.stringsImpl = null;
-        logger.info("[Strings] Disabled");
+        info("[Strings] Disabled");
     }
 
     public void reload() {
@@ -121,18 +116,27 @@ public final class Strings extends JavaPlugin {
 
     private void loadMetrics() {
         Metrics metrics = new Metrics(this, METRICS_ID);
-        metrics.addCustomChart(new SimplePie("distributor", this::getDistributor));
-        metrics.addCustomChart(new SimplePie("using_stringsapi", this::isAPIUsed));
-        metrics.addCustomChart(new SimplePie("using_stringsmoderation_expansion", this::isUsingStringsModeration));
+        metrics.addCustomChart(new SimplePie(
+                "distributor",
+                () -> DISTRIBUTOR)
+        );
+        metrics.addCustomChart(new SimplePie(
+                "using_stringsapi",
+                () -> String.valueOf(StringsProvider.isUsed()))
+        );
+        metrics.addCustomChart(new SimplePie(
+                "using_stringsmoderation_expansion",
+                () -> String.valueOf(getServer().getPluginManager().getPlugin("StringsModeration") != null))
+        );
     }
 
     private void logOutAll() {
         userUtil.getUsers().forEach(User::logOff);
     }
 
-    private void checkEnvironment() {
+    private void determineEnvironment() {
         if(getConfig().getBoolean("placeholder-api") && getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            getLogger().info("PlaceholderAPI detected.");
+            info("PlaceholderAPI detected.");
             usingPlaceholderAPI = true;
         } try {
             Class.forName("com.destroystokyo.paper.util.VersionFetcher");
@@ -159,15 +163,15 @@ public final class Strings extends JavaPlugin {
         try {
             RegisteredServiceProvider<Chat> serviceProvider = getServer().getServicesManager().getRegistration(Chat.class);
             if(serviceProvider == null) {
-                getLogger().info("Vault not found, using built in methods.");
+                info("Vault not found, using built in methods.");
                 usingVault = false;
             } else {
                 chat = serviceProvider.getProvider();
                 usingVault = true;
-                getLogger().info("Vault found.");
+                info("Vault found.");
             }
         } catch(NoClassDefFoundError a) {
-            getLogger().info("Vault not found, using built in methods.");
+            info("Vault not found, using built in methods.");
             usingVault = false;
         }
     }
@@ -194,14 +198,14 @@ public final class Strings extends JavaPlugin {
             String raw = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
             short latest = Short.parseShort(raw);
             if(latest > PLUGIN_NUM) {
-                Bukkit.getLogger().info("+------------[Strings]------------+");
-                Bukkit.getLogger().info("|    A new update is available!   |");
-                Bukkit.getLogger().info("|          Download at:           |");
-                Bukkit.getLogger().info("|   https://wiicart.net/strings   |");
-                Bukkit.getLogger().info("+---------------------------------+");
+                getServer().getLogger().info("+------------[Strings]------------+");
+                getServer().getLogger().info("|    A new update is available!   |");
+                getServer().getLogger().info("|          Download at:           |");
+                getServer().getLogger().info("|   https://wiicart.net/strings   |");
+                getServer().getLogger().info("+---------------------------------+");
             }
         } catch(IOException a) {
-            Bukkit.getLogger().info("[Strings] Unable to check for updates.");
+            getServer().getLogger().info("[Strings] Unable to check for updates.");
         }
     }
 
@@ -211,7 +215,7 @@ public final class Strings extends JavaPlugin {
         try {
             StringsProvider.register(stringsImpl, this, apiUUID);
         } catch(IllegalStateException a) {
-            Bukkit.getLogger().info("Failed to register StringsAPI");
+            info("Failed to register StringsAPI");
         }
     }
 
@@ -221,18 +225,6 @@ public final class Strings extends JavaPlugin {
 
     public FileManager files() {
         return fileManager;
-    }
-
-    public ServerMessages getServerMessages() {
-        return serverMessages;
-    }
-
-    public PlayerDirectMessenger getPlayerDirectMessenger() {
-        return playerDirectMessenger;
-    }
-
-    public Messenger getMessenger() {
-        return messenger;
     }
 
     public Chat getVaultChat() {
@@ -268,28 +260,28 @@ public final class Strings extends JavaPlugin {
         return logManager;
     }
 
+    public ServerMessages getServerMessages() {
+        return serverMessages;
+    }
+
+    public PlayerDirectMessenger getPlayerDirectMessenger() {
+        return playerDirectMessenger;
+    }
+
+    public Messenger getMessenger() {
+        return messenger;
+    }
+
     public Configuration getConfigClass() {
         return configClass;
     }
 
-    public String getVersion() {
-        return VERSION;
+    public void info(String message) {
+        getLogger().info(message);
     }
 
-    public short getPluginNum() {
-        return PLUGIN_NUM;
+    public void warning(String message) {
+        getLogger().warning(message);
     }
 
-    public String getDistributor() {
-        return DISTRIBUTOR;
-    }
-
-    public @NotNull String isAPIUsed() {
-        return String.valueOf(StringsProvider.isInvoked());
-    }
-
-    public @NotNull String isUsingStringsModeration() {
-        boolean using = getServer().getPluginManager().getPlugin("StringsModeration") != null;
-        return String.valueOf(using);
-    }
 }

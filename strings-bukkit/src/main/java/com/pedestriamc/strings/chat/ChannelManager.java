@@ -20,20 +20,17 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 /**
- * Stores Channels
+ * Loads and stores Channels
  */
 public final class ChannelManager implements ChannelLoader {
 
@@ -86,7 +83,6 @@ public final class ChannelManager implements ChannelLoader {
         }
 
         channels.put(channel.getName(), channel);
-        setToChanged();
         log("Channel '" + channel.getName() + "' registered.");
     }
 
@@ -111,8 +107,7 @@ public final class ChannelManager implements ChannelLoader {
         });
 
         for(User user : users) {
-            Channel active = user.getActiveChannel();
-            if(active != null && active.equals(channel)) {
+            if(user.getActiveChannel().equals(channel)) {
                 user.setActiveChannel(defaultChannel);
                 user.leaveChannel(channel);
                 userUtil.saveUser(user);
@@ -127,7 +122,6 @@ public final class ChannelManager implements ChannelLoader {
 
         priorityChannels.remove(channel);
         channels.remove(channel.getName());
-        setToChanged();
     }
 
     @SuppressWarnings("unused")
@@ -189,73 +183,8 @@ public final class ChannelManager implements ChannelLoader {
         channelSymbols.put(symbol, channel);
     }
 
-    private boolean changed = false;
-
-    /**
-     * Signifies that something with Channels has changed and datasets should be updated when called.
-     */
-    private void setToChanged() {
-        changed = true;
-        count = 0;
-    }
-
-    private boolean isChanged() {
-        return changed;
-    }
-
-
-    int count = 0;
-
-    /**
-     * Signifies that a dataset has been updated
-     */
-    private void datasetUpdated() {
-        count++;
-        if(count == 3) {
-            count = 0;
-            changed = false;
-        }
-    }
-
     @Contract(value = " -> new", pure = true)
     public @NotNull SortedSet<Channel> getSortedChannelSet() {
         return new TreeSet<>(priorityChannels);
-    }
-
-    private List<Channel> nonProtectedChannels = new ArrayList<>();
-    @Contract(" -> new")
-    public @NotNull List<Channel> getNonProtectedChannels() {
-        if(isChanged() || nonProtectedChannels == null) {
-            nonProtectedChannels = getChannels().stream()
-                    .filter(channel -> channel.getType() != Type.PROTECTED)
-                    .toList();
-            datasetUpdated();
-        }
-        return new ArrayList<>(nonProtectedChannels);
-    }
-
-    private List<String> nonProtectedChannelNames;
-    @SuppressWarnings("unused")
-    public List<String> getNonProtectedChannelNames() {
-        if(isChanged() || nonProtectedChannelNames == null) {
-            nonProtectedChannelNames = getChannels().stream()
-                    .filter(channel -> channel.getType() != Type.PROTECTED)
-                    .map(Channel::getName)
-                    .toList();
-            datasetUpdated();
-        }
-        return new ArrayList<>(nonProtectedChannelNames);
-    }
-
-
-    private Set<Channel> protectedChannels;
-    public Set<Channel> getProtectedChannels() {
-        if(isChanged() || protectedChannels == null) {
-            protectedChannels = getChannels().stream()
-                    .filter(channel -> channel.getType() == Type.PROTECTED)
-                    .collect(Collectors.toSet());
-            datasetUpdated();
-        }
-        return new HashSet<>(protectedChannels);
     }
 }

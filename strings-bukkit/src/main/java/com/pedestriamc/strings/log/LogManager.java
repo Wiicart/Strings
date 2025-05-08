@@ -1,150 +1,79 @@
 package com.pedestriamc.strings.log;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.log.listeners.ChatFilterListener;
-import com.pedestriamc.strings.log.listeners.CommandListener;
-import com.pedestriamc.strings.log.listeners.LogChatListener;
-import com.pedestriamc.strings.log.listeners.LogDirectMessageListener;
-import com.pedestriamc.strings.log.listeners.SignListener;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileWriter;
 
+/**
+ * Handles all logging.
+ */
 public class LogManager {
 
     private final Strings strings;
 
-    private final boolean doChatLogging;
-    private final boolean doCommandLogging;
-    private final boolean doFilterLogging;
-    private final boolean doSignLogging;
-    private final boolean doDirectMessageLogging;
-
-    private File chatFile;
-    private File commandFile;
-    private File filterFile;
-    private File signFile;
-    private File directMessageFile;
-
-    public LogManager(Strings strings) {
-
+    public LogManager(@NotNull Strings strings) {
         this.strings = strings;
-        FileConfiguration config = strings.files().getLogsFileConfig();
-
-        doChatLogging = load(config, "chat-log", LogType.CHAT);
-        if(doChatLogging) {
-            register(new LogChatListener(this));
-        }
-
-        doCommandLogging = load(config, "command-log", LogType.COMMAND);
-        if(doCommandLogging) {
-            register(new CommandListener(this));
-        }
-
-        doFilterLogging = load(config, "filter-log", LogType.FILTER);
-        if(doFilterLogging) {
-            register(new ChatFilterListener(this));
-        }
-
-        doSignLogging = load(config, "sign-log", LogType.SIGN);
-        if(doSignLogging) {
-            register(new SignListener(this));
-        }
-
-        doDirectMessageLogging = load(config, "dm-log", LogType.DIRECT_MESSAGE);
-        if(doDirectMessageLogging) {
-            register(new LogDirectMessageListener(this));
-        }
-
+        loadTypes(strings.files().getLogsFileConfig());
     }
 
-    public void log(LogType logType, String log) {
-        switch(logType) {
-            case CHAT -> {
-                if(doChatLogging) {
-                    write(chatFile, log);
-                }
-            }
-            case FILTER -> {
-                if(doFilterLogging) {
-                    write(filterFile, log);
-                }
-            }
-            case SIGN -> {
-                if(doSignLogging) {
-                    write(signFile, log);
-                }
-            }
-            case COMMAND -> {
-                if(doCommandLogging) {
-                    write(commandFile, log);
-                }
-            }
-            case DIRECT_MESSAGE -> {
-                if(doDirectMessageLogging) {
-                    write(directMessageFile, log);
-                }
-            }
+    /**
+     * Logs a message to a file, based on LogType, and if the LogType is enabled.
+     * @param type The LogType of the log.
+     * @param log The log message.
+     */
+    void log(@NotNull LogType type, @NotNull String log) {
+        if(type.isEnabled()) {
+            write(type.getFile(), log);
         }
     }
 
-    private void write(File file, String log) {
-        try(FileWriter fileWriter = new FileWriter(file, true)) {
-            fileWriter.write(log);
-            fileWriter.write(System.lineSeparator());
-        } catch(Exception ignored) {}
+    /**
+     * Writes a log to a file.
+     * @param file The file to write the log to.
+     * @param log The log message.
+     */
+    private synchronized void write(@NotNull File file, @NotNull String log) {
+        strings.async(() -> {
+            try(FileWriter fileWriter = new FileWriter(file, true)) {
+                fileWriter.write(log);
+                fileWriter.write(System.lineSeparator());
+            } catch(Exception e) {
+                strings.warning("Failed to write log to file: " + file.getAbsolutePath());
+                strings.warning("Error: " + e.getMessage());
+            }
+        });
     }
 
-    private boolean load(FileConfiguration config, String configOption, LogType type) {
-        if(!config.getBoolean(configOption)) {
-            return false;
+    private void loadTypes(@NotNull FileConfiguration config) {
+        for(LogType type : LogType.TYPES) {
+            type.setEnabled(config.getBoolean(type.getConfigKey()));
+            if(type.isEnabled()) {
+                register(type.createListener(this));
+            }
+
+            File file = new File(strings.getDataFolder(), type.getPath());
+            prepareFile(file);
+            type.setFile(file);
         }
-
-        switch(type) {
-            case DIRECT_MESSAGE -> {
-                directMessageFile = new File(strings.getDataFolder(), "/logs/direct-messages.txt");
-                prepareFile(directMessageFile);
-            }
-
-            case FILTER -> {
-                filterFile = new File(strings.getDataFolder(), "/logs/filtered-messages.txt");
-                prepareFile(filterFile);
-            }
-
-            case COMMAND -> {
-                commandFile = new File(strings.getDataFolder(), "/logs/commands.txt");
-                prepareFile(commandFile);
-            }
-
-            case SIGN -> {
-                signFile = new File(strings.getDataFolder(), "/logs/signs.txt");
-                prepareFile(signFile);
-            }
-
-            case CHAT -> {
-                chatFile = new File(strings.getDataFolder(), "/logs/chat.txt");
-                prepareFile(chatFile);
-            }
-        }
-        return true;
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void prepareFile(File file) {
+    private void prepareFile(@NotNull File file) {
         if(!file.exists()) {
             try {
                 file.getParentFile().mkdirs();
                 file.createNewFile();
             } catch(Exception e) {
-                Bukkit.getLogger().info("[Strings] Failed to create file \"" + file.getName() + "\"");
+                strings.warning("Failed to create file \"" + file.getName() + "\"");
             }
         }
     }
 
-    private void register(Listener listener) {
+    private void register(@NotNull Listener listener) {
         strings.getServer().getPluginManager().registerEvents(listener, strings);
     }
 

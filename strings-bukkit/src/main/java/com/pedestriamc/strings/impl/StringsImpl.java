@@ -4,7 +4,6 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.*;
-import com.pedestriamc.strings.api.platform.Platform;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.api.channel.Channel;
@@ -91,15 +90,11 @@ public final class StringsImpl implements StringsAPI {
     }
 
     public short getVersion() {
-        return strings.getPluginNum();
+        return Strings.PLUGIN_NUM;
     }
 
     public Messenger getMessenger() {
         return strings.getMessenger();
     }
 
-    @Override
-    public Platform getPlatform() {
-        return Platform.BUKKIT;
-    }
 }
