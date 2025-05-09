@@ -6,50 +6,23 @@ import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.*;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.Mentioner;
-import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.UserUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 public final class StringsImpl implements StringsAPI {
 
     private final Strings strings;
-    private final ChannelManager channelLoader;
     private final Mentioner mentioner;
     private final UserUtil userUtil;
 
     public StringsImpl(@NotNull Strings strings) {
         this.strings = strings;
-        channelLoader = strings.getChannelLoader();
         mentioner = strings.getMentioner();
         userUtil = strings.getUserUtil();
-    }
-
-    @Override
-    public Set<Channel> getChannels() {
-        return channelLoader.getChannels();
-    }
-
-    @Override
-    public Optional<Channel> getOptionalChannel(String name) {
-        return Optional.ofNullable(this.getChannel(name));
-    }
-
-    @Override
-    public @Nullable Channel getChannel(String name) {
-        return channelLoader.getChannel(name);
-    }
-
-    @Override
-    public Optional<StringsUser> getOptionalStringsUser(UUID uuid) {
-        return Optional.of(userUtil.getUser(uuid));
     }
 
     @Override

@@ -3,8 +3,9 @@ package com.pedestriamc.strings.api;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+
+import static org.jetbrains.annotations.ApiStatus.*;
 
 import java.util.UUID;
 
@@ -12,8 +13,6 @@ import java.util.UUID;
  * Static StringsAPI getter
  */
 public final class StringsProvider {
-
-    static final short VERSION = 6;
 
     private static StringsAPI api;
     private static UUID apiUuid;
@@ -43,14 +42,6 @@ public final class StringsProvider {
     }
 
     /**
-     * Provides a short of the API version.
-     * @return A short of the API version.
-     */
-    public static short getVersion() {
-        return VERSION;
-    }
-
-    /**
      * Tells if the get() method has been invoked.
      * @return A boolean.
      */
@@ -65,7 +56,7 @@ public final class StringsProvider {
      * @param api API Implementation
      * @param plugin Strings plugin
      */
-    @ApiStatus.Internal
+    @Internal
     static void register(@NotNull final StringsAPI api, final JavaPlugin plugin, final UUID uuid) throws IllegalStateException, SecurityException {
         if(StringsProvider.api != null) {
             throw new IllegalStateException("StringsProvider already initialized.");
@@ -85,7 +76,7 @@ public final class StringsProvider {
      * @hidden
      * @param uuid UUID from Strings
      */
-    @ApiStatus.Internal
+    @Internal
     static void unregister(final UUID uuid) throws IllegalStateException, SecurityException {
         if(StringsProvider.api == null) {
             throw new IllegalStateException("StringsProvider uninitialized.");

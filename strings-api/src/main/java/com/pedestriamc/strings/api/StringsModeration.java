@@ -5,7 +5,8 @@ import org.bukkit.entity.Player;
 /**
  * Provides methods to interact with the StringsModeration module.
  */
-public interface ModerationAPI {
+@SuppressWarnings("unused")
+public interface StringsModeration {
 
     /**
      * Checks if a Player is currently on a chat cooldown.

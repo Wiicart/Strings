@@ -1,14 +1,12 @@
 package com.pedestriamc.strings.api;
 
-import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
+import com.pedestriamc.strings.api.internal.StringsModerationRegistrar;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -28,39 +26,6 @@ public interface StringsAPI {
      * @return A short with the version.
      */
     short getVersion();
-
-    /**
-     * Provides a Set of all registered Channels.
-     * @return A populated Set.
-     */
-    @Deprecated
-    Set<Channel> getChannels();
-
-    /**
-     * Gets the Channel with the specified name if it exists.
-     * @param name The name of the Channel to search for.
-     * @return The Channel, if it exists.
-     */
-    @Deprecated
-    Optional<Channel> getOptionalChannel(String name);
-
-    /**
-     * Provides a Channel based off its name if it exists.
-     * Deprecated - use ChannelLoader#getChannel() instead.
-     * @param name The name to search under.
-     * @return A StringsChannel, if it exists.
-     */
-    @Nullable
-    @Deprecated
-    Channel getChannel(String name);
-
-    /**
-     * Provides an Optional of StringsUser based on UUID
-     * @param uuid The UUID of the Player.
-     * @return An Optional containing a StringsUser if the StringsUser exists.
-     */
-    @Deprecated
-    Optional<StringsUser> getOptionalStringsUser(UUID uuid);
 
     /**
      * Provides a StringsUser based off a UUID if it exists.
@@ -112,6 +77,19 @@ public interface StringsAPI {
      * @return The Strings Messenger instance
      */
     Messenger getMessenger();
+
+    /**
+     * Provides the StringsModeration instance, offering some moderation methods.
+     * @throws IllegalStateException Check if StringsModeration is available by checking if the plugin is enabled.
+     * @return The StringsModeration implementation.
+     */
+    default StringsModeration getModeration() throws IllegalStateException {
+        StringsModeration moderation = StringsModerationRegistrar.get();
+        if(moderation == null) {
+            throw new IllegalStateException("StringsModeration is not available.");
+        }
+        return moderation;
+    }
 
 }
 

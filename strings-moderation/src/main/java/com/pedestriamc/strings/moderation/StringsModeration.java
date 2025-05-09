@@ -1,6 +1,8 @@
 package com.pedestriamc.strings.moderation;
 
 import com.pedestriamc.strings.api.StringsProvider;
+import com.pedestriamc.strings.api.internal.APIRegistrar;
+import com.pedestriamc.strings.moderation.impl.APIImplementation;
 import com.pedestriamc.strings.moderation.listener.ReloadListener;
 import com.pedestriamc.strings.moderation.manager.ChatFilter;
 import com.pedestriamc.strings.moderation.manager.CooldownManager;
@@ -16,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.UUID;
 
 public final class StringsModeration extends JavaPlugin {
 
@@ -24,6 +27,8 @@ public final class StringsModeration extends JavaPlugin {
     private CooldownManager cooldownManager;
     private LinkFilter linkFilter;
     private RepetitionManager repetitionManager;
+
+    private UUID apiUuid;
 
     @Override
     public void onEnable() {
@@ -44,6 +49,8 @@ public final class StringsModeration extends JavaPlugin {
         config = YamlConfiguration.loadConfiguration(file);
 
         instantiate();
+        registerAPI();
+
         info("StringsModeration enabled.");
     }
 
@@ -56,6 +63,9 @@ public final class StringsModeration extends JavaPlugin {
         repetitionManager = null;
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
+        try {
+            APIRegistrar.unregister(apiUuid);
+        } catch(Exception ignored) {}
         info("StringsModeration disabled.");
     }
 
@@ -72,6 +82,15 @@ public final class StringsModeration extends JavaPlugin {
         repetitionManager = new RepetitionManager(this);
         registerListener(new ChatListener(this));
         registerListener(new ReloadListener(this));
+    }
+
+    private void registerAPI() {
+        apiUuid = UUID.randomUUID();
+        try {
+            APIRegistrar.register(new APIImplementation(this), apiUuid);
+        } catch(Exception ex) {
+            getLogger().warning("Failed to register StringsModeration API");
+        }
     }
 
     public void registerListener(Listener listener) {
