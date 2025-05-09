@@ -68,7 +68,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public boolean doUrlFilter() {
+    public boolean isUrlFiltering() {
         return false;
     }
 
@@ -78,7 +78,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public boolean doProfanityFilter() {
+    public boolean isProfanityFiltering() {
         return false;
     }
 
@@ -88,7 +88,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public boolean doCooldown() {
+    public boolean isCooldownEnabled() {
         return false;
     }
 

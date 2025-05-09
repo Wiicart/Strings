@@ -31,7 +31,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.event.Listener;
 
-import static com.pedestriamc.strings.configuration.ConfigurationOption.*;
+import static com.pedestriamc.strings.configuration.Option.*;
 
 /**
  * Registers CommandExecutors and Listeners
@@ -55,7 +55,7 @@ public class ClassRegistryManager {
     }
 
     private void registerCommands() {
-        Configuration config = strings.getConfigClass();
+        Configuration config = strings.getConfiguration();
 
         registerCommand("strings", new StringsCommand(strings), new StringsTabCompleter());
 

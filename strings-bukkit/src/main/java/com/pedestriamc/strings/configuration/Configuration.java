@@ -14,16 +14,16 @@ public class Configuration {
         this.config = config;
     }
 
-    private Object get(@NotNull ConfigurationOption option) {
+    private Object get(@NotNull Option option) {
         return config.get(option.getIdentifier());
     }
 
-    public boolean getBoolean(@NotNull ConfigurationOption option) {
+    public boolean getBoolean(@NotNull Option option) {
         return config.getBoolean(option.getIdentifier());
     }
 
     @Nullable
-    public String getString(@NotNull ConfigurationOption option) {
+    public String getString(@NotNull Option option) {
         String val = config.getString(option.getIdentifier());
         if(val == null && option.getDefault() instanceof String) {
             return option.getDefault().toString();
@@ -32,7 +32,7 @@ public class Configuration {
     }
 
     @Nullable
-    public String colored(@NotNull ConfigurationOption option) {
+    public String getColored(@NotNull Option option) {
         String str = getString(option);
         if(str != null) {
             return ChatColor.translateAlternateColorCodes('&', str);
@@ -40,7 +40,7 @@ public class Configuration {
         return null;
     }
 
-    public float getFloat(@NotNull ConfigurationOption option) {
+    public float getFloat(@NotNull Option option) {
         return (float) config.getDouble(option.getIdentifier());
     }
 
@@ -51,7 +51,7 @@ public class Configuration {
      * @param value The new value
      * @return True if the change is successful, false otherwise
      */
-    public boolean set(@NotNull ConfigurationOption option, @NotNull Object value) {
+    public boolean set(@NotNull Option option, @NotNull Object value) {
         if(value.getClass().equals(option.getType())) {
             config.set(option.getIdentifier(), value);
             return true;

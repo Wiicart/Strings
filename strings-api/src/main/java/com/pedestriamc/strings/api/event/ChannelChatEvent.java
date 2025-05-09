@@ -3,6 +3,7 @@ package com.pedestriamc.strings.api.event;
 import com.pedestriamc.strings.api.channel.Channel;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -21,6 +22,7 @@ public final class ChannelChatEvent extends AsyncPlayerChatEvent {
      * @param players the players to receive the message.
      * @param channel the channel which the message will be sent to
      */
+    @ApiStatus.Internal
     public ChannelChatEvent(boolean async, @NotNull Player who, @NotNull String message, @NotNull Set<Player> players, Channel channel) {
         super(async, who, message, players);
         this.channel = channel;

@@ -217,7 +217,7 @@ public final class ChannelFileReader {
     }
 
     private void log(String message) {
-        strings.getLogger().info(message);
+        strings.info(message);
     }
 
 }

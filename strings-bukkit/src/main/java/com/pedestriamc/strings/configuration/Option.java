@@ -2,7 +2,7 @@ package com.pedestriamc.strings.configuration;
 
 import java.util.List;
 
-public enum ConfigurationOption {
+public enum Option {
 
     PROCESS_CHATCOLOR("process-in-chat-colors", true, Boolean.class),
     ENABLE_CHATCOLOR_COMMAND("enable-chatcolor", true, Boolean.class),
@@ -31,18 +31,18 @@ public enum ConfigurationOption {
     MSG_ENABLED("msg-enabled", true, Boolean.class);
 
 
-    private final String option;
+    private final String key;
     private final Object defaultValue;
     private final Class<?> type;
 
-    ConfigurationOption(String option, Object defaultValue, Class<?> type) {
-        this.option = option;
+    Option(String key, Object defaultValue, Class<?> type) {
+        this.key = key;
         this.defaultValue = defaultValue;
         this.type = type;
     }
 
     public String getIdentifier() {
-        return option;
+        return key;
     }
 
     /**

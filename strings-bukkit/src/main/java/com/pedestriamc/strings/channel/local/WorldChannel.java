@@ -88,9 +88,9 @@ public class WorldChannel extends AbstractChannel implements LocalChannel {
         map.put("format", this.getFormat());
         map.put("default-color", this.getDefaultColor());
         map.put("call-event", String.valueOf(this.isCallEvent()));
-        map.put("filter-profanity", String.valueOf(this.doProfanityFilter()));
-        map.put("block-urls", String.valueOf(this.doUrlFilter()));
-        map.put("cooldown", String.valueOf(this.doCooldown()));
+        map.put("filter-profanity", String.valueOf(this.isProfanityFiltering()));
+        map.put("block-urls", String.valueOf(this.isUrlFiltering()));
+        map.put("cooldown", String.valueOf(this.isCooldownEnabled()));
         map.put("type", String.valueOf(this.getType()));
         map.put("membership", String.valueOf(this.getMembership()));
         map.put("priority", String.valueOf(this.getPriority()));

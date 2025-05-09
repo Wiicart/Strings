@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.listeners;
 
 import com.pedestriamc.strings.configuration.Configuration;
-import com.pedestriamc.strings.configuration.ConfigurationOption;
+import com.pedestriamc.strings.configuration.Option;
 import com.pedestriamc.strings.user.UserUtil;
 import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.Strings;
@@ -24,10 +24,10 @@ public class JoinListener implements Listener {
         userUtil = strings.getUserUtil();
         serverMessages = strings.getServerMessages();
 
-        Configuration configuration = strings.getConfigClass();
-        modifyJoinMessage = configuration.getBoolean(ConfigurationOption.CUSTOM_JOIN_LEAVE);
-        doMotd = configuration.getBoolean(ConfigurationOption.ENABLE_MOTD);
-        doJoinLeaveMessage = configuration.getBoolean(ConfigurationOption.JOIN_LEAVE);
+        Configuration configuration = strings.getConfiguration();
+        modifyJoinMessage = configuration.getBoolean(Option.CUSTOM_JOIN_LEAVE);
+        doMotd = configuration.getBoolean(Option.ENABLE_MOTD);
+        doJoinLeaveMessage = configuration.getBoolean(Option.JOIN_LEAVE);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

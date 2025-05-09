@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.listeners;
 
 import com.pedestriamc.strings.configuration.Configuration;
-import com.pedestriamc.strings.configuration.ConfigurationOption;
+import com.pedestriamc.strings.configuration.Option;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.UserUtil;
 import com.pedestriamc.strings.misc.ServerMessages;
@@ -22,9 +22,9 @@ public class LeaveListener implements Listener {
         userUtil = strings.getUserUtil();
         serverMessages = strings.getServerMessages();
 
-        Configuration config = strings.getConfigClass();
-        modifyLeaveMessage = config.getBoolean(ConfigurationOption.JOIN_LEAVE);
-        doJoinLeaveMessage = config.getBoolean(ConfigurationOption.CUSTOM_JOIN_LEAVE);
+        Configuration config = strings.getConfiguration();
+        modifyLeaveMessage = config.getBoolean(Option.JOIN_LEAVE);
+        doJoinLeaveMessage = config.getBoolean(Option.CUSTOM_JOIN_LEAVE);
     }
 
     @EventHandler

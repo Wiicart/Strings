@@ -118,9 +118,9 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
         map.put("format", getFormat());
         map.put("default-color", getDefaultColor());
         map.put("call-event", String.valueOf(isCallEvent()));
-        map.put("filter-profanity", String.valueOf(doProfanityFilter()));
-        map.put("block-urls", String.valueOf(doUrlFilter()));
-        map.put("cooldown", String.valueOf(doCooldown()));
+        map.put("filter-profanity", String.valueOf(isProfanityFiltering()));
+        map.put("block-urls", String.valueOf(isUrlFiltering()));
+        map.put("cooldown", String.valueOf(isCooldownEnabled()));
         map.put("type", String.valueOf(getType()));
         map.put("membership", String.valueOf(getMembership()));
         map.put("distance", String.valueOf(distance));

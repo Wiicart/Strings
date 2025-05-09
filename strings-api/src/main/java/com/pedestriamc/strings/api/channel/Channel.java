@@ -85,7 +85,7 @@ public interface Channel extends Comparable<Channel> {
      *
      * @return If the Channel does URL filtering.
      */
-    boolean doUrlFilter();
+    boolean isUrlFiltering();
 
     /**
      * Sets if the channel should do URL filtering.
@@ -97,7 +97,7 @@ public interface Channel extends Comparable<Channel> {
      * Tells if the Channel requires profanity filtering.
      * @return If the Channel does profanity filtering.
      */
-    boolean doProfanityFilter();
+    boolean isProfanityFiltering();
 
     /**
      * Sets if the Channel should preform profanity filtering.
@@ -109,7 +109,7 @@ public interface Channel extends Comparable<Channel> {
      * Tells if the Channel requires a chat cool-down.
      * @return If the Channel does a chat cooldown.
      */
-    boolean doCooldown();
+    boolean isCooldownEnabled();
 
     /**
      * Sets if the Channel should do cool-downs.

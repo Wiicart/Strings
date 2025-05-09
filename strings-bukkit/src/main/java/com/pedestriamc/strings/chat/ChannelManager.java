@@ -74,7 +74,7 @@ public final class ChannelManager implements ChannelLoader {
         Objects.requireNonNull(channel, "Channel cannot be null");
         String channelName = channel.getName();
         if(channels.containsKey(channelName)) {
-            log("A Channel with the name '" + channelName + "' already exists, channels with the same name cannot be registered.");
+            strings.info("A Channel with the name '" + channelName + "' already exists, channels with the same name cannot be registered.");
             return;
         }
 
@@ -83,7 +83,7 @@ public final class ChannelManager implements ChannelLoader {
         }
 
         channels.put(channel.getName(), channel);
-        log("Channel '" + channel.getName() + "' registered.");
+        strings.info("Channel '" + channel.getName() + "' registered.");
     }
 
     /**
@@ -142,7 +142,7 @@ public final class ChannelManager implements ChannelLoader {
     public void saveChannel(@NotNull Channel channel) {
         Objects.requireNonNull(channel, "Cannot save null channel");
         if (channel.getType() == Type.PROTECTED) {
-            log("Unable to save protected channels, they must be modified in channels.yml");
+            strings.info("Unable to save protected channels, they must be modified in channels.yml");
             return;
         }
 
@@ -168,10 +168,6 @@ public final class ChannelManager implements ChannelLoader {
             case "helpop" -> { return new HelpOPChannel(strings, data); }
             default -> throw new UnsupportedOperationException("Unknown channel type: " + type + ".");
         }
-    }
-
-    private void log(String message) {
-        strings.getLogger().info(message);
     }
 
     @Contract(value = " -> new", pure = true)

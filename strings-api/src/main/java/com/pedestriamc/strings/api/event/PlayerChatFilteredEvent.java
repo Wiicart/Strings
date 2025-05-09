@@ -3,6 +3,7 @@ package com.pedestriamc.strings.api.event;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public final class PlayerChatFilteredEvent extends Event {
     private final String filteredMessage;
     private final List<String> filteredElements;
 
+    @ApiStatus.Internal
     public PlayerChatFilteredEvent(Player player, String originalMessage, String filteredMessage, List<String> filteredElements) {
         this.player = player;
         this.originalMessage = originalMessage;

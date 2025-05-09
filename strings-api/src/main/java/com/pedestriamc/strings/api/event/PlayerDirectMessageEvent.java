@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,6 +24,7 @@ public final class PlayerDirectMessageEvent extends Event implements Cancellable
      * @param recipient The recipient of the direct message.
      * @param message The message being sent.
      */
+    @ApiStatus.Internal
     public PlayerDirectMessageEvent(Player sender, Player recipient, String message) {
         this.sender = sender;
         this.recipient = recipient;

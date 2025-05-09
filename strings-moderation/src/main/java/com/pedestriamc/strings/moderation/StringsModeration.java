@@ -27,17 +27,15 @@ public final class StringsModeration extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        try {
-            StringsProvider.get();
-        } catch (IllegalStateException e) {
-            info("Failed to connect to Strings API, disabling.");
+        if(!StringsProvider.isEnabled()) {
+            getLogger().warning("Failed to connect to Strings API, disabling.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
         Plugin plugin = getServer().getPluginManager().getPlugin("Strings");
         if(plugin == null) {
-            info("Failed to get Strings config file, disabling.");
+            getLogger().warning("Failed to get Strings config file, disabling.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -56,6 +54,8 @@ public final class StringsModeration extends JavaPlugin {
         cooldownManager = null;
         linkFilter = null;
         repetitionManager = null;
+        HandlerList.unregisterAll(this);
+        getServer().getScheduler().cancelTasks(this);
         info("StringsModeration disabled.");
     }
 
@@ -63,9 +63,6 @@ public final class StringsModeration extends JavaPlugin {
         onDisable();
         onLoad();
         onEnable();
-        HandlerList.unregisterAll(this);
-        getServer().getScheduler().cancelTasks(this);
-
     }
 
     private void instantiate() {

@@ -151,7 +151,7 @@ public class HelpOPChannel extends ProtectedChannel {
     }
 
     @Override
-    public boolean doUrlFilter() {
+    public boolean isUrlFiltering() {
         return urlFilter;
     }
 
@@ -161,7 +161,7 @@ public class HelpOPChannel extends ProtectedChannel {
     }
 
     @Override
-    public boolean doProfanityFilter() {
+    public boolean isProfanityFiltering() {
         return profanityFilter;
     }
 

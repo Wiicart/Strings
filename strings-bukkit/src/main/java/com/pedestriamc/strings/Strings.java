@@ -1,8 +1,9 @@
 package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.api.StringsAPI;
+import com.pedestriamc.strings.api.StringsAPIRegistrar;
 import com.pedestriamc.strings.api.StringsProvider;
-import com.pedestriamc.strings.api.event.StringsReloadEvent;
+import com.pedestriamc.strings.api.event.StringsReloader;
 import com.pedestriamc.strings.placeholder.StringsPlaceholderExpansion;
 import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.chat.Mentioner;
@@ -67,7 +68,7 @@ public final class Strings extends JavaPlugin {
         fileManager = new FileManager(this);
         determineEnvironment();
         instantiateObjects();
-        setupAPI();
+        registerAPI();
     }
 
     @Override
@@ -87,23 +88,24 @@ public final class Strings extends JavaPlugin {
     @Override
     public void onDisable() {
         logOutAll();
-        this.userUtil = null;
-        this.serverMessages = null;
-        this.playerDirectMessenger = null;
-        this.channelLoader = null;
-        this.autoBroadcasts = null;
-        this.mentioner = null;
-        this.logManager = null;
-        this.fileManager = null;
+        userUtil = null;
+        serverMessages = null;
+        playerDirectMessenger = null;
+        channelLoader = null;
+        autoBroadcasts = null;
+        mentioner = null;
+        logManager = null;
+        fileManager = null;
 
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
         getServer().getServicesManager().unregister(StringsAPI.class, stringsImpl);
+        stringsImpl = null;
 
         try {
-            StringsProvider.unregister(apiUUID);
+            StringsAPIRegistrar.unregister(apiUUID);
         } catch(IllegalStateException | SecurityException ignored) {}
-        this.stringsImpl = null;
+
         info("[Strings] Disabled");
     }
 
@@ -111,7 +113,7 @@ public final class Strings extends JavaPlugin {
         onDisable();
         onLoad();
         onEnable();
-        getServer().getPluginManager().callEvent(new StringsReloadEvent());
+        getServer().getPluginManager().callEvent(StringsReloader.createEvent());
     }
 
     private void loadMetrics() {
@@ -205,15 +207,15 @@ public final class Strings extends JavaPlugin {
                 getServer().getLogger().info("+---------------------------------+");
             }
         } catch(IOException a) {
-            getServer().getLogger().info("[Strings] Unable to check for updates.");
+            warning("Unable to check for updates.");
         }
     }
 
-    private void setupAPI() {
+    private void registerAPI() {
         apiUUID = UUID.randomUUID();
         stringsImpl = new StringsImpl(this);
         try {
-            StringsProvider.register(stringsImpl, this, apiUUID);
+            StringsAPIRegistrar.register(stringsImpl, this, apiUUID);
         } catch(IllegalStateException a) {
             info("Failed to register StringsAPI");
         }
@@ -272,7 +274,7 @@ public final class Strings extends JavaPlugin {
         return messenger;
     }
 
-    public Configuration getConfigClass() {
+    public Configuration getConfiguration() {
         return configClass;
     }
 

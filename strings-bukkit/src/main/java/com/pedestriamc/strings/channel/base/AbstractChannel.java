@@ -8,7 +8,7 @@ import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.chat.MessageProcessor;
-import com.pedestriamc.strings.configuration.ConfigurationOption;
+import com.pedestriamc.strings.configuration.Option;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -67,7 +67,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         this.priority = priority;
 
         messageProcessor = new MessageProcessor(strings, this);
-        mentionsEnabled = strings.getConfigClass().getBoolean(ConfigurationOption.ENABLE_MENTIONS);
+        mentionsEnabled = strings.getConfiguration().getBoolean(Option.ENABLE_MENTIONS);
         members = new HashSet<>();
         monitors = new HashSet<>();
     }
@@ -149,9 +149,9 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         map.put("format", getFormat());
         map.put("default-color", getDefaultColor());
         map.put("call-event", String.valueOf(isCallEvent()));
-        map.put("filter-profanity", String.valueOf(doProfanityFilter()));
-        map.put("block-urls", String.valueOf(doUrlFilter()));
-        map.put("cooldown", String.valueOf(doCooldown()));
+        map.put("filter-profanity", String.valueOf(isProfanityFiltering()));
+        map.put("block-urls", String.valueOf(isUrlFiltering()));
+        map.put("cooldown", String.valueOf(isCooldownEnabled()));
         map.put("type", String.valueOf(getType()));
         map.put("membership", String.valueOf(getMembership()));
         map.put("priority", String.valueOf(getPriority()));
@@ -227,7 +227,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public boolean doUrlFilter() {
+    public boolean isUrlFiltering() {
         return doUrlFilter;
     }
 
@@ -237,7 +237,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public boolean doProfanityFilter() {
+    public boolean isProfanityFiltering() {
         return doProfanityFilter;
     }
 
@@ -247,7 +247,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public boolean doCooldown() {
+    public boolean isCooldownEnabled() {
         return this.doCooldown;
     }
 

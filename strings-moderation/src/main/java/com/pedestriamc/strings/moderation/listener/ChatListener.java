@@ -52,7 +52,7 @@ public class ChatListener implements Listener {
         Channel channel = event.getChannel();
         String message = event.getMessage();
         if(
-                channel.doCooldown()
+                channel.isCooldownEnabled()
                 && !player.hasPermission("strings.chat.bypasscooldown") &&
                 noPermOrAdmin(player, "strings.chat.bypasscooldown")
                 && cooldownManager.isOnCooldown(player)
@@ -72,11 +72,11 @@ public class ChatListener implements Listener {
 
         if(noPermOrAdmin(player, "strings.chat.filterbypass")) {
             String original = message;
-            if(channel.doUrlFilter()) {
+            if(channel.isUrlFiltering()) {
                 message = linkFilter.filter(event.getMessage(), player);
             }
 
-            if(channel.doProfanityFilter()) {
+            if(channel.isProfanityFiltering()) {
                 ChatFilter.FilteredChat filtered = chatFilter.filter(message);
                 if(!filtered.message().equals(message)) {
                     messenger.sendMessage(Message.BANNED_WORD, player);

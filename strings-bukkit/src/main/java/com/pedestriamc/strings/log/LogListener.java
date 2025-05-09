@@ -36,7 +36,7 @@ class LogListener {
             String log = "["
                     + new Date() + "] Player "
                     + event.getPlayer().getName()
-                    + " updated or placed a sign with the following content: "
+                    + " updated or placed a sign: "
                     + Arrays.toString(event.getLines());
 
             logManager.log(LogType.SIGN, log);
@@ -56,7 +56,7 @@ class LogListener {
             String log = "["
                     + new Date() + "] Player "
                     + event.getSender().getName()
-                    + " sent a message to player "
+                    + " -> "
                     + event.getRecipient().getName()
                     + ": \""
                     + event.getMessage()
@@ -101,7 +101,7 @@ class LogListener {
             String log = "["
                     + new Date() + "] Player "
                     + event.getPlayer().getName()
-                    + " issued the following command: \""
+                    + " issued command: \""
                     + event.getMessage()
                     + "\"";
             logManager.log(LogType.COMMAND, log);

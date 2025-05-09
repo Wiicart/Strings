@@ -2,7 +2,7 @@ package com.pedestriamc.strings.misc;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.configuration.Configuration;
-import com.pedestriamc.strings.configuration.ConfigurationOption;
+import com.pedestriamc.strings.configuration.Option;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.UserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -25,9 +25,9 @@ public class ServerMessages {
         userUtil = strings.getUserUtil();
         usePAPI = strings.usingPlaceholderAPI();
 
-        Configuration config = strings.getConfigClass();
-        joinMessageTemplate = config.getString(ConfigurationOption.JOIN_MESSAGE);
-        leaveMessageTemplate = config.getString(ConfigurationOption.LEAVE_MESSAGE);
+        Configuration config = strings.getConfiguration();
+        joinMessageTemplate = config.getString(Option.JOIN_MESSAGE);
+        leaveMessageTemplate = config.getString(Option.LEAVE_MESSAGE);
         motd = new ArrayList<>();
         List<?> list = strings.getConfig().getList("motd");
         if(list != null) {

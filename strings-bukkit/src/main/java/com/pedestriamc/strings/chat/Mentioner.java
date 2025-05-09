@@ -1,14 +1,13 @@
 package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.configuration.Configuration;
+import com.pedestriamc.strings.configuration.Option;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.UserUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,21 +22,19 @@ public class Mentioner {
     private final String format;
     private Sound sound;
 
-    @SuppressWarnings("DataFlowIssue")
     public Mentioner(@NotNull Strings strings)
     {
         this.userUtil = strings.getUserUtil();
 
-        FileConfiguration config = strings.getConfig();
-        pitch = (float) config.getDouble("mention-pitch", 0.594604F);
-        volume = (float) config.getDouble("mention-vol", 10F);
-        format = ChatColor.translateAlternateColorCodes(
-                '&',
-                config.getString("mention-format", "&e%sender% mentioned you."));
+        Configuration config = strings.getConfiguration();
+        pitch = config.getFloat(Option.MENTION_PITCH);
+        volume = config.getFloat(Option.MENTION_VOLUME);
+        format = config.getColored(Option.MENTION_FORMAT);
+
         try {
-            sound = Sound.valueOf(config.getString("mention-sound"));
+            sound = Sound.valueOf(config.getString(Option.MENTION_SOUND));
         } catch(IllegalArgumentException e) {
-            Bukkit.getLogger().info("[Strings] Invalid sound-type for mentions in config.yml, resorting to: BLOCK_NOTE_BLOCK_PLING");
+            strings.warning("Invalid sound-type for mentions in config.yml, defaulting to: BLOCK_NOTE_BLOCK_PLING");
             sound = Sound.BLOCK_NOTE_BLOCK_PLING;
         }
     }

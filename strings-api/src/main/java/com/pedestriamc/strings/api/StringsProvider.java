@@ -3,6 +3,7 @@ package com.pedestriamc.strings.api;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -12,7 +13,7 @@ import java.util.UUID;
  */
 public final class StringsProvider {
 
-    static final short VERSION = 5;
+    static final short VERSION = 6;
 
     private static StringsAPI api;
     private static UUID apiUuid;
@@ -34,12 +35,38 @@ public final class StringsProvider {
     }
 
     /**
+     * Tells if the Strings plugin is loaded, and if the API is registered.
+     * @return A boolean.
+     */
+    public static boolean isEnabled() {
+        return api != null;
+    }
+
+    /**
+     * Provides a short of the API version.
+     * @return A short of the API version.
+     */
+    public static short getVersion() {
+        return VERSION;
+    }
+
+    /**
+     * Tells if the get() method has been invoked.
+     * @return A boolean.
+     */
+    public static boolean isUsed() {
+        return invoked;
+    }
+
+    /**
      * For internal use only.
+     * Registers the StringsAPI implementation
      * @hidden
      * @param api API Implementation
      * @param plugin Strings plugin
      */
-    public static void register(@NotNull final StringsAPI api, final JavaPlugin plugin, final UUID uuid) throws IllegalStateException, SecurityException {
+    @ApiStatus.Internal
+    static void register(@NotNull final StringsAPI api, final JavaPlugin plugin, final UUID uuid) throws IllegalStateException, SecurityException {
         if(StringsProvider.api != null) {
             throw new IllegalStateException("StringsProvider already initialized.");
         }
@@ -54,10 +81,12 @@ public final class StringsProvider {
 
     /**
      * For internal use only.
+     * Unregisters the StringsAPI implementation
      * @hidden
      * @param uuid UUID from Strings
      */
-    public static void unregister(final UUID uuid) throws IllegalStateException, SecurityException {
+    @ApiStatus.Internal
+    static void unregister(final UUID uuid) throws IllegalStateException, SecurityException {
         if(StringsProvider.api == null) {
             throw new IllegalStateException("StringsProvider uninitialized.");
         }
@@ -66,17 +95,5 @@ public final class StringsProvider {
         }
         StringsProvider.api = null;
         Bukkit.getLogger().info("[Strings] Strings API unloaded.");
-    }
-
-    /**
-     * Provides a short of the API version.
-     * @return A short of the API version.
-     */
-    public static short getVersion() {
-        return VERSION;
-    }
-
-    public static boolean isUsed() {
-        return invoked;
     }
 }

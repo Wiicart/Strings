@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.pedestriamc.strings.configuration.ConfigurationOption.*;
+import static com.pedestriamc.strings.configuration.Option.*;
 
 public class MessageProcessor {
 
@@ -35,11 +35,11 @@ public class MessageProcessor {
         this.channel = channel;
         userUtil = strings.getUserUtil();
         logger = strings.getLogger();
-        Configuration config = strings.getConfigClass();
+        Configuration config = strings.getConfiguration();
         usingPlaceholderAPI = strings.usingPlaceholderAPI();
         processingMessagePlaceholders = config.getBoolean(PROCESS_PLACEHOLDERS) && usingPlaceholderAPI;
         parsingMessageChatColors = config.getBoolean(PROCESS_CHATCOLOR);
-        mentionColor = config.colored(MENTION_COLOR);
+        mentionColor = config.getColored(MENTION_COLOR);
     }
 
     /**
@@ -99,12 +99,14 @@ public class MessageProcessor {
                 sb.append(segment);
                 continue;
             }
+
             for(Player p : Bukkit.getOnlinePlayers()) {
                 if(!userUtil.getUser(p).isMentionsEnabled() || !segment.contains(p.getName())) {
                     continue;
                 }
                 segment = segment.replace("@" + p.getName(), mentionColor + "@" + p.getName() + ChatColor.RESET + color);
             }
+
             if(sender.hasPermission("strings.mention.all") && segment.contains("@everyone")) {
                 segment = segment.replace("@everyone", mentionColor + "@everyone" + ChatColor.RESET + color);
             }

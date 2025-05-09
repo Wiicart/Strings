@@ -4,6 +4,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
@@ -14,6 +15,7 @@ public final class Messenger {
     private final EnumMap<Message, Object> enumMap = new EnumMap<>(Message.class);
     private final String prefix;
 
+    @ApiStatus.Internal
     public Messenger(FileConfiguration config) {
         for(Message msg : Message.values()) {
             String key = msg.getKey();
