@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.api;
 
 import com.pedestriamc.strings.api.channel.ChannelLoader;
-import com.pedestriamc.strings.api.internal.StringsModerationRegistrar;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.entity.Player;
@@ -77,19 +76,6 @@ public interface StringsAPI {
      * @return The Strings Messenger instance
      */
     Messenger getMessenger();
-
-    /**
-     * Provides the StringsModeration instance, offering some moderation methods.
-     * @throws IllegalStateException Check if StringsModeration is available by checking if the plugin is enabled.
-     * @return The StringsModeration implementation.
-     */
-    default StringsModeration getModeration() throws IllegalStateException {
-        StringsModeration moderation = StringsModerationRegistrar.get();
-        if(moderation == null) {
-            throw new IllegalStateException("StringsModeration is not available.");
-        }
-        return moderation;
-    }
 
 }
 

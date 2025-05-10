@@ -1,10 +1,10 @@
 package com.pedestriamc.strings.api.internal;
 
 import com.pedestriamc.strings.api.StringsModeration;
+import com.pedestriamc.strings.api.StringsProvider;
 import org.bukkit.Bukkit;
 
 import java.lang.reflect.Method;
-import java.util.UUID;
 
 // Reflection-based registrar, based off LuckPerms implementation.
 public final class APIRegistrar {
@@ -14,10 +14,10 @@ public final class APIRegistrar {
 
     static {
         try {
-            REGISTER = StringsModerationRegistrar.class.getDeclaredMethod("register", StringsModeration.class, UUID.class);
+            REGISTER = StringsProvider.class.getDeclaredMethod("registerModeration", StringsModeration.class);
             REGISTER.setAccessible(true);
 
-            UNREGISTER = StringsModerationRegistrar.class.getDeclaredMethod("unregister", UUID.class);
+            UNREGISTER = StringsProvider.class.getDeclaredMethod("unregisterModeration");
             UNREGISTER.setAccessible(true);
         } catch(NoSuchMethodException e) {
             throw new ExceptionInInitializerError(e);
@@ -26,18 +26,20 @@ public final class APIRegistrar {
 
     private APIRegistrar() {}
 
-    public static void register(com.pedestriamc.strings.api.StringsModeration moderation, UUID uuid) {
+    public static void register(com.pedestriamc.strings.api.StringsModeration moderation) {
         try {
-            REGISTER.invoke(null, moderation, uuid);
+            REGISTER.invoke(null, moderation);
+            Bukkit.getLogger().info("[StringsModeration] Registered with StringsAPI");
         } catch(Exception e) {
             Bukkit.getLogger().warning("[StringsModeration] Failed to register StringsModeration API");
             Bukkit.getLogger().warning("[StringsModeration] Error: " + e.getMessage());
         }
     }
 
-    public static void unregister(UUID uuid) {
+    public static void unregister() {
         try {
-            UNREGISTER.invoke(null, uuid);
+            UNREGISTER.invoke(null);
+            Bukkit.getLogger().info("[StringModeration] Unregistered from StringsAPI");
         } catch(Exception e) {
             Bukkit.getLogger().warning("[StringsModeration] Failed to register StringsModeration API");
             Bukkit.getLogger().warning("[StringsModeration] Error: " + e.getMessage());

@@ -18,7 +18,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.UUID;
 
 public final class StringsModeration extends JavaPlugin {
 
@@ -27,8 +26,6 @@ public final class StringsModeration extends JavaPlugin {
     private CooldownManager cooldownManager;
     private LinkFilter linkFilter;
     private RepetitionManager repetitionManager;
-
-    private UUID apiUuid;
 
     @Override
     public void onEnable() {
@@ -64,7 +61,7 @@ public final class StringsModeration extends JavaPlugin {
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
         try {
-            APIRegistrar.unregister(apiUuid);
+            APIRegistrar.unregister();
         } catch(Exception ignored) {}
         info("StringsModeration disabled.");
     }
@@ -85,9 +82,8 @@ public final class StringsModeration extends JavaPlugin {
     }
 
     private void registerAPI() {
-        apiUuid = UUID.randomUUID();
         try {
-            APIRegistrar.register(new APIImplementation(this), apiUuid);
+            APIRegistrar.register(new APIImplementation(this));
         } catch(Exception ex) {
             getLogger().warning("Failed to register StringsModeration API");
         }

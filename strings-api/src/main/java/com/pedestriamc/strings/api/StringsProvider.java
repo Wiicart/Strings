@@ -17,6 +17,7 @@ public final class StringsProvider {
     private static StringsAPI api;
     private static UUID apiUuid;
     private static boolean invoked = false;
+    private static StringsModeration moderation;
 
     // Class should not be instantiated.
     private StringsProvider() {}
@@ -31,6 +32,19 @@ public final class StringsProvider {
         }
         invoked = true;
         return StringsProvider.api;
+    }
+
+    /**
+     * Provides the StringsModeration instance, offering some moderation methods.
+     * @throws IllegalStateException Check if StringsModeration is available by checking if the plugin is enabled.
+     * @return The StringsModeration implementation.
+     */
+    public static StringsModeration getModeration() {
+        if(moderation == null) {
+            throw new IllegalStateException("Strings Moderation is not available.");
+        }
+        invoked = true;
+        return StringsProvider.moderation;
     }
 
     /**
@@ -87,4 +101,15 @@ public final class StringsProvider {
         StringsProvider.api = null;
         Bukkit.getLogger().info("[Strings] Strings API unloaded.");
     }
+
+    @Internal
+    static void registerModeration(StringsModeration moderation) {
+        StringsProvider.moderation = moderation;
+    }
+
+    @Internal
+    static void unregisterModeration() {
+        StringsProvider.moderation = null;
+    }
+
 }
