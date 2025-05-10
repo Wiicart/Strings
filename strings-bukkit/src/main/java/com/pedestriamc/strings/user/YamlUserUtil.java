@@ -53,7 +53,7 @@ public final class YamlUserUtil implements UserUtil {
     }
 
     @Override
-    public @NotNull CompletableFuture<User> loadUserAsync(@NotNull UUID uuid)
+    public @NotNull CompletableFuture<User> loadUserAsync(@NotNull final UUID uuid)
     {
         CompletableFuture<User> future = new CompletableFuture<>();
         strings.async(() -> {

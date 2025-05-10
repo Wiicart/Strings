@@ -13,13 +13,13 @@ public interface StringsModeration {
      * @param player The Player to check.
      * @return A boolean containing if the Player is on cooldown.
      */
-    boolean isOnCooldown(Player player);
+    boolean isOnCooldown(final Player player);
 
     /**
      * Starts a chat cooldown for a Player
      * @param player The Player to start the cooldown on.
      */
-    void startCooldown(Player player);
+    void startCooldown(final Player player);
 
     /**
      * Checks if the last message the player sent was the same.
@@ -27,6 +27,6 @@ public interface StringsModeration {
      * @param message The message
      * @return A boolean containing the value of if the last message is a duplicate.
      */
-    boolean isRepeating(Player player, String message);
+    boolean isRepeating(final Player player, final String message);
 
 }

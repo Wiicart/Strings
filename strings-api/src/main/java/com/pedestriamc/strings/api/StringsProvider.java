@@ -12,6 +12,7 @@ import java.util.UUID;
 /**
  * Static StringsAPI getter
  */
+@SuppressWarnings("unused")
 public final class StringsProvider {
 
     private static StringsAPI api;

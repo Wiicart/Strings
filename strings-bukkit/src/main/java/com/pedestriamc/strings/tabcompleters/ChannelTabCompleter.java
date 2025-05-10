@@ -26,14 +26,12 @@ public class ChannelTabCompleter extends AbstractTabCompleter {
             "join", "leave", "monitor", "unmonitor", "broadcast", "announce"
     );
 
+    private static final String HELP = "help";
+
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
         return switch (args.length) {
-            case 1 -> {
-                List<String> list = collect(getAllowedChannels(sender), CASES);
-                list.add("help");
-                yield filter(list, args[0]);
-            }
+            case 1 -> filter(collect(HELP, getAllowedChannels(sender), CASES), args[0]);
             case 2 -> {
                 if(CASES.contains(args[0].toLowerCase())) {
                     yield filter(getAllowedChannels(sender), args[1]);
