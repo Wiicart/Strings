@@ -20,7 +20,7 @@ public interface StringsUser {
      * @return A UUID.
      */
     @NotNull
-    UUID getUuid();
+    UUID getUniqueId();
 
     void message(@NotNull String message);
 
@@ -126,13 +126,19 @@ public interface StringsUser {
      * Tells if the StringsUser has mentions enabled.
      * @return A boolean if the User has mentions enabled or not.
      */
-    boolean mentionsEnabled();
+    boolean isMentionsEnabled();
 
     /**
      * Sets if the StringsUser has mentions enabled.
      * @param mentionsEnabled true/false if the StringsUser should have mentions enabled.
      */
     void setMentionsEnabled(boolean mentionsEnabled);
+
+    /**
+     * Provides a Set of Players that this User has ignored (for /msg).
+     * @return A populated Set.
+     */
+    Set<Player> getIgnoredPlayers();
 
     Player getPlayer();
 

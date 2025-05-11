@@ -4,7 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.UserUtil;
+import com.pedestriamc.strings.user.util.UserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import net.md_5.bungee.api.ChatColor;
@@ -84,32 +84,31 @@ public class MessageProcessor {
         return message;
     }
 
-    public String processMentions(Player sender, @NotNull String str)
-    {
+    public String processMentions(Player sender, @NotNull String str) {
         if(!str.contains("@")) {
             return str;
         }
 
+        String chatColor = userUtil.getUser(sender).getChatColor(channel);
         String[] splitStr = str.split("((?=@))"); //https://www.baeldung.com/java-split-string-keep-delimiters
         StringBuilder sb = new StringBuilder();
-        String color = "";
         for(String segment : splitStr) {
-            if(!segment.contains("@") ) {
-                color = org.bukkit.ChatColor.getLastColors(segment);
-                sb.append(segment);
+            if(!segment.contains("@")) {
+                sb.append(chatColor).append(segment);
                 continue;
+            }
+
+            if(sender.hasPermission("strings.mention.all") && segment.contains("@everyone")) {
+                segment = segment.replace("@everyone", mentionColor + "@everyone" + ChatColor.RESET + chatColor);
             }
 
             for(Player p : Bukkit.getOnlinePlayers()) {
                 if(!userUtil.getUser(p).isMentionsEnabled() || !segment.contains(p.getName())) {
                     continue;
                 }
-                segment = segment.replace("@" + p.getName(), mentionColor + "@" + p.getName() + ChatColor.RESET + color);
+                segment = segment.replace("@" + p.getName(), mentionColor + "@" + p.getName() + ChatColor.RESET + chatColor);
             }
 
-            if(sender.hasPermission("strings.mention.all") && segment.contains("@everyone")) {
-                segment = segment.replace("@everyone", mentionColor + "@everyone" + ChatColor.RESET + color);
-            }
             sb.append(segment);
         }
         return sb.toString();

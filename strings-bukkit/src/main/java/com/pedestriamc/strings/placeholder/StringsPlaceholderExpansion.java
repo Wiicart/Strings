@@ -4,7 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.channel.DefaultChannel;
-import com.pedestriamc.strings.user.UserUtil;
+import com.pedestriamc.strings.user.util.UserUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

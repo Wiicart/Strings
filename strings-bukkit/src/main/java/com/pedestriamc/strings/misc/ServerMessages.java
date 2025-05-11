@@ -4,7 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.configuration.Option;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.UserUtil;
+import com.pedestriamc.strings.user.util.UserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

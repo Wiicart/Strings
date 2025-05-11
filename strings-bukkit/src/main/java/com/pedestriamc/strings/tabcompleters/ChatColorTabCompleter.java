@@ -25,7 +25,7 @@ public class ChatColorTabCompleter extends AbstractTabCompleter {
             case 1 -> filter(COLORS, args[0]);
 
             case 2, 3, 4, 5 -> {
-                List<String> list = collect(STYLES, getPlayerNames());
+                List<String> list = combine(STYLES, getPlayerNames());
                 yield filter(list, args[1].toLowerCase());
             }
 

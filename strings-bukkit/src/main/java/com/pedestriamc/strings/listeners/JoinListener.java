@@ -2,7 +2,7 @@ package com.pedestriamc.strings.listeners;
 
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.configuration.Option;
-import com.pedestriamc.strings.user.UserUtil;
+import com.pedestriamc.strings.user.util.UserUtil;
 import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.Strings;
 import org.bukkit.entity.Player;

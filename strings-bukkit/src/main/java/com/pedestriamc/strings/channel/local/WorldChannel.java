@@ -27,7 +27,6 @@ public class WorldChannel extends AbstractChannel implements LocalChannel {
     public WorldChannel(@NotNull Strings strings, @NotNull ChannelData data) {
         super(
                 strings,
-                strings.getChannelLoader(),
                 data.getName(),
                 data.getDefaultColor(),
                 data.getFormat(),

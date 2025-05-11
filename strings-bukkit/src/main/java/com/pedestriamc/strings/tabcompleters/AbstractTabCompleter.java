@@ -40,7 +40,7 @@ abstract class AbstractTabCompleter implements TabCompleter {
      * @return A populated List<String>
      */
     @SafeVarargs
-    final @NotNull List<String> collect(@NotNull final Collection<String>... collections) {
+    final @NotNull List<String> combine(@NotNull final Collection<String>... collections) {
         List<String> list = new ArrayList<>();
         for(Collection<String> collection : collections) {
             list.addAll(collection);
@@ -55,8 +55,8 @@ abstract class AbstractTabCompleter implements TabCompleter {
      * @return A populated List<String>
      */
     @SafeVarargs
-    final @NotNull List<String> collect(@NotNull final String string, @NotNull final Collection<String>... collections) {
-        List<String> list = collect(collections);
+    final @NotNull List<String> combine(@NotNull final String string, @NotNull final Collection<String>... collections) {
+        List<String> list = combine(collections);
         list.add(string);
         return list;
     }

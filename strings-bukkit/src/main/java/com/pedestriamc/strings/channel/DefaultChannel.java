@@ -110,9 +110,4 @@ public final class DefaultChannel extends ProtectedChannel {
         return new HashSet<>(members);
     }
 
-    @Override
-    public void saveChannel() {
-        channelManager.saveChannel(this);
-    }
-
 }

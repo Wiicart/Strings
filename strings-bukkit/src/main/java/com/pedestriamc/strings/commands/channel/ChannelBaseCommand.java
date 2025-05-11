@@ -6,14 +6,18 @@ import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.commands.base.CommandBase;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.UserUtil;
+import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Map;
 import java.util.Objects;
@@ -113,7 +117,7 @@ public class ChannelBaseCommand implements CommandBase.CommandComponent {
             return true;
         }
 
-        if(channel.getType() == Type.PROTECTED || channel.getMembership() == Membership.PROTECTED) {
+        if(channel.getType() == Type.PROTECTED || channel.getMembership() == Membership.PROTECTED && !(channel instanceof DefaultChannel)) {
             messenger.sendMessage(PROTECTED_CHANNEL_UNSUPPORTED_OPERATION, sender);
             return true;
         }
@@ -125,7 +129,7 @@ public class ChannelBaseCommand implements CommandBase.CommandComponent {
         return false;
     }
 
-    private User getUser(CommandSender sender, String name) {
+    private @Nullable User getUser(CommandSender sender, String name) {
         Player p = Bukkit.getPlayer(name);
         if(p == null) {
             messenger.sendMessage(INVALID_PLAYER, Map.of("{player}", name), sender);
@@ -142,7 +146,8 @@ public class ChannelBaseCommand implements CommandBase.CommandComponent {
                 !sender.hasPermission("strings.channels.modifyplayers");
     }
 
-    private Map<String, String> channelPlaceholders(String name) {
+    @Contract(value = "_ -> new", pure = true)
+    private @NotNull @Unmodifiable Map<String, String> channelPlaceholders(String name) {
         return Map.of("{channel}", name);
     }
 

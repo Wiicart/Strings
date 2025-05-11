@@ -4,7 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.configuration.Option;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.UserUtil;
+import com.pedestriamc.strings.user.util.UserUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Sound;
@@ -37,6 +37,14 @@ public class Mentioner {
             strings.warning("Invalid sound-type for mentions in config.yml, defaulting to: BLOCK_NOTE_BLOCK_PLING");
             sound = Sound.BLOCK_NOTE_BLOCK_PLING;
         }
+    }
+
+    public static boolean hasMentionPermission(@NotNull Player player) {
+        return player.isOp() ||
+                player.hasPermission("*") ||
+                player.hasPermission("strings.*") ||
+                player.hasPermission("strings.mention") ||
+                player.hasPermission("strings.mention.all");
     }
 
     public void mention(@NotNull Player player, @NotNull Player sender)

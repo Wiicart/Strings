@@ -21,7 +21,6 @@ public final class StringChannel extends AbstractChannel {
     public StringChannel(@NotNull Strings strings, @NotNull ChannelData data) {
         super(
                 strings,
-                strings.getChannelLoader(),
                 data.getName(),
                 data.getDefaultColor(),
                 data.getFormat(),

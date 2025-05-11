@@ -3,10 +3,10 @@ package com.pedestriamc.strings.channel.base;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.channel.Membership;
+import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.chat.MessageProcessor;
 import com.pedestriamc.strings.configuration.Option;
 import net.md_5.bungee.api.ChatColor;
@@ -26,7 +26,6 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     private final Strings strings;
 
-    private final ChannelLoader channelLoader;
     private final MessageProcessor messageProcessor;
 
     private String name;
@@ -52,9 +51,8 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     protected static final String MESSAGE_PLACEHOLDER = "{message}";
     protected static final String DEFAULT_BROADCAST_FORMAT = "&8[&3Broadcast&8] &f{message}";
 
-    protected AbstractChannel(Strings strings, ChannelLoader channelLoader, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority, String broadcastFormat) {
+    protected AbstractChannel(Strings strings, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority, String broadcastFormat) {
         this.strings = strings;
-        this.channelLoader = channelLoader;
         this.name = name;
         this.defaultColor = defaultColor != null ? defaultColor : "&f";
         this.format = format;
@@ -95,7 +93,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         String template = messageProcessor.generateTemplate(player);
         String processedMessage = messageProcessor.processMessage(player, message);
 
-        if (mentionsEnabled && player.hasPermission("strings.*") || player.hasPermission("strings.mention")) {
+        if (mentionsEnabled && Mentioner.hasMentionPermission(player)) {
             processedMessage = messageProcessor.processMentions(player, processedMessage);
         }
 
@@ -187,14 +185,8 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    @Deprecated
-    public void saveChannel() {
-        channelLoader.saveChannel(this);
-    }
-
-    @Override
     public String getDefaultColor() {
-        return defaultColor;
+        return ChatColor.translateAlternateColorCodes('&', defaultColor);
     }
 
     @Override

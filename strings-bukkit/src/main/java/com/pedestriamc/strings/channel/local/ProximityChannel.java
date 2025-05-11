@@ -29,7 +29,6 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
     public ProximityChannel(@NotNull Strings strings, @NotNull ChannelData data) {
         super(
                 strings,
-                strings.getChannelLoader(),
                 data.getName(),
                 data.getDefaultColor(),
                 data.getFormat(),

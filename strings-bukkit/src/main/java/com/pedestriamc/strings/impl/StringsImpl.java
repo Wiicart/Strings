@@ -7,7 +7,7 @@ import com.pedestriamc.strings.api.*;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.UserUtil;
+import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,12 +26,12 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public StringsUser getStringsUser(UUID uuid) {
+    public @NotNull StringsUser getStringsUser(UUID uuid) {
         return userUtil.getUser(uuid);
     }
 
     @Override
-    public StringsUser getStringsUser(Player player) {
+    public @NotNull StringsUser getStringsUser(Player player) {
         return getStringsUser(player.getUniqueId());
     }
 

@@ -1,5 +1,6 @@
-package com.pedestriamc.strings.user;
+package com.pedestriamc.strings.user.util;
 
+import com.pedestriamc.strings.user.User;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

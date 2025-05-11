@@ -5,7 +5,7 @@ import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.event.PlayerDirectMessageEvent;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
-import com.pedestriamc.strings.user.UserUtil;
+import com.pedestriamc.strings.user.util.UserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

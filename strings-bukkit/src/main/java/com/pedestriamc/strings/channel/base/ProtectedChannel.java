@@ -143,11 +143,6 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public void saveChannel() {
-
-    }
-
-    @Override
     public boolean allows(@NotNull Permissible permissible) {
         return false;
     }

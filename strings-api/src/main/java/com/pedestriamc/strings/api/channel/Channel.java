@@ -174,13 +174,6 @@ public interface Channel extends Comparable<Channel> {
     int getPriority();
 
     /**
-     * Deprecated - use ChannelLoader.saveChannel(Channel channel) instead
-     * Saves the Channel to channels.yml
-     */
-    @Deprecated
-    void saveChannel();
-
-    /**
      * Returns if a player has permission to use the Channel.
      * @param permissible The player to check
      * @return If the player has permission

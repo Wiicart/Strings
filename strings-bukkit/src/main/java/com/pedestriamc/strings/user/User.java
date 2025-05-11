@@ -8,21 +8,24 @@ import com.pedestriamc.strings.chat.ChannelManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 /**
- * The User class is used to store information about players for this plugin.
- * It provides the data that the plugin stores on the player, and when available provides information from other plugins.
+ * Stores information about players for Strings.
+ * Defaults to Vault values where available.
  */
+@SuppressWarnings("unused")
 public final class User implements StringsUser {
 
     private final Strings strings;
@@ -33,6 +36,7 @@ public final class User implements StringsUser {
     private final String name;
     private final Set<Channel> channels;
     private final Set<Channel> monitoredChannels;
+    private final Set<Player> ignored;
     private String chatColor;
     private String prefix;
     private String suffix;
@@ -42,313 +46,35 @@ public final class User implements StringsUser {
     private final boolean retain;
 
     @Nullable
-    public static User of(StringsUser user) {
+    public static User of(final @NotNull StringsUser user) {
         if(user instanceof User u) {
             return u;
         }
         return null;
     }
 
-    /**
-     * The constructor for a User with no stored data.
-     * All values are default or null.
-     * @param uuid the User's UUID.  This should match the Player's UUID.
-     */
-    public User(Strings strings, UUID uuid, boolean retained) {
-        this(strings, uuid, null, null, null, null, null, null, true, null, retained);
-    }
-
-    /**
-     * The constructor for a User with values.
-     * @param uuid The User's UUID.
-     * @param chatColor The User's chat color.
-     * @param prefix The User's prefix.
-     * @param suffix The User's suffix.
-     * @param displayName The User's display name.
-     * @param channels The channels the User is a member of.
-     * @param activeChannel The User's active channel.
-     * @param mentionsEnabled If the user receives mentions or not.
-     */
-    public User(Strings strings, UUID uuid, String chatColor, String prefix, String suffix, String displayName, Set<Channel> channels, Channel activeChannel, boolean mentionsEnabled, Set<Channel> monitoredChannels,  boolean retained) {
-        this.strings = strings;
-        channelLoader = strings.getChannelLoader();
-        this.uuid = uuid;
-        this.player = Objects.requireNonNull(Bukkit.getPlayer(uuid));
-        this.chatColor = chatColor;
-        this.prefix = prefix;
-        this.suffix = suffix;
-        this.displayName = displayName;
-        this.mentionsEnabled = mentionsEnabled;
+    User(final @NotNull UserBuilder builder) {
+        this.strings = builder.strings;
+        this.channelLoader = strings.getChannelLoader();
+        this.uuid = builder.uuid;
+        this.retain = builder.retained;
+        this.player = Objects.requireNonNull(strings.getServer().getPlayer(uuid));
         this.name = player.getName();
-        this.activeChannel = activeChannel != null ? activeChannel : channelLoader.getDefaultChannel();
-        this.channels = Objects.requireNonNullElseGet(channels, HashSet::new);
-        this.monitoredChannels = Objects.requireNonNullElseGet(monitoredChannels, HashSet::new);
-        retain = retained;
+        this.chatColor = builder.chatColor;
+        this.prefix = builder.prefix;
+        this.suffix = builder.suffix;
+        this.displayName = builder.displayName;
+        this.activeChannel = builder.activeChannel != null ? builder.activeChannel : channelLoader.getDefaultChannel();
+        this.mentionsEnabled = builder.mentionsEnabled;
+        this.channels = Objects.requireNonNullElseGet(builder.channels, HashSet::new);
+        this.monitoredChannels = Objects.requireNonNullElseGet(builder.monitoredChannels, HashSet::new);
+        this.ignored = Objects.requireNonNullElseGet(builder.ignored, HashSet::new);
 
-        if(channels != null) {
-            for(Channel channel : channels) {
-                channel.addMember(this.player);
-            }
-        } else {
+        if(channels.isEmpty()) {
             joinChannel(channelLoader.getDefaultChannel());
         }
-    }
 
-    public void message(@NotNull String message) {
-        getPlayer().sendMessage(message);
-    }
-
-    /**
-     * Provides a Map containing all the User's information.
-     * @return The populated Map.
-     */
-    public Map<String, Object> getData() {
-        synchronized(this) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("chat-color", Objects.requireNonNullElse(chatColor, ""));
-            map.put("prefix", Objects.requireNonNullElse(prefix, ""));
-            map.put("suffix", Objects.requireNonNullElse(suffix, ""));
-            map.put("display-name", Objects.requireNonNullElse(displayName, ""));
-            map.put("active-channel", activeChannel == null ? "default" : activeChannel.getName());
-            map.put("channels", new ArrayList<>(getChannelNames()));
-            map.put("monitored-channels", new ArrayList<>(getMonitoredChannelNames()));
-            map.put("mentions-enabled", mentionsEnabled);
-            return map;
-        }
-    }
-
-    /**
-     * Provides the User's UUID.
-     * @return The UUID.
-     */
-    public @NotNull UUID getUuid() {
-        return uuid;
-    }
-
-    /**
-     * Provides the User's chat color.
-     * @return A chat color.
-     */
-    @NotNull
-    public String getChatColor() {
-        if(chatColor != null && !chatColor.isEmpty()) {
-            return ChatColor.translateAlternateColorCodes('&', chatColor);
-        }
-        return "";
-    }
-
-    /**
-     * Provides the User's chat color.
-     * If the User's chat color is null, the chat color of the passed in channel is returned.
-     * @param channel The channel to get the fallback chat color from.
-     * @return A chat color.
-     */
-    public String getChatColor(Channel channel) {
-        if(chatColor == null || chatColor.isEmpty()) {
-            return channel.getDefaultColor();
-        }
-        return ChatColor.translateAlternateColorCodes('&', chatColor);
-    }
-
-    /**
-     * Provides the User's display name.
-     * If no display name is set with this plugin, it falls back to the server.
-     * @return The display name.
-     */
-    public @NotNull String getDisplayName() {
-        if(displayName == null || displayName.isEmpty()) {
-            return player.getDisplayName();
-        }
-        return ChatColor.translateAlternateColorCodes('&', displayName);
-    }
-
-    /**
-     * Provides the User's prefix.
-     * Uses Vault prefixes when available.
-     * @return The prefix.
-     */
-    public String getPrefix() {
-        if(strings.usingVault()) {
-            return ChatColor.translateAlternateColorCodes('&', strings.getVaultChat().getPlayerPrefix(player));
-        } else {
-            if(prefix == null || prefix.isEmpty()) {
-                return "";
-            }
-            return ChatColor.translateAlternateColorCodes('&', prefix);
-        }
-    }
-
-    /**
-     * Provides the User's suffix.
-     * Uses Vault suffixes when available.
-     * @return The suffix.
-     */
-    public String getSuffix() {
-        if(strings.usingVault()) {
-            return ChatColor.translateAlternateColorCodes('&', strings.getVaultChat().getPlayerSuffix(player));
-        } else {
-            if(suffix == null || suffix.isEmpty()) {
-                return "";
-            }
-            return ChatColor.translateAlternateColorCodes('&', suffix);
-        }
-    }
-
-    /**
-     * Provides the Player correlated to the User.
-     * @return The player.
-     */
-    public Player getPlayer() {
-        return player;
-    }
-
-    /**
-     * Provides the username of the User.
-     * @return The username.
-     */
-    public @NotNull String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the chat color of the User.
-     * @param chatColor The new chat color.
-     */
-    public void setChatColor(String chatColor) {
-        this.chatColor = chatColor;
-    }
-
-    /**
-     * Sets the User's prefix.
-     * @param prefix The new prefix.
-     */
-    public void setPrefix(@NotNull String prefix) {
-        this.prefix = prefix;
-        if(strings.usingVault()) {
-            strings.getVaultChat().setPlayerPrefix(player, prefix);
-        }
-    }
-
-    /**
-     * Sets the User's suffix.
-     * @param suffix The new suffix.
-     */
-    public void setSuffix(@NotNull String suffix) {
-        this.suffix = suffix;
-        if(strings.usingVault()) {
-            strings.getVaultChat().setPlayerSuffix(player, suffix);
-        }
-    }
-
-    /**
-     * Sets the player's display name and updates the User, so it's saved.
-     * @param displayName The new display name.
-     */
-    public void setDisplayName(@NotNull String displayName) {
-        this.displayName = displayName;
-        this.player.setDisplayName(displayName);
-    }
-
-    /**
-     * Provides a boolean of if the player wants to receive messages.
-     * @return A boolean.
-     */
-    public boolean isMentionsEnabled() {
-        return this.mentionsEnabled;
-    }
-
-    /**
-     * Sets if this player receives mentions
-     * @param mentionsEnabled A boolean of if the mentions should be enabled.
-     */
-    public void setMentionsEnabled(boolean mentionsEnabled) {
-        this.mentionsEnabled = mentionsEnabled;
-    }
-
-    /**
-     * Provides the player's active channel.
-     * @return The active channel.
-     */
-    @NotNull
-    public Channel getActiveChannel() {
-        return activeChannel != null ? activeChannel : channelLoader.getDefaultChannel();
-    }
-
-    /**
-     * Sets the User's active channel where the User will send messages to.
-     * @param channel The channel to be set as the active channel.
-     */
-    public void setActiveChannel(@NotNull Channel channel) {
-        Objects.requireNonNull(channel);
-        if(channel.getName().equals("helpop")) {
-            return;
-        }
-        this.activeChannel = channel;
-        joinChannel(channel);
-    }
-
-    /**
-     * Provides a Set of the channels the User is a member of.
-     * @return A populated set of channels.
-     */
-    public Set<Channel> getChannels() {
-        return channels;
-    }
-
-    /**
-     * Adds the User to a channel.
-     * @param channel The channel to join.
-     */
-    public void joinChannel(@NotNull Channel channel) {
-        Objects.requireNonNull(channel);
-        channel.addMember(this.player);
-        channels.add(channel);
-    }
-
-    /**
-     * Removes the User from a channel by updating the channel and user.
-     * @param channel the channel to leave
-     */
-    public void leaveChannel(@NotNull Channel channel) {
-        Objects.requireNonNull(channel);
-        if(channel.equals(channelLoader.getChannel("default"))) {
-            Bukkit.getLogger().info("[Strings] Player " + player.getName() + " just tried to leave channel global!  Cancelled leaving channel.");
-            return;
-        }
-        channels.remove(channel);
-        channel.removeMember(this.getPlayer());
-        if(activeChannel.equals(channel)) {
-            activeChannel = channelLoader.getChannel("default");
-        }
-    }
-
-    /**
-     * Checks if a User is a member of a channel.
-     * @param channel The channel to check
-     * @return If the player is a member of the specified channel.
-     */
-    public boolean memberOf(Channel channel) {
-        return channels.contains(channel);
-    }
-
-    @Override
-    public boolean mentionsEnabled() {
-        return isMentionsEnabled();
-    }
-
-    /**
-     * Provides an ArrayList of all names of the channels the User is a member of.
-     * @return An {@code ArrayList} of {@code String} containing the names of the channels the user is a member of.
-     */
-    public Set<String> getChannelNames() {
-        Set<String> names = new HashSet<>();
-        for(Channel channel : getChannels()) {
-            if(channel != null) {
-                String channelName = channel.getName();
-                names.add(channelName);
-            }
-        }
-        return names;
+        joinChannels();
     }
 
     /**
@@ -366,20 +92,381 @@ public final class User implements StringsUser {
         }
     }
 
+    /**
+     * Joins all Channels in the channels Set
+     */
+    private void joinChannels() {
+        for(Channel channel : channels) {
+            channel.addMember(this.player);
+        }
+    }
+
+    /**
+     * Sends a message to the User.
+     * @param message The message.
+     */
+    @Override
+    public void message(@NotNull String message) {
+        getPlayer().sendMessage(message);
+    }
+
+    /**
+     * Provides a Map containing all the User's information.
+     * @return The populated Map.
+     */
+    public @NotNull Map<String, Object> getData() {
+        synchronized(this) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("chat-color", Objects.requireNonNullElse(chatColor, ""));
+            map.put("prefix", Objects.requireNonNullElse(prefix, ""));
+            map.put("suffix", Objects.requireNonNullElse(suffix, ""));
+            map.put("display-name", Objects.requireNonNullElse(displayName, ""));
+            map.put("active-channel", activeChannel == null ? "default" : activeChannel.getName());
+            map.put("channels", getChannelNames());
+            map.put("monitored-channels", getMonitoredChannelNames());
+            map.put("ignored-players", getIgnoredUniqueIds());
+            map.put("mentions-enabled", mentionsEnabled);
+            return map;
+        }
+    }
+
+
+
+    /**
+     * Provides the User's UUID.
+     * @return The UUID.
+     */
+    @Override
+    public @NotNull UUID getUniqueId() {
+        return uuid;
+    }
+
+    /**
+     * Provides the Player aligned to the User.
+     * @return The player.
+     */
+    @Override
+    public Player getPlayer() {
+        return player;
+    }
+
+    /**
+     * Provides the username of the User.
+     * @return The username.
+     */
+    @Override
+    public @NotNull String getName() {
+        return name;
+    }
+
+
+
+    /**
+     * Sets the chat color of the User.
+     * @param chatColor The new chat color.
+     */
+    @Override
+    public void setChatColor(final String chatColor) {
+        this.chatColor = chatColor;
+    }
+
+    /**
+     * Provides the User's chat color.
+     * @return A chat color.
+     */
+    @NotNull
+    @Override
+    public String getChatColor() {
+        if(chatColor != null && !chatColor.isEmpty()) {
+            return color(chatColor);
+        }
+        return "";
+    }
+
+    /**
+     * Provides the User's chat color.
+     * If the User's chat color is null, the chat color of the passed in channel is returned.
+     * @param channel The channel to get the fallback chat color from.
+     * @return A chat color.
+     */
+    public String getChatColor(final Channel channel) {
+        if(chatColor == null || chatColor.isEmpty()) {
+            return channel.getDefaultColor();
+        }
+        return color(chatColor);
+    }
+
+
+    /**
+     * Sets the player's display name and updates the User, so it's saved.
+     * @param displayName The new display name.
+     */
+    @Override
+    public void setDisplayName(@NotNull final String displayName) {
+        this.displayName = displayName;
+        this.player.setDisplayName(displayName);
+    }
+
+    /**
+     * Provides the User's display name.
+     * If no display name is set with this plugin, it falls back to the server.
+     * @return The display name.
+     */
+    @Override
+    public @NotNull String getDisplayName() {
+        if(displayName == null || displayName.isEmpty()) {
+            return player.getDisplayName();
+        }
+        return color(displayName);
+    }
+
+
+    /**
+     * Sets the User's prefix.
+     * @param prefix The new prefix.
+     */
+    @Override
+    public void setPrefix(@NotNull String prefix) {
+        this.prefix = prefix;
+        if(strings.usingVault()) {
+            strings.getVaultChat().setPlayerPrefix(player, prefix);
+        }
+    }
+
+    /**
+     * Provides the User's prefix.
+     * Uses Vault prefixes when available.
+     * @return The prefix.
+     */
+    @Override
+    public String getPrefix() {
+        if(strings.usingVault()) {
+            return color(strings.getVaultChat().getPlayerPrefix(player));
+        } else {
+            if(prefix == null || prefix.isEmpty()) {
+                return "";
+            }
+            return color(prefix);
+        }
+    }
+
+
+    /**
+     * Sets the User's suffix.
+     * @param suffix The new suffix.
+     */
+    @Override
+    public void setSuffix(@NotNull String suffix) {
+        this.suffix = suffix;
+        if(strings.usingVault()) {
+            strings.getVaultChat().setPlayerSuffix(player, suffix);
+        }
+    }
+
+    /**
+     * Provides the User's suffix.
+     * Uses Vault suffixes when available.
+     * @return The suffix.
+     */
+    @Override
+    public @NotNull String getSuffix() {
+        if(strings.usingVault()) {
+            return color(strings.getVaultChat().getPlayerSuffix(player));
+        } else {
+            if(suffix == null || suffix.isEmpty()) {
+                return "";
+            }
+            return color(suffix);
+        }
+    }
+
+
+    /**
+     * Sets if this player receives mentions
+     * @param mentionsEnabled A boolean of if the mentions should be enabled.
+     */
+    @Override
+    public void setMentionsEnabled(boolean mentionsEnabled) {
+        this.mentionsEnabled = mentionsEnabled;
+    }
+
+    /**
+     * Provides a boolean of if the player wants to receive messages.
+     * @return A boolean.
+     */
+    @Override
+    public boolean isMentionsEnabled() {
+        return this.mentionsEnabled;
+    }
+
+
+    /**
+     * Ignores a Player.
+     * @param player The Player to ignore.
+     */
+    public void ignore(@NotNull Player player) {
+        ignored.add(player);
+    }
+
+    /**
+     * Stops ignoring a Player.
+     * @param player The Player to stop ignoring.
+     */
+    public void stopIgnoring(@NotNull Player player) {
+        ignored.remove(player);
+    }
+
+    /**
+     * Provides a Set of all ignored Players.
+     * @return A populated Set.
+     */
+    @Contract(value = " -> new", pure = true)
+    @Override
+    public @NotNull Set<Player> getIgnoredPlayers() {
+        return new HashSet<>(ignored);
+    }
+
+    /**
+     * Provides a List containing the String values of ignored Player's UUIDS.
+     * @return A populated List.
+     */
+    private List<String> getIgnoredUniqueIds() {
+        Set<Player> ignoredPlayers = getIgnoredPlayers();
+        List<String> uniqueIds = new ArrayList<>();
+        for(Player p : ignoredPlayers) {
+            uniqueIds.add(p.getUniqueId().toString());
+        }
+        return uniqueIds;
+    }
+
+
+
+    /**
+     * Checks if a User is a member of a channel.
+     * @param channel The channel to check
+     * @return If the player is a member of the specified channel.
+     */
+    @Override
+    public boolean memberOf(Channel channel) {
+        return channels.contains(channel);
+    }
+
+
+
+    /**
+     * Sets the User's active channel where the User will send messages to.
+     * @param channel The channel to be set as the active channel.
+     */
+    @Override
+    public void setActiveChannel(@NotNull Channel channel) {
+        Objects.requireNonNull(channel);
+        if(channel.getName().equals("helpop")) {
+            return;
+        }
+        this.activeChannel = channel;
+        joinChannel(channel);
+    }
+
+    /**
+     * Provides the player's active channel.
+     * @return The active channel.
+     */
+    @NotNull
+    @Override
+    public Channel getActiveChannel() {
+        return activeChannel != null ? activeChannel : channelLoader.getDefaultChannel();
+    }
+
+    /**
+     * Adds the User to a channel.
+     * @param channel The channel to join.
+     */
+    @Override
+    public void joinChannel(@NotNull Channel channel) {
+        Objects.requireNonNull(channel);
+        channel.addMember(this.player);
+        channels.add(channel);
+    }
+
+    /**
+     * Removes the User from a channel by updating the channel and user.
+     * @param channel the channel to leave
+     */
+    @Override
+    public void leaveChannel(@NotNull Channel channel) {
+        Objects.requireNonNull(channel);
+        if(channel.equals(channelLoader.getChannel("default"))) {
+            Bukkit.getLogger().info("[Strings] Player " + player.getName() + " just tried to leave channel global!  Cancelled leaving channel.");
+            return;
+        }
+        channels.remove(channel);
+        channel.removeMember(this.getPlayer());
+        if(activeChannel.equals(channel)) {
+            activeChannel = channelLoader.getChannel("default");
+        }
+    }
+
+    /**
+     * Provides a Set of the Channels this User is a member of.
+     * @return A populated set of channels.
+     */
+    @Override
+    public Set<Channel> getChannels() {
+        return new HashSet<>(channels);
+    }
+
+    /**
+     * Provides an ArrayList of all names of the channels the User is a member of.
+     * @return An {@code ArrayList} of {@code String} containing the names of the channels the user is a member of.
+     */
+    public List<String> getChannelNames() {
+        List<String> names = new ArrayList<>();
+        for(Channel channel : getChannels()) {
+            if(channel != null) {
+                String channelName = channel.getName();
+                names.add(channelName);
+            }
+        }
+        return names;
+    }
+
+
+
+    /**
+     * Monitors a Channel and adds this Player to the Channel's list of monitoring players.
+     * @param monitorable The Monitorable Channel
+     */
     public void monitor(@NotNull Monitorable monitorable) {
         Objects.requireNonNull(monitorable);
         monitoredChannels.add(monitorable);
         monitorable.addMonitor(this);
     }
 
+    /**
+     * Unmonitors a Channel and removes this Player from the Channel's list of monitoring players.
+     * @param monitorable The Monitorable Channel
+     */
     public void unmonitor(@NotNull Monitorable monitorable) {
         Objects.requireNonNull(monitorable);
         monitoredChannels.remove(monitorable);
         monitorable.removeMonitor(this);
     }
 
-    public Set<String> getMonitoredChannelNames() {
-        Set<String> names = new HashSet<>();
+    /**
+     * Provides a Set of channels that the User is monitoring.
+     * @return A populated Set
+     */
+    @Contract(value = " -> new", pure = true)
+    public @NotNull Set<Channel> getMonitoredChannels() {
+        return new HashSet<>(monitoredChannels);
+    }
+
+    /**
+     * Provides a List of all Channel names in User.getMonitoredChannels();
+     * @return A populated List
+     */
+    public @NotNull List<String> getMonitoredChannelNames() {
+        List<String> names = new ArrayList<>();
         for(Channel channel : getMonitoredChannels()) {
             if(channel != null) {
                 String channelName = channel.getName();
@@ -389,12 +476,10 @@ public final class User implements StringsUser {
         return names;
     }
 
-    public Set<Channel> getMonitoredChannels() {
-        return new HashSet<>(monitoredChannels);
-    }
+
 
     /**
-     * Returns if this User instance is reattained.
+     * Provides if this User instance is retained.
      * @return True if the user is retained, false otherwise.
      */
     @SuppressWarnings("unused")
@@ -402,8 +487,13 @@ public final class User implements StringsUser {
         return retain;
     }
 
+    @Contract("_ -> new")
+    private @NotNull String color(String string) {
+        return ChatColor.translateAlternateColorCodes('&', string);
+    }
+
     /**
-     * Provides a String representation of the getData HashMap.
+     * Provides a String representation of the User.getData() Map.
      * All data that the User has will be given.
      * @return String with information on this User.
      */
@@ -424,4 +514,5 @@ public final class User implements StringsUser {
     public int hashCode() {
         return Objects.hash(strings, uuid, player, name, channels, chatColor, prefix, suffix, displayName, activeChannel, mentionsEnabled);
     }
+
 }

@@ -1,7 +1,10 @@
-package com.pedestriamc.strings.user;
+package com.pedestriamc.strings.user.util;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.UserBuilder;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +40,7 @@ public final class YamlUserUtil implements UserUtil {
     @Override
     public void saveUser(@NotNull User user)
     {
-        UUID uuid = user.getUuid();
+        UUID uuid = user.getUniqueId();
         Map<String, Object> infoMap = user.getData();
         strings.async(() -> {
             synchronized(config) {
@@ -74,41 +77,28 @@ public final class YamlUserUtil implements UserUtil {
      */
     @NotNull
     @Override
-    public User loadUser(UUID uuid)
-    {
+    public User loadUser(UUID uuid) {
         synchronized(config) {
-            String userPath = "players." + uuid;
-            if(!config.contains(userPath)) {
-                User user = new User(strings, uuid, true);
+            ConfigurationSection section = config.getConfigurationSection("players." + uuid);
+            if(section == null) {
+                User user = new UserBuilder(strings, uuid, true).build();
                 addUser(user);
                 return user;
             }
 
-            Set<Channel> channels;
-            Set<Channel> monitoredChannels;
+            User user = new UserBuilder(strings, uuid, true)
+                    .suffix(section.getString(".suffix"))
+                    .prefix(section.getString(".prefix"))
+                    .displayName(section.getString(".display-name"))
+                    .chatColor(section.getString(".chat-color"))
+                    .mentionsEnabled(section.getBoolean(".mentions-enabled"))
+                    .activeChannel(strings.getChannelLoader().getChannel(section.getString(".active-channel")))
+                    .channels(getChannels(section.getList(".channels")))
+                    .monitoredChannels(getChannels(section.getList(".monitored-channels")))
+                    .ignoredPlayers(getPlayers(section.getList(".ignored-players")))
+                    .build();
 
-            String suffix = config.getString(userPath + ".suffix");
-            String prefix = config.getString(userPath + ".prefix");
-            String displayName = config.getString(userPath + ".display-name");
-            String chatColor = config.getString(userPath + ".chat-color");
-            boolean mentionsEnabled = config.getBoolean(userPath + "mentions-enabled", true);
-
-            String activeChannelName = config.getString(userPath + ".active-channel");
-            if(activeChannelName == null) {
-                activeChannelName = "default";
-            }
-
-            Channel activeChannel = strings.getChannelLoader().getChannel(activeChannelName);
-
-            List<?> channelNames = config.getList(userPath + ".channels");
-            List<?> monitoredChannelNames = config.getList(userPath + ".monitored-channels");
-
-            channels = getChannels(channelNames);
-            monitoredChannels = getChannels(monitoredChannelNames);
-
-            User user = new User(strings, uuid, chatColor, prefix, suffix, displayName, channels, activeChannel, mentionsEnabled, monitoredChannels, true);
             addUser(user);
-
             return user;
         }
     }
@@ -128,11 +118,29 @@ public final class YamlUserUtil implements UserUtil {
         return channels;
     }
 
+    private Set<Player> getPlayers(List<?> list) {
+        if(list == null) {
+            return new HashSet<>();
+        }
+
+        Set<Player> players = new HashSet<>();
+        for(Object item : list) {
+            if(item instanceof String string) {
+                try {
+                    UUID uuid = UUID.fromString(string);
+                    Player p = strings.getServer().getPlayer(uuid);
+                    players.add(p);
+                } catch(IllegalArgumentException ignored) {}
+            }
+        }
+        return players;
+    }
+
     @Override
     public @NotNull User getUser(UUID uuid) {
         User user = map.get(uuid);
         if(user == null) {
-            return new User(strings, uuid, false);
+            return new UserBuilder(strings, uuid, false).build();
         }
         return user;
     }
@@ -144,7 +152,7 @@ public final class YamlUserUtil implements UserUtil {
 
     @Override
     public void addUser(User user) {
-        map.put(user.getUuid(), user);
+        map.put(user.getUniqueId(), user);
     }
 
     @Override

@@ -13,7 +13,7 @@ import com.pedestriamc.strings.channel.local.StrictWorldChannel;
 import com.pedestriamc.strings.channel.StringChannel;
 import com.pedestriamc.strings.channel.local.WorldChannel;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.UserUtil;
+import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.Contract;
@@ -56,7 +56,10 @@ public final class ChannelManager implements ChannelLoader {
     }
 
     @Override
-    public @Nullable Channel getChannel(@NotNull String name) {
+    public @Nullable Channel getChannel(@Nullable String name) {
+        if(name == null) {
+            return null;
+        }
         return channels.get(name);
     }
 

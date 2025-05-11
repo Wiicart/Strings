@@ -66,7 +66,7 @@ channels:
     # {message} - the message being broadcast
     broadcast-format: "&8[&2Global&8] &f{message}"
 
-  # Staff channel, which by default will not call events, in order to hide messages from plugin interference.
+  # Staff channel, which by default will not call events, to hide messages from external plugin interference.
   staff:
     format: "&8[&cStaff&8] &f{prefix}{displayname}{suffix} &7» {message}"
     default-color: "&c"

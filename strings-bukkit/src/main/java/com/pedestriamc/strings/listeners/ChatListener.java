@@ -5,7 +5,7 @@ import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.user.UserUtil;
+import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
