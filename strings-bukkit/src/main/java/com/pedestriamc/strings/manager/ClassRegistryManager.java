@@ -128,7 +128,7 @@ public class ClassRegistryManager {
         registerListener(new JoinListener(strings));
         registerListener(new LeaveListener(strings));
         registerListener(new DirectMessageListener(strings));
-        if(strings.getConfig().getBoolean("enable-mentions")) {
+        if(strings.getConfiguration().getBoolean(ENABLE_MENTIONS)) {
             registerListener(new MentionListener(strings));
         }
     }

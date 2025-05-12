@@ -89,7 +89,7 @@ social-spy-format: "&8[&cSocialSpy&8] &8(&7{sender_username} &8» &7{recipient_u
 enable-join-leave-messages: true
 
 
-# Use custom join and leave message?
+# Use custom join and leave messages?
 # If enabled, default join and leave messages will be replaced with
 # your input in the following two config options.
 custom-join-leave-message: false
@@ -152,7 +152,7 @@ mention-everyone: true
 
 # Mention Chat Format:
 # NOT IMPLEMENTED YET, WILL BE IMPLEMENTED NEXT UPDATE.
-# MEANWHILE, USE "mention-color", THIS WILL BE SHOWN TO ALL PLAYERS.
+# MEANWHILE, USE "mention-color"; THIS WILL BE SHOWN TO ALL PLAYERS.
 # How should the text change in chat when a player uses @<username>?
 # NOTE: This will change it for ALL players.
 # The option mention-color represents what it will look like for the mentioned player.
@@ -169,17 +169,15 @@ mention-color: "&e"
 mention-format: "&e%sender% mentioned you."
 
 # Mention Sound:
-# You can have any valid Bukkit sound play when a player is mentioned.
-# A list of options:
+# The sound that is played to mentioned players.
+# Options:
 # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
-# NOTE: This plugin is compiled for 1.16, so only sounds available in 1.16 will work.
-# If you want to use more recent sounds, you can compile the plugin for a later version of Minecraft.
 mention-sound: "BLOCK_NOTE_BLOCK_PLING"
 
 # Mention Pitch:
 # Players hear a sound any time they're pinged.
 # This modifies the pitch of the sound.  Be cautious with this.
-# See link below for options:
+# See the link below for options:
 # https://minecraft.wiki/w/Note_Block
 mention-pitch: 0.594604
 

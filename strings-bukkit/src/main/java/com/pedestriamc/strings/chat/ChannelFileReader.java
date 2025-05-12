@@ -8,6 +8,7 @@ import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.channel.HelpOPChannel;
 import com.pedestriamc.strings.channel.SocialSpyChannel;
+import com.pedestriamc.strings.configuration.Option;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -123,7 +124,7 @@ public final class ChannelFileReader {
             channelLoader.addChannelSymbol("?", c);
         }
 
-        String socialSpyFormat = strings.getConfig().getString("social-spy-format");
+        String socialSpyFormat = strings.getConfiguration().getString(Option.SOCIAL_SPY_FORMAT);
         log("Loading channel 'socialspy'...");
         channelLoader.registerChannel(
                 new SocialSpyChannel(

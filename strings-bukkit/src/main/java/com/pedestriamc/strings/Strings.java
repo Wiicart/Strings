@@ -31,7 +31,7 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.net.URI;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -46,8 +46,8 @@ public final class Strings extends JavaPlugin {
     private AutoBroadcasts autoBroadcasts;
 
     private boolean usingPlaceholderAPI = false;
-    private boolean usingVault;
     private boolean isPaper = false;
+    private boolean usingVault;
 
     private FileManager fileManager;
     private UserUtil userUtil;
@@ -195,7 +195,7 @@ public final class Strings extends JavaPlugin {
 
     private void checkForUpdate() {
         try {
-            HttpsURLConnection connection = (HttpsURLConnection) new URL("https://www.wiicart.net/strings/version.txt").openConnection();
+            HttpsURLConnection connection = (HttpsURLConnection) URI.create("https://www.wiicart.net/strings/version.txt").toURL().openConnection();
             connection.setRequestMethod("GET");
             String raw = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
             short latest = Short.parseShort(raw);

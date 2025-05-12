@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * User Builder class
  */
-public class UserBuilder {
+public final class UserBuilder {
 
     final Strings strings;
     final UUID uuid;

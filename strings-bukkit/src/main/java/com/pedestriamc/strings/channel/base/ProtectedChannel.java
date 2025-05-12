@@ -133,7 +133,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public Membership getMembership() {
+    public @NotNull Membership getMembership() {
         return Membership.PROTECTED;
     }
 

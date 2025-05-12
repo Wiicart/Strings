@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.moderation.manager;
 
 import com.pedestriamc.strings.moderation.StringsModeration;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
