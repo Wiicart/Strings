@@ -11,8 +11,8 @@ import java.util.Map;
 
 public abstract class CommandBase implements CommandExecutor {
 
-    private Map<String, CommandComponent> map;
-    private CommandComponent baseCommand;
+    private Map<String, CommandExecutor> map;
+    private CommandExecutor baseCommand;
 
     @Contract(pure = true)
     protected CommandBase() {}
@@ -25,7 +25,7 @@ public abstract class CommandBase implements CommandExecutor {
      */
     @Contract(pure = true)
     @MustBeInvokedByOverriders
-    protected final void initialize(@NotNull Map<String, CommandComponent> map, @NotNull CommandComponent baseCommand) {
+    protected final void initialize(@NotNull Map<String, CommandExecutor> map, @NotNull CommandExecutor baseCommand) {
         this.map = map;
         this.baseCommand = baseCommand;
     }
@@ -40,10 +40,5 @@ public abstract class CommandBase implements CommandExecutor {
         }
         return baseCommand.onCommand(sender, command, label, args);
     }
-
-    /**
-     * Sub command interface.  Passes on all info from the command.
-     */
-    public interface CommandComponent extends CommandExecutor {}
 
 }

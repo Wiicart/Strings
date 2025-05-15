@@ -93,7 +93,7 @@ public final class User implements StringsUser {
     }
 
     /**
-     * Joins all Channels in the channels Set
+     * Joins all Channels in the channels Set. Called on initialization.
      */
     private void joinChannels() {
         for(Channel channel : channels) {
@@ -305,6 +305,7 @@ public final class User implements StringsUser {
      * @param player The Player to ignore.
      */
     public void ignore(@NotNull Player player) {
+        Objects.requireNonNull(player);
         ignored.add(player);
     }
 
@@ -313,6 +314,7 @@ public final class User implements StringsUser {
      * @param player The Player to stop ignoring.
      */
     public void stopIgnoring(@NotNull Player player) {
+        Objects.requireNonNull(player);
         ignored.remove(player);
     }
 

@@ -1,7 +1,10 @@
 package com.pedestriamc.strings.commands.channel;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.message.Message;
+import com.pedestriamc.strings.commands.MessengerCommand;
 import com.pedestriamc.strings.commands.base.CommandBase;
+import org.bukkit.command.CommandExecutor;
 
 import java.util.HashMap;
 
@@ -11,31 +14,31 @@ public final class ChannelCommand extends CommandBase {
 
     public ChannelCommand(Strings strings) {
         super();
-        HashMap<String, CommandComponent> map = new HashMap<>();
+        HashMap<String, CommandExecutor> map = new HashMap<>();
 
-        JoinCommand joinCommand = new JoinCommand(strings);
+        CommandExecutor joinCommand = new JoinCommand(strings);
         map.put("JOIN", joinCommand);
         map.put("J", joinCommand);
 
-        LeaveCommand leaveCommand = new LeaveCommand(strings);
+        CommandExecutor leaveCommand = new LeaveCommand(strings);
         map.put("LEAVE", leaveCommand);
         map.put("L", leaveCommand);
 
-        HelpCommand helpCommand = new HelpCommand(strings);
+        CommandExecutor helpCommand = new MessengerCommand(strings, Message.CHANNEL_HELP);
         map.put("HELP", helpCommand);
         map.put("H", helpCommand);
 
-        MonitorCommand monitorCommand = new MonitorCommand(strings);
+        CommandExecutor monitorCommand = new MonitorCommand(strings);
         map.put("MONITOR", monitorCommand);
 
-        UnmonitorCommand unmonitorCommand = new UnmonitorCommand(strings);
+        CommandExecutor unmonitorCommand = new UnmonitorCommand(strings);
         map.put("UNMONITOR", unmonitorCommand);
 
-        ChannelBroadcastCommand channelBroadcastCommand = new ChannelBroadcastCommand(strings);
+        CommandExecutor channelBroadcastCommand = new ChannelBroadcastCommand(strings);
         map.put("BROADCAST", channelBroadcastCommand);
         map.put("ANNOUNCE", channelBroadcastCommand);
 
-        ChannelBaseCommand baseCommand = new ChannelBaseCommand(strings);
+        CommandExecutor baseCommand = new ChannelBaseCommand(strings);
         initialize(map, baseCommand);
     }
 

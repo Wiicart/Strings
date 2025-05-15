@@ -5,15 +5,15 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.channel.DefaultChannel;
-import com.pedestriamc.strings.commands.base.CommandBase;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChannelBroadcastCommand implements CommandBase.CommandComponent {
+public class ChannelBroadcastCommand implements CommandExecutor {
 
     private final Strings strings;
 

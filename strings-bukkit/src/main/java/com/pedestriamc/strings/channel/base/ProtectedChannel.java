@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.channel.base;
 
 import com.pedestriamc.strings.api.channel.Membership;
+import com.pedestriamc.strings.api.exception.ChannelUnsupportedOperationException;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Type;
@@ -12,9 +13,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-
+/**
+ * Abstract class for ProtectedChannels
+ */
 public abstract class ProtectedChannel implements Channel {
 
+    private static final String UNIMPLEMENTED = "ProtectedChannel unimplemented operation.";
     private String name;
 
     protected ProtectedChannel(String name) {
@@ -24,27 +28,27 @@ public abstract class ProtectedChannel implements Channel {
 
     @Override
     public void sendMessage(@NotNull Player player, @NotNull String message) {
-
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public void broadcast(String message) {
-
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public @NotNull String getFormat() {
-        return "";
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public String getBroadcastFormat() {
-        return "";
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public void setFormat(@NotNull String format) {
-
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
@@ -59,68 +63,74 @@ public abstract class ProtectedChannel implements Channel {
 
     @Override
     public String getDefaultColor() {
-        return "";
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public void setDefaultColor(String defaultColor) {
-
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public boolean isUrlFiltering() {
-        return false;
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public void setUrlFilter(boolean doUrlFilter) {
-
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public boolean isProfanityFiltering() {
-        return false;
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public void setProfanityFilter(boolean doProfanityFilter) {
-
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public boolean isCooldownEnabled() {
-        return false;
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public void setDoCooldown(boolean doCooldown) {
-
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public void addMember(@NotNull Player player) {
-
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public void addMember(@NotNull StringsUser user) {
-        addMember(user.getPlayer());
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public void removeMember(@NotNull Player player) {
-
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public void removeMember(@NotNull StringsUser user) {
-        removeMember(user.getPlayer());
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
     public Set<Player> getMembers() {
-        return Set.of();
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
+
+    @Override
+    public boolean isCallEvent() {
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+    }
+
 
     @Override
     public @NotNull Type getType() {
@@ -144,11 +154,6 @@ public abstract class ProtectedChannel implements Channel {
 
     @Override
     public boolean allows(@NotNull Permissible permissible) {
-        return false;
-    }
-
-    @Override
-    public boolean isCallEvent() {
         return false;
     }
 

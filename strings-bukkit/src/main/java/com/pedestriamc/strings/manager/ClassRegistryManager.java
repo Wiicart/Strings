@@ -7,7 +7,7 @@ import com.pedestriamc.strings.commands.BroadcastCommand;
 import com.pedestriamc.strings.commands.ChatColorCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
 import com.pedestriamc.strings.commands.message.DirectMessageCommand;
-import com.pedestriamc.strings.commands.DisabledCommand;
+import com.pedestriamc.strings.commands.MessengerCommand;
 import com.pedestriamc.strings.commands.HelpOPCommand;
 import com.pedestriamc.strings.commands.MentionCommand;
 import com.pedestriamc.strings.commands.message.ReplyCommand;
@@ -99,7 +99,7 @@ public class ClassRegistryManager {
             registerCommand("helpop", new HelpOPCommand(strings), null);
         } else {
             if(!config.getBoolean(DISABLE_HELPOP_COMMAND)) {
-                registerCommand("helpop", new DisabledCommand(strings, Message.HELPOP_DISABLED), null);
+                registerCommand("helpop", new MessengerCommand(strings, Message.HELPOP_DISABLED), null);
             }
 
             try {

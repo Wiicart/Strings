@@ -7,11 +7,11 @@ import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.channel.DefaultChannel;
-import com.pedestriamc.strings.commands.base.CommandBase;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
@@ -24,7 +24,7 @@ import java.util.Objects;
 
 import static com.pedestriamc.strings.api.message.Message.*;
 
-public class ChannelBaseCommand implements CommandBase.CommandComponent {
+public class ChannelBaseCommand implements CommandExecutor {
 
     private final Messenger messenger;
     private final ChannelLoader channelLoader;

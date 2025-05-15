@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 
-public final class DisabledCommand implements CommandExecutor {
+public final class MessengerCommand implements CommandExecutor {
 
     private final Messenger messenger;
     private final Message message;
 
-    public DisabledCommand(Strings strings, Message message) {
+    public MessengerCommand(Strings strings, Message message) {
         this.messenger = strings.getMessenger();
         this.message = message;
     }

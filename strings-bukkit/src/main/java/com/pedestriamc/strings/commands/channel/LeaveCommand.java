@@ -6,10 +6,10 @@ import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.channel.HelpOPChannel;
-import com.pedestriamc.strings.commands.base.CommandBase;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static com.pedestriamc.strings.api.message.Message.*;
 
-public class LeaveCommand implements CommandBase.CommandComponent {
+public class LeaveCommand implements CommandExecutor {
 
     private final Strings strings;
     private final ChannelLoader channelLoader;

@@ -6,6 +6,7 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.channel.Membership;
+import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.chat.MessageProcessor;
 import com.pedestriamc.strings.configuration.Option;
@@ -66,6 +67,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
         messageProcessor = new MessageProcessor(strings, this);
         mentionsEnabled = strings.getConfiguration().getBoolean(Option.ENABLE_MENTIONS);
+        updatePermissions();
         members = new HashSet<>();
         monitors = new HashSet<>();
     }
@@ -138,6 +140,17 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     /**
+     * Registers the Channel instance's permissions.
+     */
+    private void updatePermissions() {
+        Permissions util = new Permissions(strings);
+        String permission = CHANNEL_PERMISSION + getName();
+
+        util.addPermission(permission);
+        util.addPermission(permission + ".broadcast");
+    }
+
+    /**
      * Base-line getData() implementation. Most subclasses should override this.
      * @return A populated LinkedHashMap containing channel data
      */
@@ -162,11 +175,10 @@ public abstract class AbstractChannel implements Channel, Monitorable {
             return true;
         }
 
-        return (
-                permissible.hasPermission(CHANNEL_PERMISSION + getName()) ||
-                permissible.hasPermission(CHANNEL_PERMISSION + "*") ||
-                permissible.hasPermission("strings.*") ||
-                permissible.hasPermission("*")
+        return Permissions.anyOfOrAdmin(permissible,
+                CHANNEL_PERMISSION + getName(),
+                CHANNEL_PERMISSION + "*",
+                "strings.*"
         );
     }
 
@@ -201,7 +213,14 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     @Override
     public void setName(@NotNull String name) {
+        // Unregister permissions w/ old name
+        Permissions util = new Permissions(strings);
+        String permission = CHANNEL_PERMISSION + getName();
+        util.removePermission(permission);
+        util.removePermission(permission + ".broadcast");
+
         this.name = name;
+        updatePermissions();
     }
 
     public boolean isCallEvent() {
