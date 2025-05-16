@@ -3,6 +3,7 @@ package com.pedestriamc.strings.channel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
+import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.chat.MessageProcessor;
 import com.pedestriamc.strings.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.api.message.Message;
@@ -100,7 +101,7 @@ public class HelpOPChannel extends ProtectedChannel {
         }
 
         for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if(onlinePlayer.hasPermission("strings.helpop.receive") || onlinePlayer.hasPermission("strings.helpop.*") || onlinePlayer.hasPermission("strings.*")) {
+            if(Permissions.anyOfOrAdmin(onlinePlayer, "strings.helpop.receive", "strings.helpop.*", "strings.*")) {
                 members.add(onlinePlayer);
             }
         }
@@ -172,11 +173,8 @@ public class HelpOPChannel extends ProtectedChannel {
 
     @Override
     public boolean allows(@NotNull Permissible permissible) {
-        return (permissible.isOp() ||
-                permissible.hasPermission("*") ||
-                permissible.hasPermission("strings.*") ||
-                permissible.hasPermission("strings.helpop.use")
-        );
+        return Permissions.anyOfOrAdmin(permissible, "strings.*", "strings.helpop.use");
     }
+
 
 }

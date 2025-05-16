@@ -514,7 +514,7 @@ public final class User implements StringsUser {
 
     @Override
     public int hashCode() {
-        return Objects.hash(strings, uuid, player, name, channels, chatColor, prefix, suffix, displayName, activeChannel, mentionsEnabled);
+        return uuid.hashCode();
     }
 
 }

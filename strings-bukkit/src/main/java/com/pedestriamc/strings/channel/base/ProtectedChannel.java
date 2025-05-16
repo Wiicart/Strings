@@ -25,7 +25,43 @@ public abstract class ProtectedChannel implements Channel {
         this.name = name;
     }
 
+    @Override
+    public @NotNull String getName() {
+        return name;
+    }
 
+    @Override
+    public void setName(@NotNull String name) {
+        this.name = name;
+    }
+
+    @Override
+    public @NotNull Type getType() {
+        return Type.PROTECTED;
+    }
+
+    @Override
+    public @NotNull Membership getMembership() {
+        return Membership.PROTECTED;
+    }
+
+
+    @Override
+    public Map<String, Object> getData() {
+        return Collections.emptyMap();
+    }
+
+    @Override
+    public int getPriority() {
+        return -1;
+    }
+
+    @Override
+    public boolean allows(@NotNull Permissible permissible) {
+        return false;
+    }
+
+    // Unimplemented methods from this point on.
     @Override
     public void sendMessage(@NotNull Player player, @NotNull String message) {
         throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
@@ -49,16 +85,6 @@ public abstract class ProtectedChannel implements Channel {
     @Override
     public void setFormat(@NotNull String format) {
         throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
-    }
-
-    @Override
-    public @NotNull String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(@NotNull String name) {
-        this.name = name;
     }
 
     @Override
@@ -129,32 +155,6 @@ public abstract class ProtectedChannel implements Channel {
     @Override
     public boolean isCallEvent() {
         throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
-    }
-
-
-    @Override
-    public @NotNull Type getType() {
-        return Type.PROTECTED;
-    }
-
-    @Override
-    public Map<String, Object> getData() {
-        return Collections.emptyMap();
-    }
-
-    @Override
-    public @NotNull Membership getMembership() {
-        return Membership.PROTECTED;
-    }
-
-    @Override
-    public int getPriority() {
-        return -1;
-    }
-
-    @Override
-    public boolean allows(@NotNull Permissible permissible) {
-        return false;
     }
 
 }

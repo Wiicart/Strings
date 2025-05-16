@@ -2,6 +2,7 @@ package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
@@ -157,28 +158,12 @@ public class MessageProcessor {
 
 
     private boolean shouldReplacePlaceholders(Player sender) {
-        if(processingMessagePlaceholders) {
-            return (
-                    sender.isOp() ||
-                    sender.hasPermission("*") ||
-                    sender.hasPermission("strings.*") ||
-                    sender.hasPermission("strings.chat.*") ||
-                    sender.hasPermission("strings.chat.placeholdermsg")
-            );
-        }
-        return false;
+        return processingMessagePlaceholders &&
+                Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.placeholdermsg");
     }
 
     private boolean shouldColorMessage(Player sender) {
-        if(parsingMessageChatColors) {
-            return (
-                    sender.isOp() ||
-                    sender.hasPermission("*") ||
-                    sender.hasPermission("strings.*") ||
-                    sender.hasPermission("strings.chat.*") ||
-                    sender.hasPermission("strings.chat.colormsg")
-            );
-        }
-        return false;
+        return parsingMessageChatColors &&
+                Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.colormsg");
     }
 }

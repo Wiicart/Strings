@@ -146,4 +146,34 @@ public final class Permissions {
     public static boolean anyOfOrAdmin(@NotNull Permissible permissible, @NotNull Permission... permissions) {
         return permissible.isOp() || permissible.hasPermission("*") || anyOf(permissible, permissions);
     }
+
+    /**
+     * Checks if a Permissible has all the listed defined permissions.
+     * @param permissible The Permissible to check the permissions of.
+     * @param permissions The permission to check for.
+     * @return If the Permissible has permission.
+     */
+    public static boolean allOf(@NotNull Permissible permissible, @NotNull String... permissions) {
+        for(String permission : permissions) {
+            if (!permissible.hasPermission(permission)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks if a Permissible has all the listed defined permissions.
+     * @param permissible The Permissible to check the permissions of.
+     * @param permissions The permission to check for.
+     * @return If the Permissible has permission.
+     */
+    public static boolean allOf(@NotNull Permissible permissible, @NotNull Permission... permissions) {
+        for(Permission permission : permissions) {
+            if (!permissible.hasPermission(permission)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

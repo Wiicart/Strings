@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.configuration.Option;
 import com.pedestriamc.strings.user.User;
@@ -40,11 +41,7 @@ public class Mentioner {
     }
 
     public static boolean hasMentionPermission(@NotNull Player player) {
-        return player.isOp() ||
-                player.hasPermission("*") ||
-                player.hasPermission("strings.*") ||
-                player.hasPermission("strings.mention") ||
-                player.hasPermission("strings.mention.all");
+        return Permissions.anyOfOrAdmin(player, "strings.*", "strings.mention", "strings.mention.*", "strings.mention.all");
     }
 
     public void mention(@NotNull Player player, @NotNull Player sender)

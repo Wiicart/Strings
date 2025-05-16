@@ -156,19 +156,11 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
 
     @Override
     public boolean allows(@NotNull Permissible permissible) {
-        if(permissible instanceof Player player) {
-            if(getMembers().contains(player)) {
-                return true;
-            }
-            if(getMembership() == Membership.DEFAULT && worlds.contains(player.getWorld())) {
-                return worlds.contains(player.getWorld());
-            }
+        if(permissible instanceof Player player &&
+                getMembership() == Membership.DEFAULT && worlds.contains(player.getWorld())) {
+            return true;
         }
-
-        return (
-                permissible.hasPermission(CHANNEL_PERMISSION + getName()) ||
-                permissible.hasPermission(CHANNEL_PERMISSION + "*") ||
-                permissible.hasPermission("strings.*")
-        );
+        return super.allows(permissible);
     }
+
 }
