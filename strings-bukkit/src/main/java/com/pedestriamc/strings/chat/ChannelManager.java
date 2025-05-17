@@ -41,7 +41,7 @@ public final class ChannelManager implements ChannelLoader {
     private final TreeSet<Channel> priorityChannels;
     private final UserUtil userUtil;
 
-    public ChannelManager(Strings strings) {
+    public ChannelManager(@NotNull Strings strings) {
         this.strings = strings;
         channels = new HashMap<>();
         config = strings.files().getChannelsFileConfig();
@@ -160,7 +160,7 @@ public final class ChannelManager implements ChannelLoader {
     }
 
     @Override
-    public Channel build(ChannelData data, @NotNull String type) throws UnsupportedOperationException {
+    public Channel build(@NotNull ChannelData data, @NotNull String type) throws UnsupportedOperationException {
         type = type.toLowerCase();
         switch(type) {
             case "stringchannel" ->  { return new StringChannel(strings, data); }

@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.chat.action;
 
-import com.pedestriamc.strings.api.chat.action.ClickableAction;
+import com.pedestriamc.strings.api.text.action.ClickableAction;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings("all")

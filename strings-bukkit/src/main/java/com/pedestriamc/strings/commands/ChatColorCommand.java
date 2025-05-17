@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.chat.StringsTextColor;
+import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.user.util.UserUtil;

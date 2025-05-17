@@ -3,7 +3,7 @@ package com.pedestriamc.strings.listener.paper;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
-import com.pedestriamc.strings.chat.paper.ChannelRenderer;
+import com.pedestriamc.strings.chat.paper.ChannelChatRenderer;
 import com.pedestriamc.strings.user.util.UserUtil;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
@@ -18,6 +18,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
+/**
+ * Chat Listener for Paper servers.
+ * Unlike with Spigot servers, the ChatEvent called by the server will not be canceled.
+ */
 public class PaperChatListener implements Listener {
 
     private final Strings strings;
@@ -31,12 +35,12 @@ public class PaperChatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     void onEvent(@NotNull AsyncChatEvent event) {
         Player player = event.getPlayer();
+        strings.info(userUtil.getUser(player).getActiveChannel().getName());
         Channel channel = userUtil.getUser(player).getActiveChannel().resolve(player);
         Set<Player> recipients = channel.resolve(player).getRecipients(player);
         event.viewers().clear();
         event.viewers().add(convertToAudience(recipients));
-        event.renderer(ChannelRenderer.forChannel(strings, channel));
-
+        event.renderer(new ChannelChatRenderer(strings, channel));
         callEvent(player, convertToPlainText(event.message()), recipients, channel);
     }
 
@@ -50,13 +54,18 @@ public class PaperChatListener implements Listener {
      * @param set The Set of recipients
      * @return A new Audience.
      */
-    private @NotNull Audience convertToAudience(Set<Player> set) {
+    private @NotNull Audience convertToAudience(@NotNull Set<Player> set) {
         return Audience.audience(set.stream()
                 .map(p -> (Audience) p)
                 .toList());
     }
 
-    private String convertToPlainText(Component component) {
+    /**
+     * Converts a Component to plain text.
+     * @param component The Component to convert
+     * @return A String representation of the Component.
+     */
+    private @NotNull String convertToPlainText(Component component) {
         return PlainTextComponentSerializer.plainText().serialize(component);
     }
 

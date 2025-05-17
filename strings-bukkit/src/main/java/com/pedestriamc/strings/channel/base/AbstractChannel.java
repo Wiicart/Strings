@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.channel.base;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.chat.StringsTextColor;
+import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
@@ -138,8 +138,10 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         Permissions util = new Permissions(strings);
         String permission = CHANNEL_PERMISSION + getName();
 
-        util.addPermission(permission);
-        util.addPermission(permission + ".broadcast");
+        try {
+            util.addPermission(permission);
+            util.addPermission(permission + ".broadcast");
+        } catch (Exception ignored) {}
     }
 
     /**

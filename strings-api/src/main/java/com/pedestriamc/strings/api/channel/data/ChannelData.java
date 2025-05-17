@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.api.channel.data;
 
 import com.pedestriamc.strings.api.channel.Membership;
-import com.pedestriamc.strings.api.chat.StringsTextColor;
+import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import org.bukkit.World;
 
 import java.util.Set;

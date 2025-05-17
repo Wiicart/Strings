@@ -1,9 +1,7 @@
 package com.pedestriamc.strings.placeholder;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.user.util.UserUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -20,7 +18,7 @@ public final class StringsPlaceholderExpansion extends PlaceholderExpansion {
 
     private final UserUtil userUtil;
 
-    public StringsPlaceholderExpansion(Strings strings) {
+    public StringsPlaceholderExpansion(@NotNull Strings strings) {
         userUtil = strings.getUserUtil();
     }
 
@@ -47,37 +45,17 @@ public final class StringsPlaceholderExpansion extends PlaceholderExpansion {
 
     @Override
     public @Nullable String onPlaceholderRequest(Player player, @NotNull String params) {
-        StringsUser user = getUser(player);
-        return switch(params.toUpperCase(Locale.ROOT)) {
-            case "CURRENT_CHANNEL" -> determineChannel(user, player);
-            case "ACTIVE_CHANNEL" -> determineActive(user);
-            case "CHAT_COLOR" -> user.getChatColor();
-            default -> null;
-        };
-    }
-
-    private @NotNull StringsUser getUser(Player player) {
-        return userUtil.getUser(player);
-    }
-
-    private @Nullable String determineChannel(StringsUser user, Player player) {
-        Channel c = user.getActiveChannel();
-        if(c instanceof DefaultChannel defaultChannel) {
-            c = defaultChannel.resolve(player);
+        StringsUser user = userUtil.getUser(player);
+        try {
+            return switch(params.toUpperCase(Locale.ROOT)) {
+                case "CURRENT_CHANNEL" -> user.getActiveChannel().resolve(player).getName();
+                case "ACTIVE_CHANNEL" -> user.getActiveChannel().getName();
+                case "CHAT_COLOR" -> user.getChatColor();
+                default -> null;
+            };
+        } catch(Exception e) {
+            return null;
         }
-        if(c != null) {
-            return c.getName();
-        }
-
-        return null;
-    }
-
-    private String determineActive(StringsUser user) {
-        Channel c = user.getActiveChannel();
-        if(c != null) {
-            return c.getName();
-        }
-        return null;
     }
 
 }

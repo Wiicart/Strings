@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
+//TODO fix chatcolor
 public class HelpOPChannel extends ProtectedChannel {
 
     private final Strings strings;
@@ -55,7 +56,7 @@ public class HelpOPChannel extends ProtectedChannel {
         this.messenger = strings.getMessenger();
         this.callEvent = data.isCallEvent();
         this.format = data.getFormat();
-        this.defaultColor = data.getDefaultColor();
+        this.defaultColor = data.getDefaultColor().toString();
         this.urlFilter = data.isDoUrlFilter();
         this.profanityFilter = data.isDoProfanityFilter();
         usePAPI = strings.usingPlaceholderAPI();
@@ -71,7 +72,7 @@ public class HelpOPChannel extends ProtectedChannel {
         String formattedMessage = messageFormat.replace("{message}", finalMessage);
         if(callEvent) {
             Bukkit.getScheduler().runTask(strings, () -> {
-                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this);
+                AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, finalMessage, members, this, true);
                 Bukkit.getPluginManager().callEvent(event);
                 if(!event.isCancelled()) {
                     for(Player p : members) {
@@ -140,17 +141,6 @@ public class HelpOPChannel extends ProtectedChannel {
     public void setFormat(@NotNull String format) {
         this.format = format;
     }
-
-    @Override
-    public String getDefaultColor() {
-        return defaultColor;
-    }
-
-    @Override
-    public void setDefaultColor(String defaultColor) {
-        this.defaultColor = defaultColor;
-    }
-
     @Override
     public boolean isUrlFiltering() {
         return urlFilter;

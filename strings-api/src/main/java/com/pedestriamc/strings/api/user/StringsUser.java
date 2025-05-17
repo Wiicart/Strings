@@ -87,7 +87,7 @@ public interface StringsUser {
      * Provides the active StringsChannel of the StringsUser.
      * @return The active StringsChannel.
      */
-    @Nullable
+    @NotNull
     Channel getActiveChannel();
 
     /**

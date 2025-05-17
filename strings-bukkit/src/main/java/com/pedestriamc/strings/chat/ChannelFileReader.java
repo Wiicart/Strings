@@ -5,6 +5,7 @@ import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.ChannelData;
+import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.channel.HelpOPChannel;
 import com.pedestriamc.strings.channel.SocialSpyChannel;
@@ -87,7 +88,8 @@ public final class ChannelFileReader {
                     helpOpExists = true;
                 }
             } catch (Exception e) {
-                log("Failed to load channel " + channelName + ", an internal error occurred.");
+                strings.warning("Failed to load channel " + channelName + ", an internal error occurred.");
+                strings.warning(e.getMessage());
             }
         }
     }
@@ -97,7 +99,7 @@ public final class ChannelFileReader {
             ChannelData data = new ChannelData("global");
             data.setMembership(Membership.DEFAULT);
             data.setFormat("{prefix}{displayname}{suffix} &7» {message}");
-            data.setDefaultColor("&f");
+            data.setDefaultColor(StringsTextColor.WHITE);
             data.setDoCooldown(false);
             data.setDoProfanityFilter(false);
             data.setDoUrlFilter(false);
@@ -136,11 +138,12 @@ public final class ChannelFileReader {
         channelLoader.registerChannel(new DefaultChannel(strings, channelLoader));
     }
 
+    //TODO fix chat color
     private ChannelData getChannelData(ConfigurationSection section, String channelName, boolean local) {
         ChannelData data = new ChannelData();
         data.setName(channelName);
         data.setFormat(section.getString("format", "{prefix}{displayname}{suffix} &7» {message}"));
-        data.setDefaultColor(section.getString("default-color", "&f"));
+        data.setDefaultColor(StringsTextColor.WHITE);
         data.setDoCooldown(section.getBoolean("cooldown", false));
         data.setDoProfanityFilter(section.getBoolean("filter-profanity", false));
         data.setDoUrlFilter(section.getBoolean("block-urls", false));

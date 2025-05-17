@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.channel.base;
 
 import com.pedestriamc.strings.api.channel.Membership;
+import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.api.exception.ChannelUnsupportedOperationException;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
@@ -97,12 +98,12 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public String getDefaultColor() {
+    public StringsTextColor getDefaultColor() {
         throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
     @Override
-    public void setDefaultColor(String defaultColor) {
+    public void setDefaultColor(StringsTextColor defaultColor) {
         throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 

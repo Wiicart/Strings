@@ -11,6 +11,7 @@ import java.util.Set;
 /**
  * An AsyncPlayerChatEvent with the additional field of a Channel.
  */
+@SuppressWarnings("unused")
 public final class ChannelChatEvent extends AsyncPlayerChatEvent {
 
     private final Channel channel;
@@ -38,8 +39,17 @@ public final class ChannelChatEvent extends AsyncPlayerChatEvent {
         return channel;
     }
 
+    /**
+     * Provides if this Event is able to cancellable. On Paper servers, this is typically not cancellable.
+     * @return If the event can be canceled.
+     */
     public boolean cancellable() {
         return cancellable;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancellable && super.isCancelled();
     }
 
 }

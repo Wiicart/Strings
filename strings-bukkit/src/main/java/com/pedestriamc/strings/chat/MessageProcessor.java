@@ -80,7 +80,7 @@ public class MessageProcessor {
             message = setPlaceholders(sender, message);
         }
         if(shouldColorMessage(sender)) {
-            message = org.bukkit.ChatColor.translateAlternateColorCodes('&', message);
+            message = net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', message);
         }
         return message;
     }

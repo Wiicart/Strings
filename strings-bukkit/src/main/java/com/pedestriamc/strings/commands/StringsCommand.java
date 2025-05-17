@@ -2,9 +2,9 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.message.Message;
+import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.commands.base.CommandBase;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,10 +15,9 @@ import java.util.HashMap;
 
 public final class StringsCommand extends CommandBase {
 
-    static final String VERSION_MESSAGE = ChatColor.translateAlternateColorCodes(
-            '&',
-            "&8[&3Strings&8] &fRunning Strings version &a" + Strings.VERSION
-    );
+    static final String VERSION_MESSAGE = StringsTextColor.DARK_GRAY + "[" +
+            StringsTextColor.DARK_AQUA + "Strings" + StringsTextColor.DARK_GRAY + "] " +
+            StringsTextColor.WHITE + "Running strings version" + StringsTextColor.GREEN + Strings.VERSION;
 
     public StringsCommand(@NotNull Strings strings) {
         HashMap<String, CommandExecutor> map = new HashMap<>();
@@ -43,7 +42,7 @@ public final class StringsCommand extends CommandBase {
         public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
             if(Permissions.anyOfOrAdmin(sender, "strings.*", "strings.reload") || sender instanceof ConsoleCommandSender) {
                 strings.reload();
-                sender.sendMessage(VERSION_MESSAGE + " " +  ChatColor.WHITE + "reloaded.");
+                sender.sendMessage(VERSION_MESSAGE + " " +  StringsTextColor.WHITE + "reloaded.");
             } else {
                 strings.getMessenger().sendMessage(Message.NO_PERMS, sender);
             }

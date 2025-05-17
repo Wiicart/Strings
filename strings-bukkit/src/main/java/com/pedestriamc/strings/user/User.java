@@ -191,7 +191,7 @@ public final class User implements StringsUser {
      */
     public String getChatColor(final Channel channel) {
         if(chatColor == null || chatColor.isEmpty()) {
-            return channel.getDefaultColor();
+            return channel.getDefaultColor().toString();
         }
         return color(chatColor);
     }

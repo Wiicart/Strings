@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.channel;
 
+import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import org.bukkit.ChatColor;
@@ -63,8 +64,8 @@ public class SocialSpyChannel extends ProtectedChannel {
     }
 
     @Override
-    public String getDefaultColor() {
-        return "&f";
+    public StringsTextColor getDefaultColor() {
+        return StringsTextColor.WHITE;
     }
 
     @Override

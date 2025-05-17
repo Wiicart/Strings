@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.api.chat.action;
+package com.pedestriamc.strings.api.text.action;
 
 import org.bukkit.entity.Player;
 
