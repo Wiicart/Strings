@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.chat.StringsTextColor;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.user.util.UserUtil;
@@ -21,23 +22,23 @@ import static com.pedestriamc.strings.api.message.Message.*;
 
 public final class ChatColorCommand implements CommandExecutor {
 
-    private static final Map<String, ChatColor> colorMap = Map.ofEntries(
-            new AbstractMap.SimpleEntry<>("BLACK", ChatColor.BLACK),
-            new AbstractMap.SimpleEntry<>("DARKBLUE", ChatColor.DARK_BLUE),
-            new AbstractMap.SimpleEntry<>("DARKGREEN", ChatColor.DARK_GREEN),
-            new AbstractMap.SimpleEntry<>("DARKAQUA", ChatColor.DARK_AQUA),
-            new AbstractMap.SimpleEntry<>("DARKRED", ChatColor.DARK_RED),
-            new AbstractMap.SimpleEntry<>("DARKPURPLE", ChatColor.DARK_PURPLE),
-            new AbstractMap.SimpleEntry<>("GOLD", ChatColor.GOLD),
-            new AbstractMap.SimpleEntry<>("GRAY", ChatColor.GRAY),
-            new AbstractMap.SimpleEntry<>("DARKGRAY", ChatColor.DARK_GRAY),
-            new AbstractMap.SimpleEntry<>("BLUE", ChatColor.BLUE),
-            new AbstractMap.SimpleEntry<>("GREEN", ChatColor.GREEN),
-            new AbstractMap.SimpleEntry<>("AQUA", ChatColor.AQUA),
-            new AbstractMap.SimpleEntry<>("RED", ChatColor.RED),
-            new AbstractMap.SimpleEntry<>("LIGHTPURPLE", ChatColor.LIGHT_PURPLE),
-            new AbstractMap.SimpleEntry<>("YELLOW", ChatColor.YELLOW),
-            new AbstractMap.SimpleEntry<>("WHITE", ChatColor.WHITE)
+    private static final Map<String, StringsTextColor> colorMap = Map.ofEntries(
+            new AbstractMap.SimpleEntry<>("BLACK", StringsTextColor.BLACK),
+            new AbstractMap.SimpleEntry<>("DARKBLUE", StringsTextColor.DARK_BLUE),
+            new AbstractMap.SimpleEntry<>("DARKGREEN", StringsTextColor.DARK_GREEN),
+            new AbstractMap.SimpleEntry<>("DARKAQUA", StringsTextColor.DARK_AQUA),
+            new AbstractMap.SimpleEntry<>("DARKRED", StringsTextColor.DARK_RED),
+            new AbstractMap.SimpleEntry<>("DARKPURPLE", StringsTextColor.DARK_PURPLE),
+            new AbstractMap.SimpleEntry<>("GOLD", StringsTextColor.GOLD),
+            new AbstractMap.SimpleEntry<>("GRAY", StringsTextColor.GRAY),
+            new AbstractMap.SimpleEntry<>("DARKGRAY", StringsTextColor.DARK_GRAY),
+            new AbstractMap.SimpleEntry<>("BLUE", StringsTextColor.BLUE),
+            new AbstractMap.SimpleEntry<>("GREEN", StringsTextColor.GREEN),
+            new AbstractMap.SimpleEntry<>("AQUA", StringsTextColor.AQUA),
+            new AbstractMap.SimpleEntry<>("RED", StringsTextColor.RED),
+            new AbstractMap.SimpleEntry<>("LIGHTPURPLE", StringsTextColor.PINK),
+            new AbstractMap.SimpleEntry<>("YELLOW", StringsTextColor.YELLOW),
+            new AbstractMap.SimpleEntry<>("WHITE", StringsTextColor.WHITE)
     );
 
     private static final Map<String, ChatColor> styleMap = Map.of(

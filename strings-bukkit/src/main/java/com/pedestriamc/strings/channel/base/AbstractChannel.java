@@ -150,7 +150,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     public Map<String, Object> getData() {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("format", getFormat());
-        map.put("default-color", getDefaultColor());
+        map.put("default-color", getDefaultColor().chatColor());
         map.put("call-event", String.valueOf(isCallEvent()));
         map.put("filter-profanity", String.valueOf(isProfanityFiltering()));
         map.put("block-urls", String.valueOf(isUrlFiltering()));

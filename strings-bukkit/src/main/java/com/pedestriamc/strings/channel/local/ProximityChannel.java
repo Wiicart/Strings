@@ -113,17 +113,8 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
 
     @Override
     public Map<String, Object> getData() {
-        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        map.put("format", getFormat());
-        map.put("default-color", getDefaultColor());
-        map.put("call-event", String.valueOf(isCallEvent()));
-        map.put("filter-profanity", String.valueOf(isProfanityFiltering()));
-        map.put("block-urls", String.valueOf(isUrlFiltering()));
-        map.put("cooldown", String.valueOf(isCooldownEnabled()));
-        map.put("type", String.valueOf(getType()));
-        map.put("membership", String.valueOf(getMembership()));
+        Map<String, Object> map = super.getData();
         map.put("distance", String.valueOf(distance));
-        map.put("priority", String.valueOf(getPriority()));
         map.put("worlds", getWorldNames());
         return map;
     }
