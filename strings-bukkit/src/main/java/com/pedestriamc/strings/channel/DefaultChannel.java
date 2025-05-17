@@ -38,7 +38,7 @@ public final class DefaultChannel extends ProtectedChannel {
 
     @Override
     public void sendMessage(@NotNull Player player, @NotNull String message) {
-        Channel channel = determineChannel(player);
+        Channel channel = resolve(player);
         if (channel != null) {
             channel.sendMessage(player, message);
             return;
@@ -53,7 +53,8 @@ public final class DefaultChannel extends ProtectedChannel {
      * @return The Channel with the highest numerical priority that the player is in scope of that allows the player.
      */
     @Nullable
-    public Channel determineChannel(@NotNull Player player) {
+    @Override
+    public Channel resolve(@NotNull Player player) {
         SortedSet<Channel> channels = channelManager.getSortedChannelSet();
         channels.removeIf(channel -> !channel.allows(player));
         channels.removeIf(channel -> channel instanceof LocalChannel local && !local.containsInScope(player));

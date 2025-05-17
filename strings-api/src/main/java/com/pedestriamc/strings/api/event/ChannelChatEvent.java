@@ -14,6 +14,7 @@ import java.util.Set;
 public final class ChannelChatEvent extends AsyncPlayerChatEvent {
 
     private final Channel channel;
+    private final boolean cancellable;
 
     /**
      * @param async   This changes the event to a synchronous state.
@@ -23,9 +24,10 @@ public final class ChannelChatEvent extends AsyncPlayerChatEvent {
      * @param channel the channel which the message will be sent to
      */
     @ApiStatus.Internal
-    public ChannelChatEvent(boolean async, @NotNull Player who, @NotNull String message, @NotNull Set<Player> players, Channel channel) {
+    public ChannelChatEvent(boolean async, @NotNull Player who, @NotNull String message, @NotNull Set<Player> players, Channel channel, boolean cancellable) {
         super(async, who, message, players);
         this.channel = channel;
+        this.cancellable = cancellable;
     }
 
     /**
@@ -34,6 +36,10 @@ public final class ChannelChatEvent extends AsyncPlayerChatEvent {
      */
     public Channel getChannel() {
         return channel;
+    }
+
+    public boolean cancellable() {
+        return cancellable;
     }
 
 }

@@ -15,11 +15,12 @@ import com.pedestriamc.strings.commands.SocialSpyCommand;
 import com.pedestriamc.strings.commands.StringsCommand;
 import com.pedestriamc.strings.commands.channel.ChannelCommand;
 import com.pedestriamc.strings.configuration.Configuration;
-import com.pedestriamc.strings.listeners.ChatListener;
-import com.pedestriamc.strings.listeners.DirectMessageListener;
-import com.pedestriamc.strings.listeners.JoinListener;
-import com.pedestriamc.strings.listeners.LeaveListener;
-import com.pedestriamc.strings.listeners.MentionListener;
+import com.pedestriamc.strings.listener.paper.PaperChatListener;
+import com.pedestriamc.strings.listener.spigot.SpigotChatListener;
+import com.pedestriamc.strings.listener.DirectMessageListener;
+import com.pedestriamc.strings.listener.JoinListener;
+import com.pedestriamc.strings.listener.LeaveListener;
+import com.pedestriamc.strings.listener.MentionListener;
 import com.pedestriamc.strings.tabcompleters.ChannelTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ChatColorTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ClearChatTabCompleter;
@@ -124,10 +125,16 @@ public class ClassRegistryManager {
 
 
     private void registerListeners() {
-        registerListener(new ChatListener(strings));
+        if(strings.isPaper()) {
+            registerListener(new PaperChatListener(strings));
+        } else {
+            registerListener(new SpigotChatListener(strings));
+        }
+
         registerListener(new JoinListener(strings));
         registerListener(new LeaveListener(strings));
         registerListener(new DirectMessageListener(strings));
+
         if(strings.getConfiguration().getBoolean(ENABLE_MENTIONS)) {
             registerListener(new MentionListener(strings));
         }

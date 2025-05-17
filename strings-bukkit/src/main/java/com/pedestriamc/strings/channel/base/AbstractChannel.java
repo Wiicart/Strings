@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.channel.base;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.chat.StringsTextColor;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
@@ -30,7 +31,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     private final MessageProcessor messageProcessor;
 
     private String name;
-    private String defaultColor;
+    private StringsTextColor defaultColor;
     private String format;
 
     private final String broadcastFormat;
@@ -52,10 +53,10 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     protected static final String MESSAGE_PLACEHOLDER = "{message}";
     protected static final String DEFAULT_BROADCAST_FORMAT = "&8[&3Broadcast&8] &f{message}";
 
-    protected AbstractChannel(Strings strings, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority, String broadcastFormat) {
+    protected AbstractChannel(Strings strings, String name, StringsTextColor defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority, String broadcastFormat) {
         this.strings = strings;
         this.name = name;
-        this.defaultColor = defaultColor != null ? defaultColor : "&f";
+        this.defaultColor = defaultColor != null ? defaultColor : StringsTextColor.WHITE;
         this.format = format;
         this.broadcastFormat = broadcastFormat;
         this.membership = membership;
@@ -71,15 +72,6 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         members = new HashSet<>();
         monitors = new HashSet<>();
     }
-
-    /**
-     * Determines which player(s) messages should be sent to.
-     * Must be implemented by extending classes.
-     * @param sender The sender of the message.
-     * @return A Set<Player> of all players who will see the message.
-     */
-    @NotNull
-    public abstract Set<Player> getRecipients(@NotNull Player sender);
 
     /**
      * Provides a Set<Player> of all Players in the Channel's scope.
@@ -110,7 +102,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     private void sendEventMessage(@NotNull Player player, @NotNull String message, @NotNull String template, @NotNull Set<Player> recipients) {
         Bukkit.getScheduler().runTask(strings, () -> {
-            AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, message, recipients, this);
+            AsyncPlayerChatEvent event = new ChannelChatEvent(false, player, message, recipients, this, true);
             Bukkit.getPluginManager().callEvent(event);
             if (!event.isCancelled()) {
                 String finalForm = template.replace(MESSAGE_PLACEHOLDER, event.getMessage());
@@ -197,12 +189,12 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public String getDefaultColor() {
-        return ChatColor.translateAlternateColorCodes('&', defaultColor);
+    public StringsTextColor getDefaultColor() {
+        return defaultColor;
     }
 
     @Override
-    public void setDefaultColor(String defaultColor) {
+    public void setDefaultColor(StringsTextColor defaultColor) {
         this.defaultColor = defaultColor;
     }
 
@@ -316,6 +308,11 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     @Override
     public Membership getMembership() {
         return membership;
+    }
+
+    @Override
+    public Channel resolve(@NotNull Player player) {
+        return this;
     }
 
 }

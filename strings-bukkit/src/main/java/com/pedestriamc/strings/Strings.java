@@ -141,7 +141,7 @@ public final class Strings extends JavaPlugin {
             info("PlaceholderAPI detected.");
             usingPlaceholderAPI = true;
         } try {
-            Class.forName("com.destroystokyo.paper.util.VersionFetcher");
+            Class.forName("io.papermc.paper.event.player.AsyncChatEvent");
             isPaper = true;
         } catch(ClassNotFoundException ignored) {}
     }

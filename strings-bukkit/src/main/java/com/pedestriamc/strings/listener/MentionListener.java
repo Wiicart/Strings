@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.listeners;
+package com.pedestriamc.strings.listener;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.chat.Mentioner;

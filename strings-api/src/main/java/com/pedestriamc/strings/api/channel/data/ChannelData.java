@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.api.channel.data;
 
 import com.pedestriamc.strings.api.channel.Membership;
+import com.pedestriamc.strings.api.chat.StringsTextColor;
 import org.bukkit.World;
 
 import java.util.Set;
@@ -12,7 +13,7 @@ import java.util.Set;
 public final class ChannelData
 {
     private String name;
-    private String defaultColor;
+    private StringsTextColor defaultColor;
     private String format;
     private String broadcastFormat;
     private Membership membership;
@@ -58,7 +59,7 @@ public final class ChannelData
      * Provides the Channel's default color.
      * @return A String representation of the default color.
      */
-    public String getDefaultColor() {
+    public StringsTextColor getDefaultColor() {
         return defaultColor;
     }
 
@@ -66,7 +67,7 @@ public final class ChannelData
      * Sets the Channel's default color.
      * @param defaultColor The new default color.
      */
-    public void setDefaultColor(String defaultColor) {
+    public void setDefaultColor(StringsTextColor defaultColor) {
         this.defaultColor = defaultColor;
     }
 

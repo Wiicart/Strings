@@ -63,7 +63,7 @@ public final class StringsPlaceholderExpansion extends PlaceholderExpansion {
     private @Nullable String determineChannel(StringsUser user, Player player) {
         Channel c = user.getActiveChannel();
         if(c instanceof DefaultChannel defaultChannel) {
-            c = defaultChannel.determineChannel(player);
+            c = defaultChannel.resolve(player);
         }
         if(c != null) {
             return c.getName();

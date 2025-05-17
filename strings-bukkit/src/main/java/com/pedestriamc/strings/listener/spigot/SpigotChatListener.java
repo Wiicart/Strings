@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.listeners;
+package com.pedestriamc.strings.listener.spigot;
 
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.chat.ChannelManager;
@@ -16,13 +16,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class ChatListener implements Listener {
+public class SpigotChatListener implements Listener {
 
     private final Channel defaultChannel;
     private final ChannelManager channelLoader;
     private final UserUtil userUtil;
 
-    public ChatListener(@NotNull Strings strings) {
+    public SpigotChatListener(@NotNull Strings strings) {
         channelLoader = strings.getChannelLoader();
         defaultChannel = channelLoader.getChannel("default");
         userUtil = strings.getUserUtil();

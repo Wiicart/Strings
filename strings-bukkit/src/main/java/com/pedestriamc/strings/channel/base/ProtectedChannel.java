@@ -45,6 +45,10 @@ public abstract class ProtectedChannel implements Channel {
         return Membership.PROTECTED;
     }
 
+    @Override
+    public Set<Player> getRecipients(@NotNull Player sender) {
+        return Collections.emptySet();
+    }
 
     @Override
     public Map<String, Object> getData() {
@@ -59,6 +63,11 @@ public abstract class ProtectedChannel implements Channel {
     @Override
     public boolean allows(@NotNull Permissible permissible) {
         return false;
+    }
+
+    @Override
+    public Channel resolve(@NotNull Player player) {
+        return this;
     }
 
     // Unimplemented methods from this point on.

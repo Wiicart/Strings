@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.listeners;
+package com.pedestriamc.strings.listener;
 
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.configuration.Option;

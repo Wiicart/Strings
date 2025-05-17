@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.listeners;
+package com.pedestriamc.strings.listener;
 
 import com.pedestriamc.strings.channel.SocialSpyChannel;
 import com.pedestriamc.strings.api.event.PlayerDirectMessageEvent;

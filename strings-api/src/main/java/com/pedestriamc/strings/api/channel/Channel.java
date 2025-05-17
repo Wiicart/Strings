@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.api.channel;
 
+import com.pedestriamc.strings.api.chat.StringsTextColor;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
@@ -29,6 +30,21 @@ public interface Channel extends Comparable<Channel> {
     default int compareTo(@NotNull Channel channel) {
         return Integer.compare(channel.getPriority(), getPriority());
     }
+
+    /**
+     * Resolves the final Channel a message would be directed too.
+     * In most implementations, the instance of itself would be returned.
+     * @param player The sender.
+     * @return A Channel
+     */
+    Channel resolve(@NotNull Player player);
+
+    /**
+     * Provides the recipients of a message if the sender were to send a message in the Channel.
+     * @param sender The message sender.
+     * @return A Set of Players.
+     */
+    Set<Player> getRecipients(@NotNull Player sender);
 
     /**
      * Broadcasts a message to a Channel.
@@ -72,7 +88,7 @@ public interface Channel extends Comparable<Channel> {
      * Provides the default chat color of the Channel.
      * @return The default chat color.
      */
-    String getDefaultColor();
+    StringsTextColor getDefaultColor();
 
     /**
      * Sets the Channel's default chat color.
