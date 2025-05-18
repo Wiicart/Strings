@@ -64,8 +64,8 @@ public class SocialSpyChannel extends ProtectedChannel {
     }
 
     @Override
-    public StringsTextColor getDefaultColor() {
-        return StringsTextColor.WHITE;
+    public String getDefaultColor() {
+        return StringsTextColor.WHITE.toString();
     }
 
     @Override

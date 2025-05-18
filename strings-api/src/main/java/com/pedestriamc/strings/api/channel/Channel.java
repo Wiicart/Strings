@@ -86,15 +86,17 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Provides the default chat color of the Channel.
+     * @deprecated - Apply default chat color in the Channel's format using {@link Channel#setFormat(String)}
      * @return The default chat color.
      */
-    StringsTextColor getDefaultColor();
+    @Deprecated
+    String getDefaultColor();
 
     /**
      * Sets the Channel's default chat color.
      * @param defaultColor The new default chat color.
      */
-    void setDefaultColor(StringsTextColor defaultColor);
+    void setDefaultColor(String defaultColor);
 
     /**
      * Tells if the channel requires URL filtering.

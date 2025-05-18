@@ -1,40 +1,40 @@
 package com.pedestriamc.strings.api.channel;
 
+import com.pedestriamc.strings.api.channel.local.LocalChannel;
+import org.bukkit.entity.Player;
+
 /**
- * Represents the types of StringsChannels.
- * Type.PROTECTED represents an internal channel for Strings and should not be modified.
+ * Represents all {@link Channel} types.
  */
 public enum Type {
     /**
-     * Represents Channels for internal plugin use
+     * Represents Channels for internal plugin use. These Channels should not be modified.
      */
     PROTECTED(),
-
     /**
-     * Represents "normal" channels such as StringChannels
+     * Represents "normal" channels such as a {@code StringChannel}
      */
     NORMAL(),
-
     /**
-     * Represents all types of ProximityChannels, which are instances of LocalChannel
+     * Represents all types of {@code ProximityChannel}, which are instances of {@link LocalChannel}
      */
     PROXIMITY(),
-
     /**
-     * Represents all types of WorldChannels, which are instances of LocalChannel
+     * Represents all types of {@code WorldChannel}, which are instances of {@link LocalChannel}
      */
     WORLD(),
-
     /**
-     * Represents the DefaultChannel, a channel that does not process any messages; it instead
+     * Represents the {@code DefaultChannel}, a channel that does not process any messages; it instead
      * forwards them to a different channel.
+     * The final destination can be determined with {@link Channel#resolve(Player)}
      */
     DEFAULT(),
-
     /**
      * Represents PartyChannels
      */
     PARTY(),
-
+    /**
+     * Represents custom Channels.
+     */
     CUSTOM()
 }

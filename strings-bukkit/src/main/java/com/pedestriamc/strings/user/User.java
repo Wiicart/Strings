@@ -189,9 +189,10 @@ public final class User implements StringsUser {
      * @param channel The channel to get the fallback chat color from.
      * @return A chat color.
      */
+    @SuppressWarnings("deprecation")
     public String getChatColor(final Channel channel) {
         if(chatColor == null || chatColor.isEmpty()) {
-            return channel.getDefaultColor().toString();
+            return channel.getDefaultColor();
         }
         return color(chatColor);
     }

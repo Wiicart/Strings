@@ -31,7 +31,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     private final MessageProcessor messageProcessor;
 
     private String name;
-    private StringsTextColor defaultColor;
+    private String defaultColor;
     private String format;
 
     private final String broadcastFormat;
@@ -53,10 +53,10 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     protected static final String MESSAGE_PLACEHOLDER = "{message}";
     protected static final String DEFAULT_BROADCAST_FORMAT = "&8[&3Broadcast&8] &f{message}";
 
-    protected AbstractChannel(Strings strings, String name, StringsTextColor defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority, String broadcastFormat) {
+    protected AbstractChannel(Strings strings, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority, String broadcastFormat) {
         this.strings = strings;
         this.name = name;
-        this.defaultColor = defaultColor != null ? defaultColor : StringsTextColor.WHITE;
+        this.defaultColor = defaultColor != null ? defaultColor : StringsTextColor.WHITE.toString();
         this.format = format;
         this.broadcastFormat = broadcastFormat;
         this.membership = membership;
@@ -152,7 +152,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     public Map<String, Object> getData() {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("format", getFormat());
-        map.put("default-color", getDefaultColor().chatColor());
+        map.put("default-color", getDefaultColor());
         map.put("call-event", String.valueOf(isCallEvent()));
         map.put("filter-profanity", String.valueOf(isProfanityFiltering()));
         map.put("block-urls", String.valueOf(isUrlFiltering()));
@@ -191,12 +191,12 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public StringsTextColor getDefaultColor() {
+    public String getDefaultColor() {
         return defaultColor;
     }
 
     @Override
-    public void setDefaultColor(StringsTextColor defaultColor) {
+    public void setDefaultColor(String defaultColor) {
         this.defaultColor = defaultColor;
     }
 

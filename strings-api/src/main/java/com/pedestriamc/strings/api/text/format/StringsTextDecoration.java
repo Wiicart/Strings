@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  * Use {@link #decoration()} to get the Adventure TextDecoration.
  */
 @SuppressWarnings("unused")
-public enum StringsTextDecoration {
+public enum StringsTextDecoration implements StringsFormat {
     /**
      * Represents bold.
      */

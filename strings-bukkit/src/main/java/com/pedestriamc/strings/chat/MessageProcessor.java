@@ -120,7 +120,7 @@ public class MessageProcessor {
      * @param string The String to translate
      * @return A translated String;
      */
-    private String setHex(@NotNull String string) {
+    private @NotNull String setHex(@NotNull String string) {
         Matcher matcher = HEX_PATTERN.matcher(string);
         StringBuilder sb = new StringBuilder();
 

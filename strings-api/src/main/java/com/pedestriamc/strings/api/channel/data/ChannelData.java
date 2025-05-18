@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.api.channel.data;
 
 import com.pedestriamc.strings.api.channel.Membership;
-import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import org.bukkit.World;
 
 import java.util.Set;
@@ -13,7 +12,7 @@ import java.util.Set;
 public final class ChannelData
 {
     private String name;
-    private StringsTextColor defaultColor;
+    private String defaultColor;
     private String format;
     private String broadcastFormat;
     private Membership membership;
@@ -51,15 +50,16 @@ public final class ChannelData
      * Sets the Channel's name.
      * @param name The new Channel name.
      */
-    public void setName(String name) {
+    public ChannelData setName(String name) {
         this.name = name;
+        return this;
     }
 
     /**
      * Provides the Channel's default color.
      * @return A String representation of the default color.
      */
-    public StringsTextColor getDefaultColor() {
+    public String getDefaultColor() {
         return defaultColor;
     }
 
@@ -67,8 +67,9 @@ public final class ChannelData
      * Sets the Channel's default color.
      * @param defaultColor The new default color.
      */
-    public void setDefaultColor(StringsTextColor defaultColor) {
+    public ChannelData setDefaultColor(String defaultColor) {
         this.defaultColor = defaultColor;
+        return this;
     }
 
     /**
@@ -79,64 +80,72 @@ public final class ChannelData
         return format;
     }
 
-    public void setFormat(String format) {
+    public ChannelData setFormat(String format) {
         this.format = format;
+        return this;
     }
 
     public Membership getMembership() {
         return membership;
     }
 
-    public void setMembership(Membership membership) {
+    public ChannelData setMembership(Membership membership) {
         this.membership = membership;
+        return this;
     }
 
     public boolean isDoCooldown() {
         return doCooldown;
     }
 
-    public void setDoCooldown(boolean doCooldown) {
+    public ChannelData setDoCooldown(boolean doCooldown) {
         this.doCooldown = doCooldown;
+        return this;
     }
 
     public boolean isDoProfanityFilter() {
         return doProfanityFilter;
     }
 
-    public void setDoProfanityFilter(boolean doProfanityFilter) {
+    public ChannelData setDoProfanityFilter(boolean doProfanityFilter) {
         this.doProfanityFilter = doProfanityFilter;
+        return this;
     }
 
     public boolean isDoUrlFilter() {
         return doUrlFilter;
     }
 
-    public void setDoUrlFilter(boolean doUrlFilter) {
+    public ChannelData setDoUrlFilter(boolean doUrlFilter) {
         this.doUrlFilter = doUrlFilter;
+        return this;
     }
 
     public boolean isCallEvent() {
         return callEvent;
     }
 
-    public void setCallEvent(boolean callEvent) {
+    public ChannelData setCallEvent(boolean callEvent) {
         this.callEvent = callEvent;
+        return this;
     }
 
     public int getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
+    public ChannelData setPriority(int priority) {
         this.priority = priority;
+        return this;
     }
 
     public Set<World> getWorlds() {
         return worlds;
     }
 
-    public void setWorlds(Set<World> worlds) {
+    public ChannelData setWorlds(Set<World> worlds) {
         this.worlds = worlds;
+        return this;
     }
 
     /**
@@ -152,15 +161,17 @@ public final class ChannelData
      * Only applicable to ProximityChannel.
      * @param distance The double value of the distance.
      */
-    public void setDistance(double distance) {
+    public ChannelData setDistance(double distance) {
         this.distance = distance;
+        return this;
     }
 
     public String getBroadcastFormat() {
         return broadcastFormat;
     }
 
-    public void setBroadcastFormat(String broadcastFormat) {
+    public ChannelData setBroadcastFormat(String broadcastFormat) {
         this.broadcastFormat = broadcastFormat;
+        return this;
     }
 }

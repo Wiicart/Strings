@@ -77,7 +77,7 @@ public final class ChannelManager implements ChannelLoader {
         Objects.requireNonNull(channel, "Channel cannot be null");
         String channelName = channel.getName();
         if(channels.containsKey(channelName)) {
-            strings.info("A Channel with the name '" + channelName + "' already exists, channels with the same name cannot be registered.");
+            strings.warning("A Channel with the name '" + channelName + "' already exists, channels with the same name cannot be registered.");
             return;
         }
 
@@ -159,8 +159,9 @@ public final class ChannelManager implements ChannelLoader {
         strings.files().saveChannelsFile();
     }
 
+    @Contract("_, _ -> new")
     @Override
-    public Channel build(@NotNull ChannelData data, @NotNull String type) throws UnsupportedOperationException {
+    public @NotNull Channel build(@NotNull ChannelData data, @NotNull String type) throws UnsupportedOperationException {
         type = type.toLowerCase();
         switch(type) {
             case "stringchannel" ->  { return new StringChannel(strings, data); }

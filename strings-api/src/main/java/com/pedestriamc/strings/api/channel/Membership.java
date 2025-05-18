@@ -1,35 +1,22 @@
 package com.pedestriamc.strings.api.channel;
 
 /**
- * Represents the default membership of a StringsChannel.
- * If the membership is Membership.DEFAULT, all players receive messages from the channel by default.
- * @see #DEFAULT
- * @see #PERMISSION
- * @see #PROTECTED
- * @see #PARTY
+ * Represents the membership of a {@link Channel}. This helps determine eligibility to send and receive messages.
  */
 public enum Membership {
     /**
-     * Channels set to Membership.DEFAULT are open to all players.
+     * Channels set to this {@code Membership} are open to all players.
      * These channels will be considered by order of priority when a player sends a
-     * message from the default channel.
+     * message from the {@code DefaultChannel}, using {@link Channel#getPriority()}
      */
     DEFAULT,
-
     /**
-     * Channels with this Membership are not open to all players and require permissions to join.
-     * These channels are not considered when a player's channel is set to default.
+     * Channels with this {@code Membership} are not open to players by default and require permissions to join.
+     * If a Player is still eligible for this Channel, it's possible to be selected by the {@code DefaultChannel}.
      */
     PERMISSION,
-
     /**
-     * Channels with this Membership are typically internal Channels, and this Membership essentially tells
-     * anything that involves Membership to ignore the channel.
+     * Channels with this Membership are typically internal Channels, behavior may vary.
      */
     PROTECTED,
-
-    /**
-     * Only PartyChannel(s) can have this Membership.
-     */
-    PARTY
 }

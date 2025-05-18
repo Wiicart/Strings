@@ -1,7 +1,6 @@
-package com.pedestriamc.strings.listener.spigot;
+package com.pedestriamc.strings.listener.chat;
 
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
-import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.Strings;
@@ -9,22 +8,17 @@ import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-
-public class SpigotChatListener implements Listener {
+public class SpigotChatListener extends AbstractChatListener {
 
     private final Channel defaultChannel;
-    private final ChannelManager channelLoader;
     private final UserUtil userUtil;
 
     public SpigotChatListener(@NotNull Strings strings) {
-        channelLoader = strings.getChannelLoader();
-        defaultChannel = channelLoader.getChannel("default");
+        super(strings);
+        defaultChannel = strings.getChannelLoader().getDefaultChannel();
         userUtil = strings.getUserUtil();
     }
 
@@ -53,21 +47,5 @@ public class SpigotChatListener implements Listener {
 
         channel.sendMessage(playerSender, playerMessage);
     }
-
-    @Contract("_, _ -> new")
-    private @NotNull Container processSymbol(String msg, User user) {
-        for(Map.Entry<String, Channel> entry : channelLoader.getChannelSymbols().entrySet()) {
-            if(msg.startsWith(entry.getKey())) {
-                Channel c = entry.getValue();
-                if (c.allows(user.getPlayer())) {
-                    msg = msg.substring(entry.getKey().length());
-                    return new Container(c, msg);
-                }
-            }
-        }
-        return new Container(user.getActiveChannel(), msg);
-    }
-
-    private record Container(Channel channel, String message) {}
 
 }
