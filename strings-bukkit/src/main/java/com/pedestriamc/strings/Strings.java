@@ -1,6 +1,5 @@
 package com.pedestriamc.strings;
 
-import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsAPIRegistrar;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.event.StringsReloader;
@@ -42,12 +41,10 @@ public final class Strings extends JavaPlugin {
     public static final String DISTRIBUTOR = "github";
     public static final short PLUGIN_NUM = 6;
 
-    @SuppressWarnings("unused")
-    private AutoBroadcasts autoBroadcasts;
-
     private boolean usingPlaceholderAPI = false;
     private boolean isPaper = false;
     private boolean usingVault;
+    private boolean usingLuckPerms = false;
 
     private FileManager fileManager;
     private UserUtil userUtil;
@@ -92,14 +89,12 @@ public final class Strings extends JavaPlugin {
         serverMessages = null;
         playerDirectMessenger = null;
         channelLoader = null;
-        autoBroadcasts = null;
         mentioner = null;
         logManager = null;
         fileManager = null;
 
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
-        getServer().getServicesManager().unregister(StringsAPI.class, stringsImpl);
         stringsImpl = null;
 
         try {
@@ -116,6 +111,9 @@ public final class Strings extends JavaPlugin {
         getServer().getPluginManager().callEvent(StringsReloader.createEvent());
     }
 
+    /**
+     * Loads bStats metrics.
+     */
     private void loadMetrics() {
         Metrics metrics = new Metrics(this, METRICS_ID);
         metrics.addCustomChart(new SimplePie(
@@ -132,15 +130,27 @@ public final class Strings extends JavaPlugin {
         );
     }
 
+    /**
+     * Runs {@link User#logOff()} on all registered Users.
+     */
     private void logOutAll() {
         userUtil.getUsers().forEach(User::logOff);
     }
 
+    /**
+     * Checks what plugins are available, and if the server is running Paper or not.
+     */
     private void determineEnvironment() {
         if(getConfig().getBoolean("placeholder-api") && getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             info("PlaceholderAPI detected.");
             usingPlaceholderAPI = true;
-        } try {
+        }
+
+        if(getServer().getPluginManager().getPlugin("LuckPerms") != null) {
+            usingLuckPerms = true;
+        }
+
+        try {
             Class.forName("io.papermc.paper.event.player.AsyncChatEvent");
             isPaper = true;
         } catch(ClassNotFoundException ignored) {}
@@ -157,8 +167,11 @@ public final class Strings extends JavaPlugin {
         mentioner = new Mentioner(this);
     }
 
+    /**
+     * Instantiates classes with dependencies not yet available when {@link Strings#instantiateObjects()} is called.
+     */
     private void instantiateObjectsTwo() {
-        autoBroadcasts = new AutoBroadcasts(this);
+        new AutoBroadcasts(this);
     }
 
     private void setupVault() {
@@ -173,7 +186,7 @@ public final class Strings extends JavaPlugin {
                 info("Vault found.");
             }
         } catch(NoClassDefFoundError a) {
-            info("Vault not found, using built in methods.");
+            warning("Vault not found, using built in methods.");
             usingVault = false;
         }
     }
@@ -233,12 +246,16 @@ public final class Strings extends JavaPlugin {
         return chat;
     }
 
-    public boolean usingPlaceholderAPI() {
+    public boolean isUsingPlaceholderAPI() {
         return usingPlaceholderAPI;
     }
 
-    public boolean usingVault() {
+    public boolean isUsingVault() {
         return usingVault;
+    }
+
+    public boolean isUsingLuckPerms() {
+        return usingLuckPerms;
     }
 
     public boolean isPaper() {

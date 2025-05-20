@@ -34,10 +34,12 @@ public final class Combination {
         return component;
     }
 
+    @SuppressWarnings("all")
     public static Component apply(Set<StringsFormat> formats, String codes) {
         return null;
     }
 
+    @SuppressWarnings("all")
     public static Combination fromString(String original) {
         return null;
     }

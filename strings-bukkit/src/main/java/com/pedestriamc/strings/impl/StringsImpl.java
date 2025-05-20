@@ -31,7 +31,7 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public @NotNull StringsUser getStringsUser(Player player) {
+    public @NotNull StringsUser getStringsUser(@NotNull Player player) {
         return getStringsUser(player.getUniqueId());
     }
 

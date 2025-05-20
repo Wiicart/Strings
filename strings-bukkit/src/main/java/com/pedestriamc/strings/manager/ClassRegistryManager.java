@@ -20,7 +20,8 @@ import com.pedestriamc.strings.listener.chat.SpigotChatListener;
 import com.pedestriamc.strings.listener.DirectMessageListener;
 import com.pedestriamc.strings.listener.JoinListener;
 import com.pedestriamc.strings.listener.LeaveListener;
-import com.pedestriamc.strings.listener.MentionListener;
+import com.pedestriamc.strings.listener.mention.LuckPermsMentionListener;
+import com.pedestriamc.strings.listener.mention.MentionListener;
 import com.pedestriamc.strings.tabcompleters.ChannelTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ChatColorTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ClearChatTabCompleter;
@@ -123,7 +124,9 @@ public class ClassRegistryManager {
         }
     }
 
-
+    /**
+     * Registers Listeners for Strings.
+     */
     private void registerListeners() {
         if(strings.isPaper()) {
             registerListener(new PaperChatListener(strings));
@@ -136,7 +139,11 @@ public class ClassRegistryManager {
         registerListener(new DirectMessageListener(strings));
 
         if(strings.getConfiguration().getBoolean(ENABLE_MENTIONS)) {
-            registerListener(new MentionListener(strings));
+            if(strings.isUsingLuckPerms()) {
+                registerListener(new LuckPermsMentionListener(strings));
+            } else {
+                registerListener(new MentionListener(strings));
+            }
         }
     }
 

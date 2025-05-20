@@ -4,9 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Type;
-import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.channel.base.AbstractChannel;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +26,7 @@ public class PartyChannel extends AbstractChannel {
     private Set<Player> monitors;
 
     protected PartyChannel(Strings strings, ChannelLoader channelLoader, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority) {
-        super(strings, name, StringsTextColor.of(ChatColor.valueOf(defaultColor)), format, membership, doCooldown, doProfanityFilter, doUrlFilter, callEvent, priority, null);
+        super(strings, name, defaultColor, format, membership, doCooldown, doProfanityFilter, doUrlFilter, callEvent, priority, null);
     }
 
     @Override

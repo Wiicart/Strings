@@ -23,7 +23,7 @@ import java.util.Set;
 
 /**
  * Chat Listener for Paper servers.
- * Unlike with Spigot servers, the ChatEvent called by the server will not be canceled.
+ * Unlike with Spigot servers, the ChatEvent called by the server is not canceled.
  */
 public class PaperChatListener extends AbstractChatListener {
 

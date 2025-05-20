@@ -37,7 +37,7 @@ public class MessageProcessor {
         userUtil = strings.getUserUtil();
         logger = strings.getLogger();
         Configuration config = strings.getConfiguration();
-        usingPlaceholderAPI = strings.usingPlaceholderAPI();
+        usingPlaceholderAPI = strings.isUsingPlaceholderAPI();
         processingMessagePlaceholders = config.getBoolean(PROCESS_PLACEHOLDERS) && usingPlaceholderAPI;
         parsingMessageChatColors = config.getBoolean(PROCESS_CHATCOLOR);
         mentionColor = config.getColored(MENTION_COLOR);

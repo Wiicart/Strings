@@ -23,7 +23,7 @@ public class ServerMessages {
 
     public ServerMessages(@NotNull Strings strings) {
         userUtil = strings.getUserUtil();
-        usePAPI = strings.usingPlaceholderAPI();
+        usePAPI = strings.isUsingPlaceholderAPI();
 
         Configuration config = strings.getConfiguration();
         joinMessageTemplate = config.getString(Option.JOIN_MESSAGE);

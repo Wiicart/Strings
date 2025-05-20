@@ -229,7 +229,7 @@ public final class User implements StringsUser {
     @Override
     public void setPrefix(@NotNull String prefix) {
         this.prefix = prefix;
-        if(strings.usingVault()) {
+        if(strings.isUsingVault()) {
             strings.getVaultChat().setPlayerPrefix(player, prefix);
         }
     }
@@ -241,7 +241,7 @@ public final class User implements StringsUser {
      */
     @Override
     public String getPrefix() {
-        if(strings.usingVault()) {
+        if(strings.isUsingVault()) {
             return color(strings.getVaultChat().getPlayerPrefix(player));
         } else {
             if(prefix == null || prefix.isEmpty()) {
@@ -259,7 +259,7 @@ public final class User implements StringsUser {
     @Override
     public void setSuffix(@NotNull String suffix) {
         this.suffix = suffix;
-        if(strings.usingVault()) {
+        if(strings.isUsingVault()) {
             strings.getVaultChat().setPlayerSuffix(player, suffix);
         }
     }
@@ -271,7 +271,7 @@ public final class User implements StringsUser {
      */
     @Override
     public @NotNull String getSuffix() {
-        if(strings.usingVault()) {
+        if(strings.isUsingVault()) {
             return color(strings.getVaultChat().getPlayerSuffix(player));
         } else {
             if(suffix == null || suffix.isEmpty()) {

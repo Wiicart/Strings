@@ -14,12 +14,12 @@ abstract class AbstractChatListener implements Listener {
 
     private final ChannelManager channelLoader;
 
-    protected AbstractChatListener(Strings strings) {
+    protected AbstractChatListener(@NotNull Strings strings) {
         channelLoader = strings.getChannelLoader();
     }
 
     @Contract("_, _ -> new")
-    protected @NotNull Container processSymbol(String msg, User user) {
+    protected @NotNull Container processSymbol(@NotNull String msg, @NotNull User user) {
         for(Map.Entry<String, Channel> entry : channelLoader.getChannelSymbols().entrySet()) {
             if(msg.startsWith(entry.getKey())) {
                 Channel c = entry.getValue();

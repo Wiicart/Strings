@@ -83,7 +83,7 @@ public final class StringsModeration extends JavaPlugin {
 
     private void registerAPI() {
         try {
-            APIRegistrar.register(new APIImplementation(this));
+            APIRegistrar.register(new APIImplementation(this), this);
         } catch(Exception ex) {
             getLogger().warning("Failed to register StringsModeration API");
         }

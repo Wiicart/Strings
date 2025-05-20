@@ -23,8 +23,7 @@ public class Mentioner {
     private final String format;
     private Sound sound;
 
-    public Mentioner(@NotNull Strings strings)
-    {
+    public Mentioner(@NotNull Strings strings) {
         this.userUtil = strings.getUserUtil();
 
         Configuration config = strings.getConfiguration();
@@ -44,8 +43,7 @@ public class Mentioner {
         return Permissions.anyOfOrAdmin(player, "strings.*", "strings.mention", "strings.mention.*", "strings.mention.all");
     }
 
-    public void mention(@NotNull Player player, @NotNull Player sender)
-    {
+    public void mention(@NotNull Player player, @NotNull Player sender) {
         if(!userUtil.getUser(player).isMentionsEnabled()) {
             return;
         }
@@ -58,8 +56,7 @@ public class Mentioner {
         mention(user.getPlayer(), sender.getPlayer());
     }
 
-    public void mention(Set<Player> group, Player sender)
-    {
+    public void mention(Set<Player> group, Player sender) {
         group.removeIf(p -> !userUtil.getUser(p).isMentionsEnabled());
 
         String str = format;
@@ -70,8 +67,7 @@ public class Mentioner {
         }
     }
 
-    private void sendMention(Player player, String message)
-    {
+    private void sendMention(Player player, String message) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
         player.playSound(player.getLocation(), sound, volume, pitch);
     }

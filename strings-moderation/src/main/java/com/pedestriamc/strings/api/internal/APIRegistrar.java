@@ -3,6 +3,8 @@ package com.pedestriamc.strings.api.internal;
 import com.pedestriamc.strings.api.StringsModeration;
 import com.pedestriamc.strings.api.StringsProvider;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.ServicePriority;
 
 import java.lang.reflect.Method;
 
@@ -26,19 +28,21 @@ public final class APIRegistrar {
 
     private APIRegistrar() {}
 
-    public static void register(com.pedestriamc.strings.api.StringsModeration moderation) {
+    public static void register(com.pedestriamc.strings.api.StringsModeration moderation, Plugin plugin) {
         try {
             REGISTER.invoke(null, moderation);
-            Bukkit.getLogger().info("[StringsModeration] Registered with StringsAPI");
+            plugin.getServer().getServicesManager().register(com.pedestriamc.strings.api.StringsModeration.class, moderation, plugin, ServicePriority.Highest);
+            plugin.getLogger().info("[StringsModeration] Registered with StringsAPI");
         } catch(Exception e) {
-            Bukkit.getLogger().warning("[StringsModeration] Failed to register StringsModeration API");
-            Bukkit.getLogger().warning("[StringsModeration] Error: " + e.getMessage());
+            plugin.getLogger().warning("[StringsModeration] Failed to register StringsModeration API");
+            plugin.getLogger().warning("[StringsModeration] Error: " + e.getMessage());
         }
     }
 
     public static void unregister() {
         try {
             UNREGISTER.invoke(null);
+            Bukkit.getServer().getServicesManager().unregister(com.pedestriamc.strings.api.StringsModeration.class);
             Bukkit.getLogger().info("[StringModeration] Unregistered from StringsAPI");
         } catch(Exception e) {
             Bukkit.getLogger().warning("[StringsModeration] Failed to register StringsModeration API");

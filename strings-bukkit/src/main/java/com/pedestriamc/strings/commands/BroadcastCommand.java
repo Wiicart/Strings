@@ -23,7 +23,7 @@ public final class BroadcastCommand implements CommandExecutor {
 
     public BroadcastCommand(@NotNull Strings strings) {
         broadcastFormat = strings.getConfiguration().getString(Option.BROADCAST_FORMAT);
-        usePAPI = strings.usingPlaceholderAPI();
+        usePAPI = strings.isUsingPlaceholderAPI();
         messenger = strings.getMessenger();
     }
 

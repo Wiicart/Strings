@@ -31,7 +31,7 @@ public class PlayerDirectMessenger {
         Configuration config = strings.getConfiguration();
         this.messageFormatSender = config.getString(Option.DM_FORMAT_OUT);
         this.messageFormatRecipient = config.getString(Option.DM_FORMAT_IN);
-        this.usePAPI = strings.usingPlaceholderAPI();
+        this.usePAPI = strings.isUsingPlaceholderAPI();
         this.messenger = strings.getMessenger();
 
     }

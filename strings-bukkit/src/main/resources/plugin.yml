@@ -129,14 +129,26 @@ permissions:
   strings.channels.default:
     description: "Allows use of default channels! It is strongly encouraged that all players have this permission."
     default: true
+  strings.mention.*:
+    description: "All mentioning permissions"
+    default: op
+    children:
+      strings.mention: true
+      strings.mention.all: true
+      strings.mention.group: true
+      strings.mention.toggle: true
   strings.mention:
     description: "Allows mentioning players in chat using @<username>"
     default: true
     children:
       strings.mention.all: false
+      strings.mention.group: false
       strings.mention.toggle: true
   strings.mention.all:
     description: "Allows mentioning all players with @everyone"
+    default: op
+  strings.mention.group:
+    description: "Allows mentioning LuckPerms groups"
     default: op
   strings.mention.toggle:
     description: "Allows toggling whether you receive mentions or not"

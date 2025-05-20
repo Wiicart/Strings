@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
-//TODO fix chatcolor
 public class HelpOPChannel extends ProtectedChannel {
 
     private final Strings strings;
@@ -29,23 +28,21 @@ public class HelpOPChannel extends ProtectedChannel {
 
     private final boolean callEvent;
     private String format;
-    private String defaultColor;
     private boolean urlFilter;
     private boolean profanityFilter;
     private final Messenger messenger;
     private final boolean usePAPI;
 
-    public HelpOPChannel(@NotNull Strings strings, String format, String defaultColor, boolean callEvent, boolean urlFilter, boolean profanityFilter)
+    public HelpOPChannel(@NotNull Strings strings, String format, boolean callEvent, boolean urlFilter, boolean profanityFilter)
     {
         super("helpop");
         this.strings = strings;
         this.callEvent = callEvent;
         this.format = format;
-        this.defaultColor = defaultColor;
         this.urlFilter = urlFilter;
         this.profanityFilter = profanityFilter;
         this.messenger = strings.getMessenger();
-        usePAPI = strings.usingPlaceholderAPI();
+        usePAPI = strings.isUsingPlaceholderAPI();
         messageProcessor = new MessageProcessor(strings, this);
     }
 
@@ -56,10 +53,9 @@ public class HelpOPChannel extends ProtectedChannel {
         this.messenger = strings.getMessenger();
         this.callEvent = data.isCallEvent();
         this.format = data.getFormat();
-        this.defaultColor = data.getDefaultColor().toString();
         this.urlFilter = data.isDoUrlFilter();
         this.profanityFilter = data.isDoProfanityFilter();
-        usePAPI = strings.usingPlaceholderAPI();
+        usePAPI = strings.isUsingPlaceholderAPI();
         messageProcessor = new MessageProcessor(strings, this);
     }
 

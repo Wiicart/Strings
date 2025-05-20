@@ -99,6 +99,7 @@ public final class StringsProvider {
         if(apiUuid != uuid) {
             throw new SecurityException("Unregister method called with unauthorized UUID.");
         }
+        Bukkit.getServer().getServicesManager().unregister(StringsAPI.class, StringsProvider.api);
         StringsProvider.api = null;
         Bukkit.getLogger().info("[Strings] Strings API unloaded.");
     }
