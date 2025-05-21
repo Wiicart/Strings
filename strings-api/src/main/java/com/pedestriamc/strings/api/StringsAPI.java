@@ -9,13 +9,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 /**
- * The API for Strings
+ * The main API class for Strings
  */
 @SuppressWarnings("unused")
 public interface StringsAPI {
 
     /**
-     * Provides the ChannelLoader instance.
+     * Provides the {@link ChannelLoader} instance.
      * @return The ChannelLoader.
      */
     ChannelLoader getChannelLoader();
@@ -27,7 +27,7 @@ public interface StringsAPI {
     short getVersion();
 
     /**
-     * Provides a StringsUser based off a UUID if it exists.
+     * Provides a {@link StringsUser} based off a UUID if it exists.
      * @param uuid The UUID to search under.
      * @return A StringsUser, if it exists.
      */
@@ -35,7 +35,7 @@ public interface StringsAPI {
     StringsUser getStringsUser(UUID uuid);
 
     /**
-     * Provides a StringsUser based off a Player if it exists.
+     * Provides a {@link StringsUser} based off a Player if it exists.
      * @param player The Player to search under.
      * @return A StringsUser, if it exists.
      */
@@ -43,7 +43,7 @@ public interface StringsAPI {
     StringsUser getStringsUser(Player player);
 
     /**
-     * Saves a StringsUser
+     * Saves a {@link StringsUser}.
      * Modifications to Users do not persist by default, you must save it to persist.
      * @param user The user to be saved.
      */
@@ -72,7 +72,7 @@ public interface StringsAPI {
     void mention(StringsUser subject, StringsUser sender);
 
     /**
-     * Provides the Messenger instance
+     * Provides the {@link Messenger} instance
      * @return The Strings Messenger instance
      */
     Messenger getMessenger();

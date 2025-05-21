@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.api.user;
 
+import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.channel.Channel;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 /**
  * This represents the Strings internal User object which stores data on individual players.
- * Changes are not saved by default, you must use StringsAPI.saveStringsUser() to save.
+ * Changes are not saved by default, you must use {@link StringsAPI#saveStringsUser(StringsUser)} to save.
  */
 @SuppressWarnings("unused")
 public interface StringsUser {
@@ -135,10 +136,21 @@ public interface StringsUser {
     void setMentionsEnabled(boolean mentionsEnabled);
 
     /**
+     * Ignores a Player.
+     * @param player The Player to ignore.
+     */
+    void ignore(@NotNull Player player);
+
+    /**
+     * Stops ignoring a Player.
+     * @param player The Player to stop ignoring.
+     */
+    void stopIgnoring(@NotNull Player player);
+    /**
      * Provides a Set of Players that this User has ignored (for /msg).
      * @return A populated Set.
      */
-    Set<Player> getIgnoredPlayers();
+    Set<UUID> getIgnoredPlayers();
 
     Player getPlayer();
 

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 /**
- * An AsyncPlayerChatEvent with the additional field of a Channel.
+ * An AsyncPlayerChatEvent with the additional field of a {@link Channel}.
  */
 @SuppressWarnings("unused")
 public final class ChannelChatEvent extends AsyncPlayerChatEvent {
@@ -40,7 +40,7 @@ public final class ChannelChatEvent extends AsyncPlayerChatEvent {
     }
 
     /**
-     * Provides if this Event is able to cancellable. On Paper servers, this is typically not cancellable.
+     * Provides if this Event is cancellable. On Paper servers, this is typically not cancellable.
      * @return If the event can be canceled.
      */
     public boolean cancellable() {

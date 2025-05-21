@@ -7,6 +7,7 @@ import com.pedestriamc.strings.user.UserBuilder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -26,8 +27,7 @@ public final class YamlUserUtil implements UserUtil {
     private final FileConfiguration config;
     private final Map<UUID, User> map;
 
-    public YamlUserUtil(Strings strings)
-    {
+    public YamlUserUtil(Strings strings) {
         this.strings = strings;
         config = strings.files().getUsersFileConfig();
         map = new ConcurrentHashMap<>();
@@ -38,8 +38,7 @@ public final class YamlUserUtil implements UserUtil {
      * @param user the User to be saved.
      */
     @Override
-    public void saveUser(@NotNull User user)
-    {
+    public void saveUser(@NotNull User user) {
         UUID uuid = user.getUniqueId();
         Map<String, Object> infoMap = user.getData();
         strings.async(() -> {
@@ -56,8 +55,7 @@ public final class YamlUserUtil implements UserUtil {
     }
 
     @Override
-    public @NotNull CompletableFuture<User> loadUserAsync(@NotNull final UUID uuid)
-    {
+    public @NotNull CompletableFuture<User> loadUserAsync(@NotNull final UUID uuid) {
         CompletableFuture<User> future = new CompletableFuture<>();
         strings.async(() -> {
             try {
@@ -95,7 +93,7 @@ public final class YamlUserUtil implements UserUtil {
                     .activeChannel(strings.getChannelLoader().getChannel(section.getString(".active-channel")))
                     .channels(getChannels(section.getList(".channels")))
                     .monitoredChannels(getChannels(section.getList(".monitored-channels")))
-                    .ignoredPlayers(getPlayers(section.getList(".ignored-players")))
+                    .ignoredPlayers(getUniqueIds(section.getList(".ignored-players")))
                     .build();
 
             addUser(user);
@@ -103,7 +101,13 @@ public final class YamlUserUtil implements UserUtil {
         }
     }
 
-    private Set<Channel> getChannels(List<?> list) {
+    /**
+     * Takes a List and provides any Channels that are listed in the List.
+     * @param list The List.
+     * @return A Set of Channels.
+     */
+    @Contract("null -> new")
+    private @NotNull Set<Channel> getChannels(List<?> list) {
         if(list == null) {
             return new HashSet<>();
         }
@@ -118,22 +122,22 @@ public final class YamlUserUtil implements UserUtil {
         return channels;
     }
 
-    private Set<Player> getPlayers(List<?> list) {
+    @Contract("null -> new")
+    private @NotNull Set<UUID> getUniqueIds(List<?> list) {
         if(list == null) {
             return new HashSet<>();
         }
 
-        Set<Player> players = new HashSet<>();
+        Set<UUID> uuids = new HashSet<>();
         for(Object item : list) {
             if(item instanceof String string) {
                 try {
                     UUID uuid = UUID.fromString(string);
-                    Player p = strings.getServer().getPlayer(uuid);
-                    players.add(p);
+                    uuids.add(uuid);
                 } catch(IllegalArgumentException ignored) {}
             }
         }
-        return players;
+        return uuids;
     }
 
     @Override
@@ -160,8 +164,9 @@ public final class YamlUserUtil implements UserUtil {
         map.remove(uuid);
     }
 
+    @Contract(" -> new")
     @Override
-    public Set<User> getUsers() {
+    public @NotNull Set<User> getUsers() {
         return new HashSet<>(map.values());
     }
 

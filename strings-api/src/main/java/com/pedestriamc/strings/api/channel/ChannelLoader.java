@@ -11,6 +11,7 @@ import java.util.Set;
  */
 @SuppressWarnings("unused")
 public interface ChannelLoader {
+
     /**
      * Registers a {@link Channel}
      * @param channel The Channel to be registered

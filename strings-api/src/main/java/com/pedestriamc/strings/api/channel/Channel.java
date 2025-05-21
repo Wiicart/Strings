@@ -50,7 +50,7 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Resolves the final Channel a message would be directed too.
-     * In most implementations, the instance of itself would be returned.
+     * In most implementations, the Channel will return itself.
      * @param player The sender.
      * @return A Channel
      */
@@ -183,7 +183,7 @@ public interface Channel extends Comparable<Channel> {
     Set<Player> getMembers();
 
     /**
-     * Provides the Channel's Type.
+     * Provides the Channel's {@link Type}.
      * @return The Channel's Type.
      */
     @NotNull
@@ -197,8 +197,8 @@ public interface Channel extends Comparable<Channel> {
     Map<String, Object> getData();
 
     /**
-     * Provides the Channel's default Membership enum.
-     * @return The Channel's membership enum.
+     * Provides the Channel's default {@link Membership} enum.
+     * @return The Channel's Membership enum.
      */
     Membership getMembership();
 

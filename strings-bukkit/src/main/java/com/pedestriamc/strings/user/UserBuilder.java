@@ -2,7 +2,6 @@ package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
-import org.bukkit.entity.Player;
 
 import java.util.Set;
 import java.util.UUID;
@@ -18,7 +17,7 @@ public final class UserBuilder {
     Channel activeChannel;
     Set<Channel> channels;
     Set<Channel> monitoredChannels;
-    Set<Player> ignored;
+    Set<UUID> ignored;
     String chatColor;
     String prefix;
     String suffix;
@@ -41,7 +40,7 @@ public final class UserBuilder {
         return this;
     }
 
-    public UserBuilder ignoredPlayers(Set<Player> ignored) {
+    public UserBuilder ignoredPlayers(Set<UUID> ignored) {
         this.ignored = ignored;
         return this;
     }

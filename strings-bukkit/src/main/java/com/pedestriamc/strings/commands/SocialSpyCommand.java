@@ -3,6 +3,7 @@ package com.pedestriamc.strings.commands;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.command.Command;
@@ -32,7 +33,7 @@ public final class SocialSpyCommand implements CommandExecutor {
             return true;
         }
 
-        if(noPermission(sender)) {
+        if(!Permissions.anyOfOrAdmin(sender, "strings.*", "strings.socialspy")) {
             messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
@@ -49,7 +50,7 @@ public final class SocialSpyCommand implements CommandExecutor {
         return true;
     }
 
-    private void determine(String arg, CommandSender sender) {
+    private void determine(@NotNull String arg, @NotNull CommandSender sender) {
         switch(arg.toLowerCase()) {
             case "on", "true" -> enableSocialSpy(sender);
 
@@ -80,9 +81,5 @@ public final class SocialSpyCommand implements CommandExecutor {
             return;
         }
         enableSocialSpy(sender);
-    }
-
-    private boolean noPermission(CommandSender sender) {
-        return !(sender.hasPermission("strings.*") || sender.hasPermission("strings.socialspy"));
     }
 }

@@ -28,6 +28,8 @@ import java.util.UUID;
 @SuppressWarnings("unused")
 public final class User implements StringsUser {
 
+    private final boolean retain;
+
     private final Strings strings;
     private final ChannelManager channelLoader;
 
@@ -36,14 +38,14 @@ public final class User implements StringsUser {
     private final String name;
     private final Set<Channel> channels;
     private final Set<Channel> monitoredChannels;
-    private final Set<Player> ignored;
+    private final Set<UUID> ignored;
+
     private String chatColor;
     private String prefix;
     private String suffix;
     private String displayName;
     private Channel activeChannel;
     private boolean mentionsEnabled;
-    private final boolean retain;
 
     @Nullable
     public static User of(final @NotNull StringsUser user) {
@@ -124,7 +126,7 @@ public final class User implements StringsUser {
             map.put("active-channel", activeChannel == null ? "default" : activeChannel.getName());
             map.put("channels", getChannelNames());
             map.put("monitored-channels", getMonitoredChannelNames());
-            map.put("ignored-players", getIgnoredUniqueIds());
+            map.put("ignored-players", ignored);
             map.put("mentions-enabled", mentionsEnabled);
             return map;
         }
@@ -307,7 +309,7 @@ public final class User implements StringsUser {
      */
     public void ignore(@NotNull Player player) {
         Objects.requireNonNull(player);
-        ignored.add(player);
+        ignored.add(player.getUniqueId());
     }
 
     /**
@@ -316,7 +318,7 @@ public final class User implements StringsUser {
      */
     public void stopIgnoring(@NotNull Player player) {
         Objects.requireNonNull(player);
-        ignored.remove(player);
+        ignored.remove(player.getUniqueId());
     }
 
     /**
@@ -325,21 +327,8 @@ public final class User implements StringsUser {
      */
     @Contract(value = " -> new", pure = true)
     @Override
-    public @NotNull Set<Player> getIgnoredPlayers() {
+    public @NotNull Set<UUID> getIgnoredPlayers() {
         return new HashSet<>(ignored);
-    }
-
-    /**
-     * Provides a List containing the String values of ignored Player's UUIDS.
-     * @return A populated List.
-     */
-    private List<String> getIgnoredUniqueIds() {
-        Set<Player> ignoredPlayers = getIgnoredPlayers();
-        List<String> uniqueIds = new ArrayList<>();
-        for(Player p : ignoredPlayers) {
-            uniqueIds.add(p.getUniqueId().toString());
-        }
-        return uniqueIds;
     }
 
 
@@ -363,7 +352,7 @@ public final class User implements StringsUser {
     @Override
     public void setActiveChannel(@NotNull Channel channel) {
         Objects.requireNonNull(channel);
-        if(channel.getName().equals("helpop")) {
+        if("helpop".equals(channel.getName())) {
             return;
         }
         this.activeChannel = channel;

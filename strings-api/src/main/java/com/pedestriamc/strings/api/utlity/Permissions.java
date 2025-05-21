@@ -37,7 +37,7 @@ public final class Permissions {
      * Registers Permissions with the PluginManager.
      * @param permissions The Permissions to be registered.
      */
-    public void addPermissions(@NotNull Permission... permissions) {
+    public void addPermissions(@NotNull Permission @NotNull ... permissions) {
         for (Permission permission : permissions) {
             addPermission(permission);
         }
@@ -55,7 +55,7 @@ public final class Permissions {
      * Registers Permissions with the PluginManager.
      * @param permissions The Permissions to be registered.
      */
-    public void addPermissions(@NotNull String... permissions) {
+    public void addPermissions(String @NotNull ... permissions) {
         for (String permission : permissions) {
             addPermission(permission);
         }
@@ -73,7 +73,7 @@ public final class Permissions {
      * Unregisters Permissions with the PluginManager.
      * @param permissions The Permissions to be unregistered.
      */
-    public void removePermissions(@NotNull Permission... permissions) {
+    public void removePermissions(Permission @NotNull ... permissions) {
         for (Permission permission : permissions) {
             removePermission(permission);
         }
@@ -91,7 +91,7 @@ public final class Permissions {
      * Unregisters Permissions with the PluginManager.
      * @param permissions The Permissions to be unregistered.
      */
-    public void removePermissions(@NotNull String... permissions) {
+    public void removePermissions(String @NotNull ... permissions) {
         for (String permission : permissions) {
             removePermission(permission);
         }
@@ -103,7 +103,7 @@ public final class Permissions {
      * @param permissions The permissions that are being checked for.
      * @return True if any of the permissions are true.
      */
-    public static boolean anyOf(@NotNull Permissible permissible, @NotNull String... permissions) {
+    public static boolean anyOf(@NotNull Permissible permissible, String @NotNull ... permissions) {
         for (String permission : permissions) {
             if (permissible.hasPermission(permission)) {
                 return true;
@@ -118,7 +118,7 @@ public final class Permissions {
      * @param permissions The permissions that are being checked for.
      * @return True if any of the permissions are true.
      */
-    public static boolean anyOf(@NotNull Permissible permissible, @NotNull Permission... permissions) {
+    public static boolean anyOf(@NotNull Permissible permissible, Permission @NotNull ... permissions) {
         for (Permission permission : permissions) {
             if (permissible.hasPermission(permission)) {
                 return true;
@@ -153,7 +153,7 @@ public final class Permissions {
      * @param permissions The permission to check for.
      * @return If the Permissible has permission.
      */
-    public static boolean allOf(@NotNull Permissible permissible, @NotNull String... permissions) {
+    public static boolean allOf(@NotNull Permissible permissible, String @NotNull ... permissions) {
         for(String permission : permissions) {
             if (!permissible.hasPermission(permission)) {
                 return false;
@@ -168,7 +168,7 @@ public final class Permissions {
      * @param permissions The permission to check for.
      * @return If the Permissible has permission.
      */
-    public static boolean allOf(@NotNull Permissible permissible, @NotNull Permission... permissions) {
+    public static boolean allOf(@NotNull Permissible permissible, Permission @NotNull ... permissions) {
         for(Permission permission : permissions) {
             if (!permissible.hasPermission(permission)) {
                 return false;

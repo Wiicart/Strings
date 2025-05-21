@@ -11,9 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public final class StringsReloadEvent extends Event {
 
     @ApiStatus.Internal
-    StringsReloadEvent() {
-
-    }
+    StringsReloadEvent() {}
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
 

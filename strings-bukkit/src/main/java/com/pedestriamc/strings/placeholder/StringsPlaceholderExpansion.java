@@ -12,7 +12,7 @@ import java.util.Locale;
 
 /**
  * PlaceholderAPI expansion for Strings
- * Valid Placeholders: %strings_active_channel%, %strings_chat_color%
+ * Valid Placeholders: {@code %strings_active_channel%}, {@code %strings_chat_color%}
  */
 public final class StringsPlaceholderExpansion extends PlaceholderExpansion {
 

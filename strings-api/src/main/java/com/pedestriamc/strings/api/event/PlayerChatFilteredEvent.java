@@ -29,18 +29,34 @@ public final class PlayerChatFilteredEvent extends Event {
         this.filteredElements = filteredElements;
     }
 
+    /**
+     * Provides the message sender.
+     * @return The Player instance of the sender.
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * Provides the original message, before filtering.
+     * @return A String.
+     */
     public String getOriginalMessage() {
         return originalMessage;
     }
 
+    /**
+     * Provides the message post-filtering.
+     * @return A string.
+     */
     public String getFilteredMessage() {
         return filteredMessage;
     }
 
+    /**
+     * Provides a list of all words/links that were filtered out of the message.
+     * @return A List of Strings.
+     */
     @SuppressWarnings("unused")
     public List<String> getFilteredElements() {
         return filteredElements;

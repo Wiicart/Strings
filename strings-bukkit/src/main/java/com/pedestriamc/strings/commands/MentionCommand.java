@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.user.util.UserUtil;
@@ -12,6 +13,10 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.pedestriamc.strings.api.message.Message.*;
 
+/**
+ * Implements the {@code /mention} command. Allows for toggling mentions.
+ * Syntax: {@code /mention <enable | disable>}
+ */
 public final class MentionCommand implements CommandExecutor {
 
     private final Messenger messenger;
@@ -29,16 +34,16 @@ public final class MentionCommand implements CommandExecutor {
             return true;
         }
 
-        if(!(player.hasPermission("strings.mention.toggle") || player.hasPermission("strings.mention.*") || player.hasPermission("strings.*"))) {
+        if(!Permissions.anyOfOrAdmin(player, "strings.*", "strings.mention.*", "strings.mention.toggle")) {
             messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
 
         User user = userUtil.getUser(player);
 
+        // Handle no args -> toggle on or off based on current status
         if(args.length == 0) {
-            boolean isEnabled = user.isMentionsEnabled();
-            if(isEnabled) {
+            if(user.isMentionsEnabled()) {
                 disable(player, user);
             } else {
                 enable(player, user);
@@ -47,11 +52,12 @@ public final class MentionCommand implements CommandExecutor {
         }
 
         if(args.length == 1) {
-            if(args[0].equals("enable") || args[0].equals("on")) {
+            String arg = args[0];
+            if(arg.equalsIgnoreCase("enable") || arg.equalsIgnoreCase("on")) {
                 enable(player, user);
                 return true;
             }
-            if(args[0].equals("disable") || args[0].equals("off")) {
+            if(arg.equalsIgnoreCase("disable") || arg.equalsIgnoreCase("off")) {
                 disable(player, user);
                 return true;
             }

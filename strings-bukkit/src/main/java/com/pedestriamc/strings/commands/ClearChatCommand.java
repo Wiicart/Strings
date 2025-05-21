@@ -2,6 +2,7 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.api.utlity.Permissions;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -16,14 +17,13 @@ public final class ClearChatCommand implements CommandExecutor {
 
     private final Messenger messenger;
 
-    public ClearChatCommand(Strings strings) {
+    public ClearChatCommand(@NotNull Strings strings) {
         messenger = strings.getMessenger();
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-
-        if(!sender.hasPermission("strings.chat.clear") && !sender.hasPermission("strings.chat.*") && !sender.hasPermission("strings.*")) {
+        if(!Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.clear")) {
             messenger.sendMessage(NO_PERMS, sender);
             return true;
         }

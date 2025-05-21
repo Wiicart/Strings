@@ -37,9 +37,16 @@ import java.util.UUID;
 
 public final class Strings extends JavaPlugin {
 
+    // bStats metrics id
     public static final int METRICS_ID = 22597;
+
+    // Version
     public static final String VERSION = "1.6";
+
+    // plugin distributor
     public static final String DISTRIBUTOR = "github";
+
+    // short version number.
     public static final short PLUGIN_NUM = 6;
 
     private boolean usingPlaceholderAPI = false;
@@ -57,6 +64,7 @@ public final class Strings extends JavaPlugin {
     private UUID apiUUID;
     private Messenger messenger;
     private ChannelManager channelLoader;
+    @SuppressWarnings("unused")
     private LogManager logManager;
     private Configuration configClass;
 
@@ -274,11 +282,6 @@ public final class Strings extends JavaPlugin {
 
     public UserUtil getUserUtil() {
         return userUtil;
-    }
-
-    @SuppressWarnings("unused")
-    public LogManager getLogManager() {
-        return logManager;
     }
 
     public ServerMessages getServerMessages() {
