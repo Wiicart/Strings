@@ -4,12 +4,13 @@ import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
-import com.pedestriamc.strings.api.channel.data.ChannelData;
+import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.channel.base.AbstractChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -23,7 +24,11 @@ public class WorldChannel extends AbstractChannel implements LocalChannel {
 
     private final Set<World> worlds;
 
-    public WorldChannel(@NotNull Strings strings, @NotNull ChannelData data) {
+    public WorldChannel(JavaPlugin plugin, ChannelBuilder builder) {
+        this((Strings) plugin, builder);
+    }
+
+    public WorldChannel(@NotNull Strings strings, @NotNull ChannelBuilder data) {
         super(
                 strings,
                 data.getName(),

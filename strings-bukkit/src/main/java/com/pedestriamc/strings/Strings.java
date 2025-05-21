@@ -2,6 +2,7 @@ package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.api.StringsAPIRegistrar;
 import com.pedestriamc.strings.api.StringsProvider;
+import com.pedestriamc.strings.api.channel.data.BuildableRegistrar;
 import com.pedestriamc.strings.api.event.StringsReloader;
 import com.pedestriamc.strings.placeholder.StringsPlaceholderExpansion;
 import com.pedestriamc.strings.chat.ChannelManager;
@@ -62,6 +63,7 @@ public final class Strings extends JavaPlugin {
     @Override
     public void onLoad() {
         info("[Strings] Loading...");
+        BuildableRegistrar.register();
         fileManager = new FileManager(this);
         determineEnvironment();
         instantiateObjects();

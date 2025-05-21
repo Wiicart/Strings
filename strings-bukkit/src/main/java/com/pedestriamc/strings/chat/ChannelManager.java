@@ -1,17 +1,10 @@
 package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channel.data.ChannelData;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.channel.DefaultChannel;
-import com.pedestriamc.strings.channel.HelpOPChannel;
-import com.pedestriamc.strings.channel.local.ProximityChannel;
-import com.pedestriamc.strings.channel.local.StrictProximityChannel;
-import com.pedestriamc.strings.channel.local.StrictWorldChannel;
-import com.pedestriamc.strings.channel.StringChannel;
-import com.pedestriamc.strings.channel.local.WorldChannel;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.configuration.ConfigurationSection;
@@ -157,21 +150,6 @@ public final class ChannelManager implements ChannelLoader {
         }
         dataMap.forEach(channelSection::set);
         strings.files().saveChannelsFile();
-    }
-
-    @Contract("_, _ -> new")
-    @Override
-    public @NotNull Channel build(@NotNull ChannelData data, @NotNull String type) throws UnsupportedOperationException {
-        type = type.toLowerCase();
-        switch(type) {
-            case "stringchannel" ->  { return new StringChannel(strings, data); }
-            case "proximity" ->  { return new ProximityChannel(strings, data); }
-            case "world" -> { return new WorldChannel(strings, data); }
-            case "proximity_strict" -> { return new StrictProximityChannel(strings, data); }
-            case "world_strict" -> { return new StrictWorldChannel(strings, data); }
-            case "helpop" -> { return new HelpOPChannel(strings, data); }
-            default -> throw new UnsupportedOperationException("Unknown channel type: " + type + ".");
-        }
     }
 
     @Contract(value = " -> new", pure = true)

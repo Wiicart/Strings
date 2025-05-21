@@ -1,9 +1,10 @@
 package com.pedestriamc.strings.api.channel;
 
-import com.pedestriamc.strings.api.text.format.StringsTextColor;
+import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -14,6 +15,24 @@ import java.util.Set;
  */
 @SuppressWarnings("unused")
 public interface Channel extends Comparable<Channel> {
+
+    /**
+     * Provides a new {@link ChannelBuilder}
+     * @return A new {@link ChannelBuilder}
+     */
+    @Contract(value = " -> new", pure = true)
+    static @NotNull ChannelBuilder builder() {
+        return new ChannelBuilder();
+    }
+
+    /**
+     * Provides a new {@link ChannelBuilder}, with a name defined.
+     * @return A new {@link ChannelBuilder}
+     */
+    @Contract(value = "_ -> new", pure = true)
+    static @NotNull ChannelBuilder builder(String name) {
+        return new ChannelBuilder(name);
+    }
 
     /**
      * Sends a message from a player to the channel.
@@ -27,9 +46,7 @@ public interface Channel extends Comparable<Channel> {
      * @param channel the object to be compared.
      * @return the param's priority - the channel instance priority
      */
-    default int compareTo(@NotNull Channel channel) {
-        return Integer.compare(channel.getPriority(), getPriority());
-    }
+    int compareTo(@NotNull Channel channel);
 
     /**
      * Resolves the final Channel a message would be directed too.

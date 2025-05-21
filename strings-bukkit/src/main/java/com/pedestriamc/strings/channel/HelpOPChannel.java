@@ -1,8 +1,9 @@
 package com.pedestriamc.strings.channel;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channel.data.ChannelData;
+import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
+import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.chat.MessageProcessor;
 import com.pedestriamc.strings.channel.base.ProtectedChannel;
@@ -16,6 +17,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.permissions.Permissible;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -46,7 +48,11 @@ public class HelpOPChannel extends ProtectedChannel {
         messageProcessor = new MessageProcessor(strings, this);
     }
 
-    public HelpOPChannel(Strings strings, ChannelData data)
+    public HelpOPChannel(JavaPlugin plugin, ChannelBuilder builder) {
+        this((Strings) plugin, builder);
+    }
+
+    public HelpOPChannel(Strings strings, ChannelBuilder data)
     {
         super("helpop");
         this.strings = strings;
@@ -121,6 +127,11 @@ public class HelpOPChannel extends ProtectedChannel {
         template = org.bukkit.ChatColor.translateAlternateColorCodes('&', template);
 
         return template;
+    }
+
+    @Override
+    public String getDefaultColor() {
+        return StringsTextColor.RED.toString();
     }
 
     @Override

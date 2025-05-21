@@ -3,13 +3,13 @@ package com.pedestriamc.strings.channel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Type;
-import com.pedestriamc.strings.api.channel.data.ChannelData;
+import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.channel.base.AbstractChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,7 +18,11 @@ import java.util.Set;
  */
 public final class StringChannel extends AbstractChannel {
 
-    public StringChannel(@NotNull Strings strings, @NotNull ChannelData data) {
+    public StringChannel(JavaPlugin plugin, ChannelBuilder builder) {
+        this((Strings) plugin, builder);
+    }
+
+    public StringChannel(@NotNull Strings strings, @NotNull ChannelBuilder data) {
         super(
                 strings,
                 data.getName(),
@@ -63,7 +67,6 @@ public final class StringChannel extends AbstractChannel {
                 }
                 yield scoped;
             }
-            default -> Collections.emptySet();
         };
     }
 

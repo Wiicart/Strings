@@ -2,13 +2,14 @@ package com.pedestriamc.strings.channel.local;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.channel.data.ChannelData;
+import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -24,7 +25,11 @@ public class StrictProximityChannel extends ProximityChannel {
     private final Channel defaultChannel;
     private final Messenger messenger;
 
-    public StrictProximityChannel(@NotNull Strings strings, @NotNull ChannelData data) {
+    public StrictProximityChannel(JavaPlugin plugin, ChannelBuilder builder) {
+        this((Strings) plugin, builder);
+    }
+
+    public StrictProximityChannel(@NotNull Strings strings, @NotNull ChannelBuilder data) {
         super(strings, data);
         defaultChannel = strings.getChannelLoader().getChannel("default");
         messenger = strings.getMessenger();

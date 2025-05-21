@@ -4,13 +4,14 @@ import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
-import com.pedestriamc.strings.api.channel.data.ChannelData;
+import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.channel.base.AbstractChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -25,7 +26,11 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
     private double distanceSquared;
     private final Set<World> worlds;
 
-    public ProximityChannel(@NotNull Strings strings, @NotNull ChannelData data) {
+    public ProximityChannel(JavaPlugin plugin, ChannelBuilder builder) {
+        this((Strings) plugin, builder);
+    }
+
+    public ProximityChannel(@NotNull Strings strings, @NotNull ChannelBuilder data) {
         super(
                 strings,
                 data.getName(),

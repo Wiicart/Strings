@@ -317,4 +317,9 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         return this;
     }
 
+    @Override
+    public int compareTo(@NotNull Channel o) {
+        return Integer.compare(o.getPriority(), getPriority());
+    }
+
 }

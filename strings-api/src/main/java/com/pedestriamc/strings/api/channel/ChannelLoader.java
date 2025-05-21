@@ -1,6 +1,5 @@
 package com.pedestriamc.strings.api.channel;
 
-import com.pedestriamc.strings.api.channel.data.ChannelData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,16 +29,6 @@ public interface ChannelLoader {
      * @param channel The Channel to be saved
      */
     void saveChannel(Channel channel);
-
-    /**
-     * Builds and returns a {@link Channel}.
-     * @param data The {@link ChannelData} object loaded with the information necessary to construct a Channel.
-     * @param type The type of channel. Must be one of {@code stringchannel}, {@code proximity}, {@code world}, {@code proximity_strict}, {@code world_strict}, {@code helpop}
-     * @return A new Channel
-     * @throws UnsupportedOperationException When the Channel type cannot be built
-     */
-    @Nullable
-    Channel build(ChannelData data, String type) throws UnsupportedOperationException;
 
     /**
      * Provides a {@link Channel} based off its name, if it exists.

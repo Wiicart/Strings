@@ -166,4 +166,8 @@ public abstract class ProtectedChannel implements Channel {
         throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
+    @Override
+    public int compareTo(@NotNull Channel o) {
+        return Integer.compare(o.getPriority(), getPriority());
+    }
 }

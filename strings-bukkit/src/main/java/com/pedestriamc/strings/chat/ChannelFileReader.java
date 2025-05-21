@@ -4,7 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Type;
-import com.pedestriamc.strings.api.channel.data.ChannelData;
+import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.channel.HelpOPChannel;
 import com.pedestriamc.strings.channel.SocialSpyChannel;
@@ -13,6 +13,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -70,11 +72,11 @@ public final class ChannelFileReader {
             }
 
             boolean local = type == Type.WORLD || type == Type.PROXIMITY;
-            ChannelData data = getChannelData(channel, channelName, local);
+            ChannelBuilder data = getChannelData(channel, channelName, local);
             String symbol = channel.getString("symbol");
 
             try {
-                Channel c = channelLoader.build(data, typeString);
+                Channel c = data.build(typeString);
 
                 channelLoader.registerChannel(c);
                 if(symbol != null) {
@@ -95,19 +97,19 @@ public final class ChannelFileReader {
 
     private void loadDefaults() {
         if(!globalExists) {
-            ChannelData data = new ChannelData("global")
-                    .setMembership(Membership.DEFAULT)
-                    .setFormat("{prefix}{displayname}{suffix} &7» {message}")
-                    .setDefaultColor("&f")
-                    .setDoCooldown(false)
-                    .setDoProfanityFilter(false)
-                    .setDoUrlFilter(false)
-                    .setCallEvent(true)
-                    .setWorlds(null)
-                    .setPriority(-1);
 
             try {
-                Channel channel = channelLoader.build(data, "normal");
+                Channel channel = Channel.builder("global")
+                        .setMembership(Membership.DEFAULT)
+                        .setFormat("{prefix}{displayname}{suffix} &7» {message}")
+                        .setDefaultColor("&f")
+                        .setDoCooldown(false)
+                        .setDoProfanityFilter(false)
+                        .setDoUrlFilter(false)
+                        .setCallEvent(true)
+                        .setWorlds(null)
+                        .setPriority(-1)
+                        .build("stringchannel");
                 channelLoader.registerChannel(channel);
             } catch (Exception ignored) {}
         }
@@ -116,7 +118,6 @@ public final class ChannelFileReader {
             Channel c = new HelpOPChannel(
                     strings,
                     "&8[&4HelpOP&8] &f{displayname} &7» {message}",
-                    "&7",
                     false,
                     false,
                     false
@@ -138,9 +139,8 @@ public final class ChannelFileReader {
         channelLoader.registerChannel(new DefaultChannel(strings, channelLoader));
     }
 
-    private ChannelData getChannelData(ConfigurationSection section, String channelName, boolean local) {
-        ChannelData data = new ChannelData()
-                .setName(channelName)
+    private ChannelBuilder getChannelData(ConfigurationSection section, String channelName, boolean local) {
+        ChannelBuilder data = Channel.builder(channelName)
                 .setFormat(section.getString("format", "{prefix}{displayname}{suffix} &7» &f{message}"))
                 .setDefaultColor(section.getString("default-color", "&f"))
                 .setDoCooldown(section.getBoolean("cooldown", false))
@@ -180,7 +180,7 @@ public final class ChannelFileReader {
         return worlds;
     }
 
-    private void loadMembership(ChannelData data, ConfigurationSection section) {
+    private void loadMembership(ChannelBuilder data, ConfigurationSection section) {
         String membershipString = section.getString("membership");
         if(membershipString == null) {
             data.setMembership(Membership.PROTECTED);
@@ -194,7 +194,7 @@ public final class ChannelFileReader {
         }
     }
 
-    private Type getType(String typeString, String channelName) {
+    private @Nullable Type getType(@NotNull String typeString, @NotNull String channelName) {
         switch (typeString) {
             case "stringchannel" -> {
                 log("Loading stringchannel '" + channelName + "'...");
