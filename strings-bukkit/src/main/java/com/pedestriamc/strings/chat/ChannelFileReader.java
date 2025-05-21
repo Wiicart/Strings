@@ -97,7 +97,6 @@ public final class ChannelFileReader {
 
     private void loadDefaults() {
         if(!globalExists) {
-
             try {
                 Channel channel = Channel.builder("global")
                         .setMembership(Membership.DEFAULT)
@@ -129,12 +128,7 @@ public final class ChannelFileReader {
 
         String socialSpyFormat = strings.getConfiguration().getString(Option.SOCIAL_SPY_FORMAT);
         log("Loading channel 'socialspy'...");
-        channelLoader.registerChannel(
-                new SocialSpyChannel(
-                        strings.getPlayerDirectMessenger(),
-                        socialSpyFormat
-                )
-        );
+        channelLoader.registerChannel(new SocialSpyChannel(strings.getPlayerDirectMessenger(), socialSpyFormat));
 
         channelLoader.registerChannel(new DefaultChannel(strings, channelLoader));
     }

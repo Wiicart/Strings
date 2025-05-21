@@ -81,6 +81,7 @@ public final class ChannelBuilder {
      * Provides the Channel name.
      * @return The Chanel name.
      */
+    @ApiStatus.Internal
     public String getName() {
         return name;
     }
@@ -98,6 +99,7 @@ public final class ChannelBuilder {
      * Provides the Channel's default color.
      * @return A String representation of the default color.
      */
+    @ApiStatus.Internal
     public String getDefaultColor() {
         return defaultColor;
     }
@@ -115,6 +117,7 @@ public final class ChannelBuilder {
      * Provides the Channel's format when messages are sent in chat.
      * @return A String containing the format.
      */
+    @ApiStatus.Internal
     public String getFormat() {
         return format;
     }
@@ -133,6 +136,7 @@ public final class ChannelBuilder {
      * Provides the Membership
      * @return The Membership
      */
+    @ApiStatus.Internal
     public Membership getMembership() {
         return membership;
     }
@@ -151,6 +155,7 @@ public final class ChannelBuilder {
      * Tells if the Channel should do cooldowns.
      * @return If cooldowns should be done.
      */
+    @ApiStatus.Internal
     public boolean isDoCooldown() {
         return doCooldown;
     }
@@ -169,6 +174,7 @@ public final class ChannelBuilder {
      * Tells if the Channel is profanity filtering
      * @return A boolean
      */
+    @ApiStatus.Internal
     public boolean isDoProfanityFilter() {
         return doProfanityFilter;
     }
@@ -187,6 +193,7 @@ public final class ChannelBuilder {
      * Tells if the Channel is URL filtering.
      * @return A boolean
      */
+    @ApiStatus.Internal
     public boolean isDoUrlFilter() {
         return doUrlFilter;
     }
@@ -205,6 +212,7 @@ public final class ChannelBuilder {
      * Tells if the Channel calls an event when a message is sent.
      * @return If the Channel calls an event when a message is sent.
      */
+    @ApiStatus.Internal
     public boolean isCallEvent() {
         return callEvent;
     }
@@ -223,6 +231,7 @@ public final class ChannelBuilder {
      * Provides the Channel priority
      * @return An int
      */
+    @ApiStatus.Internal
     public int getPriority() {
         return priority;
     }
@@ -241,6 +250,7 @@ public final class ChannelBuilder {
      * Provides the worlds this Channel should have in scope.
      * @return A Set of Worlds.
      */
+    @ApiStatus.Internal
     public Set<World> getWorlds() {
         return worlds;
     }
@@ -259,6 +269,7 @@ public final class ChannelBuilder {
      * Provides the proximity that messages will be sent around a player.
      * @return A double.
      */
+    @ApiStatus.Internal
     public double getDistance() {
         return distance;
     }
@@ -277,6 +288,7 @@ public final class ChannelBuilder {
      * Provides the broadcast format
      * @return A String representation of the format.
      */
+    @ApiStatus.Internal
     public String getBroadcastFormat() {
         return broadcastFormat;
     }
