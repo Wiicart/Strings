@@ -98,9 +98,7 @@ public final class ChannelFileReader {
     private void loadDefaults() {
         if(!globalExists) {
             try {
-                Channel channel = Channel.builder("global")
-                        .setMembership(Membership.DEFAULT)
-                        .setFormat("{prefix}{displayname}{suffix} &7» {message}")
+                Channel channel = Channel.builder("global", "{prefix}{displayname}{suffix} &7» {message}", Membership.DEFAULT)
                         .setDefaultColor("&f")
                         .setDoCooldown(false)
                         .setDoProfanityFilter(false)
@@ -134,8 +132,7 @@ public final class ChannelFileReader {
     }
 
     private ChannelBuilder getChannelData(ConfigurationSection section, String channelName, boolean local) {
-        ChannelBuilder data = Channel.builder(channelName)
-                .setFormat(section.getString("format", "{prefix}{displayname}{suffix} &7» &f{message}"))
+        ChannelBuilder data = Channel.builder(channelName, section.getString("format", "{prefix}{displayname}{suffix} &7» &f{message}"), loadMembership(section))
                 .setDefaultColor(section.getString("default-color", "&f"))
                 .setDoCooldown(section.getBoolean("cooldown", false))
                 .setDoProfanityFilter(section.getBoolean("filter-profanity", false))
@@ -144,7 +141,6 @@ public final class ChannelFileReader {
                 .setPriority(section.getInt("priority", -1))
                 .setDistance(section.getDouble("distance"))
                 .setBroadcastFormat(section.getString("broadcast-format"));
-        loadMembership(data, section);
 
         if(local) {
             data.setWorlds(loadWorlds(section));
@@ -174,18 +170,17 @@ public final class ChannelFileReader {
         return worlds;
     }
 
-    private void loadMembership(ChannelBuilder data, ConfigurationSection section) {
+    private Membership loadMembership(ConfigurationSection section) {
         String membershipString = section.getString("membership");
         if(membershipString == null) {
-            data.setMembership(Membership.PROTECTED);
-            return;
+            return Membership.PROTECTED;
         }
 
-        switch(membershipString) {
-            case "default" -> data.setMembership(Membership.DEFAULT);
-            case "permission" -> data.setMembership(Membership.PERMISSION);
-            default -> data.setMembership(Membership.PROTECTED);
-        }
+        return switch(membershipString) {
+            case "default" -> Membership.DEFAULT;
+            case "permission" -> Membership.PERMISSION;
+            default -> Membership.PROTECTED;
+        };
     }
 
     private @Nullable Type getType(@NotNull String typeString, @NotNull String channelName) {

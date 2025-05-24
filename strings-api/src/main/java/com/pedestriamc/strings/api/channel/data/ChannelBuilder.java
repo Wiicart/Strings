@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.api.channel.data;
 
+import com.google.common.base.Preconditions;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
@@ -7,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,17 +46,15 @@ public final class ChannelBuilder {
     }
 
     /**
-     * Default constructor for this class.
-     * All values are null when using this constructor, you must later define them with methods.
+     * ChannelBuilder constructor with universally required parameters.
+     * @param name The Channel name.
+     * @param format The Channel format.
+     * @param membership The Channel membership
      */
-    public ChannelBuilder() {}
-
-    /**
-     * Constructor with a param for the name of the Channel.
-     * @param name The Channel name
-     */
-    public ChannelBuilder(String name) {
+    public ChannelBuilder(@NotNull String name, @NotNull String format, @NotNull Membership membership) {
         this.name = name;
+        this.format = format;
+        this.membership = membership;
     }
 
     /**
@@ -65,7 +65,7 @@ public final class ChannelBuilder {
      * @throws IllegalArgumentException If not all required values are filled out in this ChannelBuilder.
      */
     @Contract("_ -> new")
-    public Channel build(String type) throws IllegalArgumentException {
+    public Channel build(@NotNull String type) throws IllegalArgumentException {
         if(!BUILD_FUNCTIONS.containsKey(type)) {
             throw new IllegalArgumentException("Unknown channel type: " + type);
         }
@@ -90,7 +90,8 @@ public final class ChannelBuilder {
      * Sets the Channel's name.
      * @param name The new Channel name.
      */
-    public ChannelBuilder setName(String name) {
+    public ChannelBuilder setName(@NotNull String name) {
+        Preconditions.checkNotNull(name, "Name cannot be null");
         this.name = name;
         return this;
     }
@@ -128,6 +129,7 @@ public final class ChannelBuilder {
      * @return this
      */
     public ChannelBuilder setFormat(String format) {
+        Preconditions.checkNotNull(format, "Format cannot be null");
         this.format = format;
         return this;
     }
@@ -147,6 +149,7 @@ public final class ChannelBuilder {
      * @return this
      */
     public ChannelBuilder setMembership(Membership membership) {
+        Preconditions.checkNotNull(membership, "Membership cannot be null");
         this.membership = membership;
         return this;
     }
@@ -290,7 +293,7 @@ public final class ChannelBuilder {
      */
     @ApiStatus.Internal
     public String getBroadcastFormat() {
-        return broadcastFormat;
+        return broadcastFormat != null ? broadcastFormat : "";
     }
 
     /**

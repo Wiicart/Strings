@@ -44,6 +44,7 @@ public final class StringChannel extends AbstractChannel {
         recipients.addAll(getMonitors());
         if(getMembership() == Membership.DEFAULT) {
             for(Player p : Bukkit.getOnlinePlayers()) {
+                recipients.add(p);
                 if(p.hasPermission(CHANNEL_PERMISSION + getName() + ".receive")) {
                     recipients.add(p);
                 }

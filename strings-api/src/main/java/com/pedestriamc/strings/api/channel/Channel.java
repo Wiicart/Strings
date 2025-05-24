@@ -17,21 +17,12 @@ import java.util.Set;
 public interface Channel extends Comparable<Channel> {
 
     /**
-     * Provides a new {@link ChannelBuilder}
-     * @return A new {@link ChannelBuilder}
-     */
-    @Contract(value = " -> new", pure = true)
-    static @NotNull ChannelBuilder builder() {
-        return new ChannelBuilder();
-    }
-
-    /**
      * Provides a new {@link ChannelBuilder}, with a name defined.
      * @return A new {@link ChannelBuilder}
      */
-    @Contract(value = "_ -> new", pure = true)
-    static @NotNull ChannelBuilder builder(String name) {
-        return new ChannelBuilder(name);
+    @Contract(value = "_, _, _ -> new", pure = true)
+    static @NotNull ChannelBuilder builder(@NotNull String name, @NotNull String format, @NotNull Membership membership) {
+        return new ChannelBuilder(name, format, membership);
     }
 
     /**
