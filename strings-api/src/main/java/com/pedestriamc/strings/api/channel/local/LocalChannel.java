@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -48,12 +47,6 @@ public interface LocalChannel extends Channel {
     Set<World> getWorlds();
 
     /**
-     * Provides a List containing the names of all the worlds from {@link #getWorlds()};
-     * @return A populated List.
-     */
-    List<String> getWorldNames();
-
-    /**
      * If this is an instance of a {@code ProximityChannel}, this will provide the proximity the Channel is set to.
      * Check if this is an instance of ProximityChannel with {@link LocalChannel#getType()}
      * @return A double of the proximity (max distance for players to receive a message).
@@ -69,5 +62,4 @@ public interface LocalChannel extends Channel {
      * @throws UnsupportedOperationException If the Channel is not an instance of {@code ProximityChannel}
      */
     void setProximity(double proximity) throws UnsupportedOperationException;
-
 }

@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.channel.base;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
@@ -52,6 +53,26 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     protected static final String CHANNEL_PERMISSION = "strings.channels.";
     protected static final String MESSAGE_PLACEHOLDER = "{message}";
     protected static final String DEFAULT_BROADCAST_FORMAT = "&8[&3Broadcast&8] &f{message}";
+
+    protected AbstractChannel(@NotNull Strings strings, @NotNull ChannelBuilder data) {
+        this.strings = strings;
+        name = data.getName();
+        defaultColor = data.getDefaultColor() != null ? data.getDefaultColor() : StringsTextColor.WHITE.toString();
+        format = data.getFormat();
+        broadcastFormat = data.getBroadcastFormat();
+        membership = data.getMembership();
+        doCooldown = data.isDoCooldown();
+        doProfanityFilter = data.isDoProfanityFilter();
+        doUrlFilter = data.isDoUrlFilter();
+        callEvent = data.isCallEvent();
+        priority = data.getPriority();
+
+        messageProcessor = new MessageProcessor(strings, this);
+        mentionsEnabled = strings.getConfiguration().getBoolean(Option.ENABLE_MENTIONS);
+        updatePermissions();
+        members = new HashSet<>();
+        monitors = new HashSet<>();
+    }
 
     protected AbstractChannel(Strings strings, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority, String broadcastFormat) {
         this.strings = strings;

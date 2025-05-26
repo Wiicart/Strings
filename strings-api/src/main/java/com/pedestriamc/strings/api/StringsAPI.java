@@ -77,5 +77,14 @@ public interface StringsAPI {
      */
     Messenger getMessenger();
 
+    /**
+     * Provides the StringsModeration instance, offering some moderation methods.
+     * @throws IllegalStateException Check if StringsModeration is available by checking if the plugin is enabled.
+     * @return The StringsModeration implementation.
+     */
+    default StringsModeration getModeration() {
+        return StringsProvider.getModeration();
+    }
+
 }
 

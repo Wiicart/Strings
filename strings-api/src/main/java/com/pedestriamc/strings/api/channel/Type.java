@@ -36,5 +36,5 @@ public enum Type {
     /**
      * Represents custom Channels.
      */
-    CUSTOM()
+    CUSTOM(),
 }

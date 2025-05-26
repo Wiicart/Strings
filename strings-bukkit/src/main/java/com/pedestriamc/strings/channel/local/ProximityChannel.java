@@ -3,8 +3,9 @@ package com.pedestriamc.strings.channel.local;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Membership;
-import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.channel.local.LocalChannel;
+import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.channel.base.AbstractChannel;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,32 +21,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Channel implementation that sends messages based off players in proximity in the sender's {@link World}.
+ * Worlds this Channel is effective in must be defined.
+ * Expected to be used with the {@link DefaultChannel}
+ */
 public class ProximityChannel extends AbstractChannel implements LocalChannel {
 
     private double distance;
+
+    // for more efficient calculations.
     private double distanceSquared;
+
     private final Set<World> worlds;
 
     public ProximityChannel(JavaPlugin plugin, ChannelBuilder builder) {
         this((Strings) plugin, builder);
     }
 
-    public ProximityChannel(@NotNull Strings strings, @NotNull ChannelBuilder data) {
-        super(
-                strings,
-                data.getName(),
-                data.getDefaultColor(),
-                data.getFormat(),
-                data.getMembership(),
-                data.isDoCooldown(),
-                data.isDoProfanityFilter(),
-                data.isDoUrlFilter(),
-                data.isCallEvent(),
-                data.getPriority(),
-                data.getBroadcastFormat()
-        );
-        this.worlds = new HashSet<>(data.getWorlds());
-        this.distance = data.getDistance();
+    public ProximityChannel(@NotNull Strings strings, @NotNull ChannelBuilder builder) {
+        super(strings, builder);
+        worlds = new HashSet<>(builder.getWorlds());
+        distance = builder.getDistance();
         distanceSquared = distance * distance;
     }
 
@@ -139,13 +136,11 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
         return new HashSet<>(worlds);
     }
 
-    @Override
     public List<String> getWorldNames() {
         ArrayList<String> worldNames = new ArrayList<>();
         for (World w : getWorlds()) {
             worldNames.add(w.getName());
         }
-
         return worldNames;
     }
 

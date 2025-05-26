@@ -9,7 +9,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -28,8 +30,8 @@ public class StrictWorldChannel extends WorldChannel {
         this((Strings) plugin, builder);
     }
 
-    public StrictWorldChannel(@NotNull Strings strings, @NotNull ChannelBuilder data) {
-        super(strings, data);
+    public StrictWorldChannel(@NotNull Strings strings, @NotNull ChannelBuilder builder) {
+        super(strings, builder);
         defaultChannel = strings.getChannelLoader().getChannel("default");
         messenger = strings.getMessenger();
     }
@@ -59,7 +61,8 @@ public class StrictWorldChannel extends WorldChannel {
         return recipients;
     }
 
-    private Map<String, String> getPlaceholders() {
+    @Contract(" -> new")
+    private @NotNull @Unmodifiable Map<String, String> getPlaceholders() {
         return Map.of("{channel}", getName());
     }
 

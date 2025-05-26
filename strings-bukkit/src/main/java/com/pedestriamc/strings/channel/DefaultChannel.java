@@ -52,6 +52,7 @@ public final class DefaultChannel extends ProtectedChannel {
      * @param player The player to determine a Channel for
      * @return The Channel with the highest numerical priority that the player is in scope of that allows the player.
      */
+    @SuppressWarnings("java:S2259")
     @Nullable
     @Override
     public Channel resolve(@NotNull Player player) {

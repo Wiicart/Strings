@@ -296,6 +296,7 @@ public final class ChannelBuilder {
         return broadcastFormat != null ? broadcastFormat : "";
     }
 
+
     /**
      * Sets the broadcast format used with /channel broadcast <channel>
      * @param broadcastFormat The broadcast format

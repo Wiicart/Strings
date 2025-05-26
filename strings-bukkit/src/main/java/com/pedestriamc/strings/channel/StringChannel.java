@@ -22,20 +22,8 @@ public final class StringChannel extends AbstractChannel {
         this((Strings) plugin, builder);
     }
 
-    public StringChannel(@NotNull Strings strings, @NotNull ChannelBuilder data) {
-        super(
-                strings,
-                data.getName(),
-                data.getDefaultColor(),
-                data.getFormat(),
-                data.getMembership(),
-                data.isDoCooldown(),
-                data.isDoProfanityFilter(),
-                data.isDoUrlFilter(),
-                data.isCallEvent(),
-                data.getPriority(),
-                data.getBroadcastFormat()
-        );
+    public StringChannel(@NotNull Strings strings, @NotNull ChannelBuilder builder) {
+        super(strings, builder);
     }
 
     @Override
