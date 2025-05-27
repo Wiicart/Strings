@@ -10,7 +10,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class TextConverter {
 
-    private static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
+    private static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
+            .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
+            .build();
 
     // This class should not be instantiated.
     private TextConverter() {}

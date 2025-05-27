@@ -17,7 +17,7 @@ import java.util.Objects;
  * Implements Adventure's {@link TextColor} for drop-in compatability with Adventure.
  */
 @SuppressWarnings("unused")
-public final class StringsTextColor implements TextColor, Serializable, Element<TextColor> {
+public final class StringsTextColor implements Element<TextColor>, TextColor, Serializable {
     /**
      * Represents black.
      */

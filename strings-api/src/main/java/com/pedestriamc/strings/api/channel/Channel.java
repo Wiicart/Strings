@@ -26,6 +26,13 @@ public interface Channel extends Comparable<Channel> {
     }
 
     /**
+     * Provides the Channel identifier, i.e. StringChannel -> stringchannel
+     * @return The Channel type identifier
+     */
+    @NotNull
+    String getIdentifier();
+
+    /**
      * Sends a message from a player to the channel.
      * @param player The player sending the message.
      * @param message The player's message.

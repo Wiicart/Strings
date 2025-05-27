@@ -2,8 +2,6 @@ package com.pedestriamc.strings.listener.chat;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.channel.Membership;
-import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.text.format.TextConverter;
 import com.pedestriamc.strings.chat.paper.ChannelChatRenderer;
@@ -37,16 +35,6 @@ public class PaperChatListener extends AbstractChatListener {
         super(strings);
         this.strings = strings;
         userUtil = strings.getUserUtil();
-        initializeRenderers();
-    }
-
-    private void initializeRenderers() {
-        Set<Channel> channels = strings.getChannelLoader().getChannels();
-        channels.removeIf(channel -> channel.getType() == Type.PROTECTED);
-        channels.removeIf(channel -> channel.getMembership() == Membership.PROTECTED);
-        for(Channel channel : channels) {
-            renderers.put(channel, new ChannelChatRenderer(strings, channel));
-        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -64,6 +52,10 @@ public class PaperChatListener extends AbstractChatListener {
         Set<Player> recipients = channel.getRecipients(player);
         event.viewers().clear();
         event.viewers().add(convertToAudience(recipients));
+
+        //may cause spigot dependency issue
+        event.viewers().add((Audience) strings.getServer().getConsoleSender());
+
         event.renderer(getRenderer(channel));
 
         callEvent(player, container.message(), recipients, channel);
@@ -80,7 +72,7 @@ public class PaperChatListener extends AbstractChatListener {
 
     // Calls a non-cancellable ChannelChatEvent
     private void callEvent(Player sender, String message, Set<Player> players, Channel channel) {
-        Bukkit.getScheduler().runTask(strings, () -> Bukkit.getPluginManager()
+        Bukkit.getScheduler().runTask(strings, () -> strings.getServer().getPluginManager()
                 .callEvent(new ChannelChatEvent(false, sender, message, players, channel, false)));
     }
 

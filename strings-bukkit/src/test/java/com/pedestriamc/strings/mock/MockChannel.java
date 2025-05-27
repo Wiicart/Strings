@@ -33,4 +33,9 @@ public class MockChannel extends ProtectedChannel {
     public @NotNull Membership getMembership() {
         return Membership.DEFAULT;
     }
+
+    @Override
+    public @NotNull String getIdentifier() {
+        return "mockchannel";
+    }
 }

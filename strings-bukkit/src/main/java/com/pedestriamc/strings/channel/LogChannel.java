@@ -65,4 +65,9 @@ public class LogChannel extends ProtectedChannel implements Monitorable {
         monitors.remove(player);
     }
 
+    @Override
+    public @NotNull String getIdentifier() {
+        return "logchannel";
+    }
+
 }

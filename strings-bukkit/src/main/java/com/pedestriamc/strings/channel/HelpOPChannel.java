@@ -173,5 +173,9 @@ public class HelpOPChannel extends ProtectedChannel {
         return Permissions.anyOfOrAdmin(permissible, "strings.*", "strings.helpop.use");
     }
 
+    @Override
+    public @NotNull String getIdentifier() {
+        return "helpopchannel";
+    }
 
 }

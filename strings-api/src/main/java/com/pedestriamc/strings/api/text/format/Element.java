@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <T> The Adventure API equivalent
  */
 @ApiStatus.Internal
-public sealed interface Element<T> permits StringsTextColor, TextSegment, StringsTextDecoration {
+public sealed interface Element<T> permits StringsTextColor, TextSegment, StringsTextDecoration, TextReset {
     /**
      * Should return the same as {@link ChatColor#toString()} if representing a ChatColor,
      * or a String value of the Element's text.
@@ -36,6 +36,7 @@ public sealed interface Element<T> permits StringsTextColor, TextSegment, String
     enum Type {
         COLOR,
         DECORATION,
-        TEXT
+        TEXT,
+        RESET
     }
 }

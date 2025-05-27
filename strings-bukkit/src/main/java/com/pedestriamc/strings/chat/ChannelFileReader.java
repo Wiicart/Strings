@@ -190,15 +190,15 @@ public final class ChannelFileReader {
                 return Type.NORMAL;
             }
             case "world", "world_strict" -> {
-                log("Loading world channel '" + channelName + "'...");
+                log("Loading worldchannel '" + channelName + "'...");
                 return Type.WORLD;
             }
             case "proximity", "proximity_strict" -> {
-                log("Loading proximity channel '" + channelName + "'...");
+                log("Loading proximitychannel '" + channelName + "'...");
                 return Type.PROXIMITY;
             }
             case "helpop" -> {
-                log("Loading helpop channel '" + channelName + "'...");
+                log("Loading helpopchannel '" + channelName + "'...");
                 return Type.PROTECTED;
             }
             default -> {

@@ -17,7 +17,7 @@ public final class StringsCommand extends CommandBase {
 
     static final String VERSION_MESSAGE = StringsTextColor.DARK_GRAY + "[" +
             StringsTextColor.DARK_AQUA + "Strings" + StringsTextColor.DARK_GRAY + "] " +
-            StringsTextColor.WHITE + "Running strings version" + StringsTextColor.GREEN + Strings.VERSION;
+            StringsTextColor.WHITE + "Running strings version " + StringsTextColor.GREEN + Strings.VERSION;
 
     public StringsCommand(@NotNull Strings strings) {
         HashMap<String, CommandExecutor> map = new HashMap<>();

@@ -64,4 +64,8 @@ public final class StringChannel extends AbstractChannel {
         return Type.NORMAL;
     }
 
+    @Override
+    public @NotNull String getIdentifier() {
+        return "stringchannel";
+    }
 }

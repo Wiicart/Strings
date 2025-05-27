@@ -153,4 +153,9 @@ public class ProximityChannel extends AbstractChannel implements LocalChannel {
         return super.allows(permissible);
     }
 
+    @Override
+    public @NotNull String getIdentifier() {
+        return "proximitychannel";
+    }
+
 }

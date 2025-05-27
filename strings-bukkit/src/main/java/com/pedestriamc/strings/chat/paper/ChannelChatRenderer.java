@@ -27,16 +27,17 @@ public class ChannelChatRenderer extends MessageProcessor implements ChatRendere
     public @NotNull Component render(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {
         String template = generateTemplate(source);
         Component component = TextConverter.fromLegacy(template);
-        return setPlaceholder(component, "{message}", message);
+        return setPlaceholder(component, "{message}", processMessage(source, message));
     }
 
     private @NotNull Component processMessage(@NotNull Player source, @NotNull Component message) {
         String msg = TextConverter.toLegacy(message);
-        msg = processMessage(source, msg);
+        msg = super.processMessage(source, msg);
 
         if(mentionsEnabled && Mentioner.hasMentionPermission(source)) {
             msg = processMentions(source, msg);
         }
+
         return TextConverter.fromLegacy(msg);
     }
 

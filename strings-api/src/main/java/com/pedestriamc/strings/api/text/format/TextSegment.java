@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Locale;
 
 /**
- * Immutable {@link String} wrapper that implements {@link Element} for use in a {@link Combination}.
+ * Immutable {@link String} wrapper that implements {@link Element} for use in a {@link StringsComponent}.
  */
 @SuppressWarnings("unused")
 public final class TextSegment implements Element<String> {

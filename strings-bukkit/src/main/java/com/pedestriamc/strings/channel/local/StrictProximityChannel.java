@@ -73,4 +73,8 @@ public class StrictProximityChannel extends ProximityChannel {
         return Map.of("{channel}", getName());
     }
 
+    @Override
+    public @NotNull String getIdentifier() {
+        return "strict_proximitychannel";
+    }
 }

@@ -73,4 +73,9 @@ public class PartyChannel extends AbstractChannel {
     public @NotNull Set<Player> getMonitors() {
         return new HashSet<>(monitors);
     }
+
+    @Override
+    public @NotNull String getIdentifier() {
+        return "partychannel";
+    }
 }

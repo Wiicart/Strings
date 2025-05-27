@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Class that combines Bungee and Adventure styles/decorations into one class.
  * Unlike {@link StringsTextColor}, this class cannot be directly used with Adventure.
- * Use {@link #decoration()} to get the Adventure TextDecoration.
+ * Use {@link #toAdventure()} to get the Adventure TextDecoration.
  */
 @SuppressWarnings("unused")
 public enum StringsTextDecoration implements Element<TextDecoration> {
@@ -89,14 +89,6 @@ public enum StringsTextDecoration implements Element<TextDecoration> {
         return chatColor;
     }
 
-    /**
-     * Provides the {@link TextDecoration} version of this StringsTextDecoration.
-     * @return A TextDecoration
-     */
-    public @NotNull TextDecoration decoration() {
-        return decoration;
-    }
-
     @Override
     public @NotNull String toString() {
         return chatColor.toString();
@@ -104,7 +96,7 @@ public enum StringsTextDecoration implements Element<TextDecoration> {
 
     @Override
     public @NotNull TextDecoration toAdventure() {
-        return decoration();
+        return decoration;
     }
 
     @Override

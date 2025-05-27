@@ -149,7 +149,7 @@ public class MessageProcessor {
      * @param str The text to have placeholders replaced
      * @return String w/placeholders or null
      */
-    private String setPlaceholders(Player sender, String str) {
+    protected String setPlaceholders(Player sender, String str) {
         try {
             return PlaceholderAPI.setPlaceholders(sender, str);
         } catch (NoClassDefFoundError e) {
@@ -166,5 +166,13 @@ public class MessageProcessor {
     private boolean shouldColorMessage(Player sender) {
         return parsingMessageChatColors &&
                 Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.colormsg");
+    }
+
+    protected User getUser(Player player) {
+        return userUtil.getUser(player);
+    }
+
+    protected Channel getChannel() {
+        return channel;
     }
 }

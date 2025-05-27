@@ -127,5 +127,10 @@ public class WorldChannel extends AbstractChannel implements LocalChannel {
         throw new UnsupportedOperationException("setProximity() called on WorldChannel instance, which is unsupported.");
     }
 
+    @Override
+    public @NotNull String getIdentifier() {
+        return "worldchannel";
+    }
+
 }
 
