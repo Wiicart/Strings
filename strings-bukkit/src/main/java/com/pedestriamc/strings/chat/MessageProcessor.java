@@ -12,7 +12,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,7 +80,7 @@ public class MessageProcessor {
             message = setPlaceholders(sender, message);
         }
         if(shouldColorMessage(sender)) {
-            message = net.md_5.bungee.api.ChatColor.translateAlternateColorCodes('&', message);
+            message = ChatColor.translateAlternateColorCodes('&', message);
         }
         return message;
     }
@@ -127,9 +127,11 @@ public class MessageProcessor {
         while(matcher.find()) {
             try {
                 String stringHex = matcher.group();
-                net.md_5.bungee.api.ChatColor colorCode;
+                ChatColor colorCode;
+
                 Color color = Color.decode(stringHex.substring(1));
-                colorCode = net.md_5.bungee.api.ChatColor.of(color);
+                colorCode = ChatColor.of(color);
+
                 matcher.appendReplacement(sb, colorCode.toString());
             } catch(NumberFormatException e) {
                 matcher.appendReplacement(sb, matcher.group());
@@ -155,7 +157,6 @@ public class MessageProcessor {
             return str;
         }
     }
-
 
     private boolean shouldReplacePlaceholders(Player sender) {
         return processingMessagePlaceholders &&

@@ -17,7 +17,7 @@ import java.util.Objects;
  * Implements Adventure's {@link TextColor} for drop-in compatability with Adventure.
  */
 @SuppressWarnings("unused")
-public final class StringsTextColor implements TextColor, Serializable, StringsFormat {
+public final class StringsTextColor implements TextColor, Serializable, Element<TextColor> {
     /**
      * Represents black.
      */
@@ -196,6 +196,16 @@ public final class StringsTextColor implements TextColor, Serializable, StringsF
     @Override
     public @NotNull String toString() {
         return chatColor().toString();
+    }
+
+    @Override
+    public @NotNull TextColor toAdventure() {
+        return this;
+    }
+
+    @Override
+    public @NotNull Type getType() {
+        return Type.COLOR;
     }
 
     @Override

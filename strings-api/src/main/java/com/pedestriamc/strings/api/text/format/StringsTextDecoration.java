@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  * Use {@link #decoration()} to get the Adventure TextDecoration.
  */
 @SuppressWarnings("unused")
-public enum StringsTextDecoration implements StringsFormat {
+public enum StringsTextDecoration implements Element<TextDecoration> {
     /**
      * Represents bold.
      */
@@ -98,7 +98,17 @@ public enum StringsTextDecoration implements StringsFormat {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return chatColor.toString();
+    }
+
+    @Override
+    public @NotNull TextDecoration toAdventure() {
+        return decoration();
+    }
+
+    @Override
+    public @NotNull Type getType() {
+        return Type.DECORATION;
     }
 }

@@ -1,0 +1,41 @@
+package com.pedestriamc.strings.api.text.format;
+
+import net.md_5.bungee.api.ChatColor;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * An interface for {@link StringsTextDecoration}, {@link StringsTextColor}, and {@link TextSegment},
+ * that aim to combine Adventure API elements with {@link ChatColor} elements.
+ * All implementations are immutable.
+ * @param <T> The Adventure API equivalent
+ */
+@ApiStatus.Internal
+public sealed interface Element<T> permits StringsTextColor, TextSegment, StringsTextDecoration {
+    /**
+     * Should return the same as {@link ChatColor#toString()} if representing a ChatColor,
+     * or a String value of the Element's text.
+     * @return The String representation of the Element.
+     */
+    @Override
+    @NotNull String toString();
+
+    /**
+     * Provides the Adventure API equivalent for {@link StringsTextColor} and {@link StringsTextDecoration}.
+     * Returns a String for {@link TextSegment}.
+     * @return The adventure equivalent.
+     */
+    @NotNull T toAdventure();
+
+    /**
+     * Provides what type of Element this is.
+     * @return The Type.
+     */
+    @NotNull Type getType();
+
+    enum Type {
+        COLOR,
+        DECORATION,
+        TEXT
+    }
+}

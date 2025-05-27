@@ -1,59 +1,33 @@
 package com.pedestriamc.strings.api.text.format;
 
 import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public final class Combination {
 
-    private static final Pattern HEX = Pattern.compile("\"§x(§[0-9a-fA-F]){6}\"");
-    private static final char COLOR_CHAR = ChatColor.COLOR_CHAR;
+    private final List<Element<?>> elements = new ArrayList<>();
 
-    Set<StringsFormat> set = new HashSet<>();
-
-    public Combination(StringsFormat @NotNull... formats) {
-        set.addAll(Arrays.asList(formats));
-    }
-
-    public Component apply(String original) {
-        Component component = Component.text(original);
-        for(StringsFormat format : set) {
-            if(format instanceof StringsTextColor color) {
-                component = component.color(color);
-            }
-            if(format instanceof StringsTextDecoration decoration) {
-                component = component.decorate(decoration.decoration());
-            }
+    public Combination(Element<?> @NotNull ... elements) {
+        for(int i=0; i<elements.length; i++) {
+            Element<?> element = elements[i];
+            Objects.requireNonNull(element);
+            this.elements.add(element);
         }
-        return component;
     }
 
-    @SuppressWarnings("all")
-    public static Component apply(Set<StringsFormat> formats, String codes) {
-        return null;
+    public @NotNull Component toComponent() {
+        return Component.text("wow");
     }
 
-    @SuppressWarnings("all")
-    public static Combination fromString(String original) {
-        return null;
-    }
-
-    @Override
     public @NotNull String toString() {
         StringBuilder builder = new StringBuilder();
-        for(StringsFormat format : set) {
-            if(format instanceof StringsTextColor color) {
-                builder.append(color.chatColor());
-            }
-            if(format instanceof StringsTextDecoration decoration) {
-                builder.append(decoration.decoration());
-            }
+        for(Element<?> element : elements) {
+            builder.append(element.toString());
         }
         return builder.toString();
     }

@@ -37,17 +37,17 @@ import java.util.UUID;
 
 public final class Strings extends JavaPlugin {
 
-    // bStats metrics id
-    public static final int METRICS_ID = 22597;
-
     // Version
     public static final String VERSION = "1.6";
 
-    // plugin distributor
-    public static final String DISTRIBUTOR = "github";
-
     // short version number.
     public static final short PLUGIN_NUM = 6;
+
+    // bStats metrics id
+    public static final int METRICS_ID = 22597;
+
+    // plugin distributor
+    public static final String DISTRIBUTOR = "github";
 
     private boolean usingPlaceholderAPI = false;
     private boolean isPaper = false;

@@ -24,6 +24,7 @@ import java.util.Set;
 /**
  * Chat Listener for Paper servers.
  * Unlike with Spigot servers, the ChatEvent called by the server is not canceled.
+ * Does not call {@link Channel#sendMessage(Player, String)}, instead handles the message independently.
  */
 public class PaperChatListener extends AbstractChatListener {
 
@@ -56,9 +57,9 @@ public class PaperChatListener extends AbstractChatListener {
         Container container = processSymbol(TextConverter.toLegacy(event.message()), user);
         Channel channel = container.channel();
         event.message(TextConverter.fromLegacy(container.message()));
-        if(channel == null) {
-            channel = userUtil.getUser(player).getActiveChannel().resolve(player);
-        }
+
+        // Resolve Channel if DefaultChannel is returned
+        channel = channel.resolve(player);
 
         Set<Player> recipients = channel.getRecipients(player);
         event.viewers().clear();

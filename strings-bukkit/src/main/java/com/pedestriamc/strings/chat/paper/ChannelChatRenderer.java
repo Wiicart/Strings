@@ -33,6 +33,7 @@ public class ChannelChatRenderer extends MessageProcessor implements ChatRendere
     private @NotNull Component processMessage(@NotNull Player source, @NotNull Component message) {
         String msg = TextConverter.toLegacy(message);
         msg = processMessage(source, msg);
+
         if(mentionsEnabled && Mentioner.hasMentionPermission(source)) {
             msg = processMentions(source, msg);
         }
