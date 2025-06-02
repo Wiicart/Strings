@@ -7,17 +7,19 @@ import com.pedestriamc.strings.channel.local.StrictProximityChannel;
 import com.pedestriamc.strings.channel.local.StrictWorldChannel;
 import com.pedestriamc.strings.channel.local.WorldChannel;
 
+/**
+ * Registers BiFunctions to create Channel implementations.
+ */
 public final class BuildableRegistrar {
 
     private BuildableRegistrar() {}
 
     public static void register() {
-        ChannelBuilder.registerBuildable("stringchannel", StringChannel::new);
-        ChannelBuilder.registerBuildable("proximity", ProximityChannel::new);
-        ChannelBuilder.registerBuildable("proximity_strict", StrictProximityChannel::new);
-        ChannelBuilder.registerBuildable("world", WorldChannel::new);
-        ChannelBuilder.registerBuildable("world_strict", StrictWorldChannel::new);
-        ChannelBuilder.registerBuildable("helpop", HelpOPChannel::new);
+        ChannelBuilder.registerBuildable(StringChannel.IDENTIFIER, StringChannel::new);
+        ChannelBuilder.registerBuildable(ProximityChannel.IDENTIFIER, ProximityChannel::new);
+        ChannelBuilder.registerBuildable(StrictProximityChannel.IDENTIFIER, StrictProximityChannel::new);
+        ChannelBuilder.registerBuildable(WorldChannel.IDENTIFIER, WorldChannel::new);
+        ChannelBuilder.registerBuildable(StrictWorldChannel.IDENTIFIER, StrictWorldChannel::new);
+        ChannelBuilder.registerBuildable(HelpOPChannel.IDENTIFIER, HelpOPChannel::new);
     }
-
 }

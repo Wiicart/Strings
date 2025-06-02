@@ -2,6 +2,7 @@ package com.pedestriamc.strings.channel.local;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
@@ -21,7 +22,9 @@ import java.util.Set;
  * A WorldChannel that does not send player messages to all members of the Channel.
  * Players must either be in the scope (one of the Worlds of the Channel) or be a monitor.
  */
-public class StrictWorldChannel extends WorldChannel {
+public class StrictWorldChannel extends AbstractLocalChannel {
+
+    public static final String IDENTIFIER = "world_strict";
 
     private final Channel defaultChannel;
     private final Messenger messenger;
@@ -61,6 +64,11 @@ public class StrictWorldChannel extends WorldChannel {
         return recipients;
     }
 
+    @Override
+    public @NotNull Type getType() {
+        return Type.WORLD;
+    }
+
     @Contract(" -> new")
     private @NotNull @Unmodifiable Map<String, String> getPlaceholders() {
         return Map.of("{channel}", getName());
@@ -68,6 +76,18 @@ public class StrictWorldChannel extends WorldChannel {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "strict_worldchannel";
+        return IDENTIFIER;
+    }
+
+    // N/A to this implementation, UnsupportedOperationException always thrown.
+    @Override
+    public double getProximity() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("getProximity() called on WorldChannel instance, which is unsupported.");
+    }
+
+    // N/A to this implementation, UnsupportedOperationException always thrown.
+    @Override
+    public void setProximity(double proximity) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("setProximity() called on WorldChannel instance, which is unsupported.");
     }
 }

@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,22 +22,32 @@ import java.util.function.BiFunction;
  */
 public final class ChannelBuilder {
 
+    // Stores the Strings instance for use in constructing the Channels.
     @ApiStatus.Internal
     private static final JavaPlugin STRINGS = JavaPlugin.getProvidingPlugin(Channel.class);
 
+    // Stores functions to build Channels.
     @ApiStatus.Internal
     private static final Map<String, BiFunction<JavaPlugin, ChannelBuilder, Channel>> BUILD_FUNCTIONS = new HashMap<>();
 
+
+    // These fields may not be null at any point.
+    @NotNull
     private String name;
-    private String defaultColor;
+    @NotNull
     private String format;
-    private String broadcastFormat;
+    @NotNull
     private Membership membership;
+
+    // Nullable fields, default values should be provided where necessary if null.
+    @Range(from = -1, to = Integer.MAX_VALUE)
+    private int priority;
+    private String defaultColor;
+    private String broadcastFormat;
     private boolean doCooldown;
     private boolean doProfanityFilter;
     private boolean doUrlFilter;
     private boolean callEvent;
-    private int priority;
     private double distance;
     private Set<World> worlds;
 
@@ -61,8 +72,10 @@ public final class ChannelBuilder {
      * Builds a Channel
      * @param type The Type of Channel to construct.
      *             Options: {@code stringchannel, proximity, proximity_strict, world, world_strict, helpop}
+     *
      * @return A new Channel of the specified type.
-     * @throws IllegalArgumentException If not all required values are filled out in this ChannelBuilder.
+     * @throws IllegalArgumentException If not all required values are filled out in this ChannelBuilder,
+     * or the Channel type is unknown.
      */
     @Contract("_ -> new")
     public Channel build(@NotNull String type) throws IllegalArgumentException {
@@ -82,7 +95,7 @@ public final class ChannelBuilder {
      * @return The Chanel name.
      */
     @ApiStatus.Internal
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 
@@ -101,8 +114,8 @@ public final class ChannelBuilder {
      * @return A String representation of the default color.
      */
     @ApiStatus.Internal
-    public String getDefaultColor() {
-        return defaultColor;
+    public @NotNull String getDefaultColor() {
+        return defaultColor != null ? defaultColor : "";
     }
 
     /**
@@ -119,7 +132,7 @@ public final class ChannelBuilder {
      * @return A String containing the format.
      */
     @ApiStatus.Internal
-    public String getFormat() {
+    public @NotNull String getFormat() {
         return format;
     }
 
@@ -139,7 +152,7 @@ public final class ChannelBuilder {
      * @return The Membership
      */
     @ApiStatus.Internal
-    public Membership getMembership() {
+    public @NotNull Membership getMembership() {
         return membership;
     }
 
@@ -244,7 +257,7 @@ public final class ChannelBuilder {
      * @param priority The int priority
      * @return this
      */
-    public ChannelBuilder setPriority(int priority) {
+    public ChannelBuilder setPriority(@Range(from = -1, to = Integer.MAX_VALUE) int priority) {
         this.priority = priority;
         return this;
     }
@@ -255,7 +268,7 @@ public final class ChannelBuilder {
      */
     @ApiStatus.Internal
     public Set<World> getWorlds() {
-        return worlds;
+        return worlds != null ? worlds : Set.of();
     }
 
     /**
@@ -263,7 +276,7 @@ public final class ChannelBuilder {
      * @param worlds A Set of the worlds.
      * @return this
      */
-    public ChannelBuilder setWorlds(Set<World> worlds) {
+    public ChannelBuilder setWorlds(final Set<World> worlds) {
         this.worlds = worlds;
         return this;
     }
@@ -293,7 +306,8 @@ public final class ChannelBuilder {
      */
     @ApiStatus.Internal
     public String getBroadcastFormat() {
-        return broadcastFormat != null ? broadcastFormat : "";
+        return broadcastFormat != null ?
+                broadcastFormat : "&8[&c" + this.getName() + "&8] &f{message}";
     }
 
 

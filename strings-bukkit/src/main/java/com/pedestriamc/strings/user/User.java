@@ -5,21 +5,20 @@ import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.chat.ChannelManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Stores information about players for Strings.
@@ -28,23 +27,25 @@ import java.util.UUID;
 @SuppressWarnings("unused")
 public final class User implements StringsUser {
 
+    // should almost always be true, see YamlUserUtil for usage.
     private final boolean retain;
 
-    private final Strings strings;
-    private final ChannelManager channelLoader;
+    private final @NotNull Strings strings;
+    private final @NotNull ChannelManager channelLoader;
 
-    private final UUID uuid;
-    private final Player player;
-    private final String name;
-    private final Set<Channel> channels;
-    private final Set<Channel> monitoredChannels;
-    private final Set<UUID> ignored;
+    private final @NotNull UUID uuid;
+    private final @NotNull Player player;
+    private final @NotNull String name;
+    private final @NotNull Set<Channel> channels;
+    private final @NotNull Set<Monitorable> monitored;
+    private final @NotNull Set<UUID> ignored;
+
+    private @NotNull Channel activeChannel;
 
     private String chatColor;
     private String prefix;
     private String suffix;
     private String displayName;
-    private Channel activeChannel;
     private boolean mentionsEnabled;
 
     @Nullable
@@ -62,14 +63,14 @@ public final class User implements StringsUser {
         this.retain = builder.retained;
         this.player = Objects.requireNonNull(strings.getServer().getPlayer(uuid));
         this.name = player.getName();
-        this.chatColor = builder.chatColor;
-        this.prefix = builder.prefix;
-        this.suffix = builder.suffix;
+        this.chatColor = Objects.requireNonNullElse(builder.chatColor, "");
+        this.prefix = Objects.requireNonNullElse(builder.prefix, "");
+        this.suffix = Objects.requireNonNullElse(builder.suffix, "");
         this.displayName = builder.displayName;
         this.activeChannel = builder.activeChannel != null ? builder.activeChannel : channelLoader.getDefaultChannel();
         this.mentionsEnabled = builder.mentionsEnabled;
         this.channels = Objects.requireNonNullElseGet(builder.channels, HashSet::new);
-        this.monitoredChannels = Objects.requireNonNullElseGet(builder.monitoredChannels, HashSet::new);
+        this.monitored = Objects.requireNonNullElseGet(builder.monitoredChannels, HashSet::new);
         this.ignored = Objects.requireNonNullElseGet(builder.ignored, HashSet::new);
 
         if(channels.isEmpty()) {
@@ -87,19 +88,20 @@ public final class User implements StringsUser {
         for(Channel channel : channels) {
             channel.removeMember(getPlayer());
         }
-
-        for(Channel channel : monitoredChannels) {
-            Monitorable monitorable = Monitorable.of(channel);
+        for(Monitorable monitorable : monitored) {
             monitorable.removeMonitor(getPlayer());
         }
     }
 
     /**
-     * Joins all Channels in the channels Set. Called on initialization.
+     * Joins all Channels in the channels Set. Called only on initialization.
      */
     private void joinChannels() {
         for(Channel channel : channels) {
-            channel.addMember(this.player);
+            channel.addMember(this);
+        }
+        for(Monitorable monitorable : monitored) {
+            monitorable.addMonitor(this);
         }
     }
 
@@ -112,23 +114,33 @@ public final class User implements StringsUser {
         getPlayer().sendMessage(message);
     }
 
+
+
+    // signifies data has changed for the data cache.
+    private volatile boolean dirty = true;
+    // cache for getData
+    private Map<String, Object> data;
+
     /**
      * Provides a Map containing all the User's information.
      * @return The populated Map.
      */
     public @NotNull Map<String, Object> getData() {
         synchronized(this) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("chat-color", Objects.requireNonNullElse(chatColor, ""));
-            map.put("prefix", Objects.requireNonNullElse(prefix, ""));
-            map.put("suffix", Objects.requireNonNullElse(suffix, ""));
-            map.put("display-name", Objects.requireNonNullElse(displayName, ""));
-            map.put("active-channel", activeChannel == null ? "default" : activeChannel.getName());
-            map.put("channels", getChannelNames());
-            map.put("monitored-channels", getMonitoredChannelNames());
-            map.put("ignored-players", ignored);
-            map.put("mentions-enabled", mentionsEnabled);
-            return map;
+            if(dirty || data == null) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("chat-color", Objects.requireNonNullElse(chatColor, ""));
+                map.put("prefix", Objects.requireNonNullElse(prefix, ""));
+                map.put("suffix", Objects.requireNonNullElse(suffix, ""));
+                map.put("display-name", Objects.requireNonNullElse(displayName, ""));
+                map.put("active-channel", activeChannel.getName());
+                map.put("channels", getNames(channels));
+                map.put("monitored-channels", getNames(monitored));
+                map.put("ignored-players", ignored);
+                map.put("mentions-enabled", mentionsEnabled);
+                data = map;
+            }
+            return data;
         }
     }
 
@@ -148,7 +160,7 @@ public final class User implements StringsUser {
      * @return The player.
      */
     @Override
-    public Player getPlayer() {
+    public @NotNull Player getPlayer() {
         return player;
     }
 
@@ -170,6 +182,7 @@ public final class User implements StringsUser {
     @Override
     public void setChatColor(final String chatColor) {
         this.chatColor = chatColor;
+        dirty = true;
     }
 
     /**
@@ -191,7 +204,7 @@ public final class User implements StringsUser {
      * @param channel The channel to get the fallback chat color from.
      * @return A chat color.
      */
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings("java:S1874")
     public String getChatColor(final Channel channel) {
         if(chatColor == null || chatColor.isEmpty()) {
             return channel.getDefaultColor();
@@ -208,6 +221,7 @@ public final class User implements StringsUser {
     public void setDisplayName(@NotNull final String displayName) {
         this.displayName = displayName;
         this.player.setDisplayName(displayName);
+        dirty = true;
     }
 
     /**
@@ -234,6 +248,7 @@ public final class User implements StringsUser {
         if(strings.isUsingVault()) {
             strings.getVaultChat().setPlayerPrefix(player, prefix);
         }
+        dirty = true;
     }
 
     /**
@@ -264,6 +279,7 @@ public final class User implements StringsUser {
         if(strings.isUsingVault()) {
             strings.getVaultChat().setPlayerSuffix(player, suffix);
         }
+        dirty = true;
     }
 
     /**
@@ -290,7 +306,10 @@ public final class User implements StringsUser {
      */
     @Override
     public void setMentionsEnabled(boolean mentionsEnabled) {
-        this.mentionsEnabled = mentionsEnabled;
+        if(this.mentionsEnabled != mentionsEnabled) {
+            this.mentionsEnabled = mentionsEnabled;
+            dirty = true;
+        }
     }
 
     /**
@@ -310,6 +329,7 @@ public final class User implements StringsUser {
     public void ignore(@NotNull Player player) {
         Objects.requireNonNull(player);
         ignored.add(player.getUniqueId());
+        dirty = true;
     }
 
     /**
@@ -319,6 +339,7 @@ public final class User implements StringsUser {
     public void stopIgnoring(@NotNull Player player) {
         Objects.requireNonNull(player);
         ignored.remove(player.getUniqueId());
+        dirty = true;
     }
 
     /**
@@ -352,11 +373,13 @@ public final class User implements StringsUser {
     @Override
     public void setActiveChannel(@NotNull Channel channel) {
         Objects.requireNonNull(channel);
-        if("helpop".equals(channel.getName())) {
-            return;
+        if(!activeChannel.equals(channel)) {
+            this.activeChannel = channel;
+            dirty = true;
+            if(!channels.contains(channel)) {
+                joinChannel(channel);
+            }
         }
-        this.activeChannel = channel;
-        joinChannel(channel);
     }
 
     /**
@@ -366,7 +389,7 @@ public final class User implements StringsUser {
     @NotNull
     @Override
     public Channel getActiveChannel() {
-        return activeChannel != null ? activeChannel : channelLoader.getDefaultChannel();
+        return activeChannel;
     }
 
     /**
@@ -376,8 +399,11 @@ public final class User implements StringsUser {
     @Override
     public void joinChannel(@NotNull Channel channel) {
         Objects.requireNonNull(channel);
-        channel.addMember(this.player);
-        channels.add(channel);
+        if(!channels.contains(channel)) {
+            channel.addMember(this);
+            channels.add(channel);
+            dirty = true;
+        }
     }
 
     /**
@@ -387,14 +413,18 @@ public final class User implements StringsUser {
     @Override
     public void leaveChannel(@NotNull Channel channel) {
         Objects.requireNonNull(channel);
-        if(channel.equals(channelLoader.getChannel("default"))) {
-            Bukkit.getLogger().info("[Strings] Player " + player.getName() + " just tried to leave channel global!  Cancelled leaving channel.");
+        if(channel.equals(channelLoader.getDefaultChannel())) {
+            strings.warning("[Strings] Player " + player.getName() + " just tried to leave channel global. This is not permitted.");
             return;
         }
-        channels.remove(channel);
-        channel.removeMember(this.getPlayer());
-        if(activeChannel.equals(channel)) {
-            activeChannel = channelLoader.getChannel("default");
+
+        if(channels.contains(channel)) {
+            channels.remove(channel);
+            channel.removeMember(this);
+            dirty = true;
+            if(activeChannel.equals(channel)) {
+                activeChannel = channelLoader.getDefaultChannel();
+            }
         }
     }
 
@@ -407,19 +437,11 @@ public final class User implements StringsUser {
         return new HashSet<>(channels);
     }
 
-    /**
-     * Provides an ArrayList of all names of the channels the User is a member of.
-     * @return An {@code ArrayList} of {@code String} containing the names of the channels the user is a member of.
-     */
-    public List<String> getChannelNames() {
-        List<String> names = new ArrayList<>();
-        for(Channel channel : getChannels()) {
-            if(channel != null) {
-                String channelName = channel.getName();
-                names.add(channelName);
-            }
-        }
-        return names;
+    private Set<String> getNames(@NotNull Collection<? extends Channel> collection) {
+        return collection.stream()
+                .filter(Objects::nonNull)
+                .map(Channel::getName)
+                .collect(Collectors.toUnmodifiableSet());
     }
 
 
@@ -428,20 +450,28 @@ public final class User implements StringsUser {
      * Monitors a Channel and adds this Player to the Channel's list of monitoring players.
      * @param monitorable The Monitorable Channel
      */
+    @Override
     public void monitor(@NotNull Monitorable monitorable) {
         Objects.requireNonNull(monitorable);
-        monitoredChannels.add(monitorable);
-        monitorable.addMonitor(this);
+        if(!monitored.contains(monitorable)) {
+            monitored.add(monitorable);
+            monitorable.addMonitor(this);
+            dirty = true;
+        }
     }
 
     /**
      * Unmonitors a Channel and removes this Player from the Channel's list of monitoring players.
      * @param monitorable The Monitorable Channel
      */
+    @Override
     public void unmonitor(@NotNull Monitorable monitorable) {
         Objects.requireNonNull(monitorable);
-        monitoredChannels.remove(monitorable);
-        monitorable.removeMonitor(this);
+        if(monitored.contains(monitorable)) {
+            monitored.remove(monitorable);
+            monitorable.removeMonitor(this);
+            dirty = true;
+        }
     }
 
     /**
@@ -450,24 +480,8 @@ public final class User implements StringsUser {
      */
     @Contract(value = " -> new", pure = true)
     public @NotNull Set<Channel> getMonitoredChannels() {
-        return new HashSet<>(monitoredChannels);
+        return new HashSet<>(monitored);
     }
-
-    /**
-     * Provides a List of all Channel names in User.getMonitoredChannels();
-     * @return A populated List
-     */
-    public @NotNull List<String> getMonitoredChannelNames() {
-        List<String> names = new ArrayList<>();
-        for(Channel channel : getMonitoredChannels()) {
-            if(channel != null) {
-                String channelName = channel.getName();
-                names.add(channelName);
-            }
-        }
-        return names;
-    }
-
 
 
     /**
@@ -499,7 +513,7 @@ public final class User implements StringsUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return mentionsEnabled == user.mentionsEnabled && Objects.equals(strings, user.strings) && Objects.equals(uuid, user.uuid) && Objects.equals(player, user.player) && Objects.equals(name, user.name) && Objects.equals(channels, user.channels) && Objects.equals(chatColor, user.chatColor) && Objects.equals(prefix, user.prefix) && Objects.equals(suffix, user.suffix) && Objects.equals(displayName, user.displayName) && Objects.equals(activeChannel, user.activeChannel);
+        return this.uuid.equals(user.uuid);
     }
 
     @Override

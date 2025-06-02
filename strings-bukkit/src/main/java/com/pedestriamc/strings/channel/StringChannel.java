@@ -18,6 +18,8 @@ import java.util.Set;
  */
 public final class StringChannel extends AbstractChannel {
 
+    public static final String IDENTIFIER = "stringchannel";
+
     public StringChannel(JavaPlugin plugin, ChannelBuilder builder) {
         this((Strings) plugin, builder);
     }
@@ -66,6 +68,6 @@ public final class StringChannel extends AbstractChannel {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "stringchannel";
+        return IDENTIFIER;
     }
 }

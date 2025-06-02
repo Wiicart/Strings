@@ -25,6 +25,8 @@ import java.util.Set;
 
 public class HelpOPChannel extends ProtectedChannel {
 
+    public static final String IDENTIFIER = "helpop";
+
     private final Strings strings;
     private final MessageProcessor messageProcessor;
 
@@ -175,7 +177,7 @@ public class HelpOPChannel extends ProtectedChannel {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "helpopchannel";
+        return IDENTIFIER;
     }
 
 }

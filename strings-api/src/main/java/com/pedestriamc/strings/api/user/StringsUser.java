@@ -2,6 +2,7 @@ package com.pedestriamc.strings.api.user;
 
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.Monitorable;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -146,12 +147,29 @@ public interface StringsUser {
      * @param player The Player to stop ignoring.
      */
     void stopIgnoring(@NotNull Player player);
+
     /**
      * Provides a Set of Players that this User has ignored (for /msg).
      * @return A populated Set.
      */
     Set<UUID> getIgnoredPlayers();
 
+    /**
+     * Provides the Player this StringsUser is associated with.
+     * @return The Player.
+     */
     Player getPlayer();
+
+    /**
+     * Monitors a Channel
+     * @param monitorable The Channel to monitor.
+     */
+    void monitor(@NotNull Monitorable monitorable);
+
+    /**
+     * Unmonitors a Channel
+     * @param monitorable The Channel to unmonitor.
+     */
+    void unmonitor(@NotNull Monitorable monitorable);
 
 }

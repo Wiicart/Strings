@@ -2,6 +2,7 @@ package com.pedestriamc.strings.api.channel;
 
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -32,25 +33,35 @@ public interface Monitorable extends Channel {
     Set<Player> getMonitors();
 
     /**
+     * For internal usage - Use {@link StringsUser#monitor(Monitorable)}
      * Adds a monitor
      * @param player The Player to be added
      */
+    @ApiStatus.Internal
     void addMonitor(@NotNull Player player);
 
     /**
+     * For internal usage - Use {@link StringsUser#unmonitor(Monitorable)}
      * Removes a monitor
      * @param player The Player to be removed
      */
+    @ApiStatus.Internal
     void removeMonitor(@NotNull Player player);
 
-    @SuppressWarnings("unused")
-    default void addMonitor(@NotNull StringsUser stringsUser) {
-        addMonitor(stringsUser.getPlayer());
-    }
+    /**
+     * For internal usage - Use {@link StringsUser#monitor(Monitorable)}
+     * Adds a monitor
+     * @param stringsUser The User to be added
+     */
+    @ApiStatus.Internal
+    void addMonitor(@NotNull StringsUser stringsUser);
 
-    @SuppressWarnings("unused")
-    default void removeMonitor(@NotNull StringsUser stringsUser) {
-        removeMonitor(stringsUser.getPlayer());
-    }
+    /**
+     * For internal usage - Use {@link StringsUser#unmonitor(Monitorable)}
+     * Removes a monitor
+     * @param stringsUser The User to be removed
+     */
+    @ApiStatus.Internal
+    void removeMonitor(@NotNull StringsUser stringsUser);
 
 }

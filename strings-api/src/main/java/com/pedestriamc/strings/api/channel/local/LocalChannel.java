@@ -5,6 +5,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 import java.util.Set;
 
@@ -36,9 +37,7 @@ public interface LocalChannel extends Channel {
      * @param player The Player to check
      * @return If the Player is in scope
      */
-    default boolean containsInScope(@NotNull Player player) {
-        return getWorlds().contains(player.getWorld());
-    }
+    boolean containsInScope(@NotNull Player player);
 
     /**
      * Provides a Set of all the Worlds the Channel is used in.
@@ -47,12 +46,22 @@ public interface LocalChannel extends Channel {
     Set<World> getWorlds();
 
     /**
+     * Sets the Worlds this LocalChannel contains.
+     * Channel implementations use a copy of the provided Set,
+     * so updates made to the provided Set after invocation will not be reflected.
+     *
+     * @param worlds The Set of Worlds the Channel should contain.
+     */
+    void setWorlds(@NotNull Set<World> worlds);
+
+    /**
      * If this is an instance of a {@code ProximityChannel}, this will provide the proximity the Channel is set to.
      * Check if this is an instance of ProximityChannel with {@link LocalChannel#getType()}
      * @return A double of the proximity (max distance for players to receive a message).
      * @throws UnsupportedOperationException If this is an instance of a {@code WorldChannel}, this exception will be thrown.
      * Before calling, check {@link LocalChannel#getType()}
      */
+    @Range(from = -1, to = Integer.MAX_VALUE)
     double getProximity() throws UnsupportedOperationException;
 
     /**
@@ -61,5 +70,5 @@ public interface LocalChannel extends Channel {
      * @param proximity The proximity to set the Channel to
      * @throws UnsupportedOperationException If the Channel is not an instance of {@code ProximityChannel}
      */
-    void setProximity(double proximity) throws UnsupportedOperationException;
+    void setProximity(@Range(from = -1, to = Integer.MAX_VALUE) double proximity) throws UnsupportedOperationException;
 }

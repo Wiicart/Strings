@@ -85,6 +85,7 @@ public class MessageProcessor {
         return message;
     }
 
+    //TODO fix adventure support
     public String processMentions(Player sender, @NotNull String str) {
         if(!str.contains("@")) {
             return str;

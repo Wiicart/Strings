@@ -25,11 +25,14 @@ import java.util.TreeSet;
  */
 public final class DefaultChannel extends ProtectedChannel {
 
-    private final ChannelManager channelManager;
-    private final Set<Player> members;
+    @NotNull
     private final Strings strings;
+    @NotNull
+    private final ChannelManager channelManager;
+    @NotNull
+    private final Set<Player> members;
 
-    public DefaultChannel(Strings strings, @NotNull ChannelManager channelManager) {
+    public DefaultChannel(@NotNull Strings strings, @NotNull ChannelManager channelManager) {
         super("default");
         this.channelManager = channelManager;
         this.members = new HashSet<>();
@@ -52,7 +55,6 @@ public final class DefaultChannel extends ProtectedChannel {
      * @param player The player to determine a Channel for
      * @return The Channel with the highest numerical priority that the player is in scope of that allows the player.
      */
-    @SuppressWarnings("java:S2259")
     @Nullable
     @Override
     public Channel resolve(@NotNull Player player) {

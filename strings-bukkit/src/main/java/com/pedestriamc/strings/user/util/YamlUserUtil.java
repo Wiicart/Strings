@@ -2,6 +2,7 @@ package com.pedestriamc.strings.user.util;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.UserBuilder;
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,10 +14,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * YAML UserUtil implementation
@@ -92,13 +95,21 @@ public final class YamlUserUtil implements UserUtil {
                     .mentionsEnabled(section.getBoolean(".mentions-enabled"))
                     .activeChannel(strings.getChannelLoader().getChannel(section.getString(".active-channel")))
                     .channels(getChannels(section.getList(".channels")))
-                    .monitoredChannels(getChannels(section.getList(".monitored-channels")))
+                    .monitoredChannels(getMonitorables(section.getList(".monitored-channels")))
                     .ignoredPlayers(getUniqueIds(section.getList(".ignored-players")))
                     .build();
 
             addUser(user);
             return user;
         }
+    }
+
+    private Set<Monitorable> getMonitorables(List<?> list) {
+        return getChannels(list).stream()
+                .filter(Objects::nonNull)
+                .filter(Monitorable.class::isInstance)
+                .map(Monitorable.class::cast)
+                .collect(Collectors.toSet());
     }
 
     /**

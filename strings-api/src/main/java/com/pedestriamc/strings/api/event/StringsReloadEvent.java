@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Called when the Strings plugin reloads.
  */
+@ApiStatus.Internal
 public final class StringsReloadEvent extends Event {
 
     @ApiStatus.Internal

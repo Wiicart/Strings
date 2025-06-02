@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Loads and stores all Users for Strings
  */
-public interface UserUtil {
+public sealed interface UserUtil permits YamlUserUtil {
 
     /**
      * Saves a User to either a file or database.

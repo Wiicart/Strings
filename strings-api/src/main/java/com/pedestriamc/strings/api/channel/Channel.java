@@ -4,8 +4,10 @@ import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 import java.util.Map;
 import java.util.Set;
@@ -26,10 +28,14 @@ public interface Channel extends Comparable<Channel> {
     }
 
     /**
-     * Provides the Channel identifier, i.e. StringChannel -> stringchannel
+     * Provides the Channel identifier, i.e., {@code StringChannel} -> {@code stringchannel}.
+     * This must be constant across instances of an implementation
+     * but must be unique from other implementations.
+     *
      * @return The Channel type identifier
      */
     @NotNull
+    @Contract(pure = true)
     String getIdentifier();
 
     /**
@@ -101,16 +107,17 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Provides the default chat color of the Channel.
-     * @deprecated - Apply default chat color in the Channel's format using {@link Channel#setFormat(String)}
+     * Obsolete - define a color in the Channels format instead. {@link Channel#getFormat()}
      * @return The default chat color.
      */
-    @Deprecated
+    @ApiStatus.Obsolete
     String getDefaultColor();
 
     /**
      * Sets the Channel's default chat color.
      * @param defaultColor The new default chat color.
      */
+    @ApiStatus.Obsolete
     void setDefaultColor(String defaultColor);
 
     /**
@@ -151,27 +158,39 @@ public interface Channel extends Comparable<Channel> {
     void setDoCooldown(boolean doCooldown);
 
     /**
-     * Adds a player to the Channel.
-     * @param player The player to be added.
+     * For internal usage - use {@link StringsUser#joinChannel(Channel)} instead.
+     * Adds a User to the channel.
+     *
+     * @param player The Player to be added.
      */
+    @ApiStatus.Internal
     void addMember(@NotNull Player player);
 
     /**
+     * For internal usage - use {@link StringsUser#joinChannel(Channel)} instead.
      * Adds a User to the channel.
+     *
      * @param user The User to be added.
      */
+    @ApiStatus.Internal
     void addMember(@NotNull StringsUser user);
 
     /**
+     * For internal usage - use {@link StringsUser#leaveChannel(Channel)} instead.
      * Removes a player from the Channel.
+     *
      * @param player The player to be removed.
      */
+    @ApiStatus.Internal
     void removeMember(@NotNull Player player);
 
     /**
-     * Removes a User from the Channel.
-     * @param user The User to be removed.
+     * For internal usage - use {@link StringsUser#leaveChannel(Channel)} instead.
+     * Removes a player from the Channel.
+     *
+     * @param user The user to be removed.
      */
+    @ApiStatus.Internal
     void removeMember(@NotNull StringsUser user);
 
     /**
@@ -204,6 +223,7 @@ public interface Channel extends Comparable<Channel> {
      * Provides the priority of the Channel.
      * @return An int representing the priority.
      */
+    @Range(from = Integer.MIN_VALUE, to = Integer.MAX_VALUE)
     int getPriority();
 
     /**
@@ -213,6 +233,10 @@ public interface Channel extends Comparable<Channel> {
      */
     boolean allows(@NotNull Permissible permissible);
 
+    /**
+     * Signifies if the Channel calls an Event when a message is sent in Spigot environments.
+     * @return If an Event is called.
+     */
     boolean isCallEvent();
 
 }

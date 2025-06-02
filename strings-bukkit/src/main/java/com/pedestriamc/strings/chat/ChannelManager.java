@@ -27,7 +27,9 @@ import java.util.TreeSet;
  */
 public final class ChannelManager implements ChannelLoader {
 
+    @NotNull
     private final Strings strings;
+
     private final HashMap<String, Channel> channels;
     private final FileConfiguration config;
     private final HashMap<String, Channel> channelSymbols;

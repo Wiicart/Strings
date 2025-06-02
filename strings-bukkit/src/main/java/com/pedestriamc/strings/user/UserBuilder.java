@@ -2,6 +2,7 @@ package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.Monitorable;
 
 import java.util.Set;
 import java.util.UUID;
@@ -16,7 +17,7 @@ public final class UserBuilder {
     final boolean retained;
     Channel activeChannel;
     Set<Channel> channels;
-    Set<Channel> monitoredChannels;
+    Set<Monitorable> monitoredChannels;
     Set<UUID> ignored;
     String chatColor;
     String prefix;
@@ -35,7 +36,7 @@ public final class UserBuilder {
         return this;
     }
 
-    public UserBuilder monitoredChannels(Set<Channel> monitoredChannels) {
+    public UserBuilder monitoredChannels(Set<Monitorable> monitoredChannels) {
         this.monitoredChannels = monitoredChannels;
         return this;
     }

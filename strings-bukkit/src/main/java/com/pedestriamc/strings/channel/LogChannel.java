@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.channel;
 
 import com.pedestriamc.strings.api.channel.Monitorable;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.channel.base.ProtectedChannel;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
@@ -61,8 +62,18 @@ public class LogChannel extends ProtectedChannel implements Monitorable {
     }
 
     @Override
+    public void addMonitor(@NotNull StringsUser stringsUser) {
+        addMonitor(stringsUser.getPlayer());
+    }
+
+    @Override
     public void removeMonitor(@NotNull Player player) {
         monitors.remove(player);
+    }
+
+    @Override
+    public void removeMonitor(@NotNull StringsUser stringsUser) {
+        removeMonitor(stringsUser.getPlayer());
     }
 
     @Override
