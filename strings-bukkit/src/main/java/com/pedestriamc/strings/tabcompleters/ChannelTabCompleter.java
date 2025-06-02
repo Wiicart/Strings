@@ -16,17 +16,17 @@ import java.util.Set;
  */
 public class ChannelTabCompleter extends AbstractTabCompleter {
 
-    private final ChannelManager channelLoader;
-
-    public ChannelTabCompleter(@NotNull Strings strings) {
-        this.channelLoader = strings.getChannelLoader();
-    }
-
     private static final Set<String> CASES = Set.of(
             "join", "leave", "monitor", "unmonitor", "broadcast", "announce"
     );
 
     private static final String HELP = "help";
+
+    private final ChannelManager channelLoader;
+
+    public ChannelTabCompleter(@NotNull Strings strings) {
+        this.channelLoader = strings.getChannelLoader();
+    }
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {

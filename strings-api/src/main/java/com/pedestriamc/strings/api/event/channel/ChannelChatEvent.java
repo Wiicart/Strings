@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.api.event;
+package com.pedestriamc.strings.api.event.channel;
 
 import com.pedestriamc.strings.api.channel.Channel;
 import org.bukkit.entity.Player;

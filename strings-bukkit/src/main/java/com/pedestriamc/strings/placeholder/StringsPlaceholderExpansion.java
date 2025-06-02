@@ -50,7 +50,7 @@ public final class StringsPlaceholderExpansion extends PlaceholderExpansion {
             return switch(params.toUpperCase(Locale.ROOT)) {
                 case "CURRENT_CHANNEL" -> user.getActiveChannel().resolve(player).getName();
                 case "ACTIVE_CHANNEL" -> user.getActiveChannel().getName();
-                case "CHAT_COLOR" -> user.getChatColor();
+                case "CHAT_COLOR" -> user.getChatColorComponent().asLegacyString();
                 default -> null;
             };
         } catch(Exception e) {

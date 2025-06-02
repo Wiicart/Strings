@@ -3,7 +3,9 @@ package com.pedestriamc.strings.api.user;
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
+import com.pedestriamc.strings.api.text.format.StringsComponent;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,16 +38,35 @@ public interface StringsUser {
     /**
      * Provides the StringsUser's chat color.
      * If the StringsUser's chat color is null, the StringsUser's active channel's chat color is returned.
+     *
+     * @deprecated Use {@link StringsUser#getChatColorComponent()} instead.
      * @return A chat color.
      */
     @Nullable
+    @ApiStatus.Obsolete
     String getChatColor();
 
     /**
      * Sets the chat color of the User.
+     * @deprecated Use {@link StringsUser#getChatColorComponent()} instead.
      * @param chatColor The new chat color.
      */
+    @ApiStatus.Obsolete
     void setChatColor(String chatColor);
+
+    /**
+     * Provides a {@link StringsComponent} of the Player's chat color.
+     * Simply a wrapper for adventure's {@code Component}
+     *
+     * @return The Player's chat color StringsComponent
+     */
+    StringsComponent getChatColorComponent();
+
+    /**
+     * Sets a {@link StringsComponent} of the Player's chat color.
+     * {@link StringsComponent} is simply a wrapper for adventure's {@code Component}
+     */
+    void setChatColorComponent(StringsComponent chatColor);
 
     /**
      * Provides the prefix of the StringsUser, if it exists.

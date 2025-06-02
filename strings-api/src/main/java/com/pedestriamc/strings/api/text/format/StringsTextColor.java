@@ -83,7 +83,6 @@ public final class StringsTextColor implements Element<TextColor>, TextColor, Se
      */
     public static final StringsTextColor WHITE = new StringsTextColor(0xFFFFFF);
 
-    @ApiStatus.Internal
     private static final Map<Character, StringsTextColor> legacyCodes;
     static {
         legacyCodes = new HashMap<>();

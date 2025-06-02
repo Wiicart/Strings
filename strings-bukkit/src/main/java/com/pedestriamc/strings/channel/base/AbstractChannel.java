@@ -6,7 +6,7 @@ import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
-import com.pedestriamc.strings.api.event.ChannelChatEvent;
+import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.chat.Mentioner;

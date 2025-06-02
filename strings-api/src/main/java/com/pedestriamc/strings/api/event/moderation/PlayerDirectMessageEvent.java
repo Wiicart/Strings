@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.api.event;
+package com.pedestriamc.strings.api.event.moderation;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

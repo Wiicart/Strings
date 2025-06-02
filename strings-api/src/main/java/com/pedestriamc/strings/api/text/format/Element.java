@@ -5,13 +5,13 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * An interface for {@link StringsTextDecoration}, {@link StringsTextColor}, and {@link TextSegment},
+ * An interface for {@link StringsTextDecoration} and {@link StringsTextColor}.
  * that aim to combine Adventure API elements with {@link ChatColor} elements.
  * All implementations are immutable.
  * @param <T> The Adventure API equivalent
  */
 @ApiStatus.Internal
-public sealed interface Element<T> permits StringsTextColor, TextSegment, StringsTextDecoration, TextReset {
+public sealed interface Element<T> permits StringsTextColor, StringsTextDecoration {
     /**
      * Should return the same as {@link ChatColor#toString()} if representing a ChatColor,
      * or a String value of the Element's text.
@@ -22,7 +22,6 @@ public sealed interface Element<T> permits StringsTextColor, TextSegment, String
 
     /**
      * Provides the Adventure API equivalent for {@link StringsTextColor} and {@link StringsTextDecoration}.
-     * Returns a String for {@link TextSegment}.
      * @return The adventure equivalent.
      */
     @NotNull T toAdventure();
@@ -36,7 +35,5 @@ public sealed interface Element<T> permits StringsTextColor, TextSegment, String
     enum Type {
         COLOR,
         DECORATION,
-        TEXT,
-        RESET
     }
 }

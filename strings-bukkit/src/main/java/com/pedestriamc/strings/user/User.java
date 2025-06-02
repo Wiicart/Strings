@@ -1,12 +1,16 @@
 package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.event.channel.UserChannelEvent;
+import com.pedestriamc.strings.api.text.format.StringsComponent;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.chat.ChannelManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,8 +45,8 @@ public final class User implements StringsUser {
     private final @NotNull Set<UUID> ignored;
 
     private @NotNull Channel activeChannel;
+    private @NotNull StringsComponent chatColorComponent;
 
-    private String chatColor;
     private String prefix;
     private String suffix;
     private String displayName;
@@ -63,7 +67,7 @@ public final class User implements StringsUser {
         this.retain = builder.retained;
         this.player = Objects.requireNonNull(strings.getServer().getPlayer(uuid));
         this.name = player.getName();
-        this.chatColor = Objects.requireNonNullElse(builder.chatColor, "");
+        this.chatColorComponent = StringsComponent.fromLegacy(Objects.requireNonNullElse(builder.chatColor, ""));
         this.prefix = Objects.requireNonNullElse(builder.prefix, "");
         this.suffix = Objects.requireNonNullElse(builder.suffix, "");
         this.displayName = builder.displayName;
@@ -129,7 +133,7 @@ public final class User implements StringsUser {
         synchronized(this) {
             if(dirty || data == null) {
                 Map<String, Object> map = new HashMap<>();
-                map.put("chat-color", Objects.requireNonNullElse(chatColor, ""));
+                map.put("chat-color", Objects.requireNonNullElse(getChatColorComponent().asLegacyString(), ""));
                 map.put("prefix", Objects.requireNonNullElse(prefix, ""));
                 map.put("suffix", Objects.requireNonNullElse(suffix, ""));
                 map.put("display-name", Objects.requireNonNullElse(displayName, ""));
@@ -175,14 +179,28 @@ public final class User implements StringsUser {
 
 
 
+    @Override
+    public @NotNull StringsComponent getChatColorComponent() {
+        return chatColorComponent;
+    }
+
+    @Override
+    public void setChatColorComponent(final StringsComponent chatColor) {
+        Objects.requireNonNull(chatColor);
+        if(!chatColorComponent.equals(chatColor)) {
+            chatColorComponent = chatColor;
+            dirty = true;
+        }
+    }
+
     /**
      * Sets the chat color of the User.
      * @param chatColor The new chat color.
      */
     @Override
+    @ApiStatus.Obsolete
     public void setChatColor(final String chatColor) {
-        this.chatColor = chatColor;
-        dirty = true;
+        setChatColorComponent(StringsComponent.fromLegacy(chatColor));
     }
 
     /**
@@ -191,11 +209,9 @@ public final class User implements StringsUser {
      */
     @NotNull
     @Override
+    @ApiStatus.Obsolete
     public String getChatColor() {
-        if(chatColor != null && !chatColor.isEmpty()) {
-            return color(chatColor);
-        }
-        return "";
+        return getChatColorComponent().asLegacyString();
     }
 
     /**
@@ -205,11 +221,13 @@ public final class User implements StringsUser {
      * @return A chat color.
      */
     @SuppressWarnings("java:S1874")
-    public String getChatColor(final Channel channel) {
-        if(chatColor == null || chatColor.isEmpty()) {
+    @ApiStatus.Obsolete
+    public String getChatColor(final @NotNull Channel channel) {
+        final String chatColor = getChatColor();
+        if(chatColor.isEmpty()) {
             return channel.getDefaultColor();
         }
-        return color(chatColor);
+        return chatColor;
     }
 
 
@@ -218,7 +236,7 @@ public final class User implements StringsUser {
      * @param displayName The new display name.
      */
     @Override
-    public void setDisplayName(@NotNull final String displayName) {
+    public void setDisplayName(final @NotNull String displayName) {
         this.displayName = displayName;
         this.player.setDisplayName(displayName);
         dirty = true;
@@ -402,6 +420,7 @@ public final class User implements StringsUser {
         if(!channels.contains(channel)) {
             channel.addMember(this);
             channels.add(channel);
+            callEvent(new UserChannelEvent(channel, this, UserChannelEvent.Type.JOIN));
             dirty = true;
         }
     }
@@ -421,10 +440,11 @@ public final class User implements StringsUser {
         if(channels.contains(channel)) {
             channels.remove(channel);
             channel.removeMember(this);
-            dirty = true;
             if(activeChannel.equals(channel)) {
                 activeChannel = channelLoader.getDefaultChannel();
             }
+            callEvent(new UserChannelEvent(channel, this, UserChannelEvent.Type.LEAVE));
+            dirty = true;
         }
     }
 
@@ -433,7 +453,7 @@ public final class User implements StringsUser {
      * @return A populated set of channels.
      */
     @Override
-    public Set<Channel> getChannels() {
+    public @NotNull Set<Channel> getChannels() {
         return new HashSet<>(channels);
     }
 
@@ -456,6 +476,7 @@ public final class User implements StringsUser {
         if(!monitored.contains(monitorable)) {
             monitored.add(monitorable);
             monitorable.addMonitor(this);
+            callEvent(new UserChannelEvent(monitorable, this, UserChannelEvent.Type.MONITOR));
             dirty = true;
         }
     }
@@ -470,6 +491,7 @@ public final class User implements StringsUser {
         if(monitored.contains(monitorable)) {
             monitored.remove(monitorable);
             monitorable.removeMonitor(this);
+            callEvent(new UserChannelEvent(monitorable, this, UserChannelEvent.Type.UNMONITOR));
             dirty = true;
         }
     }
@@ -496,6 +518,10 @@ public final class User implements StringsUser {
     @Contract("_ -> new")
     private @NotNull String color(String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
+    }
+
+    private void callEvent(@NotNull Event event) {
+        strings.getServer().getPluginManager().callEvent(event);
     }
 
     /**

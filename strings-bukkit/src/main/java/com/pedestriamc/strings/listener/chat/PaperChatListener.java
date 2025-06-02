@@ -2,7 +2,7 @@ package com.pedestriamc.strings.listener.chat;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.event.ChannelChatEvent;
+import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.api.text.format.TextConverter;
 import com.pedestriamc.strings.chat.paper.ChannelChatRenderer;
 import com.pedestriamc.strings.user.User;

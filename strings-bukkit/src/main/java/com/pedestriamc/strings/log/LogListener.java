@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.log;
 
-import com.pedestriamc.strings.api.event.ChannelChatEvent;
-import com.pedestriamc.strings.api.event.PlayerChatFilteredEvent;
-import com.pedestriamc.strings.api.event.PlayerDirectMessageEvent;
+import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
+import com.pedestriamc.strings.api.event.moderation.PlayerChatFilteredEvent;
+import com.pedestriamc.strings.api.event.moderation.PlayerDirectMessageEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;

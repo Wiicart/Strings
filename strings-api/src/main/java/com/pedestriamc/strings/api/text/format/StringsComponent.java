@@ -2,38 +2,63 @@ package com.pedestriamc.strings.api.text.format;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
+/**
+ * Immutable simple Component wrapper that makes converting to a legacy String easier.
+ */
 @SuppressWarnings("unused")
 public final class StringsComponent implements ComponentLike {
 
-    private final List<Element<?>> elements = new ArrayList<>();
+    private final @NotNull Component component;
 
-    public StringsComponent(final Element<?> @NotNull ... elements) {
-        for(int i=0; i<elements.length; i++) {
-            Element<?> element = elements[i];
-            Objects.requireNonNull(element);
-            this.elements.add(element);
-        }
+    public static StringsComponent fromLegacy(@NotNull String string) {
+        return new StringsComponent(LegacyComponentSerializer.legacySection().deserialize(string));
     }
 
-    public @NotNull String toString() {
-        StringBuilder builder = new StringBuilder();
+    public static StringsComponent of(Element<?>... elements) {
+        TextComponent.Builder builder = Component.text();
         for(Element<?> element : elements) {
-            builder.append(element.toString());
+            if(element instanceof StringsTextColor c) {
+                builder.color(c.toAdventure());
+            }
+            if(element instanceof StringsTextDecoration d) {
+                builder.decorate(d.toAdventure());
+            }
         }
-        return builder.toString();
+        return new StringsComponent(builder.build());
+    }
+
+    public StringsComponent(@NotNull Component component) {
+        this.component = component;
     }
 
     @Override
     public @NotNull Component asComponent() {
-        if(elements.isEmpty()) {
-            return Component.empty();
-        }
-        return Component.text("wow");
+        return component;
+    }
+
+    public @NotNull String asLegacyString() {
+        return LegacyComponentSerializer.legacySection().serialize(component);
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return asLegacyString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        StringsComponent that = (StringsComponent) o;
+        return component.equals(that.component);
+    }
+
+    @Override
+    public int hashCode() {
+        return component.hashCode();
     }
 }

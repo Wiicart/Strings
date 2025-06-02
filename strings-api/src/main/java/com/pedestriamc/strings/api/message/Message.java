@@ -76,7 +76,7 @@ public enum Message {
     }
 
     @NotNull
-    public String getKey() {
+    public final String getKey() {
         return key;
     }
 }

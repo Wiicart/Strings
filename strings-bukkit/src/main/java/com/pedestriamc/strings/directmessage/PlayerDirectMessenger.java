@@ -4,7 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.configuration.Option;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.api.event.PlayerDirectMessageEvent;
+import com.pedestriamc.strings.api.event.moderation.PlayerDirectMessageEvent;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.user.util.UserUtil;

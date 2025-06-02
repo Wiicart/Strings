@@ -3,6 +3,7 @@ package com.pedestriamc.strings.user;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.UUID;
@@ -12,9 +13,10 @@ import java.util.UUID;
  */
 public final class UserBuilder {
 
-    final Strings strings;
-    final UUID uuid;
+    final @NotNull Strings strings;
+    final @NotNull UUID uuid;
     final boolean retained;
+
     Channel activeChannel;
     Set<Channel> channels;
     Set<Monitorable> monitoredChannels;
@@ -25,7 +27,7 @@ public final class UserBuilder {
     String displayName;
     boolean mentionsEnabled;
 
-    public UserBuilder(Strings strings, UUID uuid, boolean retained) {
+    public UserBuilder(@NotNull Strings strings, @NotNull UUID uuid, boolean retained) {
         this.strings = strings;
         this.uuid = uuid;
         this.retained = retained;

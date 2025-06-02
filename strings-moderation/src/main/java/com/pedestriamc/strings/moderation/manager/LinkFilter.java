@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.moderation.manager;
 
 import com.pedestriamc.strings.api.StringsProvider;
-import com.pedestriamc.strings.api.event.PlayerChatFilteredEvent;
+import com.pedestriamc.strings.api.event.moderation.PlayerChatFilteredEvent;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import org.bukkit.Bukkit;
