@@ -107,7 +107,7 @@ public class ClassRegistryManager {
             try {
                 Channel helpOpChannel = strings.getChannelLoader().getChannel("helpop");
                 if(helpOpChannel != null) {
-                    strings.getChannelLoader().unregisterChannel(helpOpChannel);
+                    strings.getChannelLoader().unregister(helpOpChannel);
                 }
             } catch(Exception ignored) {}
         }

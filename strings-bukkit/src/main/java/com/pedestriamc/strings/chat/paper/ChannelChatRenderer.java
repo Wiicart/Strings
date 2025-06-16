@@ -2,7 +2,7 @@ package com.pedestriamc.strings.chat.paper;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.text.format.TextConverter;
+import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.chat.MessageProcessor;
 import com.pedestriamc.strings.configuration.Option;
@@ -26,19 +26,21 @@ public class ChannelChatRenderer extends MessageProcessor implements ChatRendere
     @Override
     public @NotNull Component render(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {
         String template = generateTemplate(source);
-        Component component = TextConverter.fromLegacy(template);
+        Component component = ComponentConverter.fromString(template);
         return setPlaceholder(component, "{message}", processMessage(source, message));
     }
 
     private @NotNull Component processMessage(@NotNull Player source, @NotNull Component message) {
-        String msg = TextConverter.toLegacy(message);
+        String msg = ComponentConverter.toString(message);
         msg = super.processMessage(source, msg);
 
         if(mentionsEnabled && Mentioner.hasMentionPermission(source)) {
             msg = processMentions(source, msg);
         }
 
-        return TextConverter.fromLegacy(msg);
+        Component chatColor = getUser(source).getChatColorComponent().asComponent();
+
+        return chatColor.append(ComponentConverter.fromString(msg));
     }
 
     private @NotNull Component setPlaceholder(@NotNull Component component, final @NotNull String original, final @NotNull String replacement) {

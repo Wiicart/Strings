@@ -44,18 +44,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <filters>
-                                <filter>
-                                    <artifact>org.apache.commons:*</artifact>
-                                    <includes>
-                                        <include>org/apache/commons/lang3/StringUtils.class</include>
-                                    </includes>
-                                    <excludes>
-                                        <exclude>**</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                            <minimizeJar>true</minimizeJar>
                             <createDependencyReducedPom>true</createDependencyReducedPom>
                             <relocations>
                                 <relocation>
@@ -63,6 +51,20 @@
                                     <shadedPattern>com.pedestriamc.strings</shadedPattern>
                                 </relocation>
                             </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>org.apache.commons:commons-collections4</artifact>
+                                    <includes>
+                                        <include>org/apache/commons/collections4/**</include>
+                                    </includes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.apache.commons:commons-lang3</artifact>
+                                    <includes>
+                                        <include>org/apache/commons/lang3/**</include>
+                                    </includes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>

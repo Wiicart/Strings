@@ -60,7 +60,7 @@ public final class StringsProvider {
      * Tells if the get() method has been invoked.
      * @return A boolean.
      */
-    public static boolean isUsed() {
+    static boolean isUsed() {
         return invoked;
     }
 

@@ -2,6 +2,9 @@ package com.pedestriamc.strings.api.message;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * All Messages that can be used with the {@link Messenger}.
+ */
 public enum Message {
     NO_PERMS("no-perms"),
     CHAT_CLEARED("chat-cleared"),

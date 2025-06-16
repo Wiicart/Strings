@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.api.text.format;
 
+import net.kyori.adventure.text.ComponentLike;
 import net.md_5.bungee.api.ChatColor;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -10,8 +10,8 @@ import org.jetbrains.annotations.NotNull;
  * All implementations are immutable.
  * @param <T> The Adventure API equivalent
  */
-@ApiStatus.Internal
-public sealed interface Element<T> permits StringsTextColor, StringsTextDecoration {
+public sealed interface Element<T> extends ComponentLike permits StringsTextColor, StringsTextComponent, StringsTextDecoration, StringsTextReset
+{
     /**
      * Should return the same as {@link ChatColor#toString()} if representing a ChatColor,
      * or a String value of the Element's text.
@@ -35,5 +35,7 @@ public sealed interface Element<T> permits StringsTextColor, StringsTextDecorati
     enum Type {
         COLOR,
         DECORATION,
+        TEXT,
+        RESET,
     }
 }

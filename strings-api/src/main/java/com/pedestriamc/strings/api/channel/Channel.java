@@ -19,7 +19,8 @@ import java.util.Set;
 public interface Channel extends Comparable<Channel> {
 
     /**
-     * Provides a new {@link ChannelBuilder}, with a name defined.
+     * Provides a new {@link ChannelBuilder}, with the Channel's name, format, and membership defined.
+     *
      * @return A new {@link ChannelBuilder}
      */
     @Contract(value = "_, _, _ -> new", pure = true)
@@ -28,9 +29,9 @@ public interface Channel extends Comparable<Channel> {
     }
 
     /**
-     * Provides the Channel identifier, i.e., {@code StringChannel} -> {@code stringchannel}.
-     * This must be constant across instances of an implementation
-     * but must be unique from other implementations.
+     * Provides the Channel identifier, i.e., {@code StringChannel.class} -> {@code stringchannel}.
+     * This must be constant across instances of an implementation, and already set at compile-time.
+     * This must be unique from other implementations.
      *
      * @return The Channel type identifier
      */
@@ -40,6 +41,10 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Sends a message from a player to the channel.
+     * Internally, messages might not be processed using this method.
+     * For custom implementations, ensure {@link Channel#getFormat()}, {@link Channel#getRecipients(Player)}, etc.
+     * behave as intended, to ensure consistent behavior.
+     *
      * @param player The player sending the message.
      * @param message The player's message.
      */
@@ -47,6 +52,7 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Compares the priorities of the Channels.
+     *
      * @param channel the object to be compared.
      * @return the param's priority - the channel instance priority
      */
@@ -54,14 +60,16 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Resolves the final Channel a message would be directed too.
-     * In most implementations, the Channel will return itself.
+     * In most implementations, the Channel instance will return itself.
+     *
      * @param player The sender.
-     * @return A Channel
+     * @return A Channel, possibly {@code this}
      */
     Channel resolve(@NotNull Player player);
 
     /**
      * Provides the recipients of a message if the sender were to send a message in the Channel.
+     *
      * @param sender The message sender.
      * @return A Set of Players.
      */
@@ -71,43 +79,51 @@ public interface Channel extends Comparable<Channel> {
      * Broadcasts a message to a Channel.
      * @param message The broadcast message.
      */
-    void broadcast(String message);
+    void broadcast(@NotNull String message);
 
     /**
      * Provides the formatting of the Channel.
+     * Placeholders: {@code {prefix}, {suffix}, {displayname}, {message}}
+     *
      * @return The Channel format.
      */
-    @NotNull
-    String getFormat();
+    @NotNull String getFormat();
 
     /**
      * Provides the formatting for broadcasts in the Channel.
+     *
      * @return A String of the broadcast format.
      */
-    String getBroadcastFormat();
+    @NotNull String getBroadcastFormat();
 
     /**
      * Sets the Channel's format.
+     * Placeholders: {@code {prefix}, {suffix}, {displayname}, {message}}
+     *
      * @param format The new format.
      */
     void setFormat(@NotNull String format);
 
     /**
      * Provides the Channel's name.
+     *
      * @return The Channel name.
      */
-    @NotNull
-    String getName();
+    @NotNull String getName();
 
     /**
      * Sets the Channel's name.
+     * To ensure this change is properly updated with the plugin, reload Strings or unregister then re-register
+     * this Channel with the {@link ChannelLoader}
+     *
      * @param name The new name.
      */
     void setName(@NotNull String name);
 
     /**
      * Provides the default chat color of the Channel.
-     * Obsolete - define a color in the Channels format instead. {@link Channel#getFormat()}
+     * Obsolete—Colors should be defined in the Channel's format instead.
+     *
      * @return The default chat color.
      */
     @ApiStatus.Obsolete
@@ -115,6 +131,8 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Sets the Channel's default chat color.
+     * Obsolete—define a color in the Channel's format instead. {@link Channel#getFormat()}
+     *
      * @param defaultColor The new default chat color.
      */
     @ApiStatus.Obsolete
@@ -206,7 +224,6 @@ public interface Channel extends Comparable<Channel> {
     @NotNull
     Type getType();
 
-
     /**
      * Provides all the Channel's information in a Map.
      * @return A populated Map containing the Channel's information.
@@ -237,6 +254,6 @@ public interface Channel extends Comparable<Channel> {
      * Signifies if the Channel calls an Event when a message is sent in Spigot environments.
      * @return If an Event is called.
      */
-    boolean isCallEvent();
+    boolean callsEvents();
 
 }

@@ -137,7 +137,7 @@ public class HelpOPChannel extends ProtectedChannel {
     }
 
     @Override
-    public boolean isCallEvent() {
+    public boolean callsEvents() {
         return callEvent;
     }
 

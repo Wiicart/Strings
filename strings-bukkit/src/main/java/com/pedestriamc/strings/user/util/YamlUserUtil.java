@@ -4,7 +4,6 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.UserBuilder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -30,7 +29,7 @@ public final class YamlUserUtil implements UserUtil {
     private final FileConfiguration config;
     private final Map<UUID, User> map;
 
-    public YamlUserUtil(Strings strings) {
+    public YamlUserUtil(@NotNull Strings strings) {
         this.strings = strings;
         config = strings.files().getUsersFileConfig();
         map = new ConcurrentHashMap<>();
@@ -76,24 +75,23 @@ public final class YamlUserUtil implements UserUtil {
      * @param uuid The UUID of the User.
      * @return The User, if data is found.
      */
-    @NotNull
     @Override
-    public User loadUser(UUID uuid) {
+    public @NotNull User loadUser(UUID uuid) {
         synchronized(config) {
             ConfigurationSection section = config.getConfigurationSection("players." + uuid);
             if(section == null) {
-                User user = new UserBuilder(strings, uuid, true).build();
+                User user = User.builder(strings, uuid, true).build();
                 addUser(user);
                 return user;
             }
 
-            User user = new UserBuilder(strings, uuid, true)
+            User user = User.builder(strings, uuid, true)
                     .suffix(section.getString(".suffix"))
                     .prefix(section.getString(".prefix"))
                     .displayName(section.getString(".display-name"))
                     .chatColor(section.getString(".chat-color"))
                     .mentionsEnabled(section.getBoolean(".mentions-enabled"))
-                    .activeChannel(strings.getChannelLoader().getChannel(section.getString(".active-channel")))
+                    .activeChannel(strings.getChannelLoader().getChannel(getStringNonNull(section, ".active-channel")))
                     .channels(getChannels(section.getList(".channels")))
                     .monitoredChannels(getMonitorables(section.getList(".monitored-channels")))
                     .ignoredPlayers(getUniqueIds(section.getList(".ignored-players")))
@@ -151,11 +149,17 @@ public final class YamlUserUtil implements UserUtil {
         return uuids;
     }
 
+    @SuppressWarnings("SameParameterValue")
+    private String getStringNonNull(@NotNull ConfigurationSection section, @NotNull String key) {
+        return Objects.requireNonNullElse(section.getString(key), "");
+    }
+
+
     @Override
     public @NotNull User getUser(UUID uuid) {
         User user = map.get(uuid);
         if(user == null) {
-            return new UserBuilder(strings, uuid, false).build();
+            return User.builder(strings, uuid, false).build();
         }
         return user;
     }

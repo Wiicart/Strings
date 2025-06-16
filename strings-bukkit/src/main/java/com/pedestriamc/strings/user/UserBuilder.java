@@ -25,7 +25,8 @@ public final class UserBuilder {
     String prefix;
     String suffix;
     String displayName;
-    boolean mentionsEnabled;
+    // Mentions are enabled by default
+    boolean mentionsEnabled = true;
 
     public UserBuilder(@NotNull Strings strings, @NotNull UUID uuid, boolean retained) {
         this.strings = strings;

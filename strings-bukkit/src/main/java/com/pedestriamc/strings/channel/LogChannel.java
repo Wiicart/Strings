@@ -23,7 +23,7 @@ public class LogChannel extends ProtectedChannel implements Monitorable {
     }
 
     @Override
-    public void broadcast(String message) {
+    public void broadcast(@NotNull String message) {
         Set<Player> recipients = new HashSet<>(members);
         recipients.addAll(monitors);
         for(Player player : recipients) {

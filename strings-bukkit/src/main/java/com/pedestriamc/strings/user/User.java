@@ -15,14 +15,15 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Stores information about players for Strings.
@@ -60,6 +61,11 @@ public final class User implements StringsUser {
         return null;
     }
 
+    @Contract(value = "_, _, _ -> new", pure = true)
+    public static @NotNull UserBuilder builder(Strings strings, UUID uuid, boolean retained) {
+        return new UserBuilder(strings, uuid, retained);
+    }
+
     User(final @NotNull UserBuilder builder) {
         this.strings = builder.strings;
         this.channelLoader = strings.getChannelLoader();
@@ -67,10 +73,10 @@ public final class User implements StringsUser {
         this.retain = builder.retained;
         this.player = Objects.requireNonNull(strings.getServer().getPlayer(uuid));
         this.name = player.getName();
-        this.chatColorComponent = StringsComponent.fromLegacy(Objects.requireNonNullElse(builder.chatColor, ""));
+        this.chatColorComponent = StringsComponent.fromString(color(Objects.requireNonNullElse(builder.chatColor, "")));
         this.prefix = Objects.requireNonNullElse(builder.prefix, "");
         this.suffix = Objects.requireNonNullElse(builder.suffix, "");
-        this.displayName = builder.displayName;
+        this.displayName = Objects.requireNonNullElse(builder.displayName, "");
         this.activeChannel = builder.activeChannel != null ? builder.activeChannel : channelLoader.getDefaultChannel();
         this.mentionsEnabled = builder.mentionsEnabled;
         this.channels = Objects.requireNonNullElseGet(builder.channels, HashSet::new);
@@ -133,14 +139,14 @@ public final class User implements StringsUser {
         synchronized(this) {
             if(dirty || data == null) {
                 Map<String, Object> map = new HashMap<>();
-                map.put("chat-color", Objects.requireNonNullElse(getChatColorComponent().asLegacyString(), ""));
+                map.put("chat-color", getChatColorComponent().toString());
                 map.put("prefix", Objects.requireNonNullElse(prefix, ""));
                 map.put("suffix", Objects.requireNonNullElse(suffix, ""));
                 map.put("display-name", Objects.requireNonNullElse(displayName, ""));
                 map.put("active-channel", activeChannel.getName());
                 map.put("channels", getNames(channels));
                 map.put("monitored-channels", getNames(monitored));
-                map.put("ignored-players", ignored);
+                map.put("ignored-players", new ArrayList<>(ignored));
                 map.put("mentions-enabled", mentionsEnabled);
                 data = map;
             }
@@ -200,7 +206,7 @@ public final class User implements StringsUser {
     @Override
     @ApiStatus.Obsolete
     public void setChatColor(final String chatColor) {
-        setChatColorComponent(StringsComponent.fromLegacy(chatColor));
+        setChatColorComponent(StringsComponent.fromString(chatColor));
     }
 
     /**
@@ -211,7 +217,7 @@ public final class User implements StringsUser {
     @Override
     @ApiStatus.Obsolete
     public String getChatColor() {
-        return getChatColorComponent().asLegacyString();
+        return getChatColorComponent().toString();
     }
 
     /**
@@ -275,7 +281,7 @@ public final class User implements StringsUser {
      * @return The prefix.
      */
     @Override
-    public String getPrefix() {
+    public @NotNull String getPrefix() {
         if(strings.isUsingVault()) {
             return color(strings.getVaultChat().getPlayerPrefix(player));
         } else {
@@ -457,11 +463,11 @@ public final class User implements StringsUser {
         return new HashSet<>(channels);
     }
 
-    private Set<String> getNames(@NotNull Collection<? extends Channel> collection) {
+    private List<String> getNames(@NotNull Collection<? extends Channel> collection) {
         return collection.stream()
                 .filter(Objects::nonNull)
                 .map(Channel::getName)
-                .collect(Collectors.toUnmodifiableSet());
+                .toList();
     }
 
 
@@ -521,7 +527,8 @@ public final class User implements StringsUser {
     }
 
     private void callEvent(@NotNull Event event) {
-        strings.getServer().getPluginManager().callEvent(event);
+        strings.getServer().getScheduler().runTask(strings,
+                () -> strings.getServer().getPluginManager().callEvent(event));
     }
 
     /**

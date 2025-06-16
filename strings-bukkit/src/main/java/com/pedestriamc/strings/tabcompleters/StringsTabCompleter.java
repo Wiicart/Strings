@@ -11,10 +11,11 @@ public class StringsTabCompleter extends AbstractTabCompleter {
     private static final List<String> LIST = List.of("version", "reload", "help");
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        if(args.length == 1) {
-            return filter(LIST, args[0]);
-        }
-        return EMPTY;
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
+        return switch(args.length) {
+            case 0 -> LIST;
+            case 1 -> filter(LIST, args[0]);
+            default -> EMPTY;
+        };
     }
 }

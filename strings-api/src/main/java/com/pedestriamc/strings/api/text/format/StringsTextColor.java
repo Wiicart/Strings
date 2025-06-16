@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.api.text.format;
 
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.md_5.bungee.api.ChatColor;
 import org.jetbrains.annotations.ApiStatus;
@@ -9,8 +10,9 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * Class that combines Bungee and Adventure Colors into one class.
@@ -104,6 +106,7 @@ public final class StringsTextColor implements Element<TextColor>, TextColor, Se
         legacyCodes.put('f', WHITE);
     }
 
+    public static final Pattern HEX_PATTERN = Pattern.compile("\\u00A7x(\\u00A7[0-9a-fA-F]){6}");
 
     private final int value;
 
@@ -113,7 +116,7 @@ public final class StringsTextColor implements Element<TextColor>, TextColor, Se
      */
     @ApiStatus.Internal
     private StringsTextColor(@NotNull net.md_5.bungee.api.ChatColor chatColor) {
-        value = chatColor.getColor().getRGB();
+        value = chatColor.getColor().getRGB() & 0xFFFFFF;
     }
 
     /**
@@ -131,7 +134,7 @@ public final class StringsTextColor implements Element<TextColor>, TextColor, Se
      */
     @ApiStatus.Internal
     private StringsTextColor(int value) {
-        this.value = value;
+        this.value = value & 0xFFFFFF;
     }
 
     /**
@@ -161,13 +164,54 @@ public final class StringsTextColor implements Element<TextColor>, TextColor, Se
         return new StringsTextColor(ChatColor.of(color));
     }
 
+    public static @NotNull StringsTextColor of(@NotNull String string) {
+        return new StringsTextColor(ChatColor.of(string));
+    }
+
     /**
      * Provides a StringsTextColor based off Bukkit color code chars.
      * @param legacyChar The char associated with the color code.
      * @return A StringsTextColor.
      */
-    public static @Nullable StringsTextColor fromLegacyChar(char legacyChar) {
+    public static @Nullable StringsTextColor fromChar(char legacyChar) {
         return legacyCodes.get(legacyChar);
+    }
+
+    public static @NotNull StringsTextColor fromSectionHexString(@NotNull String hexString) {
+        if (!HEX_PATTERN.matcher(hexString).matches()) {
+            throw new IllegalArgumentException("Invalid hex string: " + hexString);
+        }
+
+        StringBuilder hex = generateBuilder(hexString);
+
+        if (hex.length() != 7) {
+            throw new IllegalArgumentException("Final hex must be 6 digits long: " + hex);
+        }
+
+        return of(hex.toString().toUpperCase(Locale.ROOT));
+    }
+
+    private static @NotNull StringBuilder generateBuilder(@NotNull String hexString) {
+        StringBuilder hex = new StringBuilder(7); // "#" + 6 digits
+        hex.append('#');
+
+        for (int i = 2; i < hexString.length(); i += 2) {
+            if (hexString.charAt(i) != '§') {
+                throw new IllegalArgumentException("Expected '§' at position " + i + " in " + hexString);
+            }
+
+            char c = hexString.charAt(i + 1);
+            if (!isHexChar(c)) {
+                throw new IllegalArgumentException("Invalid hex digit: '" + c + "' in " + hexString);
+            }
+
+            hex.append(c);
+        }
+        return hex;
+    }
+
+    private static boolean isHexChar(char c) {
+        return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
     }
 
     /**
@@ -216,6 +260,11 @@ public final class StringsTextColor implements Element<TextColor>, TextColor, Se
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(value);
+        return value;
+    }
+
+    @Override
+    public @NotNull Component asComponent() {
+        return Component.text().color(this).build();
     }
 }

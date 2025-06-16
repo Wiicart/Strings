@@ -3,7 +3,7 @@ package com.pedestriamc.strings.listener.chat;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
-import com.pedestriamc.strings.api.text.format.TextConverter;
+import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.chat.paper.ChannelChatRenderer;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
@@ -42,12 +42,19 @@ public class PaperChatListener extends AbstractChatListener {
         Player player = event.getPlayer();
         User user = userUtil.getUser(player);
 
-        Container container = processSymbol(TextConverter.toLegacy(event.message()), user);
+        Container container = processSymbol(ComponentConverter.toString(event.message()), user);
         Channel channel = container.channel();
-        event.message(TextConverter.fromLegacy(container.message()));
+        event.message(ComponentConverter.fromString(container.message()));
 
         // Resolve Channel if DefaultChannel is returned
         channel = channel.resolve(player);
+
+        // Let the Channel process the message independently if the Channel does not allow Events being called.
+        if(!channel.callsEvents()) {
+            channel.sendMessage(player, ComponentConverter.toString(event.message()));
+            event.setCancelled(true);
+            return;
+        }
 
         Set<Player> recipients = channel.getRecipients(player);
         event.viewers().clear();

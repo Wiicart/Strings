@@ -1,11 +1,13 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.text.format.Element;
+import com.pedestriamc.strings.api.text.format.StringsComponent;
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
+import com.pedestriamc.strings.api.text.format.StringsTextDecoration;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.user.util.UserUtil;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
 import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static com.pedestriamc.strings.api.message.Message.*;
@@ -41,14 +45,14 @@ public final class ChatColorCommand implements CommandExecutor {
             new AbstractMap.SimpleEntry<>("WHITE", StringsTextColor.WHITE)
     );
 
-    private static final Map<String, ChatColor> styleMap = Map.of(
-            "BOLD", ChatColor.BOLD,
-            "UNDERLINE", ChatColor.UNDERLINE,
-            "ITALIC", ChatColor.ITALIC,
-            "ITALICS", ChatColor.ITALIC,
-            "STRIKETHROUGH", ChatColor.STRIKETHROUGH,
-            "STRIKE", ChatColor.STRIKETHROUGH,
-            "MAGIC", ChatColor.MAGIC
+    private static final Map<String, StringsTextDecoration> styleMap = Map.of(
+            "BOLD", StringsTextDecoration.BOLD,
+            "UNDERLINE", StringsTextDecoration.UNDERLINE,
+            "ITALIC", StringsTextDecoration.ITALIC,
+            "ITALICS", StringsTextDecoration.ITALIC,
+            "STRIKETHROUGH", StringsTextDecoration.STRIKETHROUGH,
+            "STRIKE", StringsTextDecoration.STRIKETHROUGH,
+            "MAGIC", StringsTextDecoration.MAGIC
     );
 
     private final Strings strings;
@@ -98,13 +102,13 @@ public final class ChatColorCommand implements CommandExecutor {
         User user = strings.getUserUtil().getUser(player);
 
         if(args.length == 1 && args[0].equalsIgnoreCase("reset")) {
-            user.setChatColor("");
+            user.setChatColorComponent(StringsComponent.of());
             userUtil.saveUser(user);
             messenger.sendMessage(CHATCOLOR_SET, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), player);
             return true;
         }
 
-        StringBuilder chatColor = new StringBuilder();
+        List<Element<?>> elements = new ArrayList<>();
         boolean hasColor = false;
         for (String arg : args) {
             String pattern = "#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{3})";
@@ -113,13 +117,13 @@ public final class ChatColorCommand implements CommandExecutor {
                     messenger.sendMessage(ONE_COLOR, sender);
                     return true;
                 }
-                chatColor.append(colorMap.get(arg.toUpperCase()));
+                elements.add(colorMap.get(arg.toUpperCase()));
                 hasColor = true;
             } else if (styleMap.containsKey(arg.toUpperCase())) {
-                chatColor.append(styleMap.get(arg.toUpperCase()));
+                elements.add(styleMap.get(arg.toUpperCase()));
             } else if (arg.matches(pattern)) {
-                ChatColor color = ChatColor.of(new Color(Integer.parseInt(arg.substring(1), 16)));
-                chatColor.append(color);
+                StringsTextColor color = StringsTextColor.of(new Color(Integer.parseInt(arg.substring(1), 16)));
+                elements.add(color);
                 hasColor = true;
             }
         }
@@ -129,12 +133,12 @@ public final class ChatColorCommand implements CommandExecutor {
             return true;
         }
 
-        user.setChatColor(chatColor.toString());
+        user.setChatColorComponent(StringsComponent.of(elements));
         userUtil.saveUser(user);
         if(!player.equals(sender)) {
-            messenger.sendMessage(CHATCOLOR_SET_OTHER, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), sender);
+            messenger.sendMessage(CHATCOLOR_SET_OTHER, Map.of("{color}", user.getChatColorComponent() + "this", "{player}", player.getName()), sender);
         }
-        messenger.sendMessage(CHATCOLOR_SET, Map.of("{color}", user.getChatColor() + "this", "{player}", player.getName()), player);
+        messenger.sendMessage(CHATCOLOR_SET, Map.of("{color}", user.getChatColorComponent() + "this", "{player}", player.getName()), player);
         return true;
     }
 }

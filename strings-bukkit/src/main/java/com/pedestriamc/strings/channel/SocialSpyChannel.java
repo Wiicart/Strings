@@ -47,7 +47,7 @@ public class SocialSpyChannel extends ProtectedChannel {
     }
 
     @Override
-    public void broadcast(String message) {
+    public void broadcast(@NotNull String message) {
         for(Player p : spiesList) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
         }

@@ -11,12 +11,10 @@ public class IgnoreTabCompleter extends AbstractTabCompleter {
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
-        if(args.length == 0) {
-            return getPlayerNames();
-        }
-        if(args.length == 1) {
-            return filter(getPlayerNames(), args[0]);
-        }
-        return EMPTY;
+        return switch(args.length) {
+            case 0 -> getPlayerNames();
+            case 1 -> filter(getPlayerNames(), args[0]);
+            default -> EMPTY;
+        };
     }
 }

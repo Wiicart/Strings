@@ -2,7 +2,6 @@ package com.pedestriamc.strings.manager;
 
 import com.pedestriamc.strings.Strings;
 import com.tchristofferson.configupdater.ConfigUpdater;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +13,9 @@ import java.io.IOException;
  * Manages plugin file loading, updating, access, and saving.
  */
 @SuppressWarnings("unused")
-public class FileManager {
+public final class FileManager {
+
+    private final Strings strings;
 
     private File broadcastsFile;
     private File messagesFile;
@@ -27,8 +28,6 @@ public class FileManager {
     private FileConfiguration channelsFileConfig;
     private FileConfiguration logsFileConfig;
     private FileConfiguration moderationFileConfig;
-
-    private final Strings strings;
 
     public FileManager(Strings strings) {
         this.strings = strings;
@@ -88,7 +87,7 @@ public class FileManager {
             try {
                 ConfigUpdater.update(strings, resourceName, file);
             } catch(IOException e) {
-                Bukkit.getLogger().warning("[Strings] Failed to update file " + resourceName + ". " + e.getMessage());
+                strings.warning("Failed to update file " + resourceName + ". " + e.getMessage());
             }
         }
     }
@@ -128,7 +127,7 @@ public class FileManager {
                 try {
                     usersFileConfig.save(usersFile);
                 } catch(Exception e) {
-                    Bukkit.getLogger().warning("[Strings] An error occurred while saving the users file: " + e.getMessage());
+                    strings.warning("An error occurred while saving the users file: " + e.getMessage());
                 }
             }
         });
@@ -141,7 +140,7 @@ public class FileManager {
                 try {
                     channelsFileConfig.save(channelsFile);
                 } catch(IOException e) {
-                    Bukkit.getLogger().warning("[Strings] An error occurred while saving the channels file: " + e.getMessage());
+                    strings.warning("An error occurred while saving the channels file: " + e.getMessage());
                 }
             }
         });

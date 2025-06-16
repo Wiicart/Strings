@@ -51,11 +51,31 @@ public final class ChannelManager implements ChannelLoader {
     }
 
     @Override
-    public @Nullable Channel getChannel(@Nullable String name) {
-        if(name == null) {
-            return null;
+    public @Nullable Channel getChannel(@NotNull String name) {
+        Objects.requireNonNull(name);
+        Channel channel = channels.get(name);
+        //Refresh to check for a change.
+        if(channel == null) {
+            refreshChannelMap();
+            channel = channels.get(name);
         }
-        return channels.get(name);
+        if(!channel.getName().equals(name)) {
+            refreshChannelMap();
+            channel = channels.get(name);
+        }
+        return channel;
+    }
+
+    private void refreshChannelMap() {
+        Set<Channel> channelSet = getChannels();
+        channels.clear();
+        for(Channel channel : channelSet) {
+            Channel previous = channels.putIfAbsent(channel.getName(), channel);
+            if(previous != null) {
+                strings.warning("Two or more Channels are registered with the name '" + channel.getName() + "'.");
+                strings.warning("Channel " + channel.getName() + " with type identifier '" + channel.getIdentifier() + "' is being skipped.");
+            }
+        }
     }
 
     @Override
@@ -68,10 +88,11 @@ public final class ChannelManager implements ChannelLoader {
      * @param channel The channel to be registered
      */
     @Override
-    public void registerChannel(@NotNull Channel channel) {
+    public void register(@NotNull Channel channel) {
         Objects.requireNonNull(channel, "Channel cannot be null");
         String channelName = channel.getName();
         if(channels.containsKey(channelName)) {
+            strings.warning("Failed to register Channel.");
             strings.warning("A Channel with the name '" + channelName + "' already exists, channels with the same name cannot be registered.");
             return;
         }
@@ -90,7 +111,7 @@ public final class ChannelManager implements ChannelLoader {
      * @param channel The Channel to be unregistered
      */
     @Override
-    public void unregisterChannel(@NotNull Channel channel) {
+    public void unregister(@NotNull Channel channel) {
         Objects.requireNonNull(channel, "Channel cannot be null");
         if(!channels.containsKey(channel.getName())) {
             throw new NoSuchElementException("Channel '" + channel.getName() + "' is not registered.");
@@ -100,7 +121,7 @@ public final class ChannelManager implements ChannelLoader {
 
         Channel defaultChannel = Objects.requireNonNullElseGet(getChannel("default"), () -> {
             Channel c = new DefaultChannel(strings, this);
-            registerChannel(c);
+            register(c);
             return c;
         });
 
@@ -122,12 +143,11 @@ public final class ChannelManager implements ChannelLoader {
         channels.remove(channel.getName());
     }
 
-    @SuppressWarnings("unused")
-    public Channel getDefaultChannel() {
+    public @NotNull Channel getDefaultChannel() {
         Channel defaultChannel = channels.get("default");
         if(defaultChannel == null) {
             defaultChannel = new DefaultChannel(strings, this);
-            registerChannel(defaultChannel);
+            register(defaultChannel);
         }
         return defaultChannel;
     }
@@ -137,7 +157,7 @@ public final class ChannelManager implements ChannelLoader {
      * @param channel The channel to be saved
      */
     @Override
-    public void saveChannel(@NotNull Channel channel) {
+    public void save(@NotNull Channel channel) {
         Objects.requireNonNull(channel, "Cannot save null channel");
         if (channel.getType() == Type.PROTECTED) {
             strings.info("Unable to save protected channels, they must be modified in channels.yml");

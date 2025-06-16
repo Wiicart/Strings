@@ -22,15 +22,13 @@ public class ChatColorTabCompleter extends AbstractTabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         return switch (args.length) {
+            case 0 -> COLORS;
             case 1 -> filter(COLORS, args[0]);
-
             case 2, 3, 4, 5 -> {
                 List<String> list = combine(STYLES, getPlayerNames());
                 yield filter(list, args[1].toLowerCase());
             }
-
             case 6 -> filter(getPlayerNames(), args[2].toLowerCase());
-
             default -> EMPTY;
         };
     }

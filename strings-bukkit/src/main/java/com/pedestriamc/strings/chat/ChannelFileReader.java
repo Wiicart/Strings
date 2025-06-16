@@ -78,7 +78,7 @@ public final class ChannelFileReader {
             try {
                 Channel c = data.build(typeString);
 
-                channelLoader.registerChannel(c);
+                channelLoader.register(c);
                 if(symbol != null) {
                     channelLoader.addChannelSymbol(symbol, c);
                 }
@@ -107,7 +107,7 @@ public final class ChannelFileReader {
                         .setWorlds(null)
                         .setPriority(-1)
                         .build("stringchannel");
-                channelLoader.registerChannel(channel);
+                channelLoader.register(channel);
             } catch (Exception ignored) {}
         }
 
@@ -120,15 +120,15 @@ public final class ChannelFileReader {
                     false
             );
 
-            channelLoader.registerChannel(c);
+            channelLoader.register(c);
             channelLoader.addChannelSymbol("?", c);
         }
 
         String socialSpyFormat = strings.getConfiguration().getString(Option.SOCIAL_SPY_FORMAT);
         log("Loading channel 'socialspy'...");
-        channelLoader.registerChannel(new SocialSpyChannel(strings.getPlayerDirectMessenger(), socialSpyFormat));
+        channelLoader.register(new SocialSpyChannel(strings.getPlayerDirectMessenger(), socialSpyFormat));
 
-        channelLoader.registerChannel(new DefaultChannel(strings, channelLoader));
+        channelLoader.register(new DefaultChannel(strings, channelLoader));
     }
 
     private ChannelBuilder getChannelData(ConfigurationSection section, String channelName, boolean local) {

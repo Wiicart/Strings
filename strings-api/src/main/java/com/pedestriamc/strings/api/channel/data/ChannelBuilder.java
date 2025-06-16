@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.HashMap;
@@ -32,25 +33,26 @@ public final class ChannelBuilder {
 
 
     // These fields may not be null at any point.
-    @NotNull
-    private String name;
-    @NotNull
-    private String format;
-    @NotNull
-    private Membership membership;
+    private @NotNull String name;
+    private @NotNull String format;
+    private @NotNull Membership membership;
 
     // Nullable fields, default values should be provided where necessary if null.
+    private @Nullable String defaultColor;
+    private @Nullable String broadcastFormat;
+
+    // LocalChannel exclusive values
+    private @Nullable Set<World> worlds;
+    private double distance;
+
     @Range(from = -1, to = Integer.MAX_VALUE)
     private int priority;
-    private String defaultColor;
-    private String broadcastFormat;
     private boolean doCooldown;
     private boolean doProfanityFilter;
     private boolean doUrlFilter;
     private boolean callEvent;
-    private double distance;
-    private Set<World> worlds;
 
+    // Registers functions for building Channels
     @ApiStatus.Internal
     static void registerBuildable(String identifier, BiFunction<JavaPlugin, ChannelBuilder, Channel> function) {
         BUILD_FUNCTIONS.put(identifier, function);
@@ -102,6 +104,7 @@ public final class ChannelBuilder {
     /**
      * Sets the Channel's name.
      * @param name The new Channel name.
+     * @return this
      */
     public ChannelBuilder setName(@NotNull String name) {
         Preconditions.checkNotNull(name, "Name cannot be null");
@@ -121,6 +124,7 @@ public final class ChannelBuilder {
     /**
      * Sets the Channel's default color.
      * @param defaultColor The new default color.
+     * @return this
      */
     public ChannelBuilder setDefaultColor(String defaultColor) {
         this.defaultColor = defaultColor;

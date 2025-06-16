@@ -16,20 +16,20 @@ public interface ChannelLoader {
      * Registers a {@link Channel}
      * @param channel The Channel to be registered
      */
-    void registerChannel(Channel channel);
+    void register(@NotNull Channel channel);
 
     /**
      * Unregisters a {@link Channel}
      * @param channel The Channel to be unregistered
      * @throws NoSuchElementException Thrown if the Channel is not registered when this is called
      */
-    void unregisterChannel(Channel channel) throws NoSuchElementException;
+    void unregister(@NotNull Channel channel) throws NoSuchElementException;
 
     /**
      * Saves a {@link Channel}
      * @param channel The Channel to be saved
      */
-    void saveChannel(Channel channel);
+    void save(@NotNull Channel channel);
 
     /**
      * Provides a {@link Channel} based off its name, if it exists.
@@ -37,7 +37,7 @@ public interface ChannelLoader {
      * @return A Channel, if it exists.
      */
     @Nullable
-    Channel getChannel(String name);
+    Channel getChannel(@NotNull String name);
 
     /**
      * Provides a {@link Set} of all registered {@link Channel}(s)

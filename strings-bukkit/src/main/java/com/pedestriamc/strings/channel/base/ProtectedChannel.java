@@ -77,7 +77,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public void broadcast(String message) {
+    public void broadcast(@NotNull String message) {
         throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
@@ -87,7 +87,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public String getBroadcastFormat() {
+    public @NotNull String getBroadcastFormat() {
         throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 
@@ -162,7 +162,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public boolean isCallEvent() {
+    public boolean callsEvents() {
         throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 

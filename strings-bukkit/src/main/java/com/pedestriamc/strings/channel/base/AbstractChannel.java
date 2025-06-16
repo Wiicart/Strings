@@ -112,7 +112,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
             processedMessage = messageProcessor.processMentions(player, processedMessage);
         }
 
-        if (isCallEvent()) {
+        if (callsEvents()) {
             sendEventMessage(player, processedMessage, template, recipients);
 
         } else {
@@ -174,7 +174,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         map.put("format", getFormat());
         map.put("default-color", getDefaultColor());
-        map.put("call-event", String.valueOf(isCallEvent()));
+        map.put("call-event", String.valueOf(callsEvents()));
         map.put("filter-profanity", String.valueOf(isProfanityFiltering()));
         map.put("block-urls", String.valueOf(isUrlFiltering()));
         map.put("cooldown", String.valueOf(isCooldownEnabled()));
@@ -198,12 +198,12 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public String getBroadcastFormat() {
+    public @NotNull String getBroadcastFormat() {
         return Objects.requireNonNullElse(broadcastFormat, DEFAULT_BROADCAST_FORMAT);
     }
 
     @Override
-    public void broadcast(String message) {
+    public void broadcast(@NotNull String message) {
         String finalString = getBroadcastFormat().replace(MESSAGE_PLACEHOLDER, message);
         finalString = ChatColor.translateAlternateColorCodes('&', finalString);
         for (Player p : getPlayersInScope()) {
@@ -238,7 +238,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         updatePermissions();
     }
 
-    public boolean isCallEvent() {
+    public boolean callsEvents() {
         return callEvent;
     }
 

@@ -16,13 +16,13 @@ import java.util.Set;
  */
 public class ChannelTabCompleter extends AbstractTabCompleter {
 
-    private static final Set<String> CASES = Set.of(
+    private static final @NotNull Set<String> CASES = Set.of(
             "join", "leave", "monitor", "unmonitor", "broadcast", "announce"
     );
 
-    private static final String HELP = "help";
+    private static final @NotNull String HELP = "help";
 
-    private final ChannelManager channelLoader;
+    private final @NotNull ChannelManager channelLoader;
 
     public ChannelTabCompleter(@NotNull Strings strings) {
         this.channelLoader = strings.getChannelLoader();
@@ -31,6 +31,7 @@ public class ChannelTabCompleter extends AbstractTabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
         return switch (args.length) {
+            case 0 -> combine(HELP, getAllowedChannels(sender), CASES);
             case 1 -> filter(combine(HELP, getAllowedChannels(sender), CASES), args[0]);
             case 2 -> {
                 if(CASES.contains(args[0].toLowerCase())) {
@@ -38,9 +39,7 @@ public class ChannelTabCompleter extends AbstractTabCompleter {
                 }
                 yield filter(getPlayerNames(), args[1]);
             }
-
             case 3 -> filter(getPlayerNames(), args[2]);
-
             default -> EMPTY;
         };
     }

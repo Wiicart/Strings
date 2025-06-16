@@ -31,7 +31,7 @@ public class JoinListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    void onEvent(PlayerJoinEvent event) {
+    void onEvent(@NotNull PlayerJoinEvent event) {
         Player player = event.getPlayer();
         userUtil.loadUserAsync(player.getUniqueId());
 

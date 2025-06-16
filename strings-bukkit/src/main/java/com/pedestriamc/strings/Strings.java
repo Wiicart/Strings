@@ -1,7 +1,6 @@
 package com.pedestriamc.strings;
 
-import com.pedestriamc.strings.api.StringsAPIRegistrar;
-import com.pedestriamc.strings.api.StringsProvider;
+import com.pedestriamc.strings.api.APIRegistrar;
 import com.pedestriamc.strings.api.channel.data.BuildableRegistrar;
 import com.pedestriamc.strings.api.event.StringsReloader;
 import com.pedestriamc.strings.placeholder.StringsPlaceholderExpansion;
@@ -26,6 +25,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -68,6 +68,10 @@ public final class Strings extends JavaPlugin {
     private LogManager logManager;
     private Configuration configClass;
 
+    public Strings() {
+        super();
+    }
+
     @Override
     public void onLoad() {
         info("[Strings] Loading...");
@@ -89,7 +93,7 @@ public final class Strings extends JavaPlugin {
         instantiateObjectsTwo();
         registerPlaceholders();
         loadMetrics();
-        info("[Strings] Enabled");
+        info("Enabled");
     }
 
     @Override
@@ -108,10 +112,10 @@ public final class Strings extends JavaPlugin {
         stringsImpl = null;
 
         try {
-            StringsAPIRegistrar.unregister(apiUUID);
+            APIRegistrar.unregister(apiUUID);
         } catch(IllegalStateException | SecurityException ignored) {}
 
-        info("[Strings] Disabled");
+        info("Disabled");
     }
 
     public void reload() {
@@ -132,7 +136,7 @@ public final class Strings extends JavaPlugin {
         );
         metrics.addCustomChart(new SimplePie(
                 "using_stringsapi",
-                () -> String.valueOf(StringsProvider.isUsed()))
+                () -> String.valueOf(APIRegistrar.isAPIUsed()))
         );
         metrics.addCustomChart(new SimplePie(
                 "using_stringsmoderation_expansion",
@@ -238,7 +242,7 @@ public final class Strings extends JavaPlugin {
         apiUUID = UUID.randomUUID();
         stringsImpl = new StringsImpl(this);
         try {
-            StringsAPIRegistrar.register(stringsImpl, this, apiUUID);
+            APIRegistrar.register(stringsImpl, this, apiUUID);
         } catch(IllegalStateException a) {
             info("Failed to register StringsAPI");
         }
@@ -300,12 +304,20 @@ public final class Strings extends JavaPlugin {
         return configClass;
     }
 
-    public void info(String message) {
+    public void info(@NotNull String message) {
         getLogger().info(message);
     }
 
-    public void warning(String message) {
+    public void info(@NotNull Object message) {
+        info(message.toString());
+    }
+
+    public void warning(@NotNull String message) {
         getLogger().warning(message);
+    }
+
+    public void warning(@NotNull Object message) {
+        warning(message.toString());
     }
 
 }
