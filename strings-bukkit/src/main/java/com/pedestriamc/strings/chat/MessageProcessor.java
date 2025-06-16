@@ -51,13 +51,18 @@ public class MessageProcessor {
      */
     public String generateTemplate(Player player) {
         User user = userUtil.getUser(player);
+        return generateTemplateNonChatColor(player)
+                .replace("{message}", user.getChatColor(channel) + "{message}");
+    }
+
+    public String generateTemplateNonChatColor(Player player) {
+        User user = userUtil.getUser(player);
         String template = channel.getFormat();
 
         template = template
                 .replace("{prefix}", user.getPrefix())
                 .replace("{suffix}", user.getSuffix())
-                .replace("{displayname}", user.getDisplayName())
-                .replace("{message}", user.getChatColor(channel) + "{message}");
+                .replace("{displayname}", user.getDisplayName());
 
         if(usingPlaceholderAPI) {
             template = setPlaceholders(player, template);

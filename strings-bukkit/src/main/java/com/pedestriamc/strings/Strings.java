@@ -308,6 +308,7 @@ public final class Strings extends JavaPlugin {
         getLogger().info(message);
     }
 
+    @SuppressWarnings("unused")
     public void info(@NotNull Object message) {
         info(message.toString());
     }
@@ -316,6 +317,7 @@ public final class Strings extends JavaPlugin {
         getLogger().warning(message);
     }
 
+    @SuppressWarnings("unused")
     public void warning(@NotNull Object message) {
         warning(message.toString());
     }

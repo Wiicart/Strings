@@ -3,6 +3,7 @@ package com.pedestriamc.strings.chat.paper;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
+import com.pedestriamc.strings.api.text.format.StringsComponent;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.chat.MessageProcessor;
 import com.pedestriamc.strings.configuration.Option;
@@ -38,9 +39,7 @@ public class ChannelChatRenderer extends MessageProcessor implements ChatRendere
             msg = processMentions(source, msg);
         }
 
-        Component chatColor = getUser(source).getChatColorComponent().asComponent();
-
-        return chatColor.append(ComponentConverter.fromString(msg));
+        return StringsComponent.fromString(msg).asComponent();
     }
 
     private @NotNull Component setPlaceholder(@NotNull Component component, final @NotNull String original, final @NotNull String replacement) {

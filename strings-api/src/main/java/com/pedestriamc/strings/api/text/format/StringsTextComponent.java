@@ -19,6 +19,10 @@ public final class StringsTextComponent implements TextComponent, Element<TextCo
         return new StringsTextComponent(content);
     }
 
+    public static @NotNull StringsTextComponent of() {
+        return new StringsTextComponent("");
+    }
+
     private StringsTextComponent(@NotNull String content) {
         this.content = content;
     }
@@ -31,6 +35,14 @@ public final class StringsTextComponent implements TextComponent, Element<TextCo
     @Override
     public @NotNull TextComponent content(@NotNull String content) {
         return of(content);
+    }
+
+    public StringsTextComponent append(@NotNull String content) {
+        return of(this.content + content);
+    }
+
+    public StringsTextComponent append(@NotNull StringsTextComponent content) {
+        return of(this.content + content.content);
     }
 
     @Override
@@ -61,6 +73,10 @@ public final class StringsTextComponent implements TextComponent, Element<TextCo
     @Override
     public @NotNull TextComponent toAdventure() {
         return this;
+    }
+
+    public boolean isEmpty() {
+        return content.isEmpty();
     }
 
     @Override
