@@ -1,10 +1,11 @@
 package com.pedestriamc.strings.chat;
 
+import com.google.common.base.Preconditions;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.channel.Type;
+import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.channel.HelpOPChannel;
 import com.pedestriamc.strings.channel.SocialSpyChannel;
@@ -14,148 +15,160 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
-public final class ChannelFileReader {
+final class ChannelFileReader {
 
-    private final Strings strings;
-    private final FileConfiguration config;
-    private final ChannelManager channelLoader;
-    private boolean globalExists = false;
-    private boolean helpOpExists = false;
+    private final @NotNull Strings strings;
+    private final @NotNull ChannelManager manager;
+    
+    private static final Set<String> LEGAL_TYPES = Set.of(
+            "stringchannel", "world", "world_strict",
+            "proximity", "proximity_strict", "helpop"
+    );
+    
+    private static final Set<String> LOCAL_TYPES = Set.of(
+            "world", "world_strict", "proximity", "proximity_strict"
+    );
 
-    public ChannelFileReader(Strings strings, FileConfiguration config, ChannelManager channelLoader) {
-        this.strings = strings;
-        this.config = config;
-        this.channelLoader = channelLoader;
+    static void loadChannels(@NotNull Strings strings, @NotNull FileConfiguration config, @NotNull ChannelManager manager) {
+        new ChannelFileReader(strings, config, manager);
     }
 
-    /**
-     * Reads the FileConfiguration and loads/registers all Channels in it
-     */
-    public void read() {
+    private ChannelFileReader(@NotNull Strings strings, @NotNull FileConfiguration config, @NotNull ChannelManager manager) {
+        this.strings = strings;
+        this.manager = manager;
+
         if(!config.contains("channels")) {
-            log("No Channels defined in channels.yml, disabling plugin.");
+            strings.warning("No Channels defined in channels.yml, disabling plugin.");
             strings.getServer().getPluginManager().disablePlugin(strings);
             return;
         }
 
         ConfigurationSection channels = config.getConfigurationSection("channels");
         if(channels == null) {
-            log("An error occurred while loading channels, disabling plugin.");
+            strings.warning("An error occurred while loading channels, disabling plugin.");
             strings.getServer().getPluginManager().disablePlugin(strings);
             return;
         }
-        readFile(channels);
-        loadDefaults();
+
+        read(channels);
+        registerDefaults();
     }
 
-    private void readFile(ConfigurationSection channels) {
-        for(String channelName : channels.getKeys(false)) {
-            ConfigurationSection channel = channels.getConfigurationSection(channelName);
-            if(channel == null) {
-                continue;
-            }
-
-            String typeString = channel.getString("type");
-            if(typeString == null) {
-                typeString = "stringchannel";
-            }
-
-            Type type = getType(typeString, channelName);
-            if(type == null) {
-                continue;
-            }
-
-            boolean local = type == Type.WORLD || type == Type.PROXIMITY;
-            ChannelBuilder data = getChannelData(channel, channelName, local);
-            String symbol = channel.getString("symbol");
-
-            try {
-                Channel c = data.build(typeString);
-
-                channelLoader.register(c);
-                if(symbol != null) {
-                    channelLoader.addChannelSymbol(symbol, c);
-                }
-                if(channelName.equalsIgnoreCase("global")) {
-                    globalExists = true;
-                }
-                if(channelName.equalsIgnoreCase("helpop")) {
-                    helpOpExists = true;
-                }
-            } catch (Exception e) {
-                strings.warning("Failed to load channel " + channelName + ", an internal error occurred.");
-                strings.warning(e.getMessage());
-            }
-        }
-    }
-
-    private void loadDefaults() {
-        if(!globalExists) {
-            try {
-                Channel channel = Channel.builder("global", "{prefix}{displayname}{suffix} &7» {message}", Membership.DEFAULT)
-                        .setDefaultColor("&f")
-                        .setDoCooldown(false)
-                        .setDoProfanityFilter(false)
-                        .setDoUrlFilter(false)
-                        .setCallEvent(true)
-                        .setWorlds(null)
-                        .setPriority(-1)
-                        .build("stringchannel");
-                channelLoader.register(channel);
-            } catch (Exception ignored) {}
+    private void registerDefaults() {
+        if(manager.getChannel("global") == null) {
+            registerGlobal();
         }
 
-        if(!helpOpExists) {
-            Channel c = new HelpOPChannel(
-                    strings,
-                    "&8[&4HelpOP&8] &f{displayname} &7» {message}",
-                    false,
-                    false,
-                    false
-            );
-
-            channelLoader.register(c);
-            channelLoader.addChannelSymbol("?", c);
+        if(manager.getChannel("helpop") == null) {
+            registerHelpOp();
         }
 
         String socialSpyFormat = strings.getConfiguration().getString(Option.SOCIAL_SPY_FORMAT);
-        log("Loading channel 'socialspy'...");
-        channelLoader.register(new SocialSpyChannel(strings.getPlayerDirectMessenger(), socialSpyFormat));
+        manager.register(new SocialSpyChannel(strings.getPlayerDirectMessenger(), socialSpyFormat));
 
-        channelLoader.register(new DefaultChannel(strings, channelLoader));
+        manager.register(new DefaultChannel(strings, manager));
     }
 
-    private ChannelBuilder getChannelData(ConfigurationSection section, String channelName, boolean local) {
-        ChannelBuilder data = Channel.builder(channelName, section.getString("format", "{prefix}{displayname}{suffix} &7» &f{message}"), loadMembership(section))
-                .setDefaultColor(section.getString("default-color", "&f"))
+    private void read(@NotNull ConfigurationSection channels) {
+        for(String name : channels.getKeys(false)) {
+            ConfigurationSection section = channels.getConfigurationSection(name);
+            if(section != null) {
+                strings.info("Loading channel '" + name + "'");
+                try {
+                    loadChannel(name, section);
+                } catch(Exception e) {
+                    strings.warning("An error occurred while loading channel '" + name + "'");
+                    strings.warning(e.getMessage());
+                }
+            } else {
+                strings.warning("An error occurred while loading channel '" + name + "'");
+            }
+        }
+    }
+
+    private void loadChannel(@NotNull String name, @NotNull ConfigurationSection section) {
+        final String format = section.getString("format");
+        Preconditions.checkNotNull(format, "Channel format cannot be null.");
+        
+        final String type = getTypeString(section); // throws IllegalArgumentException if illegal
+        final Membership membership = getMembership(section); // throws IllegalArgumentException if illegal
+
+        final ChannelBuilder builder = Channel.builder(name, format, membership)
+                .setDefaultColor(section.getString("default-color", StringsTextColor.WHITE.toString()))
                 .setDoCooldown(section.getBoolean("cooldown", false))
                 .setDoProfanityFilter(section.getBoolean("filter-profanity", false))
                 .setDoUrlFilter(section.getBoolean("block-urls", false))
                 .setCallEvent(section.getBoolean("call-event", true))
                 .setPriority(section.getInt("priority", -1))
-                .setDistance(section.getDouble("distance"))
-                .setBroadcastFormat(section.getString("broadcast-format"));
+                .setBroadcastFormat(section.getString("broadcast-format", "&8[&cBroadcast&8] &f{message}"));
 
-        if(local) {
-            data.setWorlds(loadWorlds(section));
+        // Handle options specific to LocalChannels
+        if(isLocal(type)) {
+            if(isProximity(type)) {
+                builder.setDistance(getDistance(section));
+            }
+            builder.setWorlds(loadWorlds(section));
         }
 
-        return data;
+        final Channel channel = builder.build(type);
+        manager.register(channel);
+
+        // Handle symbol registration if present
+        final String symbol = section.getString("symbol");
+        if(symbol != null) {
+            manager.addChannelSymbol(symbol, channel);
+        }
     }
 
-    private Set<World> loadWorlds(ConfigurationSection section) {
+    private @NotNull Membership getMembership(@NotNull ConfigurationSection section) {
+        String membershipString = section.getString("membership");
+        Preconditions.checkNotNull(membershipString, "Channel membership cannot be null.");
+        try {
+            return Membership.valueOf(membershipString.toUpperCase(Locale.ROOT));
+        } catch(IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid channel membership: " + membershipString);
+        }
+    }
+
+    private @NotNull String getTypeString(@NotNull ConfigurationSection section) {
+        String type = section.getString("type");
+        Preconditions.checkNotNull(type, "Channel type cannot be null.");
+
+        if(LEGAL_TYPES.contains(type.toLowerCase(Locale.ROOT))) {
+            return type;
+        }
+
+        throw new IllegalArgumentException("Invalid channel type: '" + type + "'");
+    }
+
+    private boolean isProximity(@NotNull String type) {
+        type = type.toLowerCase(Locale.ROOT);
+        return type.equals("proximity") || type.equals("proximity_strict");
+    }
+
+    private double getDistance(@NotNull ConfigurationSection section) {
+        double distance = section.getDouble("distance");
+        if(distance < 1) {
+            throw new IllegalArgumentException("ProximityChannels must have a positive distance value.");
+        }
+        return distance;
+    }
+
+    private @NotNull Set<World> loadWorlds(@NotNull ConfigurationSection section) {
         Set<World> worlds = new HashSet<>();
         String legacyWorldName = section.getString("world");
         if(legacyWorldName != null) {
             World world = Bukkit.getWorld(legacyWorldName);
             if(world != null) {
                 worlds.add(world);
+            } else {
+                strings.warning("Unknown world '" + legacyWorldName + "' defined, skipping...");
             }
         }
 
@@ -164,52 +177,48 @@ public final class ChannelFileReader {
             World world = Bukkit.getWorld(str);
             if (world != null) {
                 worlds.add(world);
+            } else {
+                strings.warning("Unknown world '" + str + "' defined, skipping...");
             }
+        }
+
+        if(worlds.isEmpty()) {
+            throw new IllegalArgumentException("No worlds found, LocalChannels must define one or more worlds.");
         }
 
         return worlds;
     }
 
-    private Membership loadMembership(ConfigurationSection section) {
-        String membershipString = section.getString("membership");
-        if(membershipString == null) {
-            return Membership.PROTECTED;
-        }
-
-        return switch(membershipString) {
-            case "default" -> Membership.DEFAULT;
-            case "permission" -> Membership.PERMISSION;
-            default -> Membership.PROTECTED;
-        };
+    private boolean isLocal(@NotNull String type) {
+        return LOCAL_TYPES.contains(type.toLowerCase(Locale.ROOT));
     }
 
-    private @Nullable Type getType(@NotNull String typeString, @NotNull String channelName) {
-        switch (typeString) {
-            case "stringchannel" -> {
-                log("Loading stringchannel '" + channelName + "'...");
-                return Type.NORMAL;
-            }
-            case "world", "world_strict" -> {
-                log("Loading worldchannel '" + channelName + "'...");
-                return Type.WORLD;
-            }
-            case "proximity", "proximity_strict" -> {
-                log("Loading proximitychannel '" + channelName + "'...");
-                return Type.PROXIMITY;
-            }
-            case "helpop" -> {
-                log("Loading helpopchannel '" + channelName + "'...");
-                return Type.PROTECTED;
-            }
-            default -> {
-                strings.warning("Failed to load Channel '" + channelName + "', invalid channel type defined.");
-                return null;
-            }
+    private void registerGlobal() {
+        try {
+            manager.register(
+                    Channel.builder("global", "{prefix}{displayname}{suffix} &7» {message}", Membership.DEFAULT)
+                    .setDefaultColor("&f")
+                    .setDoCooldown(false)
+                    .setDoProfanityFilter(false)
+                    .setDoUrlFilter(false)
+                    .setCallEvent(true)
+                    .setWorlds(null)
+                    .setPriority(-1)
+                    .build("stringchannel")
+            );
+        } catch (Exception e) {
+            strings.warning("An error occurred while loading global channel fallback");
+            strings.warning(e.getMessage());
         }
     }
 
-    private void log(String message) {
-        strings.info(message);
+    private void registerHelpOp() {
+        manager.register(new HelpOPChannel(
+                strings,
+                "&8[&4HelpOP&8] &f{displayname} &7» {message}",
+                false,
+                false,
+                false
+        ));
     }
-
 }

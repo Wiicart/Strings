@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-public class Mentioner {
+public final class Mentioner {
 
     private final UserUtil userUtil;
 
@@ -56,7 +56,7 @@ public class Mentioner {
         mention(user.getPlayer(), sender.getPlayer());
     }
 
-    public void mention(Set<Player> group, Player sender) {
+    public void mention(@NotNull Set<Player> group, @NotNull Player sender) {
         group.removeIf(p -> !userUtil.getUser(p).isMentionsEnabled());
 
         String str = format;
@@ -67,7 +67,7 @@ public class Mentioner {
         }
     }
 
-    private void sendMention(Player player, String message) {
+    private void sendMention(@NotNull Player player, @NotNull String message) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
         player.playSound(player.getLocation(), sound, volume, pitch);
     }

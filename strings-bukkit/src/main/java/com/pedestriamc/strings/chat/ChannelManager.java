@@ -46,8 +46,7 @@ public final class ChannelManager implements ChannelLoader {
     }
 
     public void loadChannels() {
-        ChannelFileReader reader = new ChannelFileReader(strings, config, this);
-        reader.read();
+        ChannelFileReader.loadChannels(strings, config, this);
     }
 
     @Override
