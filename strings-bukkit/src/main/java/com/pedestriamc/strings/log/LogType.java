@@ -11,7 +11,7 @@ import static com.pedestriamc.strings.log.LogListener.*;
 /**
  * Represents what type of log is being logged.
  */
-class LogType {
+final class LogType {
 
     private File file;
     private boolean enabled;
@@ -50,7 +50,7 @@ class LogType {
      */
     static final List<LogType> TYPES = List.of(SIGN, DIRECT_MESSAGE, CHAT, COMMAND, FILTER);
 
-    protected LogType(String path, String configKey, Function<LogManager, Listener> function) {
+    private LogType(String path, String configKey, Function<LogManager, Listener> function) {
         this.path = path;
         this.configKey = configKey;
         this.function = function;

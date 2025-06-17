@@ -15,7 +15,7 @@ import static com.pedestriamc.strings.api.message.Message.*;
 
 public final class ClearChatCommand implements CommandExecutor {
 
-    private final Messenger messenger;
+    private final @NotNull Messenger messenger;
 
     public ClearChatCommand(@NotNull Strings strings) {
         messenger = strings.getMessenger();
@@ -33,24 +33,35 @@ public final class ClearChatCommand implements CommandExecutor {
             return true;
         }
 
-        if(args.length > 0 && args[0].equalsIgnoreCase("all") && (sender.hasPermission("strings.chat.clear.other") || sender.hasPermission("strings.chat.*"))) {
-            for(Player p : Bukkit.getOnlinePlayers()) {
-                p.sendMessage(StringUtils.repeat(" \n",100));
+        if(args.length == 1) {
+            if(args[0].equalsIgnoreCase("all")) {
+                if(!Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.clear")) {
+                    messenger.sendMessage(NO_PERMS, sender);
+                    return true;
+                }
+                clearChatAll();
+                messenger.sendMessage(CHAT_CLEARED_ALL, sender);
+            } else {
+                messenger.sendMessage(INVALID_ARGS, sender);
             }
-            messenger.sendMessage(CHAT_CLEARED_ALL, sender);
             return true;
         }
+
         if(!(sender instanceof Player)) {
             sender.sendMessage("[Strings] Console cannot clear it's own chat.");
             return true;
         }
-        if(args.length == 0) {
-            sender.sendMessage(StringUtils.repeat(" \n", 100));
-            messenger.sendMessage(CHAT_CLEARED, sender);
-            return true;
-        }
-        messenger.sendMessage(NO_PERMS, sender);
+
+        // One arg
+        sender.sendMessage(StringUtils.repeat(" \n", 100));
+        messenger.sendMessage(CHAT_CLEARED, sender);
         return true;
+    }
+
+    private void clearChatAll() {
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            p.sendMessage(StringUtils.repeat(" \n",100));
+        }
     }
 
 }

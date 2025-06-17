@@ -58,10 +58,11 @@ public final class ChannelManager implements ChannelLoader {
             refreshChannelMap();
             channel = channels.get(name);
         }
-        if(!channel.getName().equals(name)) {
+        if(channel != null && !channel.getName().equals(name)) {
             refreshChannelMap();
             channel = channels.get(name);
         }
+
         return channel;
     }
 

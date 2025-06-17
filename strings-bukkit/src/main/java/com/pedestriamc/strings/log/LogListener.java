@@ -16,14 +16,14 @@ import java.util.Date;
 /**
  * Stores all Listener classes used for logging.
  */
-@SuppressWarnings("ClassCanBeRecord")
-class LogListener {
+final class LogListener {
 
-    private LogListener() {
+    private LogListener() {}
 
-    }
+    static final class SignListener implements Listener {
 
-    static class SignListener implements Listener {
+        private static final String TEMPLATE =
+                "[{date}] Player {name} updated or placed a sign: \"{content}\"";
 
         private final LogManager logManager;
 
@@ -33,17 +33,18 @@ class LogListener {
 
         @EventHandler
         void onEvent(@NotNull SignChangeEvent event) {
-            String log = "["
-                    + new Date() + "] Player "
-                    + event.getPlayer().getName()
-                    + " updated or placed a sign: "
-                    + Arrays.toString(event.getLines());
-
+            String log = TEMPLATE
+                    .replace("{date}", new Date().toString())
+                    .replace("{name}", event.getPlayer().getName())
+                    .replace("{content}", Arrays.toString(event.getLines()));
             logManager.log(LogType.SIGN, log);
         }
     }
 
-    static class DirectMessageListener implements Listener {
+    static final class DirectMessageListener implements Listener {
+
+        private static final String TEMPLATE =
+                "[{date}] Player {sender} -> {recipient} \"{message}\"";
 
         private final LogManager logManager;
 
@@ -53,19 +54,19 @@ class LogListener {
 
         @EventHandler
         void onEvent(@NotNull PlayerDirectMessageEvent event) {
-            String log = "["
-                    + new Date() + "] Player "
-                    + event.getSender().getName()
-                    + " -> "
-                    + event.getRecipient().getName()
-                    + ": \""
-                    + event.getMessage()
-                    + "\"";
+            String log = TEMPLATE
+                    .replace("{date}", new Date().toString())
+                    .replace("{sender}", event.getSender().getName())
+                    .replace("{recipient}", event.getRecipient().getName())
+                    .replace("{message}", event.getMessage());
             logManager.log(LogType.DIRECT_MESSAGE, log);
         }
     }
 
-    static class ChatListener implements Listener {
+    static final class ChatListener implements Listener {
+
+        private static final String TEMPLATE =
+                "[{date}] Player {name} sent a message in channel \"{channel}\": \"{message}\"";
 
         private final LogManager logManager;
 
@@ -76,19 +77,20 @@ class LogListener {
         @EventHandler
         void onEvent(AsyncPlayerChatEvent event) {
             if(event instanceof ChannelChatEvent chatEvent) {
-                String log = "["
-                        + new Date() + "] Player "
-                        + event.getPlayer().getName()
-                        + " sent a message in channel \""
-                        + chatEvent.getChannel().getName()
-                        + "\": \"" + chatEvent.getMessage() + "\"";
-
+                String log = TEMPLATE
+                        .replace("{date}", new Date().toString())
+                        .replace("{name}", event.getPlayer().getName())
+                        .replace("{channel}", chatEvent.getChannel().getName())
+                        .replace("{message}", event.getMessage());
                 logManager.log(LogType.CHAT, log);
             }
         }
     }
 
-    static class CommandListener implements Listener {
+    static final class CommandListener implements Listener {
+
+        private static final String TEMPLATE =
+                "[{date}] Player {name} issued command: \"{command}\"";
 
         private final LogManager logManager;
 
@@ -98,19 +100,20 @@ class LogListener {
 
         @EventHandler
         void onEvent(@NotNull PlayerCommandPreprocessEvent event) {
-            String log = "["
-                    + new Date() + "] Player "
-                    + event.getPlayer().getName()
-                    + " issued command: \""
-                    + event.getMessage()
-                    + "\"";
+            String log = TEMPLATE
+                    .replace("{date}", new Date().toString())
+                    .replace("{name}", event.getPlayer().getName())
+                    .replace("{command}", event.getMessage());
             logManager.log(LogType.COMMAND, log);
         }
     }
 
-    static class ChatFilterListener implements Listener {
+    static final class ChatFilterListener implements Listener {
 
-        final LogManager logManager;
+        private static final String TEMPLATE =
+                "[{date}] Player {name} had a message filtered. Original: \"{original}\", Filtered: \"{filtered}\"";
+
+        private final LogManager logManager;
 
         ChatFilterListener(LogManager logManager) {
             this.logManager = logManager;
@@ -118,14 +121,11 @@ class LogListener {
 
         @EventHandler
         void onEvent(@NotNull PlayerChatFilteredEvent event) {
-            String log = "["
-                    + new Date() + "] Player "
-                    + event.getPlayer().getName()
-                    + " had a message filtered. Original: \""
-                    + event.getOriginalMessage()
-                    + "\", Filtered: \" "
-                    + event.getFilteredMessage()
-                    + "\"";
+            String log = TEMPLATE
+                    .replace("{date}", new Date().toString())
+                    .replace("{name}", event.getPlayer().getName())
+                    .replace("{original}", event.getOriginalMessage())
+                    .replace("{filtered}", event.getFilteredMessage());
             logManager.log(LogType.FILTER, log);
         }
     }

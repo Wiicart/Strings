@@ -16,7 +16,7 @@ import java.util.Locale;
  */
 public final class StringsPlaceholderExpansion extends PlaceholderExpansion {
 
-    private final UserUtil userUtil;
+    private final @NotNull UserUtil userUtil;
 
     public StringsPlaceholderExpansion(@NotNull Strings strings) {
         userUtil = strings.getUserUtil();

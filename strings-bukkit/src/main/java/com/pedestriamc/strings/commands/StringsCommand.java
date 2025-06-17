@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 public final class StringsCommand extends CommandBase {
 
-    static final String VERSION_MESSAGE = StringsTextColor.DARK_GRAY + "[" +
+    private static final String VERSION_MESSAGE = StringsTextColor.DARK_GRAY + "[" +
             StringsTextColor.DARK_AQUA + "Strings" + StringsTextColor.DARK_GRAY + "] " +
             StringsTextColor.WHITE + "Running strings version " + StringsTextColor.GREEN + Strings.VERSION;
 

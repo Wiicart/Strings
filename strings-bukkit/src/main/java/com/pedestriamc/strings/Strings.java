@@ -130,10 +130,7 @@ public final class Strings extends JavaPlugin {
      */
     private void loadMetrics() {
         Metrics metrics = new Metrics(this, METRICS_ID);
-        metrics.addCustomChart(new SimplePie(
-                "distributor",
-                () -> DISTRIBUTOR)
-        );
+        metrics.addCustomChart(new SimplePie("distributor", () -> DISTRIBUTOR));
         metrics.addCustomChart(new SimplePie(
                 "using_stringsapi",
                 () -> String.valueOf(APIRegistrar.isAPIUsed()))

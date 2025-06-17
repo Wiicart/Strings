@@ -43,15 +43,9 @@ final class ChannelFileReader {
         this.strings = strings;
         this.manager = manager;
 
-        if(!config.contains("channels")) {
-            strings.warning("No Channels defined in channels.yml, disabling plugin.");
-            strings.getServer().getPluginManager().disablePlugin(strings);
-            return;
-        }
-
         ConfigurationSection channels = config.getConfigurationSection("channels");
         if(channels == null) {
-            strings.warning("An error occurred while loading channels, disabling plugin.");
+            strings.warning("No Channels defined in channels.yml, disabling plugin.");
             strings.getServer().getPluginManager().disablePlugin(strings);
             return;
         }
@@ -83,7 +77,7 @@ final class ChannelFileReader {
                 try {
                     loadChannel(name, section);
                 } catch(Exception e) {
-                    strings.warning("An error occurred while loading channel '" + name + "'");
+                    strings.warning("An error occurred while loading channel '" + name + "':");
                     strings.warning(e.getMessage());
                 }
             } else {
@@ -206,7 +200,7 @@ final class ChannelFileReader {
                     .setPriority(-1)
                     .build("stringchannel")
             );
-        } catch (Exception e) {
+        } catch(Exception e) {
             strings.warning("An error occurred while loading global channel fallback");
             strings.warning(e.getMessage());
         }

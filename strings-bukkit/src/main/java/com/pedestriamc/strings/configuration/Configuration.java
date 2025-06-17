@@ -22,7 +22,6 @@ public class Configuration {
         return config.getBoolean(option.getIdentifier());
     }
 
-    @Nullable
     public String getString(@NotNull Option option) {
         String val = config.getString(option.getIdentifier());
         if(val == null && option.getDefault() instanceof String) {

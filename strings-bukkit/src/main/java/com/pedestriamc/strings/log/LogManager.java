@@ -11,7 +11,7 @@ import java.io.FileWriter;
 /**
  * Handles all logging.
  */
-public class LogManager {
+public final class LogManager {
 
     private final Strings strings;
 

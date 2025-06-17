@@ -48,9 +48,9 @@ public final class User implements StringsUser {
     private @NotNull Channel activeChannel;
     private @NotNull StringsComponent chatColorComponent;
 
-    private String prefix;
-    private String suffix;
-    private String displayName;
+    private @Nullable String prefix;
+    private @Nullable String suffix;
+    private @Nullable String displayName;
     private boolean mentionsEnabled;
 
     @Nullable
@@ -83,11 +83,12 @@ public final class User implements StringsUser {
         this.monitored = Objects.requireNonNullElseGet(builder.monitoredChannels, HashSet::new);
         this.ignored = Objects.requireNonNullElseGet(builder.ignored, HashSet::new);
 
+        // Join the DefaultChannel if not a member of any other Channels
         if(channels.isEmpty()) {
             joinChannel(channelLoader.getDefaultChannel());
         }
 
-        joinChannels();
+        joinChannels(); // Join Channels in the Channel instances
     }
 
     /**

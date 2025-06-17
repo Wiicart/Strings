@@ -3,6 +3,7 @@ package com.pedestriamc.strings.user;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -25,10 +26,9 @@ public final class UserBuilder {
     String prefix;
     String suffix;
     String displayName;
-    // Mentions are enabled by default
-    boolean mentionsEnabled = true;
+    boolean mentionsEnabled = true; // Mentions are enabled by default
 
-    public UserBuilder(@NotNull Strings strings, @NotNull UUID uuid, boolean retained) {
+    UserBuilder(@NotNull Strings strings, @NotNull UUID uuid, boolean retained) {
         this.strings = strings;
         this.uuid = uuid;
         this.retained = retained;
@@ -79,7 +79,8 @@ public final class UserBuilder {
         return this;
     }
 
-    public User build() {
+    @Contract(" -> new")
+    public @NotNull User build() {
         return new User(this);
     }
 }

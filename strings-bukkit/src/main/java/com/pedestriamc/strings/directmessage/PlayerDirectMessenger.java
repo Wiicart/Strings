@@ -19,14 +19,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerDirectMessenger {
 
-    private final UserUtil userUtil;
-    private final Map<Player, Player> replyList = new ConcurrentHashMap<>();
-    private final String messageFormatSender;
-    private final String messageFormatRecipient;
+    private final @NotNull Strings strings;
+    private final @NotNull UserUtil userUtil;
+    private final @NotNull Messenger messenger;
+
+    private final @NotNull Map<Player, Player> replyList = new ConcurrentHashMap<>();
+
+    private final @NotNull String messageFormatSender;
+    private final @NotNull String messageFormatRecipient;
+
     private final boolean usePAPI;
-    private final Messenger messenger;
 
     public PlayerDirectMessenger(@NotNull Strings strings) {
+        this.strings = strings;
         this.userUtil = strings.getUserUtil();
         Configuration config = strings.getConfiguration();
         this.messageFormatSender = config.getString(Option.DM_FORMAT_OUT);
@@ -50,33 +55,37 @@ public class PlayerDirectMessenger {
     }
 
     public void sendMessage(@NotNull Player sender, @NotNull Player recipient, @NotNull String message) {
-        String senderString = messageFormatSender;
-        String recipientString = messageFormatRecipient;
-        senderString = processPlaceholders(sender, recipient, senderString);
-        recipientString = processPlaceholders(sender, recipient, recipientString);
-        senderString = senderString.replace("{message}", message);
-        recipientString = recipientString.replace("{message}", message);
+        String senderString = processPlaceholders(sender, recipient, messageFormatSender)
+                .replace("{message}", message);
+        String recipientString = processPlaceholders(sender, recipient, messageFormatRecipient)
+                .replace("{message}", message);
 
         if(usePAPI) {
-            senderString = PlaceholderAPI.setPlaceholders(recipient, senderString);
-            recipientString = PlaceholderAPI.setPlaceholders(sender, recipientString);
+            try {
+                senderString = PlaceholderAPI.setPlaceholders(recipient, senderString);
+                recipientString = PlaceholderAPI.setPlaceholders(sender, recipientString);
+            } catch(Exception ex) {
+                strings.warning("An error occurred while handling a /msg command.");
+                strings.warning(ex.getMessage());
+            }
         }
 
         senderString = color(senderString);
         recipientString = color(recipientString);
+
         PlayerDirectMessageEvent event = new PlayerDirectMessageEvent(sender, recipient, message);
         Bukkit.getPluginManager().callEvent(event);
         if(!event.isCancelled()) {
             sender.sendMessage(senderString);
-            recipient.sendMessage(recipientString);
             replyList.put(recipient, sender);
+
+            if(!hasRecipientIgnoredSender(sender, recipient)) {
+                recipient.sendMessage(recipientString);
+            }
         }
     }
 
-    public String processPlaceholders(Player sender, Player recipient, String message) {
-        if(message == null) {
-            return null;
-        }
+    public String processPlaceholders(@NotNull Player sender, @NotNull Player recipient, @NotNull String message) {
         User senderUser = userUtil.getUser(sender);
         User recipientUser = userUtil.getUser(recipient);
         message = message
@@ -91,7 +100,12 @@ public class PlayerDirectMessenger {
         return message;
     }
 
-    private String color(String string) {
+    private @NotNull String color(@NotNull String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
+    }
+
+    // Checks if the target has ignored the message sender
+    private boolean hasRecipientIgnoredSender(@NotNull Player sender, @NotNull Player recipient) {
+        return userUtil.getUser(recipient).getIgnoredPlayers().contains(sender.getUniqueId());
     }
 }
