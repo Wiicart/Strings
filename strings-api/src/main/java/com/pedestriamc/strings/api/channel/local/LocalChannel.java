@@ -32,7 +32,7 @@ public interface LocalChannel extends Channel {
     }
 
     /**
-     * Checks if a Player is in the scope of the Channel.
+     * Checks if a Player is in the scope of the Channel, meaning that they are in a world this Channel is effective in.
      * A player not being in scope does not necessarily mean they can't send or receive messages from the Channel.
      * @param player The Player to check
      * @return If the Player is in scope

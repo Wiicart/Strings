@@ -1,0 +1,17 @@
+name: StringsDiscord
+version: '1.6'
+main: com.pedestriamc.strings.discord.StringsDiscord
+api-version: '1.20'
+prefix: StringsDiscord
+author: wiicart
+description: A lightweight chat plugin
+website: wiicart.net
+depend:
+  - Strings
+permissions:
+  strings.discord.mention:
+    description: "Allows for mentioning users on Discord"
+    default: true
+  strings.discord.mention.everyone:
+    description: "Allows for using @everyone & @here in chat."
+    default: op

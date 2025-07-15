@@ -24,7 +24,7 @@ public final class Mentioner {
     private Sound sound;
 
     public Mentioner(@NotNull Strings strings) {
-        this.userUtil = strings.getUserUtil();
+        this.userUtil = strings.users();
 
         Configuration config = strings.getConfiguration();
         pitch = config.getFloat(Option.MENTION_PITCH);
@@ -67,7 +67,7 @@ public final class Mentioner {
         }
     }
 
-    private void sendMention(@NotNull Player player, @NotNull String message) {
+    public void sendMention(@NotNull Player player, @NotNull String message) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
         player.playSound(player.getLocation(), sound, volume, pitch);
     }

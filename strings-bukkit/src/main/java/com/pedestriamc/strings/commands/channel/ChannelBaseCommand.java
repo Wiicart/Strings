@@ -33,7 +33,7 @@ public class ChannelBaseCommand implements CommandExecutor {
     public ChannelBaseCommand(Strings strings) {
         messenger = strings.getMessenger();
         channelLoader = strings.getChannelLoader();
-        userUtil = strings.getUserUtil();
+        userUtil = strings.users();
     }
 
     @Override

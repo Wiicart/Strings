@@ -19,6 +19,11 @@ public final class StringsCommand extends CommandBase {
             StringsTextColor.DARK_AQUA + "Strings" + StringsTextColor.DARK_GRAY + "] " +
             StringsTextColor.WHITE + "Running strings version " + StringsTextColor.GREEN + Strings.VERSION;
 
+    private static final String RELOAD_MESSAGE = StringsTextColor.DARK_GRAY + "[" +
+            StringsTextColor.DARK_AQUA + "Strings" + StringsTextColor.DARK_GRAY + "] " +
+            StringsTextColor.WHITE + "Strings version " + StringsTextColor.GREEN + Strings.VERSION +
+            StringsTextColor.WHITE + " reloaded.";
+
     public StringsCommand(@NotNull Strings strings) {
         HashMap<String, CommandExecutor> map = new HashMap<>();
         BaseCommand baseCommand = new BaseCommand(strings);
@@ -42,7 +47,7 @@ public final class StringsCommand extends CommandBase {
         public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
             if(Permissions.anyOfOrAdmin(sender, "strings.*", "strings.reload") || sender instanceof ConsoleCommandSender) {
                 strings.reload();
-                sender.sendMessage(VERSION_MESSAGE + " " +  StringsTextColor.WHITE + "reloaded.");
+                sender.sendMessage(RELOAD_MESSAGE);
             } else {
                 strings.getMessenger().sendMessage(Message.NO_PERMS, sender);
             }

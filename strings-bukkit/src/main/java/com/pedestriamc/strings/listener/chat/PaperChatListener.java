@@ -34,7 +34,7 @@ public class PaperChatListener extends AbstractChatListener {
     public PaperChatListener(@NotNull Strings strings) {
         super(strings);
         this.strings = strings;
-        userUtil = strings.getUserUtil();
+        userUtil = strings.users();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

@@ -94,14 +94,6 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         monitors = new HashSet<>();
     }
 
-    /**
-     * Provides a Set<Player> of all Players in the Channel's scope.
-     * Used to determine who to send broadcasts to.
-     * @return A populated Set<Player>
-     */
-    @NotNull
-    public abstract Set<Player> getPlayersInScope();
-
     @Override
     public void sendMessage(@NotNull Player player, @NotNull String message) {
         Set<Player> recipients = getRecipients(player);
@@ -206,8 +198,13 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     public void broadcast(@NotNull String message) {
         String finalString = getBroadcastFormat().replace(MESSAGE_PLACEHOLDER, message);
         finalString = ChatColor.translateAlternateColorCodes('&', finalString);
+        broadcastPlain(finalString);
+    }
+
+    @Override
+    public void broadcastPlain(@NotNull String message) {
         for (Player p : getPlayersInScope()) {
-            p.sendMessage(finalString);
+            p.sendMessage(message);
         }
     }
 

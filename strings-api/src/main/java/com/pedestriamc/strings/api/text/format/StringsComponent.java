@@ -50,7 +50,15 @@ public final class StringsComponent implements ComponentLike {
 
         TextComponent.Builder builder = Component.text();
         for(Element<?> element : elements) {
-            builder.append(element.asComponent());
+            if(element instanceof StringsTextColor color) {
+                builder.color(color);
+            } else if(element instanceof StringsTextDecoration decoration) {
+                builder.decorate(decoration.toAdventure());
+            } else if(element instanceof StringsTextReset reset) {
+                builder.append(reset.asComponent());
+            } else if(element instanceof StringsTextComponent text) {
+                builder.append(text.asComponent());
+            }
         }
         component = builder.build();
 

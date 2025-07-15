@@ -12,22 +12,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class JoinListener implements Listener {
+public class PlayerJoinListener implements Listener {
 
     private final UserUtil userUtil;
     private final boolean modifyJoinMessage;
     private final ServerMessages serverMessages;
     private final boolean doMotd;
-    private final boolean doJoinLeaveMessage;
+    private final boolean doJoinMessage;
 
-    public JoinListener(@NotNull Strings strings) {
-        userUtil = strings.getUserUtil();
+    public PlayerJoinListener(@NotNull Strings strings) {
+        userUtil = strings.users();
         serverMessages = strings.getServerMessages();
 
         Configuration configuration = strings.getConfiguration();
-        modifyJoinMessage = configuration.getBoolean(Option.CUSTOM_JOIN_LEAVE);
+        modifyJoinMessage = configuration.getBoolean(Option.USE_CUSTOM_JOIN_LEAVE);
         doMotd = configuration.getBoolean(Option.ENABLE_MOTD);
-        doJoinLeaveMessage = configuration.getBoolean(Option.JOIN_LEAVE);
+        doJoinMessage = configuration.getBoolean(Option.ENABLE_JOIN_LEAVE_MESSAGE);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -35,7 +35,7 @@ public class JoinListener implements Listener {
         Player player = event.getPlayer();
         userUtil.loadUserAsync(player.getUniqueId());
 
-        if(!doJoinLeaveMessage) {
+        if(!doJoinMessage) {
             event.setJoinMessage(null);
         } else if(modifyJoinMessage) {
             event.setJoinMessage(serverMessages.joinMessage(player));

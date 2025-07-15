@@ -22,7 +22,7 @@ public class ServerMessages {
     private final boolean usePAPI;
 
     public ServerMessages(@NotNull Strings strings) {
-        userUtil = strings.getUserUtil();
+        userUtil = strings.users();
         usePAPI = strings.isUsingPlaceholderAPI();
 
         Configuration config = strings.getConfiguration();

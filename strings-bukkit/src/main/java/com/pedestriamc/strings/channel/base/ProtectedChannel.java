@@ -36,6 +36,11 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
+    public Set<Player> getPlayersInScope() {
+        return Set.of();
+    }
+
+    @Override
     public @NotNull Type getType() {
         return Type.PROTECTED;
     }
@@ -78,6 +83,11 @@ public abstract class ProtectedChannel implements Channel {
 
     @Override
     public void broadcast(@NotNull String message) {
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+    }
+
+    @Override
+    public void broadcastPlain(@NotNull String message) {
         throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
     }
 

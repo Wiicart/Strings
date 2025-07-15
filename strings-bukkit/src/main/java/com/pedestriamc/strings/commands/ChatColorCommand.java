@@ -61,7 +61,7 @@ public final class ChatColorCommand implements CommandExecutor {
 
     public ChatColorCommand(@NotNull Strings strings) {
         this.strings = strings;
-        userUtil = strings.getUserUtil();
+        userUtil = strings.users();
         messenger = strings.getMessenger();
     }
 
@@ -99,7 +99,7 @@ public final class ChatColorCommand implements CommandExecutor {
             player = (Player) sender;
         }
 
-        User user = strings.getUserUtil().getUser(player);
+        User user = strings.users().getUser(player);
 
         if(args.length == 1 && args[0].equalsIgnoreCase("reset")) {
             user.setChatColorComponent(StringsComponent.of());

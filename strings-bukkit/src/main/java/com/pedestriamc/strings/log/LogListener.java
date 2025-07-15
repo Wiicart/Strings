@@ -10,8 +10,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 
 /**
  * Stores all Listener classes used for logging.
@@ -34,7 +34,7 @@ final class LogListener {
         @EventHandler
         void onEvent(@NotNull SignChangeEvent event) {
             String log = TEMPLATE
-                    .replace("{date}", new Date().toString())
+                    .replace("{date}", LocalDateTime.now().toString())
                     .replace("{name}", event.getPlayer().getName())
                     .replace("{content}", Arrays.toString(event.getLines()));
             logManager.log(LogType.SIGN, log);
@@ -55,7 +55,7 @@ final class LogListener {
         @EventHandler
         void onEvent(@NotNull PlayerDirectMessageEvent event) {
             String log = TEMPLATE
-                    .replace("{date}", new Date().toString())
+                    .replace("{date}", LocalDateTime.now().toString())
                     .replace("{sender}", event.getSender().getName())
                     .replace("{recipient}", event.getRecipient().getName())
                     .replace("{message}", event.getMessage());
@@ -78,7 +78,7 @@ final class LogListener {
         void onEvent(AsyncPlayerChatEvent event) {
             if(event instanceof ChannelChatEvent chatEvent) {
                 String log = TEMPLATE
-                        .replace("{date}", new Date().toString())
+                        .replace("{date}", LocalDateTime.now().toString())
                         .replace("{name}", event.getPlayer().getName())
                         .replace("{channel}", chatEvent.getChannel().getName())
                         .replace("{message}", event.getMessage());
@@ -101,7 +101,7 @@ final class LogListener {
         @EventHandler
         void onEvent(@NotNull PlayerCommandPreprocessEvent event) {
             String log = TEMPLATE
-                    .replace("{date}", new Date().toString())
+                    .replace("{date}", LocalDateTime.now().toString())
                     .replace("{name}", event.getPlayer().getName())
                     .replace("{command}", event.getMessage());
             logManager.log(LogType.COMMAND, log);
@@ -122,7 +122,7 @@ final class LogListener {
         @EventHandler
         void onEvent(@NotNull PlayerChatFilteredEvent event) {
             String log = TEMPLATE
-                    .replace("{date}", new Date().toString())
+                    .replace("{date}", LocalDateTime.now().toString())
                     .replace("{name}", event.getPlayer().getName())
                     .replace("{original}", event.getOriginalMessage())
                     .replace("{filtered}", event.getFilteredMessage());

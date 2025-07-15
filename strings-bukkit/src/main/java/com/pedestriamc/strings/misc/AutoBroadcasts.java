@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AutoBroadcasts {
+//todo convert to minimessage
+public final class AutoBroadcasts {
 
     private final Strings strings;
     private final FileConfiguration config;

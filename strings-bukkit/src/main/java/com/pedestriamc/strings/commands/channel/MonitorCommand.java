@@ -34,7 +34,7 @@ public class MonitorCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Messenger messenger = strings.getMessenger();
-        UserUtil userUtil = strings.getUserUtil();
+        UserUtil userUtil = strings.users();
         if(!sender.hasPermission("strings.channels.monitor")) {
             messenger.sendMessage(NO_PERMS, sender);
             return true;
@@ -93,7 +93,7 @@ public class MonitorCommand implements CommandExecutor {
             return true;
         }
 
-        User user = strings.getUserUtil().getUser(target);
+        User user = strings.users().getUser(target);
         if(user.getMonitoredChannels().contains(channel)) {
             messenger.sendMessage(ALREADY_MONITORING, generatePlaceholders(sender.getName(), channel.getName()), sender);
             return true;

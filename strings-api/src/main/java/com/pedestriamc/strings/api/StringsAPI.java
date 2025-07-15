@@ -4,6 +4,7 @@ import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -18,7 +19,7 @@ public interface StringsAPI {
      * Provides the {@link ChannelLoader} instance.
      * @return The ChannelLoader.
      */
-    ChannelLoader getChannelLoader();
+    @NotNull ChannelLoader getChannelLoader();
 
     /**
      * Provides a short with the plugin's version number.
@@ -32,7 +33,7 @@ public interface StringsAPI {
      * @return A StringsUser, if it exists.
      */
     @Nullable
-    StringsUser getStringsUser(UUID uuid);
+    StringsUser getStringsUser(@NotNull UUID uuid);
 
     /**
      * Provides a {@link StringsUser} based off a Player if it exists.
@@ -47,7 +48,7 @@ public interface StringsAPI {
      * Modifications to Users do not persist by default, you must save it to persist.
      * @param user The user to be saved.
      */
-    void saveStringsUser(StringsUser user);
+    void saveStringsUser(@NotNull StringsUser user);
 
     /**
      * Returns true if the server is running Paper or a fork.
@@ -61,7 +62,7 @@ public interface StringsAPI {
      * @param subject The player to be mentioned.
      * @param sender The sender of the mention.
      */
-    void mention(Player subject, Player sender);
+    void mention(@NotNull Player subject, @NotNull  Player sender);
 
     /**
      * Mentions a Player.
@@ -69,13 +70,22 @@ public interface StringsAPI {
      * @param subject The StringsUser object of the player to be mentioned.
      * @param sender The StringsUser object of the sender of the mention.
      */
-    void mention(StringsUser subject, StringsUser sender);
+    void mention(@NotNull  StringsUser subject, @NotNull  StringsUser sender);
+
+    /**
+     * Mentions a Player.
+     * Sends a message to the Player's action bar, and plays the mention Sound.
+     *
+     * @param player The Player to mention
+     * @param message The message to display in the Player's actionbar.
+     */
+    void sendMention(@NotNull Player player, @NotNull String message);
 
     /**
      * Provides the {@link Messenger} instance
      * @return The Strings Messenger instance
      */
-    Messenger getMessenger();
+    @NotNull Messenger getMessenger();
 
     /**
      * Provides the StringsModeration instance, offering some moderation methods.

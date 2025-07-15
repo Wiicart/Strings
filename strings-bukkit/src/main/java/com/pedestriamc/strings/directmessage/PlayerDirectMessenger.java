@@ -32,7 +32,7 @@ public class PlayerDirectMessenger {
 
     public PlayerDirectMessenger(@NotNull Strings strings) {
         this.strings = strings;
-        this.userUtil = strings.getUserUtil();
+        this.userUtil = strings.users();
         Configuration config = strings.getConfiguration();
         this.messageFormatSender = config.getString(Option.DM_FORMAT_OUT);
         this.messageFormatRecipient = config.getString(Option.DM_FORMAT_IN);

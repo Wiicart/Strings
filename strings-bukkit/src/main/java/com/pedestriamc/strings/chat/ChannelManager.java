@@ -42,7 +42,7 @@ public final class ChannelManager implements ChannelLoader {
         config = strings.files().getChannelsFileConfig();
         channelSymbols = new HashMap<>();
         priorityChannels = new TreeSet<>();
-        userUtil = strings.getUserUtil();
+        userUtil = strings.users();
     }
 
     public void loadChannels() {
@@ -117,7 +117,7 @@ public final class ChannelManager implements ChannelLoader {
             throw new NoSuchElementException("Channel '" + channel.getName() + "' is not registered.");
         }
 
-        Set<User> users = strings.getUserUtil().getUsers();
+        Set<User> users = strings.users().getUsers();
 
         Channel defaultChannel = Objects.requireNonNullElseGet(getChannel("default"), () -> {
             Channel c = new DefaultChannel(strings, this);

@@ -34,7 +34,7 @@ public class JoinCommand implements CommandExecutor {
     public JoinCommand(@NotNull Strings strings) {
         this.strings = strings;
         messenger = strings.getMessenger();
-        userUtil = strings.getUserUtil();
+        userUtil = strings.users();
         channelLoader = strings.getChannelLoader();
     }
 

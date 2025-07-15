@@ -34,7 +34,7 @@ public class MessageProcessor {
 
     public MessageProcessor(@NotNull Strings strings, Channel channel) {
         this.channel = channel;
-        userUtil = strings.getUserUtil();
+        userUtil = strings.users();
         logger = strings.getLogger();
         Configuration config = strings.getConfiguration();
         usingPlaceholderAPI = strings.isUsingPlaceholderAPI();

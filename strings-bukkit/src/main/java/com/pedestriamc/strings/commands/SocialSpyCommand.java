@@ -22,7 +22,7 @@ public final class SocialSpyCommand implements CommandExecutor {
 
     public SocialSpyCommand(@NotNull Strings strings) {
         messenger = strings.getMessenger();
-        userUtil = strings.getUserUtil();
+        userUtil = strings.users();
         channel = strings.getChannelLoader().getChannel("socialspy");
     }
 

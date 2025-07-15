@@ -15,7 +15,7 @@ import java.io.IOException;
 @SuppressWarnings("unused")
 public final class FileManager {
 
-    private final Strings strings;
+    private final @NotNull Strings strings;
 
     private File broadcastsFile;
     private File messagesFile;
@@ -29,7 +29,7 @@ public final class FileManager {
     private FileConfiguration logsFileConfig;
     private FileConfiguration moderationFileConfig;
 
-    public FileManager(Strings strings) {
+    public FileManager(@NotNull Strings strings) {
         this.strings = strings;
         load();
     }

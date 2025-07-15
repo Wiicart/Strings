@@ -19,7 +19,7 @@ public final class StringsPlaceholderExpansion extends PlaceholderExpansion {
     private final @NotNull UserUtil userUtil;
 
     public StringsPlaceholderExpansion(@NotNull Strings strings) {
-        userUtil = strings.getUserUtil();
+        userUtil = strings.users();
     }
 
     @Override

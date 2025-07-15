@@ -76,10 +76,30 @@ public interface Channel extends Comparable<Channel> {
     Set<Player> getRecipients(@NotNull Player sender);
 
     /**
+     * Provides a Set of Players providing the greatest possible number of players in the scope of the Channel,
+     * including monitors, members,
+     * non-member recipients that are covered by default membership, and anyone else.
+     *
+     * @return A populated Set.
+     */
+    Set<Player> getPlayersInScope();
+
+    /**
      * Broadcasts a message to a Channel.
+     * Broadcast recipients are determined using {@link Channel#getPlayersInScope()}
+     *
      * @param message The broadcast message.
      */
     void broadcast(@NotNull String message);
+
+    /**
+     * Broadcasts a message to the Channel.
+     * Unlike {@link Channel#broadcast(String)}, no formatting will be applied,
+     * and the String will be broadcast to the Channel as is.
+     * Broadcast recipients are determined using {@link Channel#getPlayersInScope()}.
+     * @param message The message to broadcast.
+     */
+    void broadcastPlain(@NotNull String message);
 
     /**
      * Provides the formatting of the Channel.

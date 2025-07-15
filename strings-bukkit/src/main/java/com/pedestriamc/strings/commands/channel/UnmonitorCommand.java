@@ -31,7 +31,7 @@ public class UnmonitorCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Messenger messenger = strings.getMessenger();
-        UserUtil userUtil = strings.getUserUtil();
+        UserUtil userUtil = strings.users();
         if(args.length < 2 || (args.length < 3 && !(sender instanceof Player))) {
             messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
             return true;
@@ -64,7 +64,7 @@ public class UnmonitorCommand implements CommandExecutor {
             return true;
         }
 
-        User user = strings.getUserUtil().getUser(target);
+        User user = strings.users().getUser(target);
         if(!user.getMonitoredChannels().contains(channel)) {
             Map<String, String> placeholders = generatePlaceholders(channel.getName(), target.getName());
             if(!target.equals(sender)) {

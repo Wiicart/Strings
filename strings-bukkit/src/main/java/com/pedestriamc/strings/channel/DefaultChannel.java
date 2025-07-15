@@ -66,7 +66,7 @@ public final class DefaultChannel extends ProtectedChannel {
             return channels.first();
         }
 
-        User user = strings.getUserUtil().getUser(player);
+        User user = strings.users().getUser(player);
         SortedSet<Channel> usersChannels = new TreeSet<>(user.getChannels());
         usersChannels.remove(this);
         if(!usersChannels.isEmpty()) {

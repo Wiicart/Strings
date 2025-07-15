@@ -120,6 +120,7 @@ public final class Strings extends JavaPlugin {
 
     public void reload() {
         onDisable();
+        reloadConfig();
         onLoad();
         onEnable();
         getServer().getPluginManager().callEvent(StringsReloader.createEvent());
@@ -249,8 +250,12 @@ public final class Strings extends JavaPlugin {
         getServer().getScheduler().runTaskAsynchronously(this, runnable);
     }
 
-    public FileManager files() {
+    public @NotNull FileManager files() {
         return fileManager;
+    }
+
+    public @NotNull UserUtil users() {
+        return userUtil;
     }
 
     public Chat getVaultChat() {
@@ -279,10 +284,6 @@ public final class Strings extends JavaPlugin {
 
     public ChannelManager getChannelLoader() {
         return channelLoader;
-    }
-
-    public UserUtil getUserUtil() {
-        return userUtil;
     }
 
     public ServerMessages getServerMessages() {

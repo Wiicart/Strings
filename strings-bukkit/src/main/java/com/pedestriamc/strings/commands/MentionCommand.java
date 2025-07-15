@@ -24,7 +24,7 @@ public final class MentionCommand implements CommandExecutor {
 
     public MentionCommand(Strings strings) {
         messenger = strings.getMessenger();
-        userUtil = strings.getUserUtil();
+        userUtil = strings.users();
     }
 
     @Override

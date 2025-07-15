@@ -19,7 +19,7 @@ public class SpigotChatListener extends AbstractChatListener {
     public SpigotChatListener(@NotNull Strings strings) {
         super(strings);
         defaultChannel = strings.getChannelLoader().getDefaultChannel();
-        userUtil = strings.getUserUtil();
+        userUtil = strings.users();
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

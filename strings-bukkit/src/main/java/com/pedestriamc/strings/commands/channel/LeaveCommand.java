@@ -29,7 +29,7 @@ public class LeaveCommand implements CommandExecutor {
         this.strings = strings;
         channelLoader = strings.getChannelLoader();
         messenger = strings.getMessenger();
-        userUtil = strings.getUserUtil();
+        userUtil = strings.users();
     }
 
     @Override

@@ -1,0 +1,143 @@
+# StringsDiscord - Config
+# author: wiicart
+
+# Bot Token
+# You must generate a Bot token
+# Info: github.com/wiicart/strings/strings-discord/README.md
+token: "0.0.0"
+
+# Global Mode
+# If enabled, all (Strings) Channel-specific functionality will be disabled,
+# and all messages sent to any Channel (with events enabled) will be sent to Discord.
+global: true
+
+# Console Discord Channel
+# Enter the Channel ID of the Discord Channel you want to reflect the server's console.
+# Enter 0 to disable.
+console-id: 0
+
+# Global Channel
+# Ignore if global is set to false.
+# If global mode is enabled, you must define one or more Channel ids to send messages to.
+global-channels:
+# - 000000000000000000 (Replace with a real Discord Channel ID
+
+# Channel Mappings
+# Ignore if global is set to true
+# In the example, "global" represents the name of a Strings channel, and the 0s are a Discord Channel ID.
+channels:
+# global: 000000000000000000
+
+# Discord Format
+# The format used when sending in-game messages to a Discord Channel
+# Placeholders:
+# {channel} - the in-game Strings Channel name
+# {display-name} - the display name of the sender
+# {username} - the username of the sender
+# {prefix} - the prefix of the sender
+# {suffix} - the suffix of the sender
+# {message} - the sender's message
+discord-format: "{display-name} » {message}"
+
+# Minecraft Format
+# The format used when sending Discord messages to the Minecraft server
+# Placeholders:
+# {channel} - the Discord Channel name
+# {username} - the sender's username
+# {nickname} - the sender's nickname
+# {role} - the name of the sender's highest role
+# {message} - the sender's message
+minecraft-format: "&8[&9Discord&8] &f{nickname} &7» &f{message}"
+
+# Mentions from Minecraft
+# Should players be able to mention people in the Discord Server?
+mentions-from-game: true
+
+# Mentions from Discord
+# Should players be able to mention people in-game with the Strings mentioning system?
+# The Strings mentioning system must be enabled,
+# and the mentioned player must have mentions enabled.
+mentions-to-game: true
+
+# Mention Format
+# The formatting used when a Discord user mentions a player in-game.
+# Placeholders:
+# - {username} - The Discord sender's username
+# - {nickname} - The Discord sender's nickname
+mention-format: "&e[Discord] {sender} mentioned you."
+
+# Server Online Message
+# Sent to Discord after all plugins are loaded and the server is online.
+online-message: ":green_circle: **Server Online**"
+
+# Server Offline Message
+# Sent to Discord when the Server (or the plugin) is disabled.
+offline-message: ":red_circle: **Server Offline**"
+
+
+# Bot Profile
+
+# Bot Activity
+# What should the bot be doing?
+# (this is only the Playing/Streaming/etc part,
+# you can specify what in the next option)
+# Options:
+# - playing
+# - listening
+# - watching
+# - competing
+# - custom (no prefix)
+activity: playing
+
+# Bot Activity Subject
+# e.g., Minecraft, YouTube, etc.
+# This goes after the activity defined above.
+activity-item: "Minecraft"
+
+# Status
+# What should the Bot's status be?
+# Options:
+# - online
+# - offline
+# - invisible
+# - idle
+online-status: online
+
+# Discord Join/Leave Messages
+# Should join and leave messages be sent to Discord?
+send-join-leave: true
+
+# Advancement Messages
+# Should advancement messages be sent to Discord?
+send-advancements: true
+
+# Discord Death Messages
+# Should player death messages be sent to Discord?
+send-death-messages: true
+
+# Avatar Handling URL
+# Used when a player joins or leaves.
+# Ensure {uuid} is in the URL so player-specific images can be loaded.
+avatar-url: "https://mineskin.eu/armor/bust/{uuid}/35.png"
+
+
+# Join Message (On Discord)
+# Placeholders:
+# - {username} - the player's username
+# - {display-name} - the player's display name
+# - {prefix} - the player's prefix
+# - {suffix} - the player's suffix
+join-message: "{username} joined the server"
+
+# Leave Message (On Discord)
+# Placeholders:
+# - {username} - the player's username
+# - {display-name} - the player's display name
+# - {prefix} - the player's prefix
+# - {suffix} - the player's suffix
+leave-message: "{username} left the server"
+
+# /discord command
+# Here you can configure what's sent when a player runs the command /discord
+# Set this to "" to disable
+discord-cmd-message: "&9discord.com"

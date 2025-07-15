@@ -11,27 +11,27 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class LeaveListener implements Listener {
+public class PlayerQuitListener implements Listener {
 
     private final UserUtil userUtil;
     private final boolean modifyLeaveMessage;
     private final ServerMessages serverMessages;
-    private final boolean doJoinLeaveMessage;
+    private final boolean doQuitMessage;
 
-    public LeaveListener(@NotNull Strings strings) {
-        userUtil = strings.getUserUtil();
+    public PlayerQuitListener(@NotNull Strings strings) {
+        userUtil = strings.users();
         serverMessages = strings.getServerMessages();
 
         Configuration config = strings.getConfiguration();
-        modifyLeaveMessage = config.getBoolean(Option.JOIN_LEAVE);
-        doJoinLeaveMessage = config.getBoolean(Option.CUSTOM_JOIN_LEAVE);
+        modifyLeaveMessage = config.getBoolean(Option.USE_CUSTOM_JOIN_LEAVE);
+        doQuitMessage = config.getBoolean(Option.ENABLE_JOIN_LEAVE_MESSAGE);
     }
 
     @EventHandler
     void onEvent(@NotNull PlayerQuitEvent event) {
         User user = userUtil.getUser(event.getPlayer());
 
-        if(!doJoinLeaveMessage) {
+        if(!doQuitMessage) {
             event.setQuitMessage(null);
         } else if(modifyLeaveMessage) {
             event.setQuitMessage(serverMessages.leaveMessage(event.getPlayer()));

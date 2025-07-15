@@ -12,6 +12,7 @@
     <artifactId>strings-bukkit</artifactId>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <kotlin.version>2.0.21</kotlin.version>
@@ -180,7 +181,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
+            <version>5.13.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

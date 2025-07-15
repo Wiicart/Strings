@@ -22,11 +22,11 @@ public final class StringsImpl implements StringsAPI {
     public StringsImpl(@NotNull Strings strings) {
         this.strings = strings;
         mentioner = strings.getMentioner();
-        userUtil = strings.getUserUtil();
+        userUtil = strings.users();
     }
 
     @Override
-    public @NotNull StringsUser getStringsUser(UUID uuid) {
+    public @NotNull StringsUser getStringsUser(@NotNull UUID uuid) {
         return userUtil.getUser(uuid);
     }
 
@@ -36,7 +36,7 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public void saveStringsUser(StringsUser user) {
+    public void saveStringsUser(@NotNull StringsUser user) {
         if(user instanceof User u) {
             userUtil.saveUser(u);
         }
@@ -48,7 +48,7 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public void mention(Player subject, Player sender) {
+    public void mention(@NotNull Player subject, @NotNull Player sender) {
         mentioner.mention(subject, sender);
     }
 
@@ -58,7 +58,12 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public ChannelLoader getChannelLoader() {
+    public void sendMention(@NotNull Player player, @NotNull String message) {
+        mentioner.sendMention(player, message);
+    }
+
+    @Override
+    public @NotNull ChannelLoader getChannelLoader() {
         return strings.getChannelLoader();
     }
 
@@ -66,7 +71,7 @@ public final class StringsImpl implements StringsAPI {
         return Strings.PLUGIN_NUM;
     }
 
-    public Messenger getMessenger() {
+    public @NotNull Messenger getMessenger() {
         return strings.getMessenger();
     }
 

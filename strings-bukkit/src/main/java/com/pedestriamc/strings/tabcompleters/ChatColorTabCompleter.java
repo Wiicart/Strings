@@ -20,7 +20,7 @@ public class ChatColorTabCompleter extends AbstractTabCompleter {
     );
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
         return switch (args.length) {
             case 0 -> COLORS;
             case 1 -> filter(COLORS, args[0]);

@@ -6,6 +6,7 @@ import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.api.event.moderation.PlayerChatFilteredEvent;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.message.Message;
+import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import com.pedestriamc.strings.moderation.manager.ChatFilter;
 import com.pedestriamc.strings.moderation.manager.LinkFilter;
@@ -17,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +32,7 @@ public class ChatListener implements Listener {
     private final Map<String, String> cooldownPlaceholders;
     private final LinkFilter linkFilter;
 
-    public ChatListener(StringsModeration stringsModeration) {
+    public ChatListener(@NotNull StringsModeration stringsModeration) {
         this.stringsModeration = stringsModeration;
         cooldownPlaceholders = new HashMap<>();
         cooldownPlaceholders.put("{cooldown_length}", (String) stringsModeration.getConfig().get("cooldown-time"));
@@ -69,7 +71,6 @@ public class ChatListener implements Listener {
             return;
         }
 
-
         if(noPermOrAdmin(player, "strings.chat.filterbypass")) {
             String original = message;
             if(channel.isUrlFiltering()) {
@@ -99,12 +100,7 @@ public class ChatListener implements Listener {
         event.setMessage(message);
     }
 
-    private boolean noPermOrAdmin(Player player, String perm) {
-        return
-                !player.hasPermission(perm) &&
-                !player.hasPermission("*") &&
-                !player.hasPermission("strings.*") &&
-                !player.isOp() &&
-                !player.hasPermission("strings.chat.*");
+    private boolean noPermOrAdmin(@NotNull Player player, @NotNull  String perm) {
+        return !Permissions.anyOfOrAdmin(player, "strings.*", "strings.chat.*", perm);
     }
 }

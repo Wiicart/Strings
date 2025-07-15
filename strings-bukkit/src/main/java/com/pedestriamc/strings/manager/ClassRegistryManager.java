@@ -18,8 +18,8 @@ import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.listener.chat.PaperChatListener;
 import com.pedestriamc.strings.listener.chat.SpigotChatListener;
 import com.pedestriamc.strings.listener.DirectMessageListener;
-import com.pedestriamc.strings.listener.JoinListener;
-import com.pedestriamc.strings.listener.LeaveListener;
+import com.pedestriamc.strings.listener.PlayerJoinListener;
+import com.pedestriamc.strings.listener.PlayerQuitListener;
 import com.pedestriamc.strings.listener.mention.LuckPermsMentionListener;
 import com.pedestriamc.strings.listener.mention.MentionListener;
 import com.pedestriamc.strings.tabcompleters.ChannelTabCompleter;
@@ -134,8 +134,8 @@ public class ClassRegistryManager {
             registerListener(new SpigotChatListener(strings));
         }
 
-        registerListener(new JoinListener(strings));
-        registerListener(new LeaveListener(strings));
+        registerListener(new PlayerJoinListener(strings));
+        registerListener(new PlayerQuitListener(strings));
         registerListener(new DirectMessageListener(strings));
 
         if(strings.getConfiguration().getBoolean(ENABLE_MENTIONS)) {
