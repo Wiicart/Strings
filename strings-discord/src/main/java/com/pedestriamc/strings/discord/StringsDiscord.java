@@ -52,7 +52,14 @@ public final class StringsDiscord extends JavaPlugin {
     @Override
     public void onLoad() {
         saveDefaultConfig();
-        settings = new Settings(this);
+        try {
+            settings = new Settings(this);
+        } catch(Exception e) {
+            getLogger().info("Failed to load discord.yml, disabling...");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         initJda();
         getLogger().info("Connecting to Bot...");
     }

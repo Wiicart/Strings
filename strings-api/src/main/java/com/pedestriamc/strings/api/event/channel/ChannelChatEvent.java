@@ -2,6 +2,7 @@ package com.pedestriamc.strings.api.event.channel;
 
 import com.pedestriamc.strings.api.channel.Channel;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +14,21 @@ import java.util.Set;
  */
 @SuppressWarnings("unused")
 public final class ChannelChatEvent extends AsyncPlayerChatEvent {
+
+    // todo update moderation and discord
+    private static final boolean IS_PAPER;
+    static {
+        boolean paperDetected = false;
+        try {
+            Class.forName("io.papermc.paper.event.player.AsyncChatEvent");
+            paperDetected = true;
+        } catch(ClassNotFoundException ignored) {}
+
+        IS_PAPER = paperDetected;
+    }
+
+    // If Paper - supply own HandlerList, otherwise resort to super class.
+    private static final HandlerList HANDLERS = new HandlerList();
 
     private final Channel channel;
     private final boolean cancellable;
@@ -52,4 +68,22 @@ public final class ChannelChatEvent extends AsyncPlayerChatEvent {
         return cancellable && super.isCancelled();
     }
 
+    @NotNull
+    @Override
+    public HandlerList getHandlers() {
+        if (IS_PAPER) {
+            return HANDLERS;
+        } else {
+            return super.getHandlers();
+        }
+    }
+
+    @NotNull
+    public static HandlerList getHandlerList() {
+        if (IS_PAPER) {
+            return HANDLERS;
+        } else {
+            return AsyncPlayerChatEvent.getHandlerList();
+        }
+    }
 }

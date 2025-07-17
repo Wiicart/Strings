@@ -26,7 +26,7 @@ public class ChannelChatRenderer extends MessageProcessor implements ChatRendere
 
     @Override
     public @NotNull Component render(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {
-        String template = generateTemplate(source);
+        String template = generateTemplateNonChatColor(source);
         Component component = ComponentConverter.fromString(template);
         return setPlaceholder(component, "{message}", processMessage(source, message));
     }

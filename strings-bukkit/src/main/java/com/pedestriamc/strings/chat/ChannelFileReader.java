@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-final class ChannelFileReader {
+class ChannelFileReader {
 
     private final @NotNull Strings strings;
     private final @NotNull ChannelManager manager;

@@ -3,21 +3,41 @@ package com.pedestriamc.strings.discord.configuration;
 import com.pedestriamc.strings.discord.StringsDiscord;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.EnumMap;
 
 public final class Settings {
+
+    private final StringsDiscord stringsDiscord;
 
     private final EnumMap<Option.Text, String> stringMap = new EnumMap<>(Option.Text.class);
 
     private final EnumMap<Option.Bool, Boolean> booleanMap = new EnumMap<>(Option.Bool.class);
 
-    public Settings(@NotNull StringsDiscord strings) {
-        FileConfiguration config = strings.getConfig();
+    public Settings(@NotNull StringsDiscord strings) throws IllegalStateException {
+        stringsDiscord = strings;
+        FileConfiguration config = getConfig();
 
         loadStrings(config);
         loadBooleans(config);
+    }
+
+    private @NotNull FileConfiguration getConfig() throws IllegalStateException {
+        Plugin plugin = stringsDiscord.getServer().getPluginManager().getPlugin("Strings");
+        if (plugin == null) {
+            throw new IllegalStateException("Strings plugin not found");
+        }
+
+        File configFile = new File(plugin.getDataFolder(), "discord.yml");
+        if (configFile.exists()) {
+            return YamlConfiguration.loadConfiguration(configFile);
+        } else {
+            throw new IllegalStateException("Failed to load discord.yml");
+        }
     }
 
     private void loadStrings(@NotNull FileConfiguration config) {
