@@ -81,7 +81,7 @@ public class StrictProximityChannel extends AbstractLocalChannel {
             }
         }
 
-        return filterMutes(recipients);
+        return filterMutesAndIgnores(sender, recipients);
     }
 
     @Override

@@ -159,6 +159,13 @@ public interface StringsUser {
     void setMentionsEnabled(boolean mentionsEnabled);
 
     /**
+     * Tells if this User is ignoring another User.
+     * @param other The User to check for being ignored
+     * @return true/false
+     */
+    boolean isIgnoring(@NotNull StringsUser other);
+
+    /**
      * Ignores a StringsUser.
      * @param user The StringsUser to ignore.
      */

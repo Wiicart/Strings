@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
 public class IgnoreTabCompleter extends AbstractTabCompleter {
 
     @Override
@@ -14,6 +13,11 @@ public class IgnoreTabCompleter extends AbstractTabCompleter {
         return switch(args.length) {
             case 0 -> getPlayerNames();
             case 1 -> filter(getPlayerNames(), args[0]);
+            case 2 -> {
+                List<String> names = getPlayerNames();
+                names.remove(args[0]);
+                yield filter(names, args[1]);
+            }
             default -> EMPTY;
         };
     }

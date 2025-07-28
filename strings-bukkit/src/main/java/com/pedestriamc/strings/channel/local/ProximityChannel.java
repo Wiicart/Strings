@@ -48,7 +48,7 @@ public class ProximityChannel extends AbstractLocalChannel {
     public @NotNull Set<StringsUser> getRecipients(@NotNull StringsUser sender) {
         Set<StringsUser> members = getMembers();
         if(members.contains(sender)) {
-            return filterMutes(universalSet());
+            return filterMutesAndIgnores(sender, universalSet());
         }
 
         Player player = User.of(sender).getPlayer();
@@ -71,7 +71,7 @@ public class ProximityChannel extends AbstractLocalChannel {
             }
         }
 
-        return filterMutes(recipients);
+        return filterMutesAndIgnores(sender, recipients);
     }
 
     @Override

@@ -48,7 +48,7 @@ public class WorldChannel extends AbstractLocalChannel {
             }
         }
         
-        return filterMutes(recipients);
+        return filterMutesAndIgnores(sender, recipients);
     }
 
     @Override

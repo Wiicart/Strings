@@ -28,23 +28,28 @@ public final class DirectMessageCommand implements CommandExecutor {
             sender.sendMessage("[Strings] This command can only be used by players!");
             return true;
         }
+
         if(!(sender.hasPermission("strings.chat.msg") || sender.hasPermission("strings.chat.*") || sender.hasPermission("strings.*"))) {
             messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
+
         if(args.length < 2) {
             messenger.sendMessage(INSUFFICIENT_ARGS, sender);
             return true;
         }
+
         Player recipient = Bukkit.getPlayer(args[0]);
         if(recipient == null) {
             messenger.sendMessage(UNKNOWN_PLAYER, sender);
             return true;
         }
+
         if(recipient.equals(sender)) {
             messenger.sendMessage(SELF_MESSAGE, sender);
             return true;
         }
+
         StringBuilder stringBuilder = new StringBuilder();
         for(int i = 1; i < args.length; i++) {
             stringBuilder.append(args[i]);

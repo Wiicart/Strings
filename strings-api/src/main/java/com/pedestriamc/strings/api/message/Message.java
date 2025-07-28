@@ -70,7 +70,12 @@ public enum Message {
     INELIGIBLE_SENDER("ineligible-sender"),
     DEFAULT_RESTRICTED("default-restricted"),
     NO_PERMS_MODIFY_OTHER("no-perms-other"),
-    CANNOT_USE_ON_SELF("use-on-other");
+    CANNOT_USE_ON_SELF("use-on-other"),
+    PLAYER_IGNORED("player-ignored"),
+    PLAYER_IGNORED_OTHER("ignored-other"),
+    CANT_IGNORE("not-ignorable"),
+    CANT_IGNORE_SELF("cant-ignore-self"),
+    CANT_IGNORE_SELF_OTHER("cant-ignore-self-other");
 
     private final String key;
 

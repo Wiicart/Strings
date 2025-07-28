@@ -11,15 +11,37 @@ import java.util.Set;
  */
 public interface Locality<T> {
 
+    /**
+     * Converts a World to a Locality
+     * @param w The world
+     * @return The world wrapped as a <code>Locality</code>
+     * @param <W> The World class
+     */
+    static <W> @NotNull Locality<W> of(W w) {
+        return new LocalityImpl<>(w);
+    }
+
+    /**
+     * Converts a Set of Worlds to a Set of Localities
+     * @param worlds The original Set
+     * @return The Set converted to Localities
+     * @param <W> The World class
+     */
     static <W> @NotNull Set<Locality<W>> convertToLocalities(@NotNull Set<W> worlds) {
         Set<Locality<W>> result = new HashSet<>();
         for (W world : worlds) {
-            result.add(new LocalityImpl<>(world));
+            result.add(of(world));
         }
 
         return result;
     }
 
+    /**
+     * Converts a Set of Localities to a Set of Worlds
+     * @param localities The original Set
+     * @return The Set converted to Worlds
+     * @param <W> The World class
+     */
     static <W> @NotNull Set<W> convertToWorlds(@NotNull Set<Locality<W>> localities) {
         Set<W> result = new HashSet<>();
         for (Locality<W> locality : localities) {

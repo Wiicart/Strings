@@ -13,9 +13,14 @@ import org.jetbrains.annotations.NotNull;
 public final class PlayerDirectMessageEvent extends Event implements Cancellable {
 
     public static final HandlerList HANDLER_LIST = new HandlerList();
+
     private String message;
+
     private final Player sender;
     private final Player recipient;
+
+    private final boolean isIgnored;
+
     private boolean isCancelled;
 
     /**
@@ -25,10 +30,11 @@ public final class PlayerDirectMessageEvent extends Event implements Cancellable
      * @param message The message being sent.
      */
     @ApiStatus.Internal
-    public PlayerDirectMessageEvent(Player sender, Player recipient, String message) {
+    public PlayerDirectMessageEvent(Player sender, Player recipient, String message, boolean isIgnored) {
         this.sender = sender;
         this.recipient = recipient;
         this.message = message;
+        this.isIgnored = isIgnored;
     }
 
     @SuppressWarnings("unused")
@@ -93,5 +99,13 @@ public final class PlayerDirectMessageEvent extends Event implements Cancellable
      */
     public Player getRecipient() {
         return this.recipient;
+    }
+
+    /**
+     * Tells if the message will be ignored, because the recipient is ignoring the sender.
+     * @return true/false
+     */
+    public boolean isIgnored() {
+        return isIgnored;
     }
 }

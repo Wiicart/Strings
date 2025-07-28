@@ -174,11 +174,30 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     @NotNull
     protected Set<StringsUser> filterMutes(@NotNull Set<StringsUser> players) {
-        return players.stream().filter(
+        return players.stream()
+                .filter(
                 p -> {
                     User user = userUtil.getUser(p.getUniqueId());
                     return !user.hasChannelMuted(this);
-                }).collect(Collectors.toSet());
+                })
+                .collect(Collectors.toSet());
+    }
+
+    protected Set<StringsUser> filterIgnores(@NotNull StringsUser sender, @NotNull Set<StringsUser> players) {
+        return players.stream()
+                .filter(
+                p -> {
+                    User user = userUtil.getUser(p.getUniqueId());
+                    return !user.isIgnoring(sender);
+                })
+                .collect(Collectors.toSet());
+    }
+
+    protected Set<StringsUser> filterMutesAndIgnores(@NotNull StringsUser sender, @NotNull Set<StringsUser> players) {
+        players = filterIgnores(sender, players);
+        players = filterMutes(players);
+
+        return players;
     }
 
     protected UserUtil getUserUtil() {

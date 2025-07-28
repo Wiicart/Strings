@@ -46,7 +46,7 @@ public final class StringChannel extends AbstractChannel {
             }
         }
 
-        return filterMutes(recipients);
+        return filterMutesAndIgnores(sender, recipients);
     }
 
     @Override

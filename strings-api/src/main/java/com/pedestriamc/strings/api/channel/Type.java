@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.api.channel;
 
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
-import org.bukkit.entity.Player;
+import com.pedestriamc.strings.api.user.StringsUser;
 
 /**
  * Represents all {@link Channel} types.
@@ -26,7 +26,7 @@ public enum Type {
     /**
      * Represents the {@code DefaultChannel}, a channel that does not process any messages; it instead
      * forwards them to a different channel.
-     * The final destination can be determined with {@link Channel#resolve(Player)}
+     * The final destination can be determined with {@link Channel#resolve(StringsUser)}
      */
     DEFAULT(),
     /**

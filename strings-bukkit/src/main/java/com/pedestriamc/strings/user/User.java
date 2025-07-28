@@ -321,8 +321,16 @@ public final class User implements StringsUser {
         return this.mentionsEnabled;
     }
 
+    public boolean isIgnoring(@NotNull StringsUser other) {
+        return getIgnoredPlayers().contains(other.getUniqueId());
+    }
+
     public void ignore(@NotNull StringsUser user) {
         Objects.requireNonNull(user);
+        if (user.equals(this)) {
+            return;
+        }
+
         ignored.add(user.getUniqueId());
         dirty = true;
     }

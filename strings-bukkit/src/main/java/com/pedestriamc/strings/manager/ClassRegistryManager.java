@@ -6,6 +6,7 @@ import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.commands.BroadcastCommand;
 import com.pedestriamc.strings.commands.ChatColorCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
+import com.pedestriamc.strings.commands.IgnoreCommand;
 import com.pedestriamc.strings.commands.message.DirectMessageCommand;
 import com.pedestriamc.strings.commands.MessengerCommand;
 import com.pedestriamc.strings.commands.HelpOPCommand;
@@ -25,6 +26,7 @@ import com.pedestriamc.strings.listener.mention.MentionListener;
 import com.pedestriamc.strings.tabcompleters.ChannelTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ChatColorTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ClearChatTabCompleter;
+import com.pedestriamc.strings.tabcompleters.IgnoreTabCompleter;
 import com.pedestriamc.strings.tabcompleters.MentionCommandTabCompleter;
 import com.pedestriamc.strings.tabcompleters.MessageTabCompleter;
 import com.pedestriamc.strings.tabcompleters.SocialSpyTabCompleter;
@@ -60,6 +62,8 @@ public class ClassRegistryManager {
         Configuration config = strings.getConfiguration();
 
         registerCommand("strings", new StringsCommand(strings), new StringsTabCompleter());
+
+        registerCommand("ignore", new IgnoreCommand(strings), new IgnoreTabCompleter());
 
         BroadcastCommand broadcastCommand = new BroadcastCommand(strings);
         registerCommand("broadcast", broadcastCommand, null);

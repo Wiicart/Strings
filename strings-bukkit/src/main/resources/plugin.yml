@@ -57,6 +57,9 @@ commands:
   mentions:
     description: "Toggles whether you receive mentions or not"
     usage: "/mentions <enable|disable>"
+  ignore:
+    description: "Allows ignoring another player"
+    usage: "/ignore <player-to-ignore> <player-ignoring (optional)>"
 permissions:
   strings.*:
     description: "All Strings permissions"
@@ -159,3 +162,14 @@ permissions:
   strings.channels.<channel>.broadcast:
     description: "Allows players to broadcast a message to a Channel."
     default: op
+  strings.chat.ignore:
+    description: "Allows ignoring players."
+    default: true
+    children:
+      strings.chat.ignore.other: false
+  strings.chat.ignore.other:
+    default: op
+    description: "Allows ignoring a Player for another Player."
+  strings.chat.unignorable:
+    default: op
+    description: "Makes it so that Players cannot ignore this Player."

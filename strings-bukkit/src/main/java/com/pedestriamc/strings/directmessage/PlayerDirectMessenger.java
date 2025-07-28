@@ -73,13 +73,15 @@ public class PlayerDirectMessenger {
         senderString = color(senderString);
         recipientString = color(recipientString);
 
-        PlayerDirectMessageEvent event = new PlayerDirectMessageEvent(sender, recipient, message);
+        boolean ignored = isRecipientIgnoring(sender, recipient);
+
+        PlayerDirectMessageEvent event = new PlayerDirectMessageEvent(sender, recipient, message, ignored);
         Bukkit.getPluginManager().callEvent(event);
         if(!event.isCancelled()) {
             sender.sendMessage(senderString);
             replyList.put(recipient, sender);
 
-            if(!hasRecipientIgnoredSender(sender, recipient)) {
+            if(!ignored) {
                 recipient.sendMessage(recipientString);
             }
         }
@@ -105,7 +107,7 @@ public class PlayerDirectMessenger {
     }
 
     // Checks if the target has ignored the message sender
-    private boolean hasRecipientIgnoredSender(@NotNull Player sender, @NotNull Player recipient) {
+    private boolean isRecipientIgnoring(@NotNull Player sender, @NotNull Player recipient) {
         return userUtil.getUser(recipient).getIgnoredPlayers().contains(sender.getUniqueId());
     }
 }

@@ -68,7 +68,7 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Provides the recipients of a message if the sender were to send a message in the Channel.
-     * All implementations should account for Channel mutes.
+     * Implementations should account for Channel mutes & User ignores.
      *
      * @param user The message sender.
      * @return A Set of Players.
