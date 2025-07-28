@@ -5,7 +5,6 @@ import com.pedestriamc.strings.api.exception.ChannelUnsupportedOperationExceptio
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Type;
-import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,10 +17,10 @@ import java.util.Set;
  */
 public abstract class ProtectedChannel implements Channel {
 
-    private static final String UNIMPLEMENTED = "ProtectedChannel unimplemented operation.";
+    private static final String UNIMPLEMENTED_MESSAGE = "ProtectedChannel unimplemented operation.";
     private String name;
 
-    protected ProtectedChannel(String name) {
+    protected ProtectedChannel(@NotNull String name) {
         this.name = name;
     }
 
@@ -36,7 +35,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public Set<Player> getPlayersInScope() {
+    public Set<StringsUser> getPlayersInScope() {
         return Set.of();
     }
 
@@ -51,7 +50,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public Set<Player> getRecipients(@NotNull Player sender) {
+    public Set<StringsUser> getRecipients(@NotNull StringsUser sender) {
         return Collections.emptySet();
     }
 
@@ -71,109 +70,99 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public Channel resolve(@NotNull Player player) {
+    public @NotNull Channel resolve(@NotNull StringsUser user) {
         return this;
     }
 
     // Unimplemented methods from this point on.
     @Override
-    public void sendMessage(@NotNull Player player, @NotNull String message) {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+    public void sendMessage(@NotNull StringsUser user, @NotNull String message) {
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public void broadcast(@NotNull String message) {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public void broadcastPlain(@NotNull String message) {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public @NotNull String getFormat() {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public @NotNull String getBroadcastFormat() {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public void setFormat(@NotNull String format) {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public String getDefaultColor() {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public void setDefaultColor(String defaultColor) {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public boolean isUrlFiltering() {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public void setUrlFilter(boolean doUrlFilter) {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public boolean isProfanityFiltering() {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public void setProfanityFilter(boolean doProfanityFilter) {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public boolean isCooldownEnabled() {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public void setDoCooldown(boolean doCooldown) {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
-    }
-
-    @Override
-    public void addMember(@NotNull Player player) {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public void addMember(@NotNull StringsUser user) {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
-    }
-
-    @Override
-    public void removeMember(@NotNull Player player) {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public void removeMember(@NotNull StringsUser user) {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
-    public Set<Player> getMembers() {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+    public Set<StringsUser> getMembers() {
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override
     public boolean callsEvents() {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED, this);
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
     @Override

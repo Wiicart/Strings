@@ -2,6 +2,7 @@ package com.pedestriamc.strings.mock;
 
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Type;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.channel.base.ProtectedChannel;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
@@ -11,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 public class MockChannel extends ProtectedChannel {
 
     @Override
-    public void sendMessage(@NotNull Player player, @NotNull String message) {
-        System.out.println("<" + player.getName() + "> " + message);
+    public void sendMessage(@NotNull StringsUser user, @NotNull String message) {
+        System.out.println("<" + user.getName() + "> " + message);
     }
 
     public MockChannel(String name) {

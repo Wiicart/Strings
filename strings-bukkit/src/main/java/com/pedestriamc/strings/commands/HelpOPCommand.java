@@ -4,6 +4,7 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.utlity.Permissions;
+import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,10 +19,12 @@ import static com.pedestriamc.strings.api.message.Message.*;
  */
 public final class HelpOPCommand implements CommandExecutor {
 
+    private final UserUtil userUtil;
     private final Channel helpOPChannel;
     private final Messenger messenger;
 
     public HelpOPCommand(@NotNull Strings strings) {
+        this.userUtil = strings.users();
         this.helpOPChannel = strings.getChannelLoader().getChannel("helpop");
         this.messenger = strings.getMessenger();
     }
@@ -49,7 +52,7 @@ public final class HelpOPCommand implements CommandExecutor {
             builder.append(" ");
         }
 
-        helpOPChannel.sendMessage(player, builder.toString());
+        helpOPChannel.sendMessage(userUtil.getUser(player), builder.toString());
         return true;
     }
 }

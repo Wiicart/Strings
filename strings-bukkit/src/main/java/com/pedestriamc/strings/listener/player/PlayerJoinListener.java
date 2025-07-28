@@ -1,10 +1,11 @@
-package com.pedestriamc.strings.listener;
+package com.pedestriamc.strings.listener.player;
 
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.configuration.Option;
 import com.pedestriamc.strings.user.util.UserUtil;
 import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.Strings;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,6 +33,8 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     void onEvent(@NotNull PlayerJoinEvent event) {
+        Bukkit.getLogger().info("Using custom join leave message: " + modifyJoinMessage);
+        Bukkit.getLogger().info("Are any join messages enabled: " + doJoinMessage);
         Player player = event.getPlayer();
         userUtil.loadUserAsync(player.getUniqueId());
 

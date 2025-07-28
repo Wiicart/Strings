@@ -7,7 +7,9 @@ import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.chat.ChannelManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.ApiStatus;
@@ -41,9 +43,11 @@ public final class User implements StringsUser {
     private final @NotNull UUID uuid;
     private final @NotNull Player player;
     private final @NotNull String name;
+
     private final @NotNull Set<Channel> channels;
     private final @NotNull Set<Monitorable> monitored;
     private final @NotNull Set<UUID> ignored;
+    private final @NotNull Set<Channel> mutes;
 
     private @NotNull Channel activeChannel;
     private @NotNull StringsComponent chatColorComponent;
@@ -51,14 +55,25 @@ public final class User implements StringsUser {
     private @Nullable String prefix;
     private @Nullable String suffix;
     private @Nullable String displayName;
-    private boolean mentionsEnabled;
 
-    @Nullable
-    public static User of(final @NotNull StringsUser user) {
+    private boolean mentionsEnabled;
+    private boolean msgEnabled;
+
+    public static User of(@NotNull StringsUser user) {
         if(user instanceof User u) {
             return u;
         }
-        return null;
+
+        throw new RuntimeException("Provided User does not implement StringsBukkit User.");
+    }
+
+    public static Player playerOf(@NotNull StringsUser user) {
+        if(user instanceof User u) {
+            return u.getPlayer();
+        } else {
+            UUID uniqueId = user.getUniqueId();
+            return Bukkit.getPlayer(uniqueId);
+        }
     }
 
     @Contract(value = "_, _, _ -> new", pure = true)
@@ -79,9 +94,11 @@ public final class User implements StringsUser {
         this.displayName = Objects.requireNonNullElse(builder.displayName, "");
         this.activeChannel = builder.activeChannel != null ? builder.activeChannel : channelLoader.getDefaultChannel();
         this.mentionsEnabled = builder.mentionsEnabled;
+        this.msgEnabled = builder.msgEnabled;
         this.channels = Objects.requireNonNullElseGet(builder.channels, HashSet::new);
         this.monitored = Objects.requireNonNullElseGet(builder.monitoredChannels, HashSet::new);
         this.ignored = Objects.requireNonNullElseGet(builder.ignored, HashSet::new);
+        this.mutes = Objects.requireNonNullElseGet(builder.mutes, HashSet::new);
 
         // Join the DefaultChannel if not a member of any other Channels
         if(channels.isEmpty()) {
@@ -97,10 +114,11 @@ public final class User implements StringsUser {
      */
     public void logOff() {
         for(Channel channel : channels) {
-            channel.removeMember(getPlayer());
+            channel.removeMember(this);
         }
+
         for(Monitorable monitorable : monitored) {
-            monitorable.removeMonitor(getPlayer());
+            monitorable.removeMonitor(this);
         }
     }
 
@@ -121,7 +139,7 @@ public final class User implements StringsUser {
      * @param message The message.
      */
     @Override
-    public void message(@NotNull String message) {
+    public void sendMessage(@NotNull String message) {
         getPlayer().sendMessage(message);
     }
 
@@ -129,6 +147,7 @@ public final class User implements StringsUser {
 
     // signifies data has changed for the data cache.
     private volatile boolean dirty = true;
+
     // cache for getData
     private Map<String, Object> data;
 
@@ -147,38 +166,32 @@ public final class User implements StringsUser {
                 map.put("active-channel", activeChannel.getName());
                 map.put("channels", getNames(channels));
                 map.put("monitored-channels", getNames(monitored));
+                map.put("muted-channels", getNames(mutes));
                 map.put("ignored-players", new ArrayList<>(ignored));
                 map.put("mentions-enabled", mentionsEnabled);
+                map.put("msg-enabled", msgEnabled);
                 data = map;
             }
+
             return data;
         }
     }
 
 
 
-    /**
-     * Provides the User's UUID.
-     * @return The UUID.
-     */
+    public @NotNull Player getPlayer() {
+        return player;
+    }
+
+    public @NotNull World getWorld() {
+        return player.getWorld();
+    }
+
     @Override
     public @NotNull UUID getUniqueId() {
         return uuid;
     }
 
-    /**
-     * Provides the Player aligned to the User.
-     * @return The player.
-     */
-    @Override
-    public @NotNull Player getPlayer() {
-        return player;
-    }
-
-    /**
-     * Provides the username of the User.
-     * @return The username.
-     */
     @Override
     public @NotNull String getName() {
         return name;
@@ -237,11 +250,6 @@ public final class User implements StringsUser {
         return chatColor;
     }
 
-
-    /**
-     * Sets the player's display name and updates the User, so it's saved.
-     * @param displayName The new display name.
-     */
     @Override
     public void setDisplayName(final @NotNull String displayName) {
         this.displayName = displayName;
@@ -249,11 +257,6 @@ public final class User implements StringsUser {
         dirty = true;
     }
 
-    /**
-     * Provides the User's display name.
-     * If no display name is set with this plugin, it falls back to the server.
-     * @return The display name.
-     */
     @Override
     public @NotNull String getDisplayName() {
         if(displayName == null || displayName.isEmpty()) {
@@ -262,11 +265,6 @@ public final class User implements StringsUser {
         return color(displayName);
     }
 
-
-    /**
-     * Sets the User's prefix.
-     * @param prefix The new prefix.
-     */
     @Override
     public void setPrefix(@NotNull String prefix) {
         this.prefix = prefix;
@@ -276,11 +274,6 @@ public final class User implements StringsUser {
         dirty = true;
     }
 
-    /**
-     * Provides the User's prefix.
-     * Uses Vault prefixes when available.
-     * @return The prefix.
-     */
     @Override
     public @NotNull String getPrefix() {
         if(strings.isUsingVault()) {
@@ -293,11 +286,6 @@ public final class User implements StringsUser {
         }
     }
 
-
-    /**
-     * Sets the User's suffix.
-     * @param suffix The new suffix.
-     */
     @Override
     public void setSuffix(@NotNull String suffix) {
         this.suffix = suffix;
@@ -307,11 +295,6 @@ public final class User implements StringsUser {
         dirty = true;
     }
 
-    /**
-     * Provides the User's suffix.
-     * Uses Vault suffixes when available.
-     * @return The suffix.
-     */
     @Override
     public @NotNull String getSuffix() {
         if(strings.isUsingVault()) {
@@ -325,10 +308,6 @@ public final class User implements StringsUser {
     }
 
 
-    /**
-     * Sets if this player receives mentions
-     * @param mentionsEnabled A boolean of if the mentions should be enabled.
-     */
     @Override
     public void setMentionsEnabled(boolean mentionsEnabled) {
         if(this.mentionsEnabled != mentionsEnabled) {
@@ -337,40 +316,24 @@ public final class User implements StringsUser {
         }
     }
 
-    /**
-     * Provides a boolean of if the player wants to receive messages.
-     * @return A boolean.
-     */
     @Override
     public boolean isMentionsEnabled() {
         return this.mentionsEnabled;
     }
 
-
-    /**
-     * Ignores a Player.
-     * @param player The Player to ignore.
-     */
-    public void ignore(@NotNull Player player) {
-        Objects.requireNonNull(player);
-        ignored.add(player.getUniqueId());
+    public void ignore(@NotNull StringsUser user) {
+        Objects.requireNonNull(user);
+        ignored.add(user.getUniqueId());
         dirty = true;
     }
 
-    /**
-     * Stops ignoring a Player.
-     * @param player The Player to stop ignoring.
-     */
-    public void stopIgnoring(@NotNull Player player) {
-        Objects.requireNonNull(player);
-        ignored.remove(player.getUniqueId());
+    @Override
+    public void stopIgnoring(@NotNull StringsUser user) {
+        Objects.requireNonNull(user);
+        ignored.remove(user.getUniqueId());
         dirty = true;
     }
 
-    /**
-     * Provides a Set of all ignored Players.
-     * @return A populated Set.
-     */
     @Contract(value = " -> new", pure = true)
     @Override
     public @NotNull Set<UUID> getIgnoredPlayers() {
@@ -379,11 +342,6 @@ public final class User implements StringsUser {
 
 
 
-    /**
-     * Checks if a User is a member of a channel.
-     * @param channel The channel to check
-     * @return If the player is a member of the specified channel.
-     */
     @Override
     public boolean memberOf(Channel channel) {
         return channels.contains(channel);
@@ -391,10 +349,6 @@ public final class User implements StringsUser {
 
 
 
-    /**
-     * Sets the User's active channel where the User will send messages to.
-     * @param channel The channel to be set as the active channel.
-     */
     @Override
     public void setActiveChannel(@NotNull Channel channel) {
         Objects.requireNonNull(channel);
@@ -407,20 +361,12 @@ public final class User implements StringsUser {
         }
     }
 
-    /**
-     * Provides the player's active channel.
-     * @return The active channel.
-     */
     @NotNull
     @Override
     public Channel getActiveChannel() {
         return activeChannel;
     }
 
-    /**
-     * Adds the User to a channel.
-     * @param channel The channel to join.
-     */
     @Override
     public void joinChannel(@NotNull Channel channel) {
         Objects.requireNonNull(channel);
@@ -455,10 +401,6 @@ public final class User implements StringsUser {
         }
     }
 
-    /**
-     * Provides a Set of the Channels this User is a member of.
-     * @return A populated set of channels.
-     */
     @Override
     public @NotNull Set<Channel> getChannels() {
         return new HashSet<>(channels);
@@ -473,10 +415,6 @@ public final class User implements StringsUser {
 
 
 
-    /**
-     * Monitors a Channel and adds this Player to the Channel's list of monitoring players.
-     * @param monitorable The Monitorable Channel
-     */
     @Override
     public void monitor(@NotNull Monitorable monitorable) {
         Objects.requireNonNull(monitorable);
@@ -488,10 +426,6 @@ public final class User implements StringsUser {
         }
     }
 
-    /**
-     * Unmonitors a Channel and removes this Player from the Channel's list of monitoring players.
-     * @param monitorable The Monitorable Channel
-     */
     @Override
     public void unmonitor(@NotNull Monitorable monitorable) {
         Objects.requireNonNull(monitorable);
@@ -503,15 +437,46 @@ public final class User implements StringsUser {
         }
     }
 
-    /**
-     * Provides a Set of channels that the User is monitoring.
-     * @return A populated Set
-     */
     @Contract(value = " -> new", pure = true)
+    @Override
     public @NotNull Set<Channel> getMonitoredChannels() {
         return new HashSet<>(monitored);
     }
 
+    @Override
+    public void muteChannel(@NotNull Channel channel) {
+        leaveChannel(channel);
+        if(channel instanceof Monitorable monitorable) {
+            unmonitor(monitorable);
+        }
+
+        mutes.add(channel);
+    }
+
+    @Override
+    public void unmuteChannel(@NotNull Channel channel) {
+        mutes.remove(channel);
+    }
+
+    @Override
+    public @NotNull Set<Channel> getMutedChannels() {
+        return new HashSet<>(mutes);
+    }
+
+    @Override
+    public boolean hasChannelMuted(@NotNull Channel channel) {
+        return mutes.contains(channel);
+    }
+
+    @Override
+    public boolean hasDirectMessagesEnabled() {
+        return msgEnabled;
+    }
+
+    @Override
+    public void setDirectMessagesEnabled(boolean msgEnabled) {
+        this.msgEnabled = msgEnabled;
+    }
 
     /**
      * Provides if this User instance is retained.
@@ -528,8 +493,9 @@ public final class User implements StringsUser {
     }
 
     private void callEvent(@NotNull Event event) {
-        strings.getServer().getScheduler().runTask(strings,
-                () -> strings.getServer().getPluginManager().callEvent(event));
+        strings.getServer().getScheduler().runTask(
+                strings, () -> strings.getServer().getPluginManager().callEvent(event)
+        );
     }
 
     /**

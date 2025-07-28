@@ -1,6 +1,5 @@
 package com.pedestriamc.strings.channel;
 
-import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
@@ -9,10 +8,8 @@ import com.pedestriamc.strings.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.user.User;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,28 +22,26 @@ import java.util.TreeSet;
  */
 public final class DefaultChannel extends ProtectedChannel {
 
-    @NotNull
-    private final Strings strings;
-    @NotNull
-    private final ChannelManager channelManager;
-    @NotNull
-    private final Set<Player> members;
 
-    public DefaultChannel(@NotNull Strings strings, @NotNull ChannelManager channelManager) {
+    private final ChannelManager channelManager;
+
+    private final Set<StringsUser> members;
+
+    public DefaultChannel(@NotNull ChannelManager channelManager) {
         super("default");
         this.channelManager = channelManager;
         this.members = new HashSet<>();
-        this.strings = strings;
     }
 
     @Override
-    public void sendMessage(@NotNull Player player, @NotNull String message) {
-        Channel channel = resolve(player);
-        if (channel != null) {
-            channel.sendMessage(player, message);
+    public void sendMessage(@NotNull StringsUser user, @NotNull String message) {
+        Channel channel = resolve(user);
+        if (!channel.equals(this)) {
+            channel.sendMessage(user, message);
             return;
         }
-        player.sendMessage(ChatColor.RED + "[Strings] You aren't a member of any channels.  Please contact a server operator for help.");
+
+        user.sendMessage(ChatColor.RED + "[Strings] You aren't a member of any channels.  Please contact a server operator for help.");
     }
 
 
@@ -55,25 +50,24 @@ public final class DefaultChannel extends ProtectedChannel {
      * @param player The player to determine a Channel for
      * @return The Channel with the highest numerical priority that the player is in scope of that allows the player.
      */
-    @Nullable
     @Override
-    public Channel resolve(@NotNull Player player) {
+    public @NotNull Channel resolve(@NotNull StringsUser player) {
         SortedSet<Channel> channels = channelManager.getSortedChannelSet();
-        channels.removeIf(channel -> !channel.allows(player));
-        channels.removeIf(channel -> channel instanceof LocalChannel local && !local.containsInScope(player));
+        channels.removeIf(channel -> !channel.allows(User.playerOf(player)));
+        channels.removeIf(channel -> channel instanceof LocalChannel<?> local && !local.containsInScope(player));
+        channels.removeIf(player::hasChannelMuted);
 
         if(!channels.isEmpty()) {
             return channels.first();
         }
 
-        User user = strings.users().getUser(player);
-        SortedSet<Channel> usersChannels = new TreeSet<>(user.getChannels());
+        SortedSet<Channel> usersChannels = new TreeSet<>(player.getChannels());
         usersChannels.remove(this);
         if(!usersChannels.isEmpty()) {
             return usersChannels.first();
         }
 
-        return null;
+        return this;
     }
 
     @Override
@@ -90,27 +84,17 @@ public final class DefaultChannel extends ProtectedChannel {
     public void setName(@NotNull String name) { /* DefaultChannel instances are always named "default" */ }
 
     @Override
-    public void addMember(@NotNull Player player) {
-        members.add(player);
-    }
-
-    @Override
-    public void removeMember(@NotNull Player player) {
-        members.remove(player);
-    }
-
-    @Override
     public void addMember(@NotNull StringsUser user) {
-        members.add(user.getPlayer());
+        members.add(user);
     }
 
     @Override
     public void removeMember(@NotNull StringsUser user) {
-        members.remove(user.getPlayer());
+        members.remove(user);
     }
 
     @Override
-    public Set<Player> getMembers() {
+    public Set<StringsUser> getMembers() {
         return new HashSet<>(members);
     }
 

@@ -6,6 +6,9 @@ import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.api.user.StringsUser;
+import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -48,34 +51,37 @@ public class StrictProximityChannel extends AbstractLocalChannel {
     }
 
     @Override
-    public void sendMessage(@NotNull Player player, @NotNull String message) {
-        if(containsInScope(player)) {
-            super.sendMessage(player, message);
+    public void sendMessage(@NotNull StringsUser user, @NotNull String message) {
+        if(containsInScope(user)) {
+            super.sendMessage(user, message); // Super class logic references this class's getRecipients impl
         } else {
-            defaultChannel.sendMessage(player, message);
-            messenger.sendMessage(Message.INELIGIBLE_SENDER, getPlaceholders(), player);
+            defaultChannel.sendMessage(user, message);
+            messenger.sendMessage(Message.INELIGIBLE_SENDER, getPlaceholders(), User.playerOf(user));
         }
     }
 
     @Override
-    public @NotNull Set<Player> getRecipients(@NotNull Player sender) {
-        World senderWorld = sender.getWorld();
-        HashSet<Player> recipients = new HashSet<>(getMonitors());
+    public @NotNull Set<StringsUser> getRecipients(@NotNull StringsUser sender) {
+        Player player = User.playerOf(sender);
+        World senderWorld = player.getWorld();
+        UserUtil userUtil = getUserUtil();
+        HashSet<StringsUser> recipients = new HashSet<>(getMonitors());
 
-        Location senderLocation = sender.getLocation();
+        Location senderLocation = player.getLocation();
         for(Player p : senderWorld.getPlayers()) {
             Location pLocation = p.getLocation();
             if(senderLocation.distanceSquared(pLocation) < distanceSquared) {
-                recipients.add(p);
+                recipients.add(userUtil.getUser(p));
             }
         }
 
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(p.hasPermission(CHANNEL_PERMISSION + getName() + ".receive")) {
-                recipients.add(p);
+                recipients.add(userUtil.getUser(p));
             }
         }
-        return recipients;
+
+        return filterMutes(recipients);
     }
 
     @Override

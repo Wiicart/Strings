@@ -19,14 +19,19 @@ public final class UserBuilder {
     final boolean retained;
 
     Channel activeChannel;
+
     Set<Channel> channels;
+    Set<Channel> mutes;
     Set<Monitorable> monitoredChannels;
     Set<UUID> ignored;
+
     String chatColor;
     String prefix;
     String suffix;
     String displayName;
+
     boolean mentionsEnabled = true; // Mentions are enabled by default
+    boolean msgEnabled = true; // /msg enabled by default
 
     UserBuilder(@NotNull Strings strings, @NotNull UUID uuid, boolean retained) {
         this.strings = strings;
@@ -46,6 +51,11 @@ public final class UserBuilder {
 
     public UserBuilder ignoredPlayers(Set<UUID> ignored) {
         this.ignored = ignored;
+        return this;
+    }
+
+    public UserBuilder mutedChannels(Set<Channel> mutes) {
+        this.mutes = mutes;
         return this;
     }
 
@@ -76,6 +86,11 @@ public final class UserBuilder {
 
     public UserBuilder mentionsEnabled(boolean mentionsEnabled) {
         this.mentionsEnabled = mentionsEnabled;
+        return this;
+    }
+
+    public UserBuilder msgEnabled(boolean msgEnabled) {
+        this.msgEnabled = msgEnabled;
         return this;
     }
 

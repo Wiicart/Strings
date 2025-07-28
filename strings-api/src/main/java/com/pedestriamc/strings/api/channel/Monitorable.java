@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.api.channel;
 
 import com.pedestriamc.strings.api.user.StringsUser;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,23 +29,7 @@ public interface Monitorable extends Channel {
      * @return A populated Set of Players
      */
     @NotNull
-    Set<Player> getMonitors();
-
-    /**
-     * For internal usage - Use {@link StringsUser#monitor(Monitorable)}
-     * Adds a monitor
-     * @param player The Player to be added
-     */
-    @ApiStatus.Internal
-    void addMonitor(@NotNull Player player);
-
-    /**
-     * For internal usage - Use {@link StringsUser#unmonitor(Monitorable)}
-     * Removes a monitor
-     * @param player The Player to be removed
-     */
-    @ApiStatus.Internal
-    void removeMonitor(@NotNull Player player);
+    Set<StringsUser> getMonitors();
 
     /**
      * For internal usage - Use {@link StringsUser#monitor(Monitorable)}

@@ -22,9 +22,6 @@ import java.util.Locale;
 import java.util.Set;
 
 class ChannelFileReader {
-
-    private final @NotNull Strings strings;
-    private final @NotNull ChannelManager manager;
     
     private static final Set<String> LEGAL_TYPES = Set.of(
             "stringchannel", "world", "world_strict",
@@ -34,6 +31,9 @@ class ChannelFileReader {
     private static final Set<String> LOCAL_TYPES = Set.of(
             "world", "world_strict", "proximity", "proximity_strict"
     );
+
+    private final @NotNull Strings strings;
+    private final @NotNull ChannelManager manager;
 
     static void loadChannels(@NotNull Strings strings, @NotNull FileConfiguration config, @NotNull ChannelManager manager) {
         new ChannelFileReader(strings, config, manager);
@@ -66,7 +66,7 @@ class ChannelFileReader {
         String socialSpyFormat = strings.getConfiguration().getString(Option.SOCIAL_SPY_FORMAT);
         manager.register(new SocialSpyChannel(strings.getPlayerDirectMessenger(), socialSpyFormat));
 
-        manager.register(new DefaultChannel(strings, manager));
+        manager.register(new DefaultChannel(manager));
     }
 
     private void read(@NotNull ConfigurationSection channels) {

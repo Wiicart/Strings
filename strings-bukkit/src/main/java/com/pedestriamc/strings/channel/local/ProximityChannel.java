@@ -3,7 +3,10 @@ package com.pedestriamc.strings.channel.local;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.channel.DefaultChannel;
+import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -41,30 +44,34 @@ public class ProximityChannel extends AbstractLocalChannel {
         distanceSquared = distance * distance;
     }
 
-    public @NotNull Set<Player> getRecipients(@NotNull Player sender) {
-        Set<Player> members = getMembers();
+    @Override
+    public @NotNull Set<StringsUser> getRecipients(@NotNull StringsUser sender) {
+        Set<StringsUser> members = getMembers();
         if(members.contains(sender)) {
-            return universalSet();
+            return filterMutes(universalSet());
         }
 
-        World senderWorld = sender.getWorld();
-        HashSet<Player> recipients = new HashSet<>(members);
+        Player player = User.of(sender).getPlayer();
+        World senderWorld = player.getWorld();
 
-        Location senderLocation = sender.getLocation();
+        HashSet<StringsUser> recipients = new HashSet<>(members);
+        UserUtil userUtil = getUserUtil();
+
+        Location senderLocation = player.getLocation();
         for(Player p : senderWorld.getPlayers()) {
             Location pLocation = p.getLocation();
             if(senderLocation.distanceSquared(pLocation) < distanceSquared) {
-                recipients.add(p);
+                recipients.add(userUtil.getUser(p));
             }
         }
 
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(p.hasPermission(CHANNEL_PERMISSION + getName() + ".receive")) {
-                recipients.add(p);
+                recipients.add(userUtil.getUser(p));
             }
         }
 
-        return recipients;
+        return filterMutes(recipients);
     }
 
     @Override

@@ -54,7 +54,7 @@ public final class StringsImpl implements StringsAPI {
 
     @Override
     public void mention(@NotNull StringsUser subject, @NotNull StringsUser sender) {
-        mentioner.mention(subject.getPlayer(), sender.getPlayer());
+        mentioner.mention(User.playerOf(subject), User.playerOf(sender));
     }
 
     @Override

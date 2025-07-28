@@ -4,52 +4,63 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
+import com.pedestriamc.strings.api.channel.local.Locality;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.channel.base.AbstractChannel;
+import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Class that implements common LocalChannel elements
  */
-abstract class AbstractLocalChannel extends AbstractChannel implements LocalChannel {
+abstract class AbstractLocalChannel extends AbstractChannel implements LocalChannel<World> {
 
-    private Set<World> worlds;
+    private final UserUtil userUtil;
+
+    private final Set<Locality<World>> worlds;
 
     protected AbstractLocalChannel(@NotNull Strings strings, @NotNull ChannelBuilder data) {
         super(strings, data);
-        worlds = new HashSet<>(data.getWorlds());
+        userUtil = getUserUtil();
+        worlds = new HashSet<>(Locality.convertToLocalities(data.getWorlds()));
+
         if(worlds.isEmpty()) {
             throw new IllegalArgumentException("Worlds cannot be empty");
         }
     }
 
     @Override
-    public boolean containsInScope(@NotNull Player player) {
-        return getWorlds().contains(player.getWorld());
+    public boolean containsInScope(@NotNull StringsUser user) {
+        return containsWorld(User.of(user).getWorld());
     }
 
     @Override
-    public Set<World> getWorlds() {
+    public Set<Locality<World>> getWorlds() {
         return new HashSet<>(worlds);
     }
 
     @Override
-    public void setWorlds(@NotNull Set<World> worlds) {
-        this.worlds = new HashSet<>(worlds);
+    public void setWorlds(@NotNull Set<Locality<World>> worlds) {
+        this.worlds.clear();
+        this.worlds.addAll(worlds);
     }
 
     @Override
     public boolean allows(@NotNull Permissible permissible) {
         if(permissible instanceof Player player &&
-                getMembership() == Membership.DEFAULT && worlds.contains(player.getWorld())) {
+                getMembership() == Membership.DEFAULT && containsWorld(player.getWorld())) {
             return true;
         }
         return super.allows(permissible);
@@ -63,28 +74,45 @@ abstract class AbstractLocalChannel extends AbstractChannel implements LocalChan
     }
 
     @Override
-    public @NotNull Set<Player> getPlayersInScope() {
+    public @NotNull Set<StringsUser> getPlayersInScope() {
         return switch(getMembership()) {
             case DEFAULT -> universalSet();
             case PERMISSION -> {
-                HashSet<Player> scoped = new HashSet<>(universalSet());
-                scoped.removeIf(p -> !allows(p));
+                HashSet<StringsUser> scoped = new HashSet<>(universalSet());
+                scoped.removeIf(p -> !allows(User.playerOf(p)));
                 yield scoped;
             }
             default -> {
-                HashSet<Player> scoped = new HashSet<>(getMembers());
+                HashSet<StringsUser> scoped = new HashSet<>(getMembers());
                 scoped.addAll(getMonitors());
                 yield scoped;
             }
         };
     }
 
+    @Override
+    public boolean containsWorld(@NotNull World world) {
+        for (Locality<World> locality : worlds) {
+            if (locality.get().equals(world)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected List<String> getWorldNames() {
         ArrayList<String> worldNames = new ArrayList<>();
-        for (World w : getWorlds()) {
-            worldNames.add(w.getName());
+        for (Locality<World> w : getWorlds()) {
+            worldNames.add(w.get().getName());
         }
         return worldNames;
+    }
+
+    protected @NotNull Set<User> convertToUsers(@NotNull Collection<Player> players) {
+        return players.stream()
+                .map(userUtil::getUser)
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -92,12 +120,20 @@ abstract class AbstractLocalChannel extends AbstractChannel implements LocalChan
      * Intended for determining recipients for an admin.
      * @return A populated Set
      */
-    protected Set<Player> universalSet() {
-        HashSet<Player> set = new HashSet<>(getMembers());
+    protected Set<StringsUser> universalSet() {
+        HashSet<StringsUser> set = new HashSet<>(getMembers());
         set.addAll(getMonitors());
-        for(World w : worlds) {
-            set.addAll(w.getPlayers());
+
+        for(Locality<World> w : worlds) {
+            set.addAll(
+                    w.get()
+                    .getPlayers()
+                    .stream()
+                    .map(getUserUtil()::getUser)
+                    .collect(Collectors.toSet())
+            );
         }
+
         return set;
     }
 }

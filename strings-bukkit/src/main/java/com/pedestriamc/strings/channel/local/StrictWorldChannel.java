@@ -4,8 +4,12 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.api.user.StringsUser;
+import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -40,28 +44,31 @@ public class StrictWorldChannel extends AbstractLocalChannel {
     }
 
     @Override
-    public void sendMessage(@NotNull Player player, @NotNull String message) {
-        if(containsInScope(player)) {
-            super.sendMessage(player, message);
+    public void sendMessage(@NotNull StringsUser user, @NotNull String message) {
+        if(containsInScope(user)) {
+            super.sendMessage(user, message); // Super class logic references this class's getRecipients impl
         } else {
-            defaultChannel.sendMessage(player, message);
-            messenger.sendMessage(Message.INELIGIBLE_SENDER, getPlaceholders(), player);
+            defaultChannel.sendMessage(user, message);
+            messenger.sendMessage(Message.INELIGIBLE_SENDER, getPlaceholders(), User.playerOf(user));
         }
     }
 
     @Override
-    public @NotNull Set<Player> getRecipients(@NotNull Player sender) {
-        HashSet<Player> recipients = new HashSet<>(getMonitors());
-        for(World w : getWorlds()) {
-            recipients.addAll(w.getPlayers());
+    public @NotNull Set<StringsUser> getRecipients(@NotNull StringsUser sender) {
+        UserUtil userUtil = getUserUtil();
+
+        HashSet<StringsUser> recipients = new HashSet<>(getMonitors());
+        for(World w : Locality.convertToWorlds(getWorlds())) {
+            recipients.addAll(convertToUsers(w.getPlayers()));
         }
 
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(p.hasPermission("strings.channels." + this.getName() + ".receive")) {
-                recipients.add(p);
+                recipients.add(userUtil.getUser(p));
             }
         }
-        return recipients;
+
+        return filterMutes(recipients);
     }
 
     @Override

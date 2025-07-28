@@ -2,7 +2,6 @@ package com.pedestriamc.strings.channel.base;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
-import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
@@ -12,6 +11,8 @@ import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.chat.MessageProcessor;
 import com.pedestriamc.strings.configuration.Option;
+import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.util.UserUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -24,12 +25,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class AbstractChannel implements Channel, Monitorable {
 
     private final Strings strings;
 
     private final MessageProcessor messageProcessor;
+    private final UserUtil userUtil;
 
     private String name;
     private String defaultColor;
@@ -47,8 +50,8 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     private final int priority;
 
-    private final Set<Player> monitors;
-    private final Set<Player> members;
+    private final Set<StringsUser> monitors;
+    private final Set<StringsUser> members;
 
     protected static final String CHANNEL_PERMISSION = "strings.channels.";
     protected static final String MESSAGE_PLACEHOLDER = "{message}";
@@ -56,6 +59,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     protected AbstractChannel(@NotNull Strings strings, @NotNull ChannelBuilder data) {
         this.strings = strings;
+        this.userUtil = strings.users();
         name = data.getName();
         defaultColor = data.getDefaultColor();
         format = data.getFormat();
@@ -74,41 +78,22 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         monitors = new HashSet<>();
     }
 
-    protected AbstractChannel(Strings strings, String name, String defaultColor, String format, Membership membership, boolean doCooldown, boolean doProfanityFilter, boolean doUrlFilter, boolean callEvent, int priority, String broadcastFormat) {
-        this.strings = strings;
-        this.name = name;
-        this.defaultColor = defaultColor != null ? defaultColor : StringsTextColor.WHITE.toString();
-        this.format = format;
-        this.broadcastFormat = broadcastFormat;
-        this.membership = membership;
-        this.doCooldown = doCooldown;
-        this.doProfanityFilter = doProfanityFilter;
-        this.doUrlFilter = doUrlFilter;
-        this.callEvent = callEvent;
-        this.priority = priority;
-
-        messageProcessor = new MessageProcessor(strings, this);
-        mentionsEnabled = strings.getConfiguration().getBoolean(Option.ENABLE_MENTIONS);
-        updatePermissions();
-        members = new HashSet<>();
-        monitors = new HashSet<>();
-    }
-
     @Override
-    public void sendMessage(@NotNull Player player, @NotNull String message) {
-        Set<Player> recipients = getRecipients(player);
-        String template = messageProcessor.generateTemplate(player);
-        String processedMessage = messageProcessor.processMessage(player, message);
+    public void sendMessage(@NotNull StringsUser user, @NotNull String message) {
+        Player p = User.playerOf(user);
+        Set<Player> recipients = convertToPlayers(getRecipients(user));
 
-        if (mentionsEnabled && Mentioner.hasMentionPermission(player)) {
-            processedMessage = messageProcessor.processMentions(player, processedMessage);
+        String template = messageProcessor.generateTemplate(p);
+        String processedMessage = messageProcessor.processMessage(p, message);
+
+        if (mentionsEnabled && Mentioner.hasMentionPermission(p)) {
+            processedMessage = messageProcessor.processMentions(p, processedMessage);
         }
 
         if (callsEvents()) {
-            sendEventMessage(player, processedMessage, template, recipients);
-
+            sendEventMessage(p, processedMessage, template, recipients);
         } else {
-            sendNonEventMessage(player, message, template, recipients);
+            sendNonEventMessage(p, message, template, recipients);
         }
 
     }
@@ -144,6 +129,17 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         Bukkit.getLogger().info(ChatColor.stripColor(finalFormNonEvent));
     }
 
+    private @NotNull Set<Player> convertToPlayers(@NotNull Set<StringsUser> users) {
+        Set<Player> recipients = new HashSet<>();
+        for(StringsUser user : users) {
+            try {
+                recipients.add(User.playerOf(user));
+            } catch(Exception ignored) {}
+        }
+
+        return recipients;
+    }
+
     /**
      * Registers the Channel instance's permissions.
      */
@@ -176,9 +172,22 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         return map;
     }
 
+    @NotNull
+    protected Set<StringsUser> filterMutes(@NotNull Set<StringsUser> players) {
+        return players.stream().filter(
+                p -> {
+                    User user = userUtil.getUser(p.getUniqueId());
+                    return !user.hasChannelMuted(this);
+                }).collect(Collectors.toSet());
+    }
+
+    protected UserUtil getUserUtil() {
+        return userUtil;
+    }
+
     @Override
     public boolean allows(@NotNull Permissible permissible) {
-        if(permissible instanceof Player player && getMembers().contains(player)) {
+        if(permissible instanceof Player player && getMembers().contains(strings.users().getUser(player))) {
             return true;
         }
 
@@ -203,8 +212,8 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     @Override
     public void broadcastPlain(@NotNull String message) {
-        for (Player p : getPlayersInScope()) {
-            p.sendMessage(message);
+        for (StringsUser user : getPlayersInScope()) {
+            user.sendMessage(message);
         }
     }
 
@@ -241,12 +250,31 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     @Override
     public void addMember(@NotNull StringsUser user) {
-        addMember(user.getPlayer());
+        members.add(user);
     }
 
     @Override
     public void removeMember(@NotNull StringsUser user) {
-        removeMember(user.getPlayer());
+        members.remove(user);
+    }
+
+    @Override
+    public Set<StringsUser> getMembers() {
+        return new HashSet<>(members);
+    }
+
+    @Override
+    public void addMonitor(@NotNull StringsUser user) {
+        monitors.add(user);
+    }
+
+    public void removeMonitor(@NotNull StringsUser user) {
+        monitors.remove(user);
+    }
+
+    @Override
+    public @NotNull Set<StringsUser> getMonitors() {
+        return new HashSet<>(monitors);
     }
 
     @Override
@@ -296,52 +324,12 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     @Override
-    public void addMonitor(@NotNull Player player) {
-        monitors.add(player);
-    }
-
-    @Override
-    public void addMonitor(@NotNull StringsUser stringsUser) {
-        addMonitor(stringsUser.getPlayer());
-    }
-
-    @Override
-    public void removeMonitor(@NotNull Player player) {
-        monitors.remove(player);
-    }
-
-    @Override
-    public void removeMonitor(@NotNull StringsUser stringsUser) {
-        removeMonitor(stringsUser.getPlayer());
-    }
-
-    @Override
-    public @NotNull Set<Player> getMonitors() {
-        return new HashSet<>(monitors);
-    }
-
-    @Override
-    public void addMember(@NotNull Player player) {
-        members.add(player);
-    }
-
-    @Override
-    public void removeMember(@NotNull Player player) {
-        members.remove(player);
-    }
-
-    @Override
-    public Set<Player> getMembers() {
-        return new HashSet<>(members);
-    }
-
-    @Override
     public Membership getMembership() {
         return membership;
     }
 
     @Override
-    public Channel resolve(@NotNull Player player) {
+    public @NotNull Channel resolve(@NotNull StringsUser user) {
         return this;
     }
 

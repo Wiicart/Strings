@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.listener;
+package com.pedestriamc.strings.listener.player;
 
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.configuration.Option;
@@ -6,6 +6,7 @@ import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.Strings;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -29,6 +30,8 @@ public class PlayerQuitListener implements Listener {
 
     @EventHandler
     void onEvent(@NotNull PlayerQuitEvent event) {
+        Bukkit.getLogger().info("Using custom leave message: " + modifyLeaveMessage);
+        Bukkit.getLogger().info("Doing any quit messages: " + doQuitMessage);
         User user = userUtil.getUser(event.getPlayer());
 
         if(!doQuitMessage) {

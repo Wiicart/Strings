@@ -2,7 +2,6 @@ package com.pedestriamc.strings.api.channel;
 
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.api.user.StringsUser;
-import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -42,13 +41,13 @@ public interface Channel extends Comparable<Channel> {
     /**
      * Sends a message from a player to the channel.
      * Internally, messages might not be processed using this method.
-     * For custom implementations, ensure {@link Channel#getFormat()}, {@link Channel#getRecipients(Player)}, etc.
+     * For custom implementations, ensure {@link Channel#getFormat()}, {@link Channel#getRecipients(StringsUser)}, etc.
      * behave as intended, to ensure consistent behavior.
      *
-     * @param player The player sending the message.
+     * @param user The player sending the message.
      * @param message The player's message.
      */
-    void sendMessage(@NotNull Player player, @NotNull String message);
+    void sendMessage(@NotNull StringsUser user, @NotNull String message);
 
     /**
      * Compares the priorities of the Channels.
@@ -62,18 +61,19 @@ public interface Channel extends Comparable<Channel> {
      * Resolves the final Channel a message would be directed too.
      * In most implementations, the Channel instance will return itself.
      *
-     * @param player The sender.
+     * @param user The sender.
      * @return A Channel, possibly {@code this}
      */
-    Channel resolve(@NotNull Player player);
+    @NotNull Channel resolve(@NotNull StringsUser user);
 
     /**
      * Provides the recipients of a message if the sender were to send a message in the Channel.
+     * All implementations should account for Channel mutes.
      *
-     * @param sender The message sender.
+     * @param user The message sender.
      * @return A Set of Players.
      */
-    Set<Player> getRecipients(@NotNull Player sender);
+    Set<StringsUser> getRecipients(@NotNull StringsUser user);
 
     /**
      * Provides a Set of Players providing the greatest possible number of players in the scope of the Channel,
@@ -82,7 +82,7 @@ public interface Channel extends Comparable<Channel> {
      *
      * @return A populated Set.
      */
-    Set<Player> getPlayersInScope();
+    Set<StringsUser> getPlayersInScope();
 
     /**
      * Broadcasts a message to a Channel.
@@ -199,28 +199,10 @@ public interface Channel extends Comparable<Channel> {
      * For internal usage - use {@link StringsUser#joinChannel(Channel)} instead.
      * Adds a User to the channel.
      *
-     * @param player The Player to be added.
-     */
-    @ApiStatus.Internal
-    void addMember(@NotNull Player player);
-
-    /**
-     * For internal usage - use {@link StringsUser#joinChannel(Channel)} instead.
-     * Adds a User to the channel.
-     *
      * @param user The User to be added.
      */
     @ApiStatus.Internal
     void addMember(@NotNull StringsUser user);
-
-    /**
-     * For internal usage - use {@link StringsUser#leaveChannel(Channel)} instead.
-     * Removes a player from the Channel.
-     *
-     * @param player The player to be removed.
-     */
-    @ApiStatus.Internal
-    void removeMember(@NotNull Player player);
 
     /**
      * For internal usage - use {@link StringsUser#leaveChannel(Channel)} instead.
@@ -235,7 +217,7 @@ public interface Channel extends Comparable<Channel> {
      * Provides a Set of the members of the Channel.
      * @return A populated Set of Players.
      */
-    Set<Player> getMembers();
+    Set<StringsUser> getMembers();
 
     /**
      * Provides the Channel's {@link Type}.

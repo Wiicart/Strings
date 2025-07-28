@@ -3,7 +3,10 @@ package com.pedestriamc.strings.channel.local;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.channel.local.Locality;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.channel.DefaultChannel;
+import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -30,21 +33,22 @@ public class WorldChannel extends AbstractLocalChannel {
     }
 
     @Override
-    public @NotNull Set<Player> getRecipients(@NotNull Player sender) {
-        HashSet<Player> recipients = new HashSet<>();
+    public @NotNull Set<StringsUser> getRecipients(@NotNull StringsUser sender) {
+        HashSet<StringsUser> recipients = new HashSet<>();
+        UserUtil userUtil = getUserUtil();
 
-        for(World w : getWorlds()) {
-            recipients.addAll(w.getPlayers());
+        for(World w : Locality.convertToWorlds(getWorlds())) {
+            recipients.addAll(convertToUsers(w.getPlayers()));
         }
 
         recipients.addAll(getMembers());
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(p.hasPermission("strings.channels." + this.getName() + ".receive")) {
-                recipients.add(p);
+                recipients.add(userUtil.getUser(p));
             }
         }
         
-        return recipients;
+        return filterMutes(recipients);
     }
 
     @Override

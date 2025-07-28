@@ -2,6 +2,7 @@ package com.pedestriamc.strings.user.util;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.user.User;
 import org.bukkit.configuration.ConfigurationSection;
@@ -91,8 +92,10 @@ public final class YamlUserUtil implements UserUtil {
                     .displayName(section.getString(".display-name"))
                     .chatColor(section.getString(".chat-color"))
                     .mentionsEnabled(section.getBoolean(".mentions-enabled"))
+                    .msgEnabled(section.getBoolean(".msg-enabled"))
                     .activeChannel(strings.getChannelLoader().getChannel(getStringNonNull(section, ".active-channel")))
                     .channels(getChannels(section.getList(".channels")))
+                    .mutedChannels(getChannels(section.getList(".muted-channels")))
                     .monitoredChannels(getMonitorables(section.getList(".monitored-channels")))
                     .ignoredPlayers(getUniqueIds(section.getList(".ignored-players")))
                     .build();
@@ -121,10 +124,14 @@ public final class YamlUserUtil implements UserUtil {
             return new HashSet<>();
         }
 
+        ChannelLoader loader = strings.getChannelLoader();
         Set<Channel> channels = new HashSet<>();
         for(Object item : list) {
-            if(item instanceof String string && strings.getChannelLoader().getChannel(string) != null) {
-                channels.add(strings.getChannelLoader().getChannel(string));
+            if(item instanceof String name) {
+                Channel channel = loader.getChannel(name);
+                if(channel != null) {
+                    channels.add(channel);
+                }
             }
         }
 

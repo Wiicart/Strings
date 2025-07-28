@@ -4,8 +4,8 @@ import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +26,7 @@ public interface StringsUser {
     @NotNull
     UUID getUniqueId();
 
-    void message(@NotNull String message);
+    void sendMessage(@NotNull String message);
 
     /**
      * Provides the StringsUser's name.
@@ -124,6 +124,7 @@ public interface StringsUser {
      * Provides a Set of all the channels the User is in.
      * @return A populated Set.
      */
+    @Contract("-> new")
     Set<Channel> getChannels();
 
     /**
@@ -139,9 +140,9 @@ public interface StringsUser {
     void leaveChannel(Channel channel);
 
     /**
-     * Returns if this StringsUser is a member of a defined StringsChannel.
+     * Checks if the User is a member of a Channel
      * @param channel The Channel to check
-     * @return True/false if the StringsUser is a member.
+     * @return True/false if the User is a member.
      */
     boolean memberOf(Channel channel);
 
@@ -158,28 +159,23 @@ public interface StringsUser {
     void setMentionsEnabled(boolean mentionsEnabled);
 
     /**
-     * Ignores a Player.
-     * @param player The Player to ignore.
+     * Ignores a StringsUser.
+     * @param user The StringsUser to ignore.
      */
-    void ignore(@NotNull Player player);
+    void ignore(@NotNull StringsUser user);
 
     /**
-     * Stops ignoring a Player.
-     * @param player The Player to stop ignoring.
+     * Stops ignoring a User.
+     * @param user The User to stop ignoring.
      */
-    void stopIgnoring(@NotNull Player player);
+    void stopIgnoring(@NotNull StringsUser user);
 
     /**
      * Provides a Set of Players that this User has ignored (for /msg).
      * @return A populated Set.
      */
+    @Contract("-> new")
     Set<UUID> getIgnoredPlayers();
-
-    /**
-     * Provides the Player this StringsUser is associated with.
-     * @return The Player.
-     */
-    Player getPlayer();
 
     /**
      * Monitors a Channel
@@ -193,4 +189,48 @@ public interface StringsUser {
      */
     void unmonitor(@NotNull Monitorable monitorable);
 
+    /**
+     * Provides a Set of channels that the User is monitoring.
+     * @return A populated Set
+     */
+    @NotNull Set<Channel> getMonitoredChannels();
+
+    /**
+     * Mutes a Channel so that regardless of eligibility, no messages from the Channel will be received.
+     * If the User is a member of or monitoring the Channel, the User will leave/unmonitor the Channel too.
+     * @param channel The Channel to mute
+     */
+    void muteChannel(@NotNull Channel channel);
+
+    /**
+     * Unmutes a Channel.
+     * @param channel The Channel to unmute
+     */
+    void unmuteChannel(@NotNull Channel channel);
+
+    /**
+     * Provides a full Set of Channels the User has muted.
+     * @return An unmodifiable Set
+     */
+    @Contract("-> new")
+    @NotNull Set<Channel> getMutedChannels();
+
+    /**
+     * Tells if the User has a Channel muted
+     * @param channel The Channel to check
+     * @return If the Channel is muted by the User
+     */
+    boolean hasChannelMuted(@NotNull Channel channel);
+
+    /**
+     * Tells if the User has direct messages (/msg) enabled.
+     * @return True/false
+     */
+    boolean hasDirectMessagesEnabled();
+
+    /**
+     * Sets direct messages (/msg) enabled or disabled.
+     * @param msgEnabled True/false
+     */
+    void setDirectMessagesEnabled(boolean msgEnabled);
 }

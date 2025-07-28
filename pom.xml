@@ -16,6 +16,7 @@
         <module>strings-bukkit</module>
         <module>strings-moderation</module>
         <module>strings-discord</module>
+        <module>strings-common</module>
     </modules>
     <properties>
         <java.version>21</java.version>

@@ -53,7 +53,7 @@ public final class ChannelManager implements ChannelLoader {
     public @Nullable Channel getChannel(@NotNull String name) {
         Objects.requireNonNull(name);
         Channel channel = channels.get(name);
-        //Refresh to check for a change.
+        // Refresh to check for a change.
         if(channel == null) {
             refreshChannelMap();
             channel = channels.get(name);
@@ -120,7 +120,7 @@ public final class ChannelManager implements ChannelLoader {
         Set<User> users = strings.users().getUsers();
 
         Channel defaultChannel = Objects.requireNonNullElseGet(getChannel("default"), () -> {
-            Channel c = new DefaultChannel(strings, this);
+            Channel c = new DefaultChannel(this);
             register(c);
             return c;
         });
@@ -146,7 +146,7 @@ public final class ChannelManager implements ChannelLoader {
     public @NotNull Channel getDefaultChannel() {
         Channel defaultChannel = channels.get("default");
         if(defaultChannel == null) {
-            defaultChannel = new DefaultChannel(strings, this);
+            defaultChannel = new DefaultChannel(this);
             register(defaultChannel);
         }
         return defaultChannel;

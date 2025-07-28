@@ -70,7 +70,7 @@ public interface StringsAPI {
      * @param subject The StringsUser object of the player to be mentioned.
      * @param sender The StringsUser object of the sender of the mention.
      */
-    void mention(@NotNull  StringsUser subject, @NotNull  StringsUser sender);
+    void mention(@NotNull StringsUser subject, @NotNull StringsUser sender);
 
     /**
      * Mentions a Player.

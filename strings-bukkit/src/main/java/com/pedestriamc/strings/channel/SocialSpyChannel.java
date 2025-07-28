@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.channel;
 
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import org.bukkit.ChatColor;
@@ -13,8 +14,9 @@ import java.util.Set;
 public class SocialSpyChannel extends ProtectedChannel {
 
     private String format;
+
     private final PlayerDirectMessenger playerDirectMessenger;
-    private final HashSet<Player> spiesList;
+    private final HashSet<StringsUser> spiesList;
 
     public SocialSpyChannel(PlayerDirectMessenger messenger, String format) {
         super("socialspy");
@@ -34,14 +36,14 @@ public class SocialSpyChannel extends ProtectedChannel {
         msg = playerDirectMessenger.processPlaceholders(sender, recipient, msg);
         msg = msg.replace("{message}", message);
         msg = ChatColor.translateAlternateColorCodes('&', msg);
-        for(Player spies : spiesList) {
-            spies.sendMessage(msg);
+        for(StringsUser spy : spiesList) {
+            spy.sendMessage(msg);
         }
     }
 
     @Override
-    public void sendMessage(@NotNull Player player, @NotNull String message) {
-        for(Player p : spiesList) {
+    public void sendMessage(@NotNull StringsUser user, @NotNull String message) {
+        for(StringsUser p : spiesList) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
         }
     }
@@ -54,7 +56,7 @@ public class SocialSpyChannel extends ProtectedChannel {
 
     @Override
     public void broadcastPlain(@NotNull String message) {
-        for(Player p : spiesList) {
+        for(StringsUser p : spiesList) {
             p.sendMessage(message);
         }
     }
@@ -77,17 +79,17 @@ public class SocialSpyChannel extends ProtectedChannel {
     }
 
     @Override
-    public void addMember(@NotNull Player player) {
+    public void addMember(@NotNull StringsUser player) {
         spiesList.add(player);
     }
 
     @Override
-    public void removeMember(@NotNull Player player) {
+    public void removeMember(@NotNull StringsUser player) {
         spiesList.remove(player);
     }
 
     @Override
-    public Set<Player> getMembers() {
+    public Set<StringsUser> getMembers() {
         return spiesList;
     }
 

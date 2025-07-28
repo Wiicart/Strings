@@ -45,7 +45,7 @@ public class SpigotChatListener extends AbstractChatListener {
             channel = user.getActiveChannel();
         }
 
-        channel.sendMessage(playerSender, playerMessage);
+        channel.sendMessage(user, playerMessage);
     }
 
 }

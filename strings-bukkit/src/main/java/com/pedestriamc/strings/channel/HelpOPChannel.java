@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.chat.MessageProcessor;
 import com.pedestriamc.strings.channel.base.ProtectedChannel;
@@ -50,11 +51,11 @@ public class HelpOPChannel extends ProtectedChannel {
         messageProcessor = new MessageProcessor(strings, this);
     }
 
-    public HelpOPChannel(JavaPlugin plugin, ChannelBuilder builder) {
+    public HelpOPChannel(@NotNull JavaPlugin plugin, @NotNull ChannelBuilder builder) {
         this((Strings) plugin, builder);
     }
 
-    public HelpOPChannel(Strings strings, ChannelBuilder data)
+    public HelpOPChannel(@NotNull Strings strings, @NotNull ChannelBuilder data)
     {
         super("helpop");
         this.strings = strings;
@@ -68,8 +69,10 @@ public class HelpOPChannel extends ProtectedChannel {
     }
 
     @Override
-    public void sendMessage(@NotNull Player player, @NotNull String message) {
+    public void sendMessage(@NotNull StringsUser user, @NotNull String message) {
         Set<Player> members = getRecipients();
+        Player player = User.playerOf(user);
+
         String messageFormat = generateTemplate(player);
         message = messageProcessor.processMessage(player, message);
         String finalMessage = message;

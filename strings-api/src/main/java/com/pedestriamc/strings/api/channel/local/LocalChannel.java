@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.api.channel.local;
 
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +17,7 @@ import java.util.Set;
  * To check this, you can call {@link #getType()} before calling these methods.
  */
 @SuppressWarnings("unused")
-public interface LocalChannel extends Channel {
+public interface LocalChannel<T> extends Channel {
 
     /**
      * Casts a Channel to a LocalChannel if it implements LocalChannel
@@ -24,26 +25,27 @@ public interface LocalChannel extends Channel {
      * @return A LocalChannel if possible, otherwise null
      */
     @Nullable
-    static LocalChannel of(Channel channel) {
-        if(channel instanceof LocalChannel localChannel) {
+    static LocalChannel<?> of(Channel channel) {
+        if(channel instanceof LocalChannel<?> localChannel) {
             return localChannel;
         }
+
         return null;
     }
 
     /**
      * Checks if a Player is in the scope of the Channel, meaning that they are in a world this Channel is effective in.
      * A player not being in scope does not necessarily mean they can't send or receive messages from the Channel.
-     * @param player The Player to check
+     * @param user The Player to check
      * @return If the Player is in scope
      */
-    boolean containsInScope(@NotNull Player player);
+    boolean containsInScope(@NotNull StringsUser user);
 
     /**
      * Provides a Set of all the Worlds the Channel is used in.
      * @return A populated Set.
      */
-    Set<World> getWorlds();
+    Set<? extends Locality<T>> getWorlds();
 
     /**
      * Sets the Worlds this LocalChannel contains.
@@ -52,7 +54,16 @@ public interface LocalChannel extends Channel {
      *
      * @param worlds The Set of Worlds the Channel should contain.
      */
-    void setWorlds(@NotNull Set<World> worlds);
+    void setWorlds(@NotNull Set<Locality<T>> worlds);
+
+    /**
+     * Tells if this LocalChannel contains a specific World.
+     * Convenience method that handles Locality unwrapping for searching.
+     *
+     * @param world The world to search for
+     * @return If the LocalChannel contains the World or not.
+     */
+    boolean containsWorld(@NotNull T world);
 
     /**
      * If this is an instance of a {@code ProximityChannel}, this will provide the proximity the Channel is set to.

@@ -48,7 +48,7 @@ public final class StringsPlaceholderExpansion extends PlaceholderExpansion {
         StringsUser user = userUtil.getUser(player);
         try {
             return switch(params.toUpperCase(Locale.ROOT)) {
-                case "CURRENT_CHANNEL" -> user.getActiveChannel().resolve(player).getName();
+                case "CURRENT_CHANNEL" -> user.getActiveChannel().resolve(userUtil.getUser(player)).getName();
                 case "ACTIVE_CHANNEL" -> user.getActiveChannel().getName();
                 case "CHAT_COLOR" -> user.getChatColorComponent().toString();
                 default -> null;
