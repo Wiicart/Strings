@@ -1,6 +1,3 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
 name: Java CI with Maven
 
 permissions:
@@ -29,21 +26,8 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
 
-      - name: Upload full target/ directory
+      - name: Upload all JAR files
         uses: actions/upload-artifact@v4
         with:
-          name: artifact
-          path: target/
-
-      - name: Create staging directory for JAR
-        run: mkdir staging && cp target/*.jar staging
-
-      - name: Upload JAR as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Package
-          path: staging
-
-    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-    # - name: Update dependency graph
-    #   uses: gradle/actions/dependency-submission@v3
+          name: JAR-Packages
+          path: target/*.jar
