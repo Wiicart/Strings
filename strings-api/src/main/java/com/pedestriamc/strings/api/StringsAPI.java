@@ -2,6 +2,7 @@ package com.pedestriamc.strings.api;
 
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -86,6 +87,12 @@ public interface StringsAPI {
      * @return The Strings Messenger instance
      */
     @NotNull Messenger getMessenger();
+
+    /**
+     * Provides the {@link Settings} instance
+     * @return The Settings instance
+     */
+    @NotNull Settings getSettings();
 
     /**
      * Provides the StringsModeration instance, offering some moderation methods.

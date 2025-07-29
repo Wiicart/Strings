@@ -2,8 +2,8 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.utlity.Permissions;
-import com.pedestriamc.strings.configuration.Option;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -23,7 +23,7 @@ public final class BroadcastCommand implements CommandExecutor {
 
     public BroadcastCommand(@NotNull Strings strings) {
         this.strings = strings;
-        broadcastFormat = strings.getConfiguration().getString(Option.BROADCAST_FORMAT);
+        broadcastFormat = strings.getConfiguration().getString(Option.Text.BROADCAST_FORMAT);
         usePAPI = strings.isUsingPlaceholderAPI();
         messenger = strings.getMessenger();
     }

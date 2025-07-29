@@ -2,11 +2,11 @@ package com.pedestriamc.strings.chat.paper;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.chat.MessageProcessor;
-import com.pedestriamc.strings.configuration.Option;
 import io.papermc.paper.chat.ChatRenderer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -21,7 +21,7 @@ public class ChannelChatRenderer extends MessageProcessor implements ChatRendere
 
     public ChannelChatRenderer(final @NotNull Strings strings, final @NotNull Channel channel) {
         super(strings, channel);
-        mentionsEnabled = strings.getConfiguration().getBoolean(Option.ENABLE_MENTIONS);
+        mentionsEnabled = strings.getConfiguration().getBoolean(Option.Bool.ENABLE_MENTIONS);
     }
 
     @Override

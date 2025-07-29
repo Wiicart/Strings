@@ -1,61 +1,103 @@
 package com.pedestriamc.strings.configuration;
 
+import com.pedestriamc.strings.api.settings.Settings;
+import com.pedestriamc.strings.api.settings.Option;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("unused")
-public class Configuration {
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
 
-    private final FileConfiguration config;
+public class Configuration implements Settings {
 
-    public Configuration(FileConfiguration config) {
-        this.config = config;
+    private final EnumMap<Option.Text, String> stringMap = new EnumMap<>(Option.Text.class);
+
+    private final EnumMap<Option.Bool, Boolean> booleans = new EnumMap<>(Option.Bool.class);
+
+    private final EnumMap<Option.Double, Double> doubles = new EnumMap<>(Option.Double.class);
+
+    private final EnumMap<Option.StringList, List<String>> lists = new EnumMap<>(Option.StringList.class);
+
+    public Configuration(@NotNull FileConfiguration config) {
+        loadStrings(config);
+        loadDoubles(config);
+        loadBooleans(config);
+        loadStringLists(config);
     }
 
-    private Object get(@NotNull Option option) {
-        return config.get(option.getIdentifier());
-    }
-
-    public boolean getBoolean(@NotNull Option option) {
-        return config.getBoolean(option.getIdentifier());
-    }
-
-    public String getString(@NotNull Option option) {
-        String val = config.getString(option.getIdentifier());
-        if(val == null && option.getDefault() instanceof String) {
-            return option.getDefault().toString();
+    private void loadStrings(@NotNull FileConfiguration config) {
+        for (Option.Text option : Option.Text.values()) {
+            String val = config.getString(option.getKey());
+            if (val != null) {
+                stringMap.put(option, val);
+            } else {
+                stringMap.put(option, option.getDefault());
+            }
         }
-        return val;
     }
 
-    @Nullable
-    public String getColored(@NotNull Option option) {
-        String str = getString(option);
-        if(str != null) {
-            return ChatColor.translateAlternateColorCodes('&', str);
+    private void loadBooleans(@NotNull FileConfiguration config) {
+        for (Option.Bool bool : Option.Bool.values()) {
+            String key = bool.getKey();
+            if (config.contains(key)) {
+                booleans.put(bool, config.getBoolean(key));
+            } else {
+                booleans.put(bool, bool.getDefault());
+            }
         }
-        return null;
     }
 
-    public float getFloat(@NotNull Option option) {
-        return (float) config.getDouble(option.getIdentifier());
-    }
-
-    /**
-     * Sets a config option.
-     * Returns false if the wrong type is provided.
-     * @param option The ConfigurationOption to be changed
-     * @param value The new value
-     * @return True if the change is successful, false otherwise
-     */
-    public boolean set(@NotNull Option option, @NotNull Object value) {
-        if(value.getClass().equals(option.getType())) {
-            config.set(option.getIdentifier(), value);
-            return true;
+    private void loadDoubles(@NotNull FileConfiguration config) {
+        for (Option.Double option : Option.Double.values()) {
+            String key = option.getKey();
+            if (config.contains(key)) {
+                doubles.put(option, config.getDouble(key));
+            } else {
+                doubles.put(option, option.getDefault());
+            }
         }
-        return false;
     }
 
+    private void loadStringLists(@NotNull FileConfiguration config) {
+        for (Option.StringList list : Option.StringList.values()) {
+            String key = list.getKey();
+            if (config.contains(key)) {
+                lists.put(list, config.getStringList(key));
+            } else {
+                lists.put(list, list.getDefault());
+            }
+        }
+    }
+
+    @Override
+    public @NotNull String getString(Option.@NotNull Text option) {
+        return stringMap.get(option);
+    }
+
+    @Override
+    public @NotNull String getColored(Option.@NotNull Text option) {
+        return ChatColor.translateAlternateColorCodes('&', getString(option));
+    }
+
+    @Override
+    public @NotNull List<String> getStringList(Option.@NotNull StringList option) {
+        return new ArrayList<>(lists.get(option));
+    }
+
+    @Override
+    public boolean getBoolean(Option.@NotNull Bool option) {
+        return booleans.get(option);
+    }
+
+    @Override
+    public double getDouble(Option.@NotNull Double option) {
+        return doubles.get(option);
+    }
+
+    @Override
+    public float getFloat(Option.@NotNull Double option) {
+        return (float) getDouble(option);
+    }
 }

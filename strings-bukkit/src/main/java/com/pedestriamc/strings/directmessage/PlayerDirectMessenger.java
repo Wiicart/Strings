@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.directmessage;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.configuration.Configuration;
-import com.pedestriamc.strings.configuration.Option;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.event.moderation.PlayerDirectMessageEvent;
 import com.pedestriamc.strings.api.message.Message;
@@ -34,8 +34,8 @@ public class PlayerDirectMessenger {
         this.strings = strings;
         this.userUtil = strings.users();
         Configuration config = strings.getConfiguration();
-        this.messageFormatSender = config.getString(Option.DM_FORMAT_OUT);
-        this.messageFormatRecipient = config.getString(Option.DM_FORMAT_IN);
+        this.messageFormatSender = config.getString(Option.Text.DIRECT_MESSAGE_FORMAT_OUT);
+        this.messageFormatRecipient = config.getString(Option.Text.DIRECT_MESSAGE_FORMAT_IN);
         this.usePAPI = strings.isUsingPlaceholderAPI();
         this.messenger = strings.getMessenger();
 

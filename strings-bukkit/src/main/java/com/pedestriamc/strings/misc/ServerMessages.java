@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.misc;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.configuration.Configuration;
-import com.pedestriamc.strings.configuration.Option;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -18,7 +18,7 @@ public class ServerMessages {
     private final UserUtil userUtil;
     private final String joinMessageTemplate;
     private final String leaveMessageTemplate;
-    private final ArrayList<String> motd;
+    private final List<String> motd;
     private final boolean usePAPI;
 
     public ServerMessages(@NotNull Strings strings) {
@@ -26,17 +26,9 @@ public class ServerMessages {
         usePAPI = strings.isUsingPlaceholderAPI();
 
         Configuration config = strings.getConfiguration();
-        joinMessageTemplate = config.getString(Option.JOIN_MESSAGE);
-        leaveMessageTemplate = config.getString(Option.LEAVE_MESSAGE);
-        motd = new ArrayList<>();
-        List<?> list = strings.getConfig().getList("motd");
-        if(list != null) {
-            for(Object obj : list) {
-                if(obj instanceof String string) {
-                    motd.add(string);
-                }
-            }
-        }
+        joinMessageTemplate = config.getString(Option.Text.JOIN_MESSAGE);
+        leaveMessageTemplate = config.getString(Option.Text.LEAVE_MESSAGE);
+        motd = config.getStringList(Option.StringList.MOTD);
     }
 
     public String joinMessage(Player player) {

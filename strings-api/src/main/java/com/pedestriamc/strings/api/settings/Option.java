@@ -1,5 +1,7 @@
 package com.pedestriamc.strings.api.settings;
 
+import java.util.List;
+
 public final class Option {
 
     private Option() {}
@@ -25,6 +27,14 @@ public final class Option {
             this.key = key;
             this.defaultValue = defaultValue;
         }
+
+        public String getKey() {
+            return key;
+        }
+
+        public boolean getDefault() {
+            return defaultValue;
+        }
     }
 
     public enum Text {
@@ -46,18 +56,55 @@ public final class Option {
             this.key = key;
             this.defaultValue = defaultValue;
         }
+
+        public String getKey() {
+            return key;
+        }
+
+        public String getDefault() {
+            return defaultValue;
+        }
     }
 
-    public enum DoubleNumber {
+    public enum Double {
         MENTION_PITCH("mention-pitch", 0.594604),
         MENTION_VOLUME("mention-vol", 10D);
 
         final String key;
         final double defaultValue;
 
-        DoubleNumber(String key, double defaultValue) {
+        Double(String key, double defaultValue) {
             this.key = key;
             this.defaultValue = defaultValue;
         }
+
+        public String getKey() {
+            return key;
+        }
+
+        public double getDefault() {
+            return defaultValue;
+        }
     }
+
+    public enum StringList {
+        MOTD("motd", java.util.List.of("&fWelcome to the server, {username}!", "&fHave fun!"));
+
+        final String key;
+        final List<String> defaultValue;
+
+        StringList(String key, List<String> defaultValue) {
+            this.key = key;
+            this.defaultValue = defaultValue;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public List<String> getDefault() {
+            return defaultValue;
+        }
+    }
+
 }

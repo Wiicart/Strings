@@ -1,9 +1,9 @@
 package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.configuration.Configuration;
-import com.pedestriamc.strings.configuration.Option;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import net.md_5.bungee.api.ChatMessageType;
@@ -27,12 +27,12 @@ public final class Mentioner {
         this.userUtil = strings.users();
 
         Configuration config = strings.getConfiguration();
-        pitch = config.getFloat(Option.MENTION_PITCH);
-        volume = config.getFloat(Option.MENTION_VOLUME);
-        format = config.getColored(Option.MENTION_FORMAT);
+        pitch = config.getFloat(Option.Double.MENTION_PITCH);
+        volume = config.getFloat(Option.Double.MENTION_VOLUME);
+        format = config.getColored(Option.Text.MENTION_TEXT_ACTION_BAR);
 
         try {
-            sound = Sound.valueOf(config.getString(Option.MENTION_SOUND));
+            sound = Sound.valueOf(config.getString(Option.Text.MENTION_SOUND));
         } catch(IllegalArgumentException e) {
             strings.warning("Invalid sound-type for mentions in config.yml, defaulting to: BLOCK_NOTE_BLOCK_PLING");
             sound = Sound.BLOCK_NOTE_BLOCK_PLING;

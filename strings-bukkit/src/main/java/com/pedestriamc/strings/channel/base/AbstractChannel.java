@@ -2,6 +2,7 @@ package com.pedestriamc.strings.channel.base;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
@@ -10,7 +11,6 @@ import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.chat.MessageProcessor;
-import com.pedestriamc.strings.configuration.Option;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import net.md_5.bungee.api.ChatColor;
@@ -72,7 +72,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         priority = data.getPriority();
 
         messageProcessor = new MessageProcessor(strings, this);
-        mentionsEnabled = strings.getConfiguration().getBoolean(Option.ENABLE_MENTIONS);
+        mentionsEnabled = strings.getConfiguration().getBoolean(Option.Bool.ENABLE_MENTIONS);
         updatePermissions();
         members = new HashSet<>();
         monitors = new HashSet<>();

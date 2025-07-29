@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.*;
+import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.user.User;
@@ -73,6 +74,11 @@ public final class StringsImpl implements StringsAPI {
 
     public @NotNull Messenger getMessenger() {
         return strings.getMessenger();
+    }
+
+    @Override
+    public @NotNull Settings getSettings() {
+        return strings.getConfiguration();
     }
 
 }

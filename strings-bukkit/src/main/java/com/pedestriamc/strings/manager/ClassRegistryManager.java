@@ -3,6 +3,7 @@ package com.pedestriamc.strings.manager;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Message;
+import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.commands.BroadcastCommand;
 import com.pedestriamc.strings.commands.ChatColorCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
@@ -34,8 +35,6 @@ import com.pedestriamc.strings.tabcompleters.StringsTabCompleter;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.event.Listener;
-
-import static com.pedestriamc.strings.configuration.Option.*;
 
 /**
  * Registers CommandExecutors and Listeners
@@ -86,7 +85,7 @@ public class ClassRegistryManager {
         registerCommand("mention", mentionCommand, mentionCommandTabCompleter);
         registerCommand("mentions", mentionCommand, mentionCommandTabCompleter);
 
-        if(config.getBoolean(MSG_ENABLED)) {
+        if(config.getBoolean(Option.Bool.ENABLE_DIRECT_MESSAGES)) {
             DirectMessageCommand directMessageCommand = new DirectMessageCommand(strings);
             MessageTabCompleter messageTabCompleter = new MessageTabCompleter();
             registerCommand("msg", directMessageCommand, messageTabCompleter);
@@ -97,14 +96,14 @@ public class ClassRegistryManager {
             registerCommand("r", replyCommand, null);
         }
 
-        if(config.getBoolean(ENABLE_CHATCOLOR_COMMAND)) {
+        if(config.getBoolean(Option.Bool.ENABLE_CHATCOLOR_COMMAND)) {
             registerCommand("chatcolor", new ChatColorCommand(strings), new ChatColorTabCompleter());
         }
 
-        if(config.getBoolean(ENABLE_HELPOP)) {
+        if(config.getBoolean(Option.Bool.ENABLE_HELPOP)) {
             registerCommand("helpop", new HelpOPCommand(strings), null);
         } else {
-            if(!config.getBoolean(DISABLE_HELPOP_COMMAND)) {
+            if(!config.getBoolean(Option.Bool.DISABLE_HELPOP_COMMAND)) {
                 registerCommand("helpop", new MessengerCommand(strings, Message.HELPOP_DISABLED), null);
             }
 
@@ -142,7 +141,7 @@ public class ClassRegistryManager {
         registerListener(new PlayerQuitListener(strings));
         registerListener(new DirectMessageListener(strings));
 
-        if(strings.getConfiguration().getBoolean(ENABLE_MENTIONS)) {
+        if(strings.getConfiguration().getBoolean(Option.Bool.ENABLE_MENTIONS)) {
             if(strings.isUsingLuckPerms()) {
                 registerListener(new LuckPermsMentionListener(strings));
             } else {

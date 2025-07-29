@@ -2,6 +2,7 @@ package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.user.User;
@@ -16,8 +17,6 @@ import java.awt.Color;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.pedestriamc.strings.configuration.Option.*;
 
 public class MessageProcessor {
 
@@ -38,9 +37,9 @@ public class MessageProcessor {
         logger = strings.getLogger();
         Configuration config = strings.getConfiguration();
         usingPlaceholderAPI = strings.isUsingPlaceholderAPI();
-        processingMessagePlaceholders = config.getBoolean(PROCESS_PLACEHOLDERS) && usingPlaceholderAPI;
-        parsingMessageChatColors = config.getBoolean(PROCESS_CHATCOLOR);
-        mentionColor = config.getColored(MENTION_COLOR);
+        processingMessagePlaceholders = config.getBoolean(Option.Bool.PROCESS_PLACEHOLDERS) && usingPlaceholderAPI;
+        parsingMessageChatColors = config.getBoolean(Option.Bool.PROCESS_CHATCOLOR);
+        mentionColor = config.getColored(Option.Text.MENTION_COLOR);
     }
 
     /**
@@ -90,7 +89,6 @@ public class MessageProcessor {
         return message;
     }
 
-    //TODO fix adventure support
     public String processMentions(Player sender, @NotNull String str) {
         if(!str.contains("@")) {
             return str;

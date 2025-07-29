@@ -5,11 +5,11 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.channel.HelpOPChannel;
 import com.pedestriamc.strings.channel.SocialSpyChannel;
-import com.pedestriamc.strings.configuration.Option;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -63,7 +63,7 @@ class ChannelFileReader {
             registerHelpOp();
         }
 
-        String socialSpyFormat = strings.getConfiguration().getString(Option.SOCIAL_SPY_FORMAT);
+        String socialSpyFormat = strings.getConfiguration().getString(Option.Text.SOCIAL_SPY_FORMAT);
         manager.register(new SocialSpyChannel(strings.getPlayerDirectMessenger(), socialSpyFormat));
 
         manager.register(new DefaultChannel(manager));
