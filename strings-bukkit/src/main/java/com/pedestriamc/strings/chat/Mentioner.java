@@ -2,12 +2,12 @@ package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.settings.Option;
-import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.wiicart.commands.permission.Permissions;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +53,7 @@ public final class Mentioner {
     }
 
     public void mention(@NotNull User user, @NotNull User sender) {
-        mention(user.getPlayer(), sender.getPlayer());
+        mention(user.player(), sender.player());
     }
 
     public void mention(@NotNull Set<Player> group, @NotNull Player sender) {

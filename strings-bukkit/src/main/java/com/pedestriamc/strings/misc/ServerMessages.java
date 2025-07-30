@@ -65,7 +65,7 @@ public class ServerMessages {
     }
 
     private @NotNull String applyPlaceholders(@NotNull String message, User user) {
-        Player player = user.getPlayer();
+        Player player = user.player();
         return message
                 .replace("{displayname}", player.getDisplayName())
                 .replace("{username}", player.getName())

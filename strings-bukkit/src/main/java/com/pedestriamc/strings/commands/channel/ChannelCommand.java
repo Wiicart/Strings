@@ -2,44 +2,38 @@ package com.pedestriamc.strings.commands.channel;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.message.Message;
-import com.pedestriamc.strings.commands.MessengerCommand;
-import com.pedestriamc.strings.commands.base.CommandBase;
-import org.bukkit.command.CommandExecutor;
+import com.pedestriamc.strings.commands.CartMessengerCommand;
+import net.wiicart.commands.command.tree.CommandTree;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
+public class ChannelCommand extends CommandTree {
 
-public final class ChannelCommand extends CommandBase {
-
-    public static final String CHANNEL_PLACEHOLDER = "{channel}";
-
-    public ChannelCommand(Strings strings) {
-        super();
-        HashMap<String, CommandExecutor> map = new HashMap<>();
-
-        CommandExecutor joinCommand = new JoinCommand(strings);
-        map.put("JOIN", joinCommand);
-        map.put("J", joinCommand);
-
-        CommandExecutor leaveCommand = new LeaveCommand(strings);
-        map.put("LEAVE", leaveCommand);
-        map.put("L", leaveCommand);
-
-        CommandExecutor helpCommand = new MessengerCommand(strings, Message.CHANNEL_HELP);
-        map.put("HELP", helpCommand);
-        map.put("H", helpCommand);
-
-        CommandExecutor monitorCommand = new MonitorCommand(strings);
-        map.put("MONITOR", monitorCommand);
-
-        CommandExecutor unmonitorCommand = new UnmonitorCommand(strings);
-        map.put("UNMONITOR", unmonitorCommand);
-
-        CommandExecutor channelBroadcastCommand = new ChannelBroadcastCommand(strings);
-        map.put("BROADCAST", channelBroadcastCommand);
-        map.put("ANNOUNCE", channelBroadcastCommand);
-
-        CommandExecutor baseCommand = new ChannelBaseCommand(strings);
-        initialize(map, baseCommand);
+    public ChannelCommand(@NotNull Strings strings) {
+        super(CommandTree.builder()
+                .executes(new RootCommand(strings))
+                .withChild("join", b -> {
+                    b.withAliases("j");
+                    b.executes(new JoinCommand(strings));
+                })
+                .withChild("leave", b -> {
+                    b.withAliases("l");
+                    b.executes(new LeaveCommand(strings));
+                })
+                .withChild("help", b -> {
+                        b.withAliases("h");
+                        b.executes(new CartMessengerCommand(strings, Message.CHANNEL_HELP));
+                })
+                .withChild("broadcast", b -> {
+                    b.withAliases("announce");
+                    b.executes(new BroadcastCommand(strings));
+                })
+                .withChild("mute", b -> b.executes(new MuteCommand(strings)))
+                .withChild("unmute", b -> b.executes(new UnmuteCommand(strings)))
+                .withChild("monitor", b -> b.executes(new MonitorCommand(strings)))
+                .withChild("unmonitor", b -> b.executes(new UnmonitorCommand(strings)))
+                .withChild("list", b -> {})
+                .build()
+        );
     }
 
 }

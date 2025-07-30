@@ -3,10 +3,10 @@ package com.pedestriamc.strings.commands;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
-import com.pedestriamc.strings.api.utlity.Permissions;
 import net.wiicart.commands.command.CartCommandExecutor;
 import net.wiicart.commands.command.CommandData;
 import net.wiicart.commands.command.tree.CommandTree;
+import net.wiicart.commands.permission.Permissions;
 import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
 

@@ -349,7 +349,6 @@ public final class User implements StringsUser {
     }
 
 
-
     @Override
     public boolean memberOf(Channel channel) {
         return channels.contains(channel);
@@ -450,6 +449,11 @@ public final class User implements StringsUser {
     @Override
     public @NotNull Set<Channel> getMonitoredChannels() {
         return new HashSet<>(monitored);
+    }
+
+    @Override
+    public boolean isMonitoring(@NotNull Monitorable monitorable) {
+        return monitored.contains(monitorable);
     }
 
     @Override

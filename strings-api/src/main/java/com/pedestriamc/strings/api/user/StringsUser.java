@@ -185,6 +185,13 @@ public interface StringsUser {
     Set<UUID> getIgnoredPlayers();
 
     /**
+     * Tells if this User is monitoring a Channel
+     * @param monitorable The Channel to check
+     * @return true/false
+     */
+    boolean isMonitoring(@NotNull Monitorable monitorable);
+
+    /**
      * Monitors a Channel
      * @param monitorable The Channel to monitor.
      */

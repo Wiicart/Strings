@@ -2,6 +2,7 @@ package com.pedestriamc.strings.commands.channel;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.user.User;
 import net.wiicart.commands.command.CartCommandExecutor;
 import net.wiicart.commands.command.CommandData;
@@ -10,9 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.pedestriamc.strings.api.message.Message.*;
 
-class LeaveCommand extends AbstractChannelCommand implements CartCommandExecutor {
+class MuteCommand extends AbstractChannelCommand implements CartCommandExecutor {
 
-    LeaveCommand(@NotNull Strings strings) {
+    MuteCommand(@NotNull Strings strings) {
         super(strings);
     }
 
@@ -25,7 +26,7 @@ class LeaveCommand extends AbstractChannelCommand implements CartCommandExecutor
             return;
         }
 
-        Channel channel = getChannel(sender, args[0]);
+        Channel channel = getChannelAndCheckAllows(sender, args[0]);
         if (channel == null) {
             return;
         }
@@ -35,29 +36,28 @@ class LeaveCommand extends AbstractChannelCommand implements CartCommandExecutor
             return;
         }
 
-        if (isNotMember(sender, target, channel)) {
+        if (isAlreadyMuted(sender, target, channel)) {
             return;
         }
 
-        target.leaveChannel(channel);
+        target.muteChannel(channel);
         saveUser(target);
 
         sendFinalMessages(sender, target, channel);
     }
 
-    private boolean isNotMember(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
+    private void sendFinalMessages(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
+        sendFinalMessages(sender, target, channel, MUTE_SUCCESS, MUTE_SUCCESS_OTHER);
+    }
+
+    private boolean isAlreadyMuted(@NotNull CommandSender sender, @NotNull StringsUser target, @NotNull Channel channel) {
         return checkAlreadySet(
-                !target.memberOf(channel),
+                target.hasChannelMuted(channel),
                 sender,
                 target,
                 channel,
-                NOT_CHANNEL_MEMBER,
-                NOT_CHANNEL_MEMBER_OTHER
+                ALREADY_MUTED,
+                ALREADY_MUTED_OTHER
         );
     }
-
-    private void sendFinalMessages(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
-        sendFinalMessages(sender, target, channel, LEFT_CHANNEL, LEFT_CHANNEL_OTHER);
-    }
-
 }

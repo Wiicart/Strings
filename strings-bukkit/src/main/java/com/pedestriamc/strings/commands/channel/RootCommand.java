@@ -10,9 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.pedestriamc.strings.api.message.Message.*;
 
-class LeaveCommand extends AbstractChannelCommand implements CartCommandExecutor {
+class RootCommand extends AbstractChannelCommand implements CartCommandExecutor {
 
-    LeaveCommand(@NotNull Strings strings) {
+    RootCommand(@NotNull Strings strings) {
         super(strings);
     }
 
@@ -25,7 +25,7 @@ class LeaveCommand extends AbstractChannelCommand implements CartCommandExecutor
             return;
         }
 
-        Channel channel = getChannel(sender, args[0]);
+        Channel channel = getChannelAndCheckAllows(sender, args[0]);
         if (channel == null) {
             return;
         }
@@ -35,29 +35,29 @@ class LeaveCommand extends AbstractChannelCommand implements CartCommandExecutor
             return;
         }
 
-        if (isNotMember(sender, target, channel)) {
+        if (isAlreadyActive(sender, target, channel)) {
             return;
         }
 
-        target.leaveChannel(channel);
+        target.joinChannel(channel);
+        target.setActiveChannel(channel);
         saveUser(target);
 
         sendFinalMessages(sender, target, channel);
     }
 
-    private boolean isNotMember(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
+    private boolean isAlreadyActive(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
         return checkAlreadySet(
-                !target.memberOf(channel),
+                target.getActiveChannel().equals(channel),
                 sender,
                 target,
                 channel,
-                NOT_CHANNEL_MEMBER,
-                NOT_CHANNEL_MEMBER_OTHER
+                ALREADY_ACTIVE,
+                ALREADY_ACTIVE_OTHER
         );
     }
 
     private void sendFinalMessages(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
-        sendFinalMessages(sender, target, channel, LEFT_CHANNEL, LEFT_CHANNEL_OTHER);
+        sendFinalMessages(sender, target, channel, CHANNEL_ACTIVE, CHANNEL_ACTIVE_OTHER);
     }
-
 }

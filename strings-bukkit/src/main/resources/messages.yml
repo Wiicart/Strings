@@ -92,6 +92,10 @@ channel-does-not-exist: "&fChannel &7{channel} &fdoes not exist!"
 # Placeholder: {channel}
 no-perms-channel: "&fYou don't have permission to use channel &7{channel}&f."
 
+# Sent when a Player tries to broadcast to a Channel without permission.
+# Placeholder: {channel}
+no-perms-channel-broadcast: "&fYou don't have permission to broadcast to channel &7{channel}&f."
+
 # Other player doesn't have perms to join channel:
 # Placeholders: {player}, {channel}
 other-player-no-perms: "&fPlayer &7{player} &fdoesn't have permission to join channel &7{channel}&f!"
@@ -282,7 +286,7 @@ ineligible-sender: "&fYou aren't in the scope of channel &7{channel}&f, it has b
 default-restricted: "&fYou can't use that command with the channel &7default&f."
 
 # Sent when a player attempts to use a command on another player without permission.
-no-perms-other: "&fYou don't have permission to use that command on another player."
+no-perms-other: "&fYou don't have permission to use that command on other players."
 
 # Sent when a player tries to run a command, defining themselves as the target.
 use-on-other: "&fYou cannot use that command on yourself."
@@ -309,3 +313,27 @@ cant-ignore-self: "&fYou can't ignore yourself!"
 
 # Sent when a player attempts to set another player as ignoring themself
 cant-ignore-self-other: "&fPlayers can't ignore themselves!"
+
+# Sent when a player tries to mute a Channel that's already muted.
+already-muted: "&fChannel &7{channel} &fis already muted."
+
+# Sent when a player tries to mute a Channel for another player but the player already has the channel muted.
+already-muted-other: "&7{player} &falready has channel &7{channel} &fmuted."
+
+# Sent when a player has a Channel muted
+mute-success: "&fChannel &7{channel} &fmuted."
+
+# Sent when a player mutes a Channel for another player.
+mute-success-other: "&fChannel &7{channel} &fmuted for &7{player}"
+
+# Sent when a player tries to unmute a Channel that isn't muted
+not-muted: "&fChannel &7{channel} &fis already not muted."
+
+# Sent when a player tries to unmute a Channel for another player but the player already has the channel not muted.
+not-muted-other: "&7{player} &falready has channel &7{channel} &fnot muted."
+
+# Sent when a player has a Channel unmuted
+unmute-success: "&fChannel &7{channel} &funmuted."
+
+# Sent when a player unmutes a Channel for another player.
+unmute-success-other: "&fChannel &7{channel} &funmuted for &7{player}"

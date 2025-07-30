@@ -3,94 +3,70 @@ package com.pedestriamc.strings.commands.channel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
-import com.pedestriamc.strings.api.message.Message;
-import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.util.UserUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import net.wiicart.commands.command.CartCommandExecutor;
+import net.wiicart.commands.command.CommandData;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
 
-public class UnmonitorCommand implements CommandExecutor {
+import static com.pedestriamc.strings.api.message.Message.*;
 
-    private final Strings strings;
+class UnmonitorCommand extends AbstractChannelCommand implements CartCommandExecutor {
 
-    public UnmonitorCommand(Strings strings) {
-        this.strings = strings;
+    UnmonitorCommand(@NotNull Strings strings) {
+        super(strings);
     }
 
-    /**
-     * /channel unmonitor <channel> <player>
-     */
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Messenger messenger = strings.getMessenger();
-        UserUtil userUtil = strings.users();
-        if(args.length < 2 || (args.length < 3 && !(sender instanceof Player))) {
-            messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
-            return true;
+    public void onCommand(@NotNull CommandData data) {
+        CommandSender sender = data.sender();
+        int length = data.args().length;
+        String[] args = data.args();
+
+        if (isArgCountIncorrect(sender, length)) {
+            return;
         }
 
-        Channel channel = strings.getChannelLoader().getChannel(args[1]);
-        if(channel == null) {
-            messenger.sendMessage(Message.UNKNOWN_CHANNEL, Map.of("{channel}", args[1]), sender);
-            return true;
+        Channel channel = getChannel(sender, args[0]);
+        if (channel == null) {
+            return;
         }
 
-        Monitorable monitorable = Monitorable.of(channel);
-        if(monitorable == null) {
-            Map<String, String> placeholders = generatePlaceholders(channel.getName(), "");
-            messenger.sendMessage(Message.NOT_MONITORABLE, placeholders, sender);
-            return true;
+        Monitorable monitorable = getMonitorable(sender, channel);
+        if (monitorable == null) {
+            return;
         }
 
-        Player target;
-        if(args.length == 3) {
-            Player p = Bukkit.getPlayer(args[2]);
-            if(p == null) {
-                messenger.sendMessage(Message.UNKNOWN_PLAYER, sender);
-                return true;
-            }
-            target = p;
-        } else if(sender instanceof Player p) {
-             target = p;
-        } else {
-            return true;
+        User target = getTarget(sender, args);
+        if (target == null) {
+            return;
         }
 
-        User user = strings.users().getUser(target);
-        if(!user.getMonitoredChannels().contains(channel)) {
-            Map<String, String> placeholders = generatePlaceholders(channel.getName(), target.getName());
-            if(!target.equals(sender)) {
-                messenger.sendMessage(Message.NOT_MONITORING_OTHER, placeholders, sender);
-            } else {
-                messenger.sendMessage(Message.NOT_MONITORING, placeholders, sender);
-            }
-            return true;
+        if (isNotMonitoring(sender, target, monitorable)) {
+            return;
         }
 
-        user.unmonitor(monitorable);
-        userUtil.saveUser(user);
+        target.unmonitor(monitorable);
+        saveUser(target);
 
-        Map<String, String> placeholders = generatePlaceholders(channel.getName(), target.getName());
-        if(!target.equals(sender)) {
-            messenger.sendMessage(Message.UNMONITORED_OTHER, placeholders, sender);
-        }
-        messenger.sendMessage(Message.UNMONITORED, placeholders, sender);
-
-        return true;
+        sendFinalMessages(sender, target, channel);
     }
 
-    private Map<String, String> generatePlaceholders(String channel, String player) {
-        Map<String, String> placeholders = new HashMap<>();
-        placeholders.put("{channel}", channel);
-        placeholders.put("{player}", player);
-        return placeholders;
+    private boolean isNotMonitoring(@NotNull CommandSender sender, @NotNull StringsUser target, @NotNull Monitorable monitorable) {
+        return checkAlreadySet(
+                !target.isMonitoring(monitorable),
+                sender,
+                target,
+                monitorable,
+                NOT_MONITORING,
+                NOT_MONITORING_OTHER
+        );
     }
+
+    private void sendFinalMessages(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
+        sendFinalMessages(sender, target, channel, UNMONITORED, UNMONITORED_OTHER);
+    }
+
 }

@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * Class used to simplify checking for multiple permissions, and to simplify permission registration.
  */
-@SuppressWarnings("unused")
+@Deprecated()
 public final class Permissions {
 
     private final PluginManager pluginManager;

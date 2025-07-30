@@ -16,11 +16,11 @@ import java.util.Set;
  */
 public class ChannelTabCompleter extends AbstractTabCompleter {
 
-    private static final @NotNull Set<String> CASES = Set.of(
-            "join", "leave", "monitor", "unmonitor", "broadcast", "announce"
+    private static final Set<String> CASES = Set.of(
+            "join", "leave", "monitor", "unmonitor", "broadcast", "announce", "mute"
     );
 
-    private static final @NotNull String HELP = "help";
+    private static final String HELP = "help";
 
     private final @NotNull ChannelManager channelLoader;
 

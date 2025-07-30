@@ -23,7 +23,7 @@ abstract class AbstractChatListener implements Listener {
         for(Map.Entry<String, Channel> entry : channelLoader.getChannelSymbols().entrySet()) {
             if(msg.startsWith(entry.getKey())) {
                 Channel c = entry.getValue();
-                if (c.allows(user.getPlayer())) {
+                if (c.allows(user.player())) {
                     msg = msg.substring(entry.getKey().length());
                     return new Container(c, msg);
                 }

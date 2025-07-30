@@ -29,6 +29,7 @@ public enum Message {
     LEFT_CHANNEL("left-channel"),
     LEFT_CHANNEL_OTHER("other-user-left-channel"),
     NO_PERMS_CHANNEL("no-perms-channel"),
+    NO_PERMS_CHANNEL_BROADCAST("no-perms-channel-broadcast"),
     NOT_CHANNEL_MEMBER("not-channel-member"),
     NOT_CHANNEL_MEMBER_OTHER("not-channel-member-other"),
     LINKS_PROHIBITED("links-prohibited"),
@@ -75,7 +76,15 @@ public enum Message {
     PLAYER_IGNORED_OTHER("ignored-other"),
     CANT_IGNORE("not-ignorable"),
     CANT_IGNORE_SELF("cant-ignore-self"),
-    CANT_IGNORE_SELF_OTHER("cant-ignore-self-other");
+    CANT_IGNORE_SELF_OTHER("cant-ignore-self-other"),
+    ALREADY_MUTED("already-muted"),
+    ALREADY_MUTED_OTHER("already-muted-other"),
+    MUTE_SUCCESS("mute-success"),
+    MUTE_SUCCESS_OTHER("mute-success-other"),
+    NOT_MUTED("not-muted"),
+    NOT_MUTED_OTHER("not-muted-other"),
+    UNMUTE_SUCCESS("unmute-success"),
+    UNMUTE_SUCCESS_OTHER("unmute-success-other"),;
 
     private final String key;
 

@@ -162,7 +162,7 @@ public abstract class ProtectedChannel implements Channel {
 
     @Override
     public boolean callsEvents() {
-        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
+        return false;
     }
 
     @Override

@@ -2,120 +2,90 @@ package com.pedestriamc.strings.commands.channel;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Monitorable;
-import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.util.UserUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import net.wiicart.commands.command.CartCommandExecutor;
+import net.wiicart.commands.command.CommandData;
+import net.wiicart.commands.permission.Permissions;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.pedestriamc.strings.api.message.Message.*;
-import static com.pedestriamc.strings.commands.channel.ChannelCommand.CHANNEL_PLACEHOLDER;
 
-public class MonitorCommand implements CommandExecutor {
+class MonitorCommand extends AbstractChannelCommand implements CartCommandExecutor {
 
-    private final Strings strings;
-
-    public MonitorCommand(Strings strings) {
-        this.strings = strings;
+    MonitorCommand(@NotNull Strings strings) {
+        super(strings);
     }
 
-    /**
-     * /channel monitor <channel> <player>
-     */
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Messenger messenger = strings.getMessenger();
-        UserUtil userUtil = strings.users();
-        if(!sender.hasPermission("strings.channels.monitor")) {
-            messenger.sendMessage(NO_PERMS, sender);
-            return true;
+    public void onCommand(@NotNull CommandData data) {
+        CommandSender sender = data.sender();
+        int length = data.args().length;
+        String[] args = data.args();
+
+        if (isArgCountIncorrect(sender, length)) {
+            return;
         }
 
-        Player target;
-        switch(args.length) {
-            case 0, 1 -> {
-                messenger.sendMessage(INSUFFICIENT_ARGS, sender);
-                return true;
-            }
-            case 2 -> {
-                if(sender instanceof Player p) {
-                    target = p;
-                } else {
-                    messenger.sendMessage(INSUFFICIENT_ARGS, sender);
-                    return true;
-                }
-            }
-            case 3 -> {
-                Player p = Bukkit.getPlayer(args[2]);
-                if(p != null) {
-                    target = p;
-                } else {
-                    messenger.sendMessage(INVALID_PLAYER, sender);
-                    return true;
-                }
-            }
-            default -> {
-                messenger.sendMessage(TOO_MANY_ARGS, sender);
-                return true;
-
-            }
+        Channel channel = getChannel(sender, args[0]);
+        if (channel == null) {
+            return;
         }
 
-        ChannelLoader loader = strings.getChannelLoader();
-        Channel channel = loader.getChannel(args[1]);
-        if(channel == null) {
-            Map<String, String> map = new HashMap<>();
-            map.put(CHANNEL_PLACEHOLDER, args[1]);
-            messenger.sendMessage(UNKNOWN_CHANNEL, map, sender);
-            return true;
+        Monitorable monitorable = getMonitorable(sender, channel);
+        if (monitorable == null) {
+            return;
         }
 
-        if(!sender.hasPermission("strings.channels." + channel.getName() + ".monitor")) {
-            Map<String, String> map = generatePlaceholders(sender.getName(), channel.getName());
-            messenger.sendMessage(NO_PERM_MONITOR, map, sender);
-            return true;
+        if (doesNotHaveMonitorPermission(sender, monitorable)) {
+            return;
         }
 
-        Monitorable monitorable = Monitorable.of(channel);
-        if(monitorable == null) {
-            Map<String, String> map = new HashMap<>();
-            map.put(CHANNEL_PLACEHOLDER, args[1]);
-            messenger.sendMessage(NOT_MONITORABLE, map, sender);
-            return true;
+        User target = getTarget(sender, args);
+        if (target == null) {
+            return;
         }
 
-        User user = strings.users().getUser(target);
-        if(user.getMonitoredChannels().contains(channel)) {
-            messenger.sendMessage(ALREADY_MONITORING, generatePlaceholders(sender.getName(), channel.getName()), sender);
-            return true;
+        if (isAlreadyMonitoring(sender, target, monitorable)) {
+            return;
         }
 
-        user.monitor(monitorable);
-        userUtil.saveUser(user);
+        target.monitor(monitorable);
+        saveUser(target);
 
-        Map<String, String> placeholders = generatePlaceholders(target.getName(), args[1]);
-        messenger.sendMessage(MONITOR_SUCCESS, placeholders, target);
-        if(!target.equals(sender)) {
-            messenger.sendMessage(MONITOR_SUCCESS_OTHER, placeholders, sender);
-        }
-
-        return true;
+        sendFinalMessages(sender, target, channel);
     }
 
-    private Map<String, String> generatePlaceholders(String playerName, String channelName) {
-        Map<String, String> map = new HashMap<>();
-        map.put(CHANNEL_PLACEHOLDER, channelName);
-        map.put("{player}", playerName);
-        return map;
+    private boolean isAlreadyMonitoring(@NotNull CommandSender sender, @NotNull StringsUser target, @NotNull Monitorable monitorable) {
+        return checkAlreadySet(
+                target.isMonitoring(monitorable),
+                sender,
+                target,
+                monitorable,
+                ALREADY_MONITORING,
+                ALREADY_MONITORING
+        );
     }
 
+    private void sendFinalMessages(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
+        sendFinalMessages(sender, target, channel, MONITOR_SUCCESS, MONITOR_SUCCESS_OTHER);
+    }
+
+    private boolean doesNotHaveMonitorPermission(@NotNull CommandSender sender, @NotNull Monitorable monitorable) {
+        if (Permissions.anyOfOrAdmin(sender,
+                "strings.*",
+                "strings.channels.*",
+                "strings.channels." + monitorable.getName() + ".*",
+                "strings.channels." + monitorable.getName() + ".monitor"
+        )) {
+            return false;
+        } else {
+            sendMessage(NO_PERM_MONITOR, Map.of("{channel}", monitorable.getName()), sender);
+            return true;
+        }
+    }
 }

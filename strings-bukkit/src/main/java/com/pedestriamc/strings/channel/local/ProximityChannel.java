@@ -51,7 +51,7 @@ public class ProximityChannel extends AbstractLocalChannel {
             return filterMutesAndIgnores(sender, universalSet());
         }
 
-        Player player = User.of(sender).getPlayer();
+        Player player = User.of(sender).player();
         World senderWorld = player.getWorld();
 
         HashSet<StringsUser> recipients = new HashSet<>(members);

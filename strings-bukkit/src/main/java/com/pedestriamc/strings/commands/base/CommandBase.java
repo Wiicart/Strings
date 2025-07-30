@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-// Need to move to CartCommands framework - ultimately remove this class
+@Deprecated
 public abstract class CommandBase implements CommandExecutor {
 
     private Map<String, CommandExecutor> map;
