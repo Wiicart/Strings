@@ -62,6 +62,10 @@ public final class UserChannelEvent extends Event {
      */
     public enum Type {
         /**
+         * Used when a Player's active Channel has changed.
+         */
+        UPDATE_ACTIVE,
+        /**
          * Used when a Player has joined a Channel.
          */
         JOIN,

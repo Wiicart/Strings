@@ -69,7 +69,7 @@ public final class User implements StringsUser {
 
     public static Player playerOf(@NotNull StringsUser user) {
         if(user instanceof User u) {
-            return u.getPlayer();
+            return u.player();
         } else {
             UUID uniqueId = user.getUniqueId();
             return Bukkit.getPlayer(uniqueId);
@@ -140,7 +140,7 @@ public final class User implements StringsUser {
      */
     @Override
     public void sendMessage(@NotNull String message) {
-        getPlayer().sendMessage(message);
+        player().sendMessage(message);
     }
 
 
@@ -179,7 +179,7 @@ public final class User implements StringsUser {
 
 
 
-    public @NotNull Player getPlayer() {
+    public @NotNull Player player() {
         return player;
     }
 
@@ -366,6 +366,7 @@ public final class User implements StringsUser {
             if(!channels.contains(channel)) {
                 joinChannel(channel);
             }
+            callEvent(new UserChannelEvent(channel, this, UserChannelEvent.Type.UPDATE_ACTIVE));
         }
     }
 
