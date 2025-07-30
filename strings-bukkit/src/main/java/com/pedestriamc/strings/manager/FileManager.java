@@ -36,8 +36,9 @@ public final class FileManager {
 
     private void load() {
         strings.saveDefaultConfig();
-        setupCustomConfigs();
         updateConfigs();
+        strings.reloadConfig();
+        setupCustomConfigs();
     }
 
     private void setupCustomConfigs() {
