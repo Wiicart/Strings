@@ -2,7 +2,7 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.message.Messenger;
-import com.pedestriamc.strings.api.utlity.Permissions;
+import net.wiicart.commands.permission.Permissions;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

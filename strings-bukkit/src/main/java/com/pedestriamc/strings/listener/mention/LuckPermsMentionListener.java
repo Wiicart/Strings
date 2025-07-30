@@ -2,12 +2,12 @@ package com.pedestriamc.strings.listener.mention;
 
 import com.google.common.base.Preconditions;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.chat.Mentioner;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.node.matcher.NodeMatcher;
 import net.luckperms.api.node.types.InheritanceNode;
+import net.wiicart.commands.permission.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

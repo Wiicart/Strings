@@ -201,5 +201,10 @@
           <version>2.25.0</version>
           <scope>compile</scope>
       </dependency>
+      <dependency>
+          <groupId>net.wiicart.commands</groupId>
+          <artifactId>cart-commands</artifactId>
+          <version>1.0</version>
+      </dependency>
   </dependencies>
 </project>

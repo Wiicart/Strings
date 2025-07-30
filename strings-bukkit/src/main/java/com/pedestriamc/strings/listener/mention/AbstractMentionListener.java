@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.listener.mention;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.utlity.Permissions;
 import com.pedestriamc.strings.chat.Mentioner;
+import net.wiicart.commands.permission.Permissions;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
