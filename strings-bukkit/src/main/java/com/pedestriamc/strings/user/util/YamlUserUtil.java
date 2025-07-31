@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -174,6 +175,16 @@ public final class YamlUserUtil implements UserUtil {
     @Override
     public @NotNull User getUser(@NotNull Player player) {
         return getUser(player.getUniqueId());
+    }
+
+    @Override
+    public @Nullable User getUser(@NotNull String name) {
+        Player player = strings.getServer().getPlayer(name);
+        if (player != null) {
+            return getUser(player.getUniqueId());
+        } else {
+            return null;
+        }
     }
 
     @Override
