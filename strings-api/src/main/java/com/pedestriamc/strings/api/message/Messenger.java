@@ -14,7 +14,9 @@ import java.util.Map;
 /**
  * A system for sending messages to Players.
  * Values are read in from "messages.yml"
+ * Will soon be refactored to be platform-agnostic
  */
+@ApiStatus.Experimental
 public final class Messenger {
 
     private final EnumMap<Message, Object> enumMap = new EnumMap<>(Message.class);
@@ -83,6 +85,16 @@ public final class Messenger {
         }
 
         warn(message);
+    }
+
+    public void batchSend(MessageContext @NotNull ... queries) {
+        for (MessageContext query : queries) {
+            if (query.placeholders() != null) {
+                sendMessage(query.message(), query.placeholders(), query.recipient());
+            } else {
+                sendMessage(query.message(), query.recipient());
+            }
+        }
     }
 
     private void warn(@NotNull Message message) {
