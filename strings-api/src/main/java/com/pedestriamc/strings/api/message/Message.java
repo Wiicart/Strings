@@ -84,7 +84,10 @@ public enum Message {
     NOT_MUTED("not-muted"),
     NOT_MUTED_OTHER("not-muted-other"),
     UNMUTE_SUCCESS("unmute-success"),
-    UNMUTE_SUCCESS_OTHER("unmute-success-other"),;
+    UNMUTE_SUCCESS_OTHER("unmute-success-other"),
+    CHANNEL_LIST_HEADER("channel-list-header"),
+    CHANNEL_LIST_ENTRY("channel-entry"),
+    NO_CHANNELS_AVAILABLE("no-channels-available"),;
 
     private final String key;
 

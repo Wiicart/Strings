@@ -337,3 +337,13 @@ unmute-success: "&fChannel &7{channel} &funmuted."
 
 # Sent when a player unmutes a Channel for another player.
 unmute-success-other: "&fChannel &7{channel} &funmuted for &7{player}"
+
+# The header when /channel list is ran
+channel-list-header: "&8&m-----&r &8[&3S&8] &7| &fChannels &8&m-----&r"
+
+# Channel listing entry (one line)
+# Placeholder: {channel} - the Channel
+channel-entry: "&7• {channel}"
+
+# Sent when no Channels are available:
+no-channels-available: "&cNo channels available."

@@ -31,7 +31,7 @@ public class ChannelCommand extends CommandTree {
                 .withChild("unmute", b -> b.executes(new UnmuteCommand(strings)))
                 .withChild("monitor", b -> b.executes(new MonitorCommand(strings)))
                 .withChild("unmonitor", b -> b.executes(new UnmonitorCommand(strings)))
-                .withChild("list", b -> {})
+                .withChild("list", b -> b.executes(new ListCommand(strings)))
                 .build()
         );
     }

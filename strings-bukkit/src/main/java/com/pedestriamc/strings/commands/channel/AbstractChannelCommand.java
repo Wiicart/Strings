@@ -20,7 +20,7 @@ import java.util.Map;
 
 import static com.pedestriamc.strings.api.message.Message.*;
 
-abstract class AbstractChannelCommand extends AbstractCommand {
+public abstract class AbstractChannelCommand extends AbstractCommand {
 
     protected AbstractChannelCommand(@NotNull Strings strings) {
         super(strings);
@@ -61,32 +61,6 @@ abstract class AbstractChannelCommand extends AbstractCommand {
             sendMessage(NOT_MONITORABLE, Map.of("{channel}", channel.getName()), sender);
             return null;
         }
-    }
-
-    /*
-    / Takes a String array, which should have a length of 1 or 2.
-    / If the length is 2, returns the Player defined in args[1], if they exist, otherwise the senders User.
-    / * THE COMMANDSENDER MUST BE A PLAYER *
-    */
-    protected @Nullable User getTarget(@NotNull CommandSender sender, @NotNull String[] args) {
-        if (args.length == 1) {
-            if (sender instanceof Player playerSender) {
-                return getUser(playerSender);
-            } else {
-                throw new ClassCastException("If args length is 1, the sender must be a player.");
-            }
-        } else if (args.length == 2) {
-            String playerName = args[1];
-            Player player = Bukkit.getPlayer(playerName);
-            if (player == null) {
-                sendMessage(INVALID_PLAYER, Map.of("{player}", playerName), sender);
-                return null;
-            } else {
-                return getUser(player);
-            }
-        }
-
-        return null;
     }
 
     /*
@@ -159,6 +133,32 @@ abstract class AbstractChannelCommand extends AbstractCommand {
         } else {
             return false;
         }
+    }
+
+    /*
+    / Takes a String array, which should have a length of 1 or 2.
+    / If the length is 2, returns the Player defined in args[1], if they exist, otherwise the senders User.
+    / * THE COMMANDSENDER MUST BE A PLAYER *
+    */
+    protected @Nullable User getTarget(@NotNull CommandSender sender, @NotNull String[] args) {
+        if (args.length == 1) {
+            if (sender instanceof Player playerSender) {
+                return getUser(playerSender);
+            } else {
+                throw new ClassCastException("If args length is 1, the sender must be a player.");
+            }
+        } else if (args.length == 2) {
+            String playerName = args[1];
+            Player player = Bukkit.getPlayer(playerName);
+            if (player == null) {
+                sendMessage(INVALID_PLAYER, Map.of("{player}", playerName), sender);
+                return null;
+            } else {
+                return getUser(player);
+            }
+        }
+
+        return null;
     }
 
     // Sends an update message to the target, and one to the sender, if different from the target.
