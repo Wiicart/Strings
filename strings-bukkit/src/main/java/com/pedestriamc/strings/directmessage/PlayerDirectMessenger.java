@@ -6,7 +6,7 @@ import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.event.moderation.PlayerDirectMessageEvent;
 import com.pedestriamc.strings.api.message.Message;
-import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.impl.BukkitMessenger;
 import com.pedestriamc.strings.user.util.UserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -21,7 +21,7 @@ public class PlayerDirectMessenger {
 
     private final @NotNull Strings strings;
     private final @NotNull UserUtil userUtil;
-    private final @NotNull Messenger messenger;
+    private final @NotNull BukkitMessenger messenger;
 
     private final @NotNull Map<Player, Player> replyList = new ConcurrentHashMap<>();
 

@@ -8,7 +8,7 @@ import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.MessageProcessor;
 import com.pedestriamc.strings.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.api.message.Message;
-import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.impl.BukkitMessenger;
 import com.pedestriamc.strings.user.User;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
@@ -35,7 +35,7 @@ public class HelpOPChannel extends ProtectedChannel {
     private String format;
     private boolean urlFilter;
     private boolean profanityFilter;
-    private final Messenger messenger;
+    private final BukkitMessenger messenger;
     private final boolean usePAPI;
 
     public HelpOPChannel(@NotNull Strings strings, String format, boolean callEvent, boolean urlFilter, boolean profanityFilter)

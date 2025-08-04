@@ -3,6 +3,7 @@ package com.pedestriamc.strings.moderation.commands;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.api.message.MessageableSender;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,7 +23,7 @@ public class MuteCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         switch(args.length) {
             case 0 -> {
-                messenger.sendMessage(Message.INSUFFICIENT_ARGS, sender);
+                messenger.sendMessage(Message.INSUFFICIENT_ARGS, new MessageableSender(sender));
                 return true;
             }
             case 1 -> {

@@ -2,7 +2,7 @@ package com.pedestriamc.strings.commands.message;
 
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.impl.BukkitMessenger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,7 +14,7 @@ import static com.pedestriamc.strings.api.message.Message.*;
 public final class ReplyCommand implements CommandExecutor {
 
     private final PlayerDirectMessenger playerDirectMessenger;
-    private final Messenger messenger;
+    private final BukkitMessenger messenger;
 
     public ReplyCommand(@NotNull Strings strings) {
         this.playerDirectMessenger = strings.getPlayerDirectMessenger();

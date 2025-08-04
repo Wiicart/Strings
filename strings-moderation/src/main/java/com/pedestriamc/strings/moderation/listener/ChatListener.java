@@ -4,6 +4,7 @@ import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.api.event.moderation.PlayerChatFilteredEvent;
+import com.pedestriamc.strings.api.message.MessageableSender;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.moderation.StringsModeration;
@@ -60,14 +61,14 @@ public class ChatListener implements Listener {
                 && cooldownManager.isOnCooldown(player)
         ) {
                 event.setCancelled(true);
-                messenger.sendMessage(Message.COOLDOWN, cooldownPlaceholders, player);
+                messenger.sendMessage(Message.COOLDOWN, new MessageableSender(player), cooldownPlaceholders);
                 return;
         }
 
 
         if(noPermOrAdmin(player, "strings.chat.bypassrepetition") && repetitionManager.isRepeating(player, message)) {
             event.setCancelled(true);
-            messenger.sendMessage(Message.NO_REPETITION, player);
+            messenger.sendMessage(Message.NO_REPETITION, new MessageableSender(player));
             return;
         }
 
@@ -80,7 +81,7 @@ public class ChatListener implements Listener {
             if(channel.isProfanityFiltering()) {
                 ChatFilter.FilteredChat filtered = chatFilter.filter(message);
                 if(!filtered.message().equals(message)) {
-                    messenger.sendMessage(Message.BANNED_WORD, player);
+                    messenger.sendMessage(Message.BANNED_WORD, new MessageableSender(player));
                     Bukkit.getScheduler().runTask(stringsModeration, () -> {
                         PlayerChatFilteredEvent filterEvent = new PlayerChatFilteredEvent(
                                 player,

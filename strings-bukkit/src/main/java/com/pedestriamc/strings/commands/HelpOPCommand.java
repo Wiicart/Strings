@@ -2,7 +2,7 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.impl.BukkitMessenger;
 import com.pedestriamc.strings.user.util.UserUtil;
 import net.wiicart.commands.permission.Permissions;
 import org.bukkit.command.Command;
@@ -21,7 +21,7 @@ public final class HelpOPCommand implements CommandExecutor {
 
     private final UserUtil userUtil;
     private final Channel helpOPChannel;
-    private final Messenger messenger;
+    private final BukkitMessenger messenger;
 
     public HelpOPCommand(@NotNull Strings strings) {
         this.userUtil = strings.users();

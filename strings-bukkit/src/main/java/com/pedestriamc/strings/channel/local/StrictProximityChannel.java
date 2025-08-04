@@ -5,7 +5,7 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
 import com.pedestriamc.strings.api.message.Message;
-import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.impl.BukkitMessenger;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
@@ -38,7 +38,7 @@ public class StrictProximityChannel extends AbstractLocalChannel {
     private double distanceSquared;
 
     private final Channel defaultChannel;
-    private final Messenger messenger;
+    private final BukkitMessenger messenger;
 
     public StrictProximityChannel(JavaPlugin plugin, ChannelBuilder builder) {
         this((Strings) plugin, builder);

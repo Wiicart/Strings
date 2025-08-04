@@ -3,7 +3,7 @@ package com.pedestriamc.strings.commands;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Message;
-import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.impl.BukkitMessenger;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.command.CommandSender;
@@ -28,7 +28,7 @@ public abstract class AbstractCommand {
         return strings.users();
     }
 
-    protected Messenger messenger() {
+    protected BukkitMessenger messenger() {
         return strings.getMessenger();
     }
 

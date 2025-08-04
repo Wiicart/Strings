@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.commands;
 
-import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.impl.BukkitMessenger;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.settings.Option;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -18,7 +18,7 @@ public final class BroadcastCommand implements CommandExecutor {
 
     private final @NotNull Strings strings;
     private final @NotNull String broadcastFormat;
-    private final @NotNull Messenger messenger;
+    private final @NotNull BukkitMessenger messenger;
     private final boolean usePAPI;
 
     public BroadcastCommand(@NotNull Strings strings) {

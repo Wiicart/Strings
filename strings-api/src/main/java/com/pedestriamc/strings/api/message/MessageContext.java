@@ -1,8 +1,9 @@
 package com.pedestriamc.strings.api.message;
 
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static org.jetbrains.annotations.ApiStatus.Internal;
 
 import java.util.Map;
 
@@ -12,37 +13,40 @@ import java.util.Map;
 public final class MessageContext {
 
     private final Message message;
-    private final CommandSender sender;
+    private final Messageable recipient;
     private final Map<String, String> placeholders;
 
     @NotNull
-    public static MessageContext of(@NotNull Message message, @NotNull Map<String, String> placeholders, @NotNull CommandSender recipient) {
+    public static MessageContext of(@NotNull Message message, @NotNull Map<String, String> placeholders, @NotNull Messageable recipient) {
         return new MessageContext(message, placeholders, recipient);
     }
 
     @NotNull
-    public static MessageContext of(Message message, CommandSender recipient) {
+    public static MessageContext of(Message message, Messageable recipient) {
         return new MessageContext(message, null, recipient);
     }
 
-    private MessageContext(Message message, Map<String, String> placeholders, CommandSender recipient) {
+    private MessageContext(Message message, Map<String, String> placeholders, Messageable recipient) {
         this.message = message;
-        this.sender = recipient;
+        this.recipient = recipient;
         this.placeholders = placeholders;
     }
 
     @NotNull
-    Message message() {
+    @Internal
+    public Message message() {
         return message;
     }
 
     @NotNull
-    CommandSender recipient() {
-        return sender;
+    @Internal
+    public Messageable recipient() {
+        return recipient;
     }
 
     @Nullable
-    Map<String, String> placeholders() {
+    @Internal
+    public Map<String, String> placeholders() {
         return placeholders;
     }
 

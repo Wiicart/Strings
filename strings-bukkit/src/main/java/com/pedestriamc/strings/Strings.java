@@ -10,7 +10,7 @@ import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import com.pedestriamc.strings.impl.StringsImpl;
 import com.pedestriamc.strings.log.LogManager;
-import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.impl.BukkitMessenger;
 import com.pedestriamc.strings.manager.ClassRegistryManager;
 import com.pedestriamc.strings.manager.FileManager;
 import com.pedestriamc.strings.misc.AutoBroadcasts;
@@ -62,7 +62,7 @@ public final class Strings extends JavaPlugin {
     private StringsImpl stringsImpl;
     private Mentioner mentioner;
     private UUID apiUUID;
-    private Messenger messenger;
+    private BukkitMessenger messenger;
     private ChannelManager channelLoader;
     @SuppressWarnings("unused")
     private LogManager logManager;
@@ -172,7 +172,7 @@ public final class Strings extends JavaPlugin {
     private void instantiateObjects() {
         userUtil = new YamlUserUtil(this);
         configClass = new Configuration(getConfig());
-        messenger = new Messenger(fileManager.getMessagesFileConfig());
+        messenger = new BukkitMessenger(fileManager.getMessagesFileConfig());
         playerDirectMessenger = new PlayerDirectMessenger(this);
         channelLoader = new ChannelManager(this);
         serverMessages = new ServerMessages(this);
@@ -294,7 +294,7 @@ public final class Strings extends JavaPlugin {
         return playerDirectMessenger;
     }
 
-    public Messenger getMessenger() {
+    public BukkitMessenger getMessenger() {
         return messenger;
     }
 

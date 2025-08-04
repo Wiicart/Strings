@@ -2,7 +2,7 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.message.Message;
-import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.impl.BukkitMessenger;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import net.wiicart.commands.permission.Permissions;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class IgnoreCommand implements CommandExecutor {
 
     private final UserUtil userUtil;
-    private final Messenger messenger;
+    private final BukkitMessenger messenger;
 
     public IgnoreCommand(@NotNull Strings strings) {
         userUtil = strings.users();

@@ -6,7 +6,7 @@ import com.pedestriamc.strings.api.text.format.StringsComponent;
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.api.text.format.StringsTextDecoration;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.impl.BukkitMessenger;
 import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -57,7 +57,7 @@ public final class ChatColorCommand implements CommandExecutor {
 
     private final Strings strings;
     private final UserUtil userUtil;
-    private final Messenger messenger;
+    private final BukkitMessenger messenger;
 
     public ChatColorCommand(@NotNull Strings strings) {
         this.strings = strings;

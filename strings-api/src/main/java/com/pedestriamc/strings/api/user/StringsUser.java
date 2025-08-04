@@ -3,6 +3,7 @@ package com.pedestriamc.strings.api.user;
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
+import com.pedestriamc.strings.api.message.Messageable;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -17,7 +18,7 @@ import java.util.UUID;
  * Changes are not saved by default, you must use {@link StringsAPI#saveStringsUser(StringsUser)} to save.
  */
 @SuppressWarnings("unused")
-public interface StringsUser {
+public interface StringsUser extends Messageable {
 
     /**
      * Provides the StringsUser's UUID.

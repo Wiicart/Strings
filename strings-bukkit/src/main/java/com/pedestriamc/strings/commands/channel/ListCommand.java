@@ -5,6 +5,7 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.MessageContext;
 import com.pedestriamc.strings.commands.AbstractCommand;
+import com.pedestriamc.strings.impl.MessageableAdapter;
 import net.wiicart.commands.command.CartCommandExecutor;
 import net.wiicart.commands.command.CommandData;
 import org.bukkit.command.CommandSender;
@@ -49,20 +50,19 @@ class ListCommand extends AbstractCommand implements CartCommandExecutor {
     private MessageContext[] getContexts(@NotNull CommandSender sender, @NotNull Set<Channel> available) {
         if (available.isEmpty()) {
             return new MessageContext[] {
-                    MessageContext.of(Message.CHANNEL_LIST_HEADER, sender),
-                    MessageContext.of(Message.NO_CHANNELS_AVAILABLE, sender)
+                    MessageContext.of(Message.NO_CHANNELS_AVAILABLE, MessageableAdapter.of(sender))
             };
         }
 
         MessageContext contexts[] = new MessageContext[available.size() + 1];
-        contexts[0] = MessageContext.of(Message.CHANNEL_LIST_HEADER, sender);
+        contexts[0] = MessageContext.of(Message.CHANNEL_LIST_HEADER, MessageableAdapter.of(sender));
 
         int pos = 1;
         for (Channel channel : available) {
             contexts[pos] = MessageContext.of(
                     Message.CHANNEL_LIST_ENTRY,
                     Map.of("{channel}", channel.getName()),
-                    sender
+                    MessageableAdapter.of(sender)
             );
             pos++;
         }

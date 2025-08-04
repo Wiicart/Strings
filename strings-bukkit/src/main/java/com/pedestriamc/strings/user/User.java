@@ -134,6 +134,8 @@ public final class User implements StringsUser {
         }
     }
 
+
+
     /**
      * Sends a message to the User.
      * @param message The message.
