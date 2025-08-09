@@ -1,25 +1,26 @@
-```
+![banner](https://cdn.modrinth.com/data/cached_images/a8a22692f6bbd15d3bb12969826334e8796cf7f4.png)
+## Channels, mentions, chat color, broadcasts, formatting, and more - all in one.
 
-      ___           ___           ___                       ___           ___           ___     
-     /\  \         /\  \         /\  \          ___        /\__\         /\  \         /\  \    
-    /::\  \        \:\  \       /::\  \        /\  \      /::|  |       /::\  \       /::\  \   
-   /:/\ \  \        \:\  \     /:/\:\  \       \:\  \    /:|:|  |      /:/\:\  \     /:/\ \  \  
-  _\:\~\ \  \       /::\  \   /::\~\:\  \      /::\__\  /:/|:|  |__   /:/  \:\  \   _\:\~\ \  \ 
- /\ \:\ \ \__\     /:/\:\__\ /:/\:\ \:\__\  __/:/\/__/ /:/ |:| /\__\ /:/__/_\:\__\ /\ \:\ \ \__\
- \:\ \:\ \/__/    /:/  \/__/ \/_|::\/:/  / /\/:/  /    \/__|:|/:/  / \:\  /\ \/__/ \:\ \:\ \/__/
-  \:\ \:\__\     /:/  /         |:|::/  /  \::/__/         |:/:/  /   \:\ \:\__\    \:\ \:\__\  
-   \:\/:/  /     \/__/          |:|\/__/    \:\__\         |::/  /     \:\/:/  /     \:\/:/  /  
-    \::/  /                     |:|  |       \/__/         /:/  /       \::/  /       \::/  /   
-     \/__/                       \|__|                     \/__/         \/__/         \/__/    
+<p align="center">
+  <a href="https://modrinth.com/plugin/strings">
+    <img alt="Modrinth Downloads" src="https://img.shields.io/modrinth/dt/strings?logo=modrinth">
 
-                                         Minecraft Chat Plugin
-```
+  </a>
+  &nbsp;
+  <a href="https://www.spigotmc.org/resources/strings-chat-plugin.118186/">
+    <img alt="Spiget Downloads" src="https://img.shields.io/spiget/downloads/118186?logo=spigotmc">
+  </a>
+</p>
+
+
+
 ## Information
-Strings is a Minecraft chat plugin written with the Spigot API, bringing lots of customizability to your Minecraft server's chat.
+Strings is a Minecraft chat plugin written with the Spigot & Paper API,
+bringing lots of customizability to your Minecraft server's chat.
 
 **Features include:**
 
-- Customizability
+- Extensive Customizability
 - Public Developer API
 - Channels
 - Chat Formatting
@@ -32,43 +33,91 @@ Strings is a Minecraft chat plugin written with the Spigot API, bringing lots of
 - PlaceholderAPI Support
 - Moderation 
 - Mentions
+- Discord Support
 
 And much more!
 
-## Channel Information
-One of the biggest and most versatile features of this plugin is the channel system.
-There are 3 main channel types:
+## Channel System
+Strings has a powerful channel system.
+<details>
+The most powerful feature of this plugin is the Channel system.
+There are three main Channel types, and the Channel interface is publicly available
+so developers can implement custom Channels too.
+
+### Main Channel Types
 
 - StringChannel\
-  A channel that does not consider the player's world or proximity.
+  A standard channel that disregards worlds and proximity
 - WorldChannel\
-  A channel that only works in one specific world, unless the channel manually joined.
+  A channel designed to be used in specific worlds
 - ProximityChannel\
-  A channel that only sends messages to players within the right proximity of the sender, unless the channel is manually joined.
+  A channel that sends messages to players within a certain distance of the sender
+- DefaultChannel\
+  Instead of forcing players to select a specific channel, the default Channel routes
+  the sender's message to a Channel, based on membership and priority
 
-Some additional features available to channels are per-channel formatting, priority and default membership.
+### Channel Features
+**Membership**
+All channels have one of two `memberships` defined.
+- `default` - available to all players, regardless of permissions
+- `permission` - only allowed to players with permission, such as `strings.channels.<name>`
 
-**Channel Membership:**\
-There are two options for channel `membership`, and those are `default` and `permission`.  Default channels are available to all players, regardless of permissions, as long as they are within the scope of the channel.
+**Priority**
+Channels can be designated a priority which helps determine what channel a message is sent to
+when a player is in the *DefaultChannel*. The higher the number, the higher priority.
 
-**Priority:**\
-Each channel can be designated a certain priority, the higher the number, the higher the priority.  This only matters for channels with `membership: default`, as priority will determine what channel a player's message will be sent in.
+**Extendable**
+The `Channel` interface is available through the `strings-api` module, so developers can
+create custom Channel implementations.
 
-**Default Channels:**\
-Both channel membership and priority work together to offer a key piece of functionality, the default channel.  Every player has an active channel set, however, internally there is a channel type that does not process messages, rather it designates the appropriate channel a player's message should be sent in, considering world, priority and membership.
+</details>
+
+## Images
+Example images of Strings
+<details>
+
+### Chat Colors that support Minecraft and Hex/RGB color codes.
+<img src="https://cdn.modrinth.com/data/cached_images/2aefad36a9788df57ea37e0d415440b6bfd1b4ed.png" alt="chatcolor" width="700"/>
+<br/><br/>
+
+### Custom formatting on a per-channel basis
+<img src="https://cdn.modrinth.com/data/cached_images/3cced0075b41fd7bd822e226a703fea118eaa994.png" alt="formatting" width="700"/>
+<br/><br/>
+
+### 3 different channel types (Global, World, Proximity)
+<img src="https://cdn.modrinth.com/data/cached_images/51e7c35edf9a6530ebd6091e7bbbb8261181a710.png" alt="channels" width="700"/>
+<br/><br/>
 
 
-**Developer:**\
-Nearly all of the things listed in this section, and more are customizable through the API.  For more information, check out the [wiki](https://github.com/Wiicart/Strings/wiki).
+### Customizable join and leave messages.
+<img src="https://cdn.modrinth.com/data/cached_images/b7c5edebc8bcaab3d0413f984fe386d19cf1a85d.png" alt="jlmsg" width="700"/>
+<br/><br/>
+
+### Customizable player mention system with sounds.
+<img src="https://cdn.modrinth.com/data/cached_images/b4c1c7aa48183ae8fa59faea99cfd15ae965bbfd.png" alt="mentions" width="700"/>
+<br/><br/>
+
+### Customizable automatic broadcasts
+<img src="https://cdn.modrinth.com/data/cached_images/32232e4d2f5b1678e6c00891fbe61db6a3d82f1e.png" alt="auto" width="700"/>
+<br/><br/>
+
+### Prefix/Suffix support with Vault/LuckPerms and more.
+<img src="https://cdn.modrinth.com/data/cached_images/2609ada09c59ee85badfb388862faa25edc59193.png" alt="auto" width="700"/>
+<br/><br/>
+</details>
+
+
 ## Developer
 I've added a public API which will be available through Maven soon.  The API is currently published through [GitHub releases](https://github.com/Wiicart/Strings/releases).
 
 ## Additional Links
-[Website](https://www.wiicart.net/strings.html)\
-[Wiki](https://github.com/Wiicart/Strings/wiki)\
-[Modrinth](https://modrinth.com/plugin/strings)\
-[Spigot](https://www.spigotmc.org/resources/strings-chat-plugin.118186/)\
-[Hangar](https://hangar.papermc.io/wiicart/Strings)\
-[bStats](https://bstats.org/plugin/bukkit/Strings/22597)\
-[Discord](https://discord.gg/meYfEJcf9P)
+[Website](https://www.wiicart.net/strings.html) |
+[Wiki](https://github.com/Wiicart/Strings/wiki) |
+[Modrinth](https://modrinth.com/plugin/strings) |
+[Spigot](https://www.spigotmc.org/resources/strings-chat-plugin.118186/) |
+[Hangar](https://hangar.papermc.io/wiicart/Strings) |
+[bStats](https://bstats.org/plugin/bukkit/Strings/22597) |
+[Discord](https://discord.gg/meYfEJcf9P) 
+
+![bStats](https://bstats.org/signatures/bukkit/strings.svg)
  
