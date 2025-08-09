@@ -1,13 +1,15 @@
 package com.pedestriamc.strings.api.channel;
 
 import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
+import com.pedestriamc.strings.api.channel.local.LocalChannel;
+import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
-
 import java.util.Map;
 import java.util.Set;
 
@@ -19,12 +21,22 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Provides a new {@link ChannelBuilder}, with the Channel's name, format, and membership defined.
-     *
+     * If constructing a {@link LocalChannel}, use {@link Channel#localBuilder(String, String, Membership, Set)} instead.
      * @return A new {@link ChannelBuilder}
      */
     @Contract(value = "_, _, _ -> new", pure = true)
     static @NotNull ChannelBuilder builder(@NotNull String name, @NotNull String format, @NotNull Membership membership) {
         return new ChannelBuilder(name, format, membership);
+    }
+
+    /**
+     * Provides a new {@link LocalChannelBuilder}, with the Channel's name, format, and membership defined.
+     *
+     * @return A new {@link LocalChannelBuilder}
+     */
+    @Contract(value = "_, _, _, _ -> new", pure = true)
+    static <T> @NotNull LocalChannelBuilder<T> localBuilder(@NotNull String name, @NotNull String format, @NotNull Membership membership, Set<Locality<T>> worlds) {
+        return new LocalChannelBuilder<>(name, format, membership, worlds);
     }
 
     /**

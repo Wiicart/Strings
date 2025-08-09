@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.channel.base;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
@@ -57,7 +57,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     protected static final String MESSAGE_PLACEHOLDER = "{message}";
     protected static final String DEFAULT_BROADCAST_FORMAT = "&8[&3Broadcast&8] &f{message}";
 
-    protected AbstractChannel(@NotNull Strings strings, @NotNull ChannelBuilder data) {
+    protected AbstractChannel(@NotNull Strings strings, @NotNull IChannelBuilder<?> data) {
         this.strings = strings;
         this.userUtil = strings.users();
         name = data.getName();

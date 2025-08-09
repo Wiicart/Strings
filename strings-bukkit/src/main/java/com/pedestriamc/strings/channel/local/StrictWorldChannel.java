@@ -1,9 +1,10 @@
 package com.pedestriamc.strings.channel.local;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Type;
-import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.impl.BukkitMessenger;
@@ -13,7 +14,6 @@ import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -33,11 +33,11 @@ public class StrictWorldChannel extends AbstractLocalChannel {
     private final Channel defaultChannel;
     private final BukkitMessenger messenger;
 
-    public StrictWorldChannel(JavaPlugin plugin, ChannelBuilder builder) {
+    public StrictWorldChannel(StringsPlatform plugin, LocalChannelBuilder<?> builder) {
         this((Strings) plugin, builder);
     }
 
-    public StrictWorldChannel(@NotNull Strings strings, @NotNull ChannelBuilder builder) {
+    public StrictWorldChannel(@NotNull Strings strings, @NotNull LocalChannelBuilder<?> builder) {
         super(strings, builder);
         defaultChannel = strings.getChannelLoader().getChannel("default");
         messenger = strings.getMessenger();

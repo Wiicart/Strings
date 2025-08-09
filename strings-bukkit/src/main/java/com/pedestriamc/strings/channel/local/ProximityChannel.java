@@ -1,8 +1,9 @@
 package com.pedestriamc.strings.channel.local;
 
+import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.user.User;
@@ -11,7 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -34,11 +34,11 @@ public class ProximityChannel extends AbstractLocalChannel {
     // for more efficient calculations.
     private double distanceSquared;
 
-    public ProximityChannel(JavaPlugin plugin, ChannelBuilder builder) {
+    public ProximityChannel(StringsPlatform plugin, LocalChannelBuilder<?> builder) {
         this((Strings) plugin, builder);
     }
 
-    public ProximityChannel(@NotNull Strings strings, @NotNull ChannelBuilder builder) {
+    ProximityChannel(@NotNull Strings strings, @NotNull LocalChannelBuilder<?> builder) {
         super(strings, builder);
         distance = builder.getDistance();
         distanceSquared = distance * distance;

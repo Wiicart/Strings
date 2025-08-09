@@ -2,7 +2,7 @@ package com.pedestriamc.strings.channel.local;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Membership;
-import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.user.StringsUser;
@@ -31,10 +31,17 @@ abstract class AbstractLocalChannel extends AbstractChannel implements LocalChan
 
     private final Set<Locality<World>> worlds;
 
-    protected AbstractLocalChannel(@NotNull Strings strings, @NotNull ChannelBuilder data) {
+    protected AbstractLocalChannel(@NotNull Strings strings, @NotNull LocalChannelBuilder<?> data) {
         super(strings, data);
         userUtil = getUserUtil();
-        worlds = new HashSet<>(Locality.convertToLocalities(data.getWorlds()));
+        try {
+            @SuppressWarnings("unchecked")
+            LocalChannelBuilder<World> builder = (LocalChannelBuilder<World>) data;
+            worlds = new HashSet<>(builder.getWorlds());
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException("Invalid World implementation", e);
+        }
+
 
         if(worlds.isEmpty()) {
             throw new IllegalArgumentException("Worlds cannot be empty");

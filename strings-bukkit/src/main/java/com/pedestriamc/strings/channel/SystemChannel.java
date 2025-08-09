@@ -3,14 +3,10 @@ package com.pedestriamc.strings.channel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.channel.base.ProtectedChannel;
-import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @SuppressWarnings("all")

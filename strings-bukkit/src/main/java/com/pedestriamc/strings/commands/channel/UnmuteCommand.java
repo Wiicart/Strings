@@ -47,7 +47,7 @@ class UnmuteCommand extends AbstractChannelCommand implements CartCommandExecuto
     }
 
     private void sendFinalMessages(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
-        sendFinalMessages(sender, target, channel, MUTE_SUCCESS, MUTE_SUCCESS_OTHER);
+        sendFinalMessages(sender, target, channel, UNMUTE_SUCCESS, UNMUTE_SUCCESS_OTHER);
     }
 
     private boolean isNotMuted(@NotNull CommandSender sender, @NotNull StringsUser target, @NotNull Channel channel) {

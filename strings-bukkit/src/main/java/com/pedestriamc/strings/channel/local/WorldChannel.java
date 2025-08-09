@@ -1,8 +1,9 @@
 package com.pedestriamc.strings.channel.local;
 
+import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.channel.DefaultChannel;
@@ -10,7 +11,6 @@ import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -24,11 +24,11 @@ public class WorldChannel extends AbstractLocalChannel {
 
     public static final String IDENTIFIER = "world";
 
-    public WorldChannel(JavaPlugin plugin, ChannelBuilder builder) {
+    public WorldChannel(StringsPlatform plugin, LocalChannelBuilder<?> builder) {
         this((Strings) plugin, builder);
     }
 
-    public WorldChannel(@NotNull Strings strings, @NotNull ChannelBuilder builder) {
+    public WorldChannel(@NotNull Strings strings, @NotNull LocalChannelBuilder<?> builder) {
         super(strings, builder);
     }
 

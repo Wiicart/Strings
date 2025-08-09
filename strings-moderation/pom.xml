@@ -106,5 +106,15 @@
       <artifactId>cart-commands</artifactId>
       <version>1.0</version>
     </dependency>
+    <dependency>
+      <groupId>net.kyori</groupId>
+      <artifactId>adventure-api</artifactId>
+      <version>4.17.0</version>
+    </dependency>
+    <dependency>
+      <groupId>net.kyori</groupId>
+      <artifactId>adventure-text-minimessage</artifactId>
+      <version>4.17.0</version>
+    </dependency>
   </dependencies>
 </project>

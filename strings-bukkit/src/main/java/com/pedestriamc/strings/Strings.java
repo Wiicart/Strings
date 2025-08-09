@@ -1,6 +1,7 @@
 package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.api.APIRegistrar;
+import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.data.BuildableRegistrar;
 import com.pedestriamc.strings.api.event.StringsReloader;
 import com.pedestriamc.strings.placeholder.StringsPlaceholderExpansion;
@@ -18,6 +19,7 @@ import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import com.pedestriamc.strings.user.util.YamlUserUtil;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
@@ -35,7 +37,7 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.UUID;
 
-public final class Strings extends JavaPlugin {
+public final class Strings extends JavaPlugin implements StringsPlatform {
 
     // Version
     public static final String VERSION = "1.6";
@@ -53,6 +55,8 @@ public final class Strings extends JavaPlugin {
     private boolean isPaper = false;
     private boolean usingVault;
     private boolean usingLuckPerms = false;
+
+    private BukkitAudiences adventure;
 
     private FileManager fileManager;
     private UserUtil userUtil;
@@ -74,9 +78,14 @@ public final class Strings extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        info("[Strings] Loading...");
-        BuildableRegistrar.register();
+        info("Loading...");
+
         fileManager = new FileManager(this);
+        info("FileManager loaded.");
+        userUtil = new YamlUserUtil(this);
+        info("UserUtil loaded.");
+
+        BuildableRegistrar.register(this);
         determineEnvironment();
         instantiateObjects();
         registerAPI();
@@ -84,6 +93,7 @@ public final class Strings extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        adventure = BukkitAudiences.create(this);
         logManager = new LogManager(this);
         this.setupVault();
         channelLoader.loadChannels();
@@ -110,6 +120,11 @@ public final class Strings extends JavaPlugin {
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
         stringsImpl = null;
+
+        if(this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
 
         try {
             APIRegistrar.unregister(apiUUID);
@@ -170,7 +185,6 @@ public final class Strings extends JavaPlugin {
 
 
     private void instantiateObjects() {
-        userUtil = new YamlUserUtil(this);
         configClass = new Configuration(getConfig());
         messenger = new BukkitMessenger(fileManager.getMessagesFileConfig());
         playerDirectMessenger = new PlayerDirectMessenger(this);
@@ -296,6 +310,13 @@ public final class Strings extends JavaPlugin {
 
     public BukkitMessenger getMessenger() {
         return messenger;
+    }
+
+    public @NotNull BukkitAudiences adventure() {
+        if(this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return this.adventure;
     }
 
     public Configuration getConfiguration() {

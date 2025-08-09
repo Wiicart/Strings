@@ -4,7 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.PartyChannel;
 import com.pedestriamc.strings.api.channel.Type;
-import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.channel.base.AbstractChannel;
 import com.pedestriamc.strings.user.User;
@@ -39,7 +39,7 @@ public class StringsPartyChannel extends AbstractChannel implements PartyChannel
         leader = (User) user;
     }
 
-    protected StringsPartyChannel(Strings strings, ChannelBuilder builder) {
+    protected StringsPartyChannel(Strings strings, IChannelBuilder<?> builder) {
         super(strings, builder);
     }
     

@@ -1,7 +1,8 @@
 package com.pedestriamc.strings.channel;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.StringsPlatform;
+import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
 import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.api.user.StringsUser;
@@ -18,7 +19,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.permissions.Permissible;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -51,11 +51,11 @@ public class HelpOPChannel extends ProtectedChannel {
         messageProcessor = new MessageProcessor(strings, this);
     }
 
-    public HelpOPChannel(@NotNull JavaPlugin plugin, @NotNull ChannelBuilder builder) {
+    public HelpOPChannel(@NotNull StringsPlatform plugin, @NotNull IChannelBuilder<?> builder) {
         this((Strings) plugin, builder);
     }
 
-    public HelpOPChannel(@NotNull Strings strings, @NotNull ChannelBuilder data)
+    public HelpOPChannel(@NotNull Strings strings, @NotNull IChannelBuilder<?> data)
     {
         super("helpop");
         this.strings = strings;

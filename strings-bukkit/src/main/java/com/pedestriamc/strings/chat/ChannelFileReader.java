@@ -4,7 +4,9 @@ import com.google.common.base.Preconditions;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Membership;
-import com.pedestriamc.strings.api.channel.data.ChannelBuilder;
+import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
+import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
+import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.channel.DefaultChannel;
@@ -93,7 +95,25 @@ class ChannelFileReader {
         final String type = getTypeString(section); // throws IllegalArgumentException if illegal
         final Membership membership = getMembership(section); // throws IllegalArgumentException if illegal
 
-        final ChannelBuilder builder = Channel.builder(name, format, membership)
+        IChannelBuilder<?> builder;
+        if (isLocal(type)) {
+            LocalChannelBuilder<World> temp = Channel.localBuilder(
+                    name,
+                    format,
+                    membership,
+                    loadWorlds(section)
+            );
+
+            if (isProximity(type)) {
+                temp.setDistance(getDistance(section));
+            }
+
+            builder = temp;
+        } else {
+            builder = Channel.builder(name, format, membership);
+        }
+
+        builder
                 .setDefaultColor(section.getString("default-color", StringsTextColor.WHITE.toString()))
                 .setDoCooldown(section.getBoolean("cooldown", false))
                 .setDoProfanityFilter(section.getBoolean("filter-profanity", false))
@@ -101,14 +121,6 @@ class ChannelFileReader {
                 .setCallEvent(section.getBoolean("call-event", true))
                 .setPriority(section.getInt("priority", -1))
                 .setBroadcastFormat(section.getString("broadcast-format", "&8[&cBroadcast&8] &f{message}"));
-
-        // Handle options specific to LocalChannels
-        if(isLocal(type)) {
-            if(isProximity(type)) {
-                builder.setDistance(getDistance(section));
-            }
-            builder.setWorlds(loadWorlds(section));
-        }
 
         final Channel channel = builder.build(type);
         manager.register(channel);
@@ -154,13 +166,13 @@ class ChannelFileReader {
         return distance;
     }
 
-    private @NotNull Set<World> loadWorlds(@NotNull ConfigurationSection section) {
-        Set<World> worlds = new HashSet<>();
+    private @NotNull Set<Locality<World>> loadWorlds(@NotNull ConfigurationSection section) {
+        Set<Locality<World>> worlds = new HashSet<>();
         String legacyWorldName = section.getString("world");
         if(legacyWorldName != null) {
             World world = Bukkit.getWorld(legacyWorldName);
             if(world != null) {
-                worlds.add(world);
+                worlds.add(Locality.of(world));
             } else {
                 strings.warning("Unknown world '" + legacyWorldName + "' defined, skipping...");
             }
@@ -170,7 +182,7 @@ class ChannelFileReader {
         for(String str : list) {
             World world = Bukkit.getWorld(str);
             if (world != null) {
-                worlds.add(world);
+                worlds.add(Locality.of(world));
             } else {
                 strings.warning("Unknown world '" + str + "' defined, skipping...");
             }
@@ -196,7 +208,6 @@ class ChannelFileReader {
                     .setDoProfanityFilter(false)
                     .setDoUrlFilter(false)
                     .setCallEvent(true)
-                    .setWorlds(null)
                     .setPriority(-1)
                     .build("stringchannel")
             );

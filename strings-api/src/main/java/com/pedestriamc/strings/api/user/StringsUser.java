@@ -27,8 +27,6 @@ public interface StringsUser extends Messageable {
     @NotNull
     UUID getUniqueId();
 
-    void sendMessage(@NotNull String message);
-
     /**
      * Provides the StringsUser's name.
      * @return A String containing the name.

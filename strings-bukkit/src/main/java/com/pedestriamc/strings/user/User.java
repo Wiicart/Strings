@@ -2,11 +2,15 @@ package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.event.channel.UserChannelEvent;
+import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.chat.ChannelManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -37,20 +41,21 @@ public final class User implements StringsUser {
     // should almost always be true, see YamlUserUtil for usage.
     private final boolean retain;
 
-    private final @NotNull Strings strings;
-    private final @NotNull ChannelManager channelLoader;
+    private final Strings strings;
+    private final ChannelManager channelLoader;
 
-    private final @NotNull UUID uuid;
-    private final @NotNull Player player;
-    private final @NotNull String name;
+    private final UUID uuid;
+    private final Player player;
+    private final Audience audience;
+    private final String name;
 
-    private final @NotNull Set<Channel> channels;
-    private final @NotNull Set<Monitorable> monitored;
-    private final @NotNull Set<UUID> ignored;
-    private final @NotNull Set<Channel> mutes;
+    private final Set<Channel> channels;
+    private final Set<Monitorable> monitored;
+    private final Set<UUID> ignored;
+    private final Set<Channel> mutes;
 
-    private @NotNull Channel activeChannel;
-    private @NotNull StringsComponent chatColorComponent;
+    private Channel activeChannel;
+    private StringsComponent chatColorComponent;
 
     private @Nullable String prefix;
     private @Nullable String suffix;
@@ -87,6 +92,7 @@ public final class User implements StringsUser {
         this.uuid = builder.uuid;
         this.retain = builder.retained;
         this.player = Objects.requireNonNull(strings.getServer().getPlayer(uuid));
+        this.audience = loadAudience(uuid);
         this.name = player.getName();
         this.chatColorComponent = StringsComponent.fromString(color(Objects.requireNonNullElse(builder.chatColor, "")));
         this.prefix = Objects.requireNonNullElse(builder.prefix, "");
@@ -134,6 +140,17 @@ public final class User implements StringsUser {
         }
     }
 
+    private Audience loadAudience(@NotNull UUID uuid) {
+        Audience temp = null;
+        try (BukkitAudiences adventure = strings.adventure()) {
+            temp = adventure.player(uuid);
+        } catch(Exception e) {
+            strings.getLogger().info("Failed to load audience for " + uuid + ".");
+        }
+
+        return temp;
+    }
+
 
 
     /**
@@ -145,6 +162,14 @@ public final class User implements StringsUser {
         player().sendMessage(message);
     }
 
+    @Override
+    public void sendMessage(@NotNull Component message) {
+        if (audience != null) {
+            audience.sendMessage(message);
+        } else {
+            sendMessage(ComponentConverter.toString(message));
+        }
+    }
 
 
     // signifies data has changed for the data cache.
