@@ -4,7 +4,6 @@
 <p align="center">
   <a href="https://modrinth.com/plugin/strings">
     <img alt="Modrinth Downloads" src="https://img.shields.io/modrinth/dt/strings?logo=modrinth">
-
   </a>
   &nbsp;
   <a href="https://www.spigotmc.org/resources/strings-chat-plugin.118186/">
