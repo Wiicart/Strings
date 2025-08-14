@@ -26,6 +26,21 @@ public interface Messenger {
     void sendMessage(@NotNull Message message, @NotNull Messageable recipient);
 
     /**
+     * Sends a Message without the Strings prefix.
+     * @param message The Message
+     * @param recipient The recipient of the Message
+     */
+    void sendMessagePlain(@NotNull Message message, @NotNull Messageable recipient);
+
+    /**
+     * Sends a Message to a Player, replacing placeholders, without the Strings prefix.
+     * @param message The Message
+     * @param recipient The recipient of the Message
+     * @param placeholders The placeholders (all occurrences of the key are replaced by the value)
+     */
+    void sendMessagePlain(@NotNull Message message, @NotNull Messageable recipient, @NotNull Map<String, String> placeholders);
+
+    /**
      * Batches message sends together using {@link MessageContext}(s)
      * @param contexts The MessageContexts
      */

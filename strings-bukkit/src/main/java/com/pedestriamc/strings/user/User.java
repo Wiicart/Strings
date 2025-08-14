@@ -164,7 +164,9 @@ public final class User implements StringsUser {
 
     @Override
     public void sendMessage(@NotNull Component message) {
-        if (audience != null) {
+        if (player instanceof Audience a) {
+            a.sendMessage(message);
+        } else if (audience != null) {
             audience.sendMessage(message);
         } else {
             sendMessage(ComponentConverter.toString(message));
@@ -248,6 +250,7 @@ public final class User implements StringsUser {
     @ApiStatus.Obsolete
     public void setChatColor(final String chatColor) {
         setChatColorComponent(StringsComponent.fromString(chatColor));
+        dirty = true;
     }
 
     /**
@@ -491,11 +494,13 @@ public final class User implements StringsUser {
         }
 
         mutes.add(channel);
+        dirty = true;
     }
 
     @Override
     public void unmuteChannel(@NotNull Channel channel) {
         mutes.remove(channel);
+        dirty = true;
     }
 
     @Override
@@ -516,6 +521,7 @@ public final class User implements StringsUser {
     @Override
     public void setDirectMessagesEnabled(boolean msgEnabled) {
         this.msgEnabled = msgEnabled;
+        dirty = true;
     }
 
     /**

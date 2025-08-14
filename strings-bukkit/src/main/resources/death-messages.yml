@@ -1,0 +1,93 @@
+# Death Message Options
+# Should death messages be enabled?
+# https://minecraft.wiki/w/Death_messages
+enable: true
+# Should custom death messages be used?
+custom: false
+
+# All death messages.
+# All categories have these placeholders (some may have more):
+# - {player} - the username of the dead player.
+# - {display-name} - the display name of the dead player.
+messages:
+  # Sent when /kill is used on a player
+  command:
+    - "&f{player} was killed"
+  # Sent when a player is killed by the world border.
+  world-border:
+    - "&f{player} left the confines of this world"
+  # Sent when a player is killed by a block (like cactus)
+  # Additional placeholder: {block} - the block that killed the player.
+  contact:
+    - "&f{player} was killed by {block}"
+  # Sent when a player is killed by an entity (can be a player or a mob)
+  # Additional placeholder: {killer} - the killer of the player
+  attack:
+    - "&f{player} was slain by {killer}"
+  # Sent when a player is killed by a projectile (like an arrow)
+  projectile:
+    - "&f{player} was shot"
+  # Sent when a player suffocates
+  suffocation:
+    - "&f{player} suffocated"
+  # Sent when a player burns to death
+  fire:
+    - "&f{player} went up in flames"
+    - "&f{player} burned to death"
+  # Sent when a player dies due to lava
+  lava:
+    - "&f{player} tried to swim in lava"
+  # Sent when a player drowns
+  drowning:
+    - "&f{player} drowned"
+  # Sent when a player is killed by an explosion (can be an entity or a block)
+  # Additional placeholder: {killer} - the block or entity that exploded
+  explosion:
+    - "&f{player} was exploded by {killer}"
+  # Sent when a player falls into the void
+  void:
+    - "&f{player} fell out of the world"
+  # Sent when a player is killed by lightning
+  lightning:
+    - "&f{player} was struck by lightning"
+  suicide:
+    - "&f{player} commit suicide"
+  # Sent when a player starves to death
+  starvation:
+    - "&f{player} starved to death"
+  # Sent when a player is poisoned to death
+  poison:
+    - "&f{player} was poisoned to death"
+  # Sent when a player is killed by magic
+  # (Evoker fangs, guardian, etc.)
+  magic:
+    - "&f{player} was killed by magic"
+  # Sent when a player is killed by wither effect
+  wither:
+    - "&f{player} withered away"
+  # Sent when a player is killed by a falling block
+  falling-block:
+    - "&f{player} was squashed by a falling block"
+  # Sent when a player falls from a high place
+  fall:
+    - "&f{player} fell from a high place"
+    - "&f{player} hit the ground too hard"
+  # Sent when a player is killed by thorns
+  # Additional placeholder: {killer} - the entity with thorns
+  thorns:
+    - "&f{player} was killed while trying to hurt {killer}"
+  # Sent when a player is killed by dragon breath
+  dragon-breath:
+    - "&f{player} was roasted in dragon's breath"
+  # Sent when a player is killed because of flying into a wall
+  fly-into-wall:
+    - "&f{player} experienced kinetic energy"
+  # Sent when a player is killed by walking on magma blocks
+  hot-floor:
+    - "&f{player} discovered the floor was lava"
+  # Sent when a player freezes to death
+  freeze:
+    - "&f{player} froze to death"
+  # Sent when a player dies do to a warden shriek
+  sonic-boom:
+    - "&f{player} was obliterated by a sonically-charged shriek"

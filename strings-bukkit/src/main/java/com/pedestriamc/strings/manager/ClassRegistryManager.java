@@ -20,6 +20,7 @@ import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.listener.chat.PaperChatListener;
 import com.pedestriamc.strings.listener.chat.SpigotChatListener;
 import com.pedestriamc.strings.listener.DirectMessageListener;
+import com.pedestriamc.strings.listener.player.PlayerDeathListener;
 import com.pedestriamc.strings.listener.player.PlayerJoinListener;
 import com.pedestriamc.strings.listener.player.PlayerQuitListener;
 import com.pedestriamc.strings.listener.mention.LuckPermsMentionListener;
@@ -140,6 +141,7 @@ public class ClassRegistryManager {
         registerListener(new PlayerJoinListener(strings));
         registerListener(new PlayerQuitListener(strings));
         registerListener(new DirectMessageListener(strings));
+        registerListener(new PlayerDeathListener(strings));
 
         if(strings.getConfiguration().getBoolean(Option.Bool.ENABLE_MENTIONS)) {
             if(strings.isUsingLuckPerms()) {

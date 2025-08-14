@@ -50,19 +50,20 @@ class ListCommand extends AbstractCommand implements CartCommandExecutor {
     private MessageContext[] getContexts(@NotNull CommandSender sender, @NotNull Set<Channel> available) {
         if (available.isEmpty()) {
             return new MessageContext[] {
-                    MessageContext.of(Message.NO_CHANNELS_AVAILABLE, MessageableAdapter.of(sender))
+                    MessageContext.of(Message.NO_CHANNELS_AVAILABLE, MessageableAdapter.of(sender), true)
             };
         }
 
         MessageContext contexts[] = new MessageContext[available.size() + 1];
-        contexts[0] = MessageContext.of(Message.CHANNEL_LIST_HEADER, MessageableAdapter.of(sender));
+        contexts[0] = MessageContext.of(Message.CHANNEL_LIST_HEADER, MessageableAdapter.of(sender), false);
 
         int pos = 1;
         for (Channel channel : available) {
             contexts[pos] = MessageContext.of(
                     Message.CHANNEL_LIST_ENTRY,
                     Map.of("{channel}", channel.getName()),
-                    MessageableAdapter.of(sender)
+                    MessageableAdapter.of(sender),
+                    false
             );
             pos++;
         }

@@ -18,7 +18,9 @@ public final class Option {
         ENABLE_MENTIONING_EVERYONE("mention-everyone", true),
         ENABLE_HELPOP("enable-helpop", true),
         DISABLE_HELPOP_COMMAND("other-helpop", false),
-        ENABLE_DIRECT_MESSAGES("msg-enabled", true);
+        ENABLE_DIRECT_MESSAGES("msg-enabled", true),
+        ENABLE_DEATH_MESSAGES("death-messages.enable", true),
+        USE_CUSTOM_DEATH_MESSAGES("death-messages.custom", true),;
 
         final String key;
         final boolean defaultValue;

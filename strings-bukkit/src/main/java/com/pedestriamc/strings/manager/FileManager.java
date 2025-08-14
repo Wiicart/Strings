@@ -28,6 +28,7 @@ public final class FileManager {
     private FileConfiguration channelsFileConfig;
     private FileConfiguration logsFileConfig;
     private FileConfiguration moderationFileConfig;
+    private FileConfiguration deathMessagesFileConfig;
 
     public FileManager(@NotNull Strings strings) {
         this.strings = strings;
@@ -46,6 +47,7 @@ public final class FileManager {
         messagesFile = new File(strings.getDataFolder(), "messages.yml");
         usersFile = new File(strings.getDataFolder(), "users.yml");
         channelsFile = new File(strings.getDataFolder(), "channels.yml");
+        File deathMessagesFile = new File(strings.getDataFolder(), "death-messages.yml");
         File logsFile = new File(strings.getDataFolder(), "logs.yml");
         File moderationFile = new File(strings.getDataFolder(), "moderation.yml");
 
@@ -53,6 +55,7 @@ public final class FileManager {
         createIfDoesNotExist(messagesFile, "messages.yml");
         createIfDoesNotExist(usersFile, "users.yml");
         createIfDoesNotExist(channelsFile, "channels.yml");
+        createIfDoesNotExist(deathMessagesFile, "death-messages.yml");
         createIfDoesNotExist(logsFile, "logs.yml");
         createIfDoesNotExist(moderationFile, "moderation.yml");
 
@@ -60,6 +63,7 @@ public final class FileManager {
         messagesFileConfig = YamlConfiguration.loadConfiguration(messagesFile);
         usersFileConfig = YamlConfiguration.loadConfiguration(usersFile);
         channelsFileConfig = YamlConfiguration.loadConfiguration(channelsFile);
+        deathMessagesFileConfig = YamlConfiguration.loadConfiguration(deathMessagesFile);
         logsFileConfig = YamlConfiguration.loadConfiguration(logsFile);
         moderationFileConfig = YamlConfiguration.loadConfiguration(moderationFile);
     }
@@ -80,6 +84,7 @@ public final class FileManager {
         updateIfPresent("config.yml");
         updateIfPresent("messages.yml");
         updateIfPresent("moderation.yml");
+        updateIfPresent("death-messages.yml");
     }
 
     private void updateIfPresent(String resourceName) {
@@ -93,30 +98,42 @@ public final class FileManager {
         }
     }
 
+    @NotNull
     public FileConfiguration getConfig() {
         return strings.getConfig();
     }
 
+    @NotNull
     public FileConfiguration getUsersFileConfig() {
         return usersFileConfig;
     }
 
+    @NotNull
     public FileConfiguration getBroadcastsFileConfig() {
         return broadcastsFileConfig;
     }
 
+    @NotNull
     public FileConfiguration getMessagesFileConfig() {
         return messagesFileConfig;
     }
 
+    @NotNull
     public FileConfiguration getChannelsFileConfig() {
         return channelsFileConfig;
     }
 
+    @NotNull
+    public FileConfiguration getDeathMessagesFileConfig() {
+        return deathMessagesFileConfig;
+    }
+
+    @NotNull
     public FileConfiguration getLogsFileConfig() {
         return logsFileConfig;
     }
 
+    @NotNull
     public FileConfiguration getModerationFileConfig() {
         return moderationFileConfig;
     }

@@ -24,10 +24,10 @@ public final class BukkitMessenger implements Messenger {
     private final String prefix;
 
     public BukkitMessenger(FileConfiguration config) {
-        for(Message msg : Message.values()) {
+        for (Message msg : Message.values()) {
             String key = msg.getKey();
             try {
-                if(config.isList(key)) {
+                if (config.isList(key)) {
                     enumMap.put(msg, config.getStringList(key).toArray(new String[0]));
                 } else {
                     enumMap.put(msg, config.getString(key));
@@ -49,11 +49,47 @@ public final class BukkitMessenger implements Messenger {
     }
 
     @Override
+    public void sendMessage(@NotNull Message message, @NotNull Messageable recipient) {
+        sendMessage(message, recipient, true);
+    }
+
+    @Override
+    public void sendMessagePlain(@NotNull Message message, @NotNull Messageable recipient) {
+        sendMessage(message, recipient, false);
+    }
+
+    @Override
+    public void sendMessagePlain(@NotNull Message message, @NotNull Messageable recipient, @NotNull Map<String, String> placeholders) {
+        sendMessage(message, recipient, placeholders, false);
+    }
+
+    @Override
     public void sendMessage(@NotNull Message message, @NotNull Messageable recipient, @NotNull Map<String, String> placeholders) {
+        sendMessage(message, recipient, placeholders, true);
+    }
+
+    private void sendMessage(@NotNull Message message, @NotNull Messageable recipient, boolean usePrefix) {
+        Object msgObject = enumMap.get(message);
+
+        if (msgObject instanceof String[] msg) {
+            for (String str : msg) {
+                recipient.sendMessage(applyColor(str));
+            }
+            return;
+        } else if (msgObject instanceof String str) {
+            String finalStr = usePrefix ? prefix + str : str;
+            recipient.sendMessage(applyColor(finalStr));
+            return;
+        }
+
+        warn(message);
+    }
+
+    private void sendMessage(@NotNull Message message, @NotNull Messageable recipient, @NotNull Map<String, String> placeholders, boolean usePrefix) {
         Object msg = enumMap.get(message);
-        if(msg instanceof String[] array) {
-            for(String str : array) {
-                for(Map.Entry<String, String> entry : placeholders.entrySet()) {
+        if (msg instanceof String[] array) {
+            for (String str : array) {
+                for (Map.Entry<String, String> entry : placeholders.entrySet()) {
                     str = str.replace(entry.getKey(), entry.getValue());
                 }
                 recipient.sendMessage(applyColor(str));
@@ -61,42 +97,25 @@ public final class BukkitMessenger implements Messenger {
             return;
         }
 
-        if(msg instanceof String str) {
-            for(Map.Entry<String, String> entry : placeholders.entrySet()) {
+        if (msg instanceof String str) {
+            for (Map.Entry<String, String> entry : placeholders.entrySet()) {
                 str = str.replace(entry.getKey(), entry.getValue());
             }
-            recipient.sendMessage(applyColor(prefix + str));
+
+            String finalStr = usePrefix ? prefix + str : str;
+            recipient.sendMessage(applyColor(finalStr));
             return;
         }
 
         warn(message);
     }
 
-    @Override
-    public void sendMessage(@NotNull Message message, @NotNull Messageable recipient) {
-        Object msgObject = enumMap.get(message);
-
-        if(msgObject instanceof String[] msg) {
-            for(String str : msg) {
-                recipient.sendMessage(applyColor(str));
-            }
-
-            return;
-        } else if(msgObject instanceof String) {
-            recipient.sendMessage(applyColor(prefix + enumMap.get(message)));
-
-            return;
-        }
-
-        warn(message);
-    }
-
-    public void batchSend(MessageContext @NotNull ... queries) {
-        for (MessageContext query : queries) {
-            if (query.placeholders() != null) {
-                sendMessage(query.message(), query.recipient(), query.placeholders());
+    public void batchSend(MessageContext @NotNull ... contexts) {
+        for (MessageContext context : contexts) {
+            if (context.placeholders() != null) {
+                sendMessage(context.message(), context.recipient(), context.placeholders(), context.usePrefix());
             } else {
-                sendMessage(query.message(), query.recipient());
+                sendMessage(context.message(), context.recipient(), context.usePrefix());
             }
         }
     }

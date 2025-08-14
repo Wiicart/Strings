@@ -15,21 +15,32 @@ public final class MessageContext {
     private final Message message;
     private final Messageable recipient;
     private final Map<String, String> placeholders;
+    private final boolean usePrefix;
 
     @NotNull
-    public static MessageContext of(@NotNull Message message, @NotNull Map<String, String> placeholders, @NotNull Messageable recipient) {
-        return new MessageContext(message, placeholders, recipient);
+    public static MessageContext of(
+            @NotNull Message message,
+            @NotNull Map<String, String> placeholders,
+            @NotNull Messageable recipient,
+            boolean usePrefix
+    ) {
+        return new MessageContext(message, placeholders, recipient, usePrefix);
     }
 
     @NotNull
-    public static MessageContext of(Message message, Messageable recipient) {
-        return new MessageContext(message, null, recipient);
+    public static MessageContext of(
+            Message message,
+            Messageable recipient,
+            boolean usePrefix
+    ) {
+        return new MessageContext(message, null, recipient, usePrefix);
     }
 
-    private MessageContext(Message message, Map<String, String> placeholders, Messageable recipient) {
+    private MessageContext(Message message, Map<String, String> placeholders, Messageable recipient, boolean usePrefix) {
         this.message = message;
         this.recipient = recipient;
         this.placeholders = placeholders;
+        this.usePrefix = usePrefix;
     }
 
     @NotNull
@@ -48,6 +59,11 @@ public final class MessageContext {
     @Internal
     public Map<String, String> placeholders() {
         return placeholders;
+    }
+
+    @Internal
+    public boolean usePrefix() {
+        return usePrefix;
     }
 
 }

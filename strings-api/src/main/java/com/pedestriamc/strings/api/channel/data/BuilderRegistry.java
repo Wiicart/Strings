@@ -16,7 +16,6 @@ final class BuilderRegistry {
 
     private static StringsPlatform platform;
 
-    @Internal
     private static final Map<String, BiFunction<StringsPlatform, ChannelBuilder, Channel>> BUILD_FUNCTIONS = new HashMap<>();
 
     private static final Map<String, BiFunction<StringsPlatform, LocalChannelBuilder<?>, Channel>> LOCAL_BUILD_FUNCTIONS = new HashMap<>();
