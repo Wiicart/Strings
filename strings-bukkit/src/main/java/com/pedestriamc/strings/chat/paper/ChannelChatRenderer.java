@@ -7,6 +7,7 @@ import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.chat.MessageProcessor;
+import com.pedestriamc.strings.user.User;
 import io.papermc.paper.chat.ChatRenderer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -32,6 +33,7 @@ public class ChannelChatRenderer extends MessageProcessor implements ChatRendere
     }
 
     private @NotNull Component processMessage(@NotNull Player source, @NotNull Component message) {
+        User sourceUser = getUser(source);
         String msg = ComponentConverter.toString(message);
         msg = super.processMessage(source, msg);
 
@@ -39,7 +41,7 @@ public class ChannelChatRenderer extends MessageProcessor implements ChatRendere
             msg = processMentions(source, msg);
         }
 
-        return StringsComponent.fromString(msg).asComponent();
+        return sourceUser.getChatColorComponent().append(StringsComponent.fromString(msg)).asComponent();
     }
 
     private @NotNull Component setPlaceholder(@NotNull Component component, final @NotNull String original, final @NotNull String replacement) {

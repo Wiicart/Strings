@@ -261,7 +261,7 @@ public final class User implements StringsUser {
     @Override
     @ApiStatus.Obsolete
     public String getChatColor() {
-        return getChatColorComponent().toString();
+        return color(getChatColorComponent().toString());
     }
 
     /**
@@ -274,7 +274,7 @@ public final class User implements StringsUser {
     @ApiStatus.Obsolete
     public String getChatColor(final @NotNull Channel channel) {
         final String chatColor = getChatColor();
-        if(chatColor.isEmpty()) {
+        if (chatColor.isEmpty()) {
             return channel.getDefaultColor();
         }
         return chatColor;

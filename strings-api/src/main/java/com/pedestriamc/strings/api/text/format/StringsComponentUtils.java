@@ -55,6 +55,7 @@ final class StringsComponentUtils {
         return builder.toString();
     }
 
+    // Tokenizes a String with legacy color codes, then coverts it to a StringsComponent
     static @NotNull StringsComponent createFromString(@NotNull String string) {
         final List<Element<?>> list = new ArrayList<>();
 

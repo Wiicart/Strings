@@ -90,28 +90,29 @@ public class MessageProcessor {
     }
 
     public String processMentions(Player sender, @NotNull String str) {
-        if(!str.contains("@")) {
+        if (!str.contains("@")) {
             return str;
         }
 
         String chatColor = userUtil.getUser(sender).getChatColor(channel);
         String[] splitStr = str.split("((?=@))"); //https://www.baeldung.com/java-split-string-keep-delimiters
         StringBuilder sb = new StringBuilder();
-        for(String segment : splitStr) {
-            if(!segment.contains("@")) {
+        for (String segment : splitStr) {
+            if (!segment.contains("@")) {
                 sb.append(chatColor).append(segment);
                 continue;
             }
 
-            if(sender.hasPermission("strings.mention.all") && segment.contains("@everyone")) {
+            if (sender.hasPermission("strings.mention.all") && segment.contains("@everyone")) {
                 segment = segment.replace("@everyone", mentionColor + "@everyone" + ChatColor.RESET + chatColor);
             }
 
-            for(Player p : Bukkit.getOnlinePlayers()) {
-                if(!userUtil.getUser(p).isMentionsEnabled() || !segment.contains(p.getName())) {
-                    continue;
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (userUtil.getUser(p).isMentionsEnabled() && segment.contains(p.getName())) {
+                    String original = "@" + p.getName();
+                    String replacement = mentionColor + "@" + p.getName() + ChatColor.RESET + chatColor;
+                    segment = segment.replace(original, replacement);
                 }
-                segment = segment.replace("@" + p.getName(), mentionColor + "@" + p.getName() + ChatColor.RESET + chatColor);
             }
 
             sb.append(segment);

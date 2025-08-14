@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +38,6 @@ public final class StringsComponent implements ComponentLike {
     }
 
     public static @NotNull StringsComponent of(@NotNull List<Element<?>> elements) {
-        elements = StringsComponentUtils.compact(elements);
         StringsComponent c = resolveInstance(elements);
         if(c != null) {
             return c;
@@ -48,19 +48,42 @@ public final class StringsComponent implements ComponentLike {
     private StringsComponent(final List<Element<?>> elements) {
         this.elements = ImmutableList.copyOf(elements);
 
+        StringsTextColor lastColor = StringsTextColor.WHITE;
+        List<TextDecoration> lastDecorations = new ArrayList<>();
+        Component temp = Component.text().build();
         TextComponent.Builder builder = Component.text();
-        for(Element<?> element : elements) {
+
+        for (Element<?> element : elements) {
             if(element instanceof StringsTextColor color) {
+                temp = temp.append(builder.build());
+
+                builder = Component.text();
                 builder.color(color);
+                builder.decorate(lastDecorations.toArray(new TextDecoration[0]));
+
+                lastColor = color;
             } else if(element instanceof StringsTextDecoration decoration) {
+                temp = temp.append(builder.build());
+
+                builder = Component.text();
                 builder.decorate(decoration.toAdventure());
+                builder.color(lastColor);
+
+                lastDecorations.add(decoration.toAdventure());
             } else if(element instanceof StringsTextReset reset) {
+                temp = temp.append(builder.build());
+
+                lastDecorations.clear();
+                lastColor = StringsTextColor.WHITE;
+
+                builder = Component.text();
                 builder.append(reset.asComponent());
             } else if(element instanceof StringsTextComponent text) {
                 builder.append(text.asComponent());
             }
         }
-        component = builder.build();
+        temp = temp.append(builder.build());
+        component = temp;
 
         instances.add(this);
         toString = StringsComponentUtils.convertToString(this);

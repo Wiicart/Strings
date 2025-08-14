@@ -17,7 +17,9 @@ import java.util.Set;
 public class ChannelTabCompleter extends AbstractTabCompleter {
 
     private static final Set<String> CASES = Set.of(
-            "join", "leave", "monitor", "unmonitor", "broadcast", "announce", "mute"
+            "join", "leave", "monitor", "unmonitor",
+            "broadcast", "announce", "mute", "unmute",
+            "list"
     );
 
     private static final String HELP = "help";

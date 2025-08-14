@@ -53,7 +53,7 @@ public class PaperChatListener extends AbstractChatListener {
         channel = channel.resolve(user);
 
         // Let the Channel process the message independently if the Channel does not allow Events being called.
-        if(!channel.callsEvents()) {
+        if (!channel.callsEvents()) {
             channel.sendMessage(user, ComponentConverter.toString(event.message()));
             event.setCancelled(true);
             return;
@@ -63,7 +63,6 @@ public class PaperChatListener extends AbstractChatListener {
         event.viewers().clear();
         event.viewers().add(convertToAudience(recipients));
 
-        // check for spigot dependency issue
         event.viewers().add((Audience) strings.getServer().getConsoleSender());
 
         event.renderer(getRenderer(channel));
