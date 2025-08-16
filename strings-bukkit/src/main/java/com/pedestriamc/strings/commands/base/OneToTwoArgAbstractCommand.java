@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.commands.channel;
+package com.pedestriamc.strings.commands.base;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
@@ -20,9 +20,9 @@ import java.util.Map;
 
 import static com.pedestriamc.strings.api.message.Message.*;
 
-public abstract class AbstractChannelCommand extends AbstractCommand {
+public abstract class OneToTwoArgAbstractCommand extends AbstractCommand {
 
-    protected AbstractChannelCommand(@NotNull Strings strings) {
+    protected OneToTwoArgAbstractCommand(@NotNull Strings strings) {
         super(strings);
     }
 
@@ -68,7 +68,7 @@ public abstract class AbstractChannelCommand extends AbstractCommand {
     / Checks for correct arg counts, factoring in if the sender is a Player or not
     / Also checks for permissions to modify others if args length is 2
     */
-    protected boolean isArgCountIncorrect(@NotNull CommandSender sender, int length) {
+    protected boolean checkArgCountAndNotify(@NotNull CommandSender sender, int length) {
         return switch (length) {
             case 0 -> {
                 sendMessage(Message.INSUFFICIENT_ARGS, sender);
@@ -85,7 +85,7 @@ public abstract class AbstractChannelCommand extends AbstractCommand {
             }
 
             case 2 -> {
-                if(Permissions.anyOfOrAdmin(
+                if (Permissions.anyOfOrAdmin(
                         sender,
                         "strings.*",
                         "strings.channels.*",
@@ -113,7 +113,7 @@ public abstract class AbstractChannelCommand extends AbstractCommand {
     }
 
     // Checks if the param set is true. If so, the appropriate message is sent to the sender.
-    protected boolean checkAlreadySet(
+    protected boolean checkConditionAndNotify(
             boolean set,
             @NotNull CommandSender sender,
             @NotNull StringsUser target,
@@ -162,7 +162,7 @@ public abstract class AbstractChannelCommand extends AbstractCommand {
     }
 
     // Sends an update message to the target, and one to the sender, if different from the target.
-    protected void sendFinalMessages(
+    protected void sendAlternateMessages(
             @NotNull CommandSender sender,
             @NotNull User target,
             @NotNull Channel channel,

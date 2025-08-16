@@ -87,7 +87,11 @@ public enum Message {
     UNMUTE_SUCCESS_OTHER("unmute-success-other"),
     CHANNEL_LIST_HEADER("channel-list-header"),
     CHANNEL_LIST_ENTRY("channel-entry"),
-    NO_CHANNELS_AVAILABLE("no-channels-available"),;
+    NO_CHANNELS_AVAILABLE("no-channels-available"),
+    ALREADY_IGNORED("already-ignored"),
+    NOT_IGNORED("not-ignored"),
+    PLAYER_UNIGNORED("player-unignored"),
+    PLAYER_UNIGNORED_OTHER("player-unignored-other"),;
 
     private final String key;
 

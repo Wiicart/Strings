@@ -1,21 +1,21 @@
 package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.collections.BoundedLinkedBuffer;
 import com.pedestriamc.strings.api.event.channel.UserChannelEvent;
-import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.chat.ChannelManager;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +35,6 @@ import java.util.UUID;
  * Stores information about players for Strings.
  * Defaults to Vault values where available.
  */
-@SuppressWarnings("unused")
 public final class User implements StringsUser {
 
     // should almost always be true, see YamlUserUtil for usage.
@@ -63,6 +62,8 @@ public final class User implements StringsUser {
 
     private boolean mentionsEnabled;
     private boolean msgEnabled;
+
+    BoundedLinkedBuffer<EntityDamageEvent> previousDamage = new BoundedLinkedBuffer<>(2);
 
     public static User of(@NotNull StringsUser user) {
         if(user instanceof User u) {
@@ -107,11 +108,11 @@ public final class User implements StringsUser {
         this.mutes = Objects.requireNonNullElseGet(builder.mutes, HashSet::new);
 
         // Join the DefaultChannel if not a member of any other Channels
-        if(channels.isEmpty()) {
+        if (channels.isEmpty()) {
             joinChannel(channelLoader.getDefaultChannel());
         }
 
-        joinChannels(); // Join Channels in the Channel instances
+        joinChannels();
     }
 
     /**
@@ -132,25 +133,37 @@ public final class User implements StringsUser {
      * Joins all Channels in the channels Set. Called only on initialization.
      */
     private void joinChannels() {
-        for(Channel channel : channels) {
+        for (Channel channel : channels) {
             channel.addMember(this);
         }
-        for(Monitorable monitorable : monitored) {
+
+        for (Monitorable monitorable : monitored) {
             monitorable.addMonitor(this);
         }
     }
 
+    @NotNull
     private Audience loadAudience(@NotNull UUID uuid) {
-        Audience temp = null;
-        try (BukkitAudiences adventure = strings.adventure()) {
-            temp = adventure.player(uuid);
-        } catch(Exception e) {
-            strings.getLogger().info("Failed to load audience for " + uuid + ".");
-        }
-
-        return temp;
+        return strings.adventure().player(uuid);
     }
 
+    @Nullable
+    public EntityDamageEvent getSecondToLastDamage() {
+        if (previousDamage.size() < 2) {
+            return null;
+        }
+
+        BoundedLinkedBuffer.Node<EntityDamageEvent> tail = previousDamage.getTail();
+        if (tail != null) {
+            return tail.get();
+        }
+
+        return null;
+    }
+
+    public void pushDamageEvent(@NotNull EntityDamageEvent event) {
+        previousDamage.add(event);
+    }
 
 
     /**
@@ -166,10 +179,8 @@ public final class User implements StringsUser {
     public void sendMessage(@NotNull Component message) {
         if (player instanceof Audience a) {
             a.sendMessage(message);
-        } else if (audience != null) {
-            audience.sendMessage(message);
         } else {
-            sendMessage(ComponentConverter.toString(message));
+            audience.sendMessage(message);
         }
     }
 
@@ -177,7 +188,6 @@ public final class User implements StringsUser {
     // signifies data has changed for the data cache.
     private volatile boolean dirty = true;
 
-    // cache for getData
     private Map<String, Object> data;
 
     /**

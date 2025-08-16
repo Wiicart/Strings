@@ -39,16 +39,9 @@ import java.util.UUID;
 
 public final class Strings extends JavaPlugin implements StringsPlatform {
 
-    // Version
     public static final String VERSION = "1.6";
-
-    // short version number.
-    public static final short PLUGIN_NUM = 6;
-
-    // bStats metrics id
+    public static final short VERSION_NUM = 6;
     public static final int METRICS_ID = 22597;
-
-    // plugin distributor
     public static final String DISTRIBUTOR = "github";
 
     private boolean usingPlaceholderAPI = false;
@@ -141,9 +134,6 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         getServer().getPluginManager().callEvent(StringsReloader.createEvent());
     }
 
-    /**
-     * Loads bStats metrics.
-     */
     private void loadMetrics() {
         Metrics metrics = new Metrics(this, METRICS_ID);
         metrics.addCustomChart(new SimplePie("distributor", () -> DISTRIBUTOR));
@@ -157,16 +147,10 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         );
     }
 
-    /**
-     * Runs {@link User#logOff()} on all registered Users.
-     */
     private void logOutAll() {
         userUtil.getUsers().forEach(User::logOff);
     }
 
-    /**
-     * Checks what plugins are available, and if the server is running Paper or not.
-     */
     private void determineEnvironment() {
         if(getConfig().getBoolean("placeholder-api") && getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             info("PlaceholderAPI detected.");
@@ -238,7 +222,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
             connection.setRequestMethod("GET");
             String raw = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
             short latest = Short.parseShort(raw);
-            if(latest > PLUGIN_NUM) {
+            if(latest > VERSION_NUM) {
                 getServer().getLogger().info("+------------[Strings]------------+");
                 getServer().getLogger().info("|    A new update is available!   |");
                 getServer().getLogger().info("|          Download at:           |");
@@ -313,7 +297,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
     }
 
     public @NotNull BukkitAudiences adventure() {
-        if(this.adventure == null) {
+        if (this.adventure == null) {
             throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
         }
         return this.adventure;

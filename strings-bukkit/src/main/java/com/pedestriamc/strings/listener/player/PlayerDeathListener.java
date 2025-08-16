@@ -3,7 +3,7 @@ package com.pedestriamc.strings.listener.player;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.settings.Settings;
-import com.pedestriamc.strings.misc.deathmessages.DeathMessageManager;
+import com.pedestriamc.strings.deathmessages.DeathMessageManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;

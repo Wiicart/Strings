@@ -3,6 +3,7 @@ package com.pedestriamc.strings.commands.channel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.user.StringsUser;
+import com.pedestriamc.strings.commands.base.OneToTwoArgAbstractCommand;
 import com.pedestriamc.strings.user.User;
 import net.wiicart.commands.command.CartCommandExecutor;
 import net.wiicart.commands.command.CommandData;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.pedestriamc.strings.api.message.Message.*;
 
-class MuteCommand extends AbstractChannelCommand implements CartCommandExecutor {
+class MuteCommand extends OneToTwoArgAbstractCommand implements CartCommandExecutor {
 
     MuteCommand(@NotNull Strings strings) {
         super(strings);
@@ -22,7 +23,7 @@ class MuteCommand extends AbstractChannelCommand implements CartCommandExecutor 
         CommandSender sender = data.sender();
         String[] args = data.args();
 
-        if (isArgCountIncorrect(sender, args.length)) {
+        if (checkArgCountAndNotify(sender, args.length)) {
             return;
         }
 
@@ -47,11 +48,11 @@ class MuteCommand extends AbstractChannelCommand implements CartCommandExecutor 
     }
 
     private void sendFinalMessages(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
-        sendFinalMessages(sender, target, channel, MUTE_SUCCESS, MUTE_SUCCESS_OTHER);
+        sendAlternateMessages(sender, target, channel, MUTE_SUCCESS, MUTE_SUCCESS_OTHER);
     }
 
     private boolean isAlreadyMuted(@NotNull CommandSender sender, @NotNull StringsUser target, @NotNull Channel channel) {
-        return checkAlreadySet(
+        return checkConditionAndNotify(
                 target.hasChannelMuted(channel),
                 sender,
                 target,

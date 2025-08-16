@@ -3,6 +3,7 @@ package com.pedestriamc.strings.commands.channel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Message;
+import com.pedestriamc.strings.commands.base.OneToTwoArgAbstractCommand;
 import net.wiicart.commands.command.CartCommandExecutor;
 import net.wiicart.commands.command.CommandData;
 import net.wiicart.commands.permission.Permissions;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Map;
 
-class BroadcastCommand extends AbstractChannelCommand implements CartCommandExecutor {
+class BroadcastCommand extends OneToTwoArgAbstractCommand implements CartCommandExecutor {
 
     BroadcastCommand(@NotNull Strings strings) {
         super(strings);

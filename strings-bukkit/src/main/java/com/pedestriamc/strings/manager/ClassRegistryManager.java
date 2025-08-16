@@ -7,8 +7,9 @@ import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.commands.BroadcastCommand;
 import com.pedestriamc.strings.commands.ChatColorCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
-import com.pedestriamc.strings.commands.IgnoreCommand;
 import com.pedestriamc.strings.commands.StringsCommand;
+import com.pedestriamc.strings.commands.ignore.IgnoreCommand;
+import com.pedestriamc.strings.commands.ignore.UnIgnoreCommand;
 import com.pedestriamc.strings.commands.message.DirectMessageCommand;
 import com.pedestriamc.strings.commands.MessengerCommand;
 import com.pedestriamc.strings.commands.HelpOPCommand;
@@ -20,6 +21,7 @@ import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.listener.chat.PaperChatListener;
 import com.pedestriamc.strings.listener.chat.SpigotChatListener;
 import com.pedestriamc.strings.listener.DirectMessageListener;
+import com.pedestriamc.strings.listener.player.PlayerDamageListener;
 import com.pedestriamc.strings.listener.player.PlayerDeathListener;
 import com.pedestriamc.strings.listener.player.PlayerJoinListener;
 import com.pedestriamc.strings.listener.player.PlayerQuitListener;
@@ -64,6 +66,7 @@ public class ClassRegistryManager {
         registerCommand("strings", new StringsCommand(strings), new StringsTabCompleter());
 
         registerCommand("ignore", new IgnoreCommand(strings), new IgnoreTabCompleter());
+        registerCommand("unignore", new UnIgnoreCommand(strings), new IgnoreTabCompleter());
 
         BroadcastCommand broadcastCommand = new BroadcastCommand(strings);
         registerCommand("broadcast", broadcastCommand, null);
@@ -142,6 +145,7 @@ public class ClassRegistryManager {
         registerListener(new PlayerQuitListener(strings));
         registerListener(new DirectMessageListener(strings));
         registerListener(new PlayerDeathListener(strings));
+        registerListener(new PlayerDamageListener(strings));
 
         if(strings.getConfiguration().getBoolean(Option.Bool.ENABLE_MENTIONS)) {
             if(strings.isUsingLuckPerms()) {

@@ -69,7 +69,7 @@ public final class StringsImpl implements StringsAPI {
     }
 
     public short getVersion() {
-        return Strings.PLUGIN_NUM;
+        return Strings.VERSION_NUM;
     }
 
     public @NotNull Messenger getMessenger() {

@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.misc.deathmessages;
+package com.pedestriamc.strings.deathmessages;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.DragonFireball;
@@ -61,40 +61,53 @@ final class PlaceholderGenerator {
     @Unmodifiable
     static Map<String, String> getAttackPlaceholders(@NotNull DamageCause cause, @NotNull EntityDamageEvent finalDamage) {
         String killerName = UNKNOWN;
+        String killerDisplayName = UNKNOWN;
         if (finalDamage instanceof EntityDamageByEntityEvent entityEvent) {
             Entity entity = entityEvent.getDamager();
             if (entity instanceof Player p) {
                 killerName = p.getName();
+                killerDisplayName = p.getDisplayName();
             } else {
                 String customName = entity.getCustomName();
                 killerName = customName != null ? customName : entity.getName();
+                killerDisplayName = killerName;
             }
         }
 
-        return Map.of("{killer}", killerName);
+        return Map.of(
+                "{killer}", killerName,
+                "{killer-display-name}", killerDisplayName
+        );
     }
 
     @NotNull
     @Unmodifiable
     static Map<String, String> getProjectilePlaceholders(@NotNull DamageCause cause, @NotNull EntityDamageEvent finalDamage) {
         String killerName = UNKNOWN;
+        String killerDisplayName = UNKNOWN;
         if (finalDamage instanceof EntityDamageByEntityEvent entityEvent) {
             Entity entity = entityEvent.getDamager();
             if (entity instanceof Projectile proj) {
                 ProjectileSource source = proj.getShooter();
                 if (source instanceof Player p) {
                     killerName = p.getName();
+                    killerDisplayName = p.getDisplayName();
                 } else if (source instanceof LivingEntity e) {
                     String customName = e.getCustomName();
                     killerName = customName != null ? customName : e.getName();
+                    killerDisplayName = killerName;
                 }
             } else {
                 String customName = entity.getCustomName();
                 killerName = customName != null ? customName : entity.getName();
+                killerDisplayName = killerName;
             }
         }
 
-        return Map.of("{killer}", killerName);
+        return Map.of(
+                "{killer}", killerName,
+                "{killer-display-name}", killerDisplayName
+        );
     }
 
     @NotNull

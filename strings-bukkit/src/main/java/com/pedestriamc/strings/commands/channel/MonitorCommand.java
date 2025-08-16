@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.user.StringsUser;
+import com.pedestriamc.strings.commands.base.OneToTwoArgAbstractCommand;
 import com.pedestriamc.strings.user.User;
 import net.wiicart.commands.command.CartCommandExecutor;
 import net.wiicart.commands.command.CommandData;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 import static com.pedestriamc.strings.api.message.Message.*;
 
-class MonitorCommand extends AbstractChannelCommand implements CartCommandExecutor {
+class MonitorCommand extends OneToTwoArgAbstractCommand implements CartCommandExecutor {
 
     MonitorCommand(@NotNull Strings strings) {
         super(strings);
@@ -27,7 +28,7 @@ class MonitorCommand extends AbstractChannelCommand implements CartCommandExecut
         int length = data.args().length;
         String[] args = data.args();
 
-        if (isArgCountIncorrect(sender, length)) {
+        if (checkArgCountAndNotify(sender, length)) {
             return;
         }
 
@@ -61,7 +62,7 @@ class MonitorCommand extends AbstractChannelCommand implements CartCommandExecut
     }
 
     private boolean isAlreadyMonitoring(@NotNull CommandSender sender, @NotNull StringsUser target, @NotNull Monitorable monitorable) {
-        return checkAlreadySet(
+        return checkConditionAndNotify(
                 target.isMonitoring(monitorable),
                 sender,
                 target,
@@ -72,7 +73,7 @@ class MonitorCommand extends AbstractChannelCommand implements CartCommandExecut
     }
 
     private void sendFinalMessages(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
-        sendFinalMessages(sender, target, channel, MONITOR_SUCCESS, MONITOR_SUCCESS_OTHER);
+        sendAlternateMessages(sender, target, channel, MONITOR_SUCCESS, MONITOR_SUCCESS_OTHER);
     }
 
     private boolean doesNotHaveMonitorPermission(@NotNull CommandSender sender, @NotNull Monitorable monitorable) {

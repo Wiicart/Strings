@@ -60,6 +60,9 @@ commands:
   ignore:
     description: "Allows ignoring another player"
     usage: "/ignore <player-to-ignore> <player-ignoring (optional)>"
+  unignore:
+    description: "Lets a player stop ignoring another player"
+    usage: "/unignore <player-to-unignore> <player-ignoring (optional)>"
 permissions:
   strings.*:
     description: "All Strings permissions"
@@ -173,3 +176,6 @@ permissions:
   strings.chat.unignorable:
     default: op
     description: "Makes it so that Players cannot ignore this Player."
+  strings.chat.bypass-unignorable:
+    default: op
+    description: "Allows ignoring players that have the strings.chat.unignorable permission."

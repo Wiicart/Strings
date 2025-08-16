@@ -2,6 +2,7 @@ package com.pedestriamc.strings.commands.channel;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.commands.base.OneToTwoArgAbstractCommand;
 import com.pedestriamc.strings.user.User;
 import net.wiicart.commands.command.CartCommandExecutor;
 import net.wiicart.commands.command.CommandData;
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.pedestriamc.strings.api.message.Message.*;
 
-class RootCommand extends AbstractChannelCommand implements CartCommandExecutor {
+class RootCommand extends OneToTwoArgAbstractCommand implements CartCommandExecutor {
 
     RootCommand(@NotNull Strings strings) {
         super(strings);
@@ -21,7 +22,7 @@ class RootCommand extends AbstractChannelCommand implements CartCommandExecutor 
         CommandSender sender = data.sender();
         String[] args = data.args();
 
-        if (isArgCountIncorrect(sender, args.length)) {
+        if (checkArgCountAndNotify(sender, args.length)) {
             return;
         }
 
@@ -47,7 +48,7 @@ class RootCommand extends AbstractChannelCommand implements CartCommandExecutor 
     }
 
     private boolean isAlreadyActive(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
-        return checkAlreadySet(
+        return checkConditionAndNotify(
                 target.getActiveChannel().equals(channel),
                 sender,
                 target,
@@ -58,6 +59,6 @@ class RootCommand extends AbstractChannelCommand implements CartCommandExecutor 
     }
 
     private void sendFinalMessages(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
-        sendFinalMessages(sender, target, channel, CHANNEL_ACTIVE, CHANNEL_ACTIVE_OTHER);
+        sendAlternateMessages(sender, target, channel, CHANNEL_ACTIVE, CHANNEL_ACTIVE_OTHER);
     }
 }

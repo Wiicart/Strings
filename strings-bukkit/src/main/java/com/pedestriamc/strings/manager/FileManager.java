@@ -15,7 +15,7 @@ import java.io.IOException;
 @SuppressWarnings("unused")
 public final class FileManager {
 
-    private final @NotNull Strings strings;
+    private final Strings strings;
 
     private File broadcastsFile;
     private File messagesFile;

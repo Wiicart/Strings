@@ -9,85 +9,150 @@ custom: false
 # All categories have these placeholders (some may have more):
 # - {player} - the username of the dead player.
 # - {display-name} - the display name of the dead player.
+
+# {!}
+# If a category has an "-escaping" option, two additional placeholders are available:
+# {fighter} - the name of the player/entity the dead player was fighting
+# {fighter-display-name} - the display name of the player that was being fought, or the mob name if it was a mob.
+
 messages:
   # Sent when /kill is used on a player
   command:
     - "&f{player} was killed"
+
   # Sent when a player is killed by the world border.
   world-border:
     - "&f{player} left the confines of this world"
+  world-border-escaping:
+    - "&f{player} left the confines of this world while fighting {fighter}"
+
   # Sent when a player is killed by a block (like cactus)
   # Additional placeholder: {block} - the block that killed the player.
   contact:
     - "&f{player} was killed by {block}"
+
   # Sent when a player is killed by an entity (can be a player or a mob)
-  # Additional placeholder: {killer} - the killer of the player
+  # Additional placeholders:
+  # - {killer} (the killer of the player)
+  # - {killer-display-name} (the display name of the killer if it's a player.)
   attack:
     - "&f{player} was slain by {killer}"
+
   # Sent when a player is killed by a projectile (like an arrow)
+  # Additional placeholders:
+  # - {killer} (the killer of the player)
+  # - {killer-display-name} (the display name of the killer if it's a player.)
   projectile:
-    - "&f{player} was shot"
+    - "&f{player} was shot by {killer}"
+
   # Sent when a player suffocates
   suffocation:
-    - "&f{player} suffocated"
+    - "&f{player} suffocated in a wall"
+  suffocation-escaping:
+    - "&f{player} suffocated in a wall while fighting {fighter}"
+
   # Sent when a player burns to death
   fire:
     - "&f{player} went up in flames"
     - "&f{player} burned to death"
+  fire-escaping:
+    - "&f{player} was burned to a crisp while fighting {fighter}"
+    - "&f{player} walked into fire while fighting {fighter}"
+
   # Sent when a player dies due to lava
   lava:
     - "&f{player} tried to swim in lava"
+  lava-escaping:
+    - "&f{player} tried to swim in lava to escape {player}"
+
   # Sent when a player drowns
   drowning:
     - "&f{player} drowned"
+  drowning-escaping:
+    - "&f{player} drowned while trying to escape {fighter}"
+
   # Sent when a player is killed by an explosion (can be an entity or a block)
   # Additional placeholder: {killer} - the block or entity that exploded
   explosion:
     - "&f{player} was exploded by {killer}"
+
   # Sent when a player falls into the void
   void:
     - "&f{player} fell out of the world"
+  void-escaping:
+    - "&f{player} didn't want to live in the same world as {fighter}"
+
   # Sent when a player is killed by lightning
   lightning:
     - "&f{player} was struck by lightning"
+  lightning-other:
+    - "&f{player} was struck by lightning while fighting {fighter}"
+
+  # Sent when a player commits suicide (not vanilla, requires plugin)
   suicide:
     - "&f{player} commit suicide"
+
   # Sent when a player starves to death
   starvation:
     - "&f{player} starved to death"
+  starvation-escaping:
+    - "&f{player} starved to death while fighting {fighter}"
+
   # Sent when a player is poisoned to death
   poison:
     - "&f{player} was poisoned to death"
+
   # Sent when a player is killed by magic
   # (Evoker fangs, guardian, etc.)
   magic:
     - "&f{player} was killed by magic"
+  magic-escaping:
+    - "&f{player} was killed by magic while trying to escape {fighter}"
+
   # Sent when a player is killed by wither effect
   wither:
     - "&f{player} withered away"
+  wither-escaping:
+    - "&f{player} withered away while fighting {fighter}"
+
   # Sent when a player is killed by a falling block
   falling-block:
     - "&f{player} was squashed by a falling block"
+
   # Sent when a player falls from a high place
   fall:
     - "&f{player} fell from a high place"
     - "&f{player} hit the ground too hard"
+
   # Sent when a player is killed by thorns
-  # Additional placeholder: {killer} - the entity with thorns
+  # Additional placeholders:
+  # - {killer} (the killer of the player)
+  # - {killer-display-name} (the display name of the killer if it's a player.)
   thorns:
     - "&f{player} was killed while trying to hurt {killer}"
+
   # Sent when a player is killed by dragon breath
   dragon-breath:
     - "&f{player} was roasted in dragon's breath"
+
   # Sent when a player is killed because of flying into a wall
   fly-into-wall:
     - "&f{player} experienced kinetic energy"
+  fly-into-wall-escaping:
+    - "&f{player} experienced kinetic energy while trying to escape {fighter}"
+
   # Sent when a player is killed by walking on magma blocks
   hot-floor:
     - "&f{player} discovered the floor was lava"
+  hot-floor-escaping:
+    - "&f{player} walked into the danger zone due to {fighter}"
+
   # Sent when a player freezes to death
   freeze:
     - "&f{player} froze to death"
+
   # Sent when a player dies do to a warden shriek
   sonic-boom:
     - "&f{player} was obliterated by a sonically-charged shriek"
+  sonic-boom-escaping:
+    - "&f{player} was obliterated by a sonically-charged shriek while trying to escape {fighter}"

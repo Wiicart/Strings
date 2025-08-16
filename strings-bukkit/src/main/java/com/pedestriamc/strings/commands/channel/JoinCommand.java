@@ -3,6 +3,7 @@ package com.pedestriamc.strings.commands.channel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.user.StringsUser;
+import com.pedestriamc.strings.commands.base.OneToTwoArgAbstractCommand;
 import com.pedestriamc.strings.user.User;
 import net.wiicart.commands.command.CartCommandExecutor;
 import net.wiicart.commands.command.CommandData;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static com.pedestriamc.strings.api.message.Message.*;
 
-class JoinCommand extends AbstractChannelCommand implements CartCommandExecutor {
+class JoinCommand extends OneToTwoArgAbstractCommand implements CartCommandExecutor {
 
     JoinCommand(@NotNull Strings strings) {
         super(strings);
@@ -23,7 +24,7 @@ class JoinCommand extends AbstractChannelCommand implements CartCommandExecutor 
         int length = data.args().length;
         String[] args = data.args();
 
-        if (isArgCountIncorrect(sender, length)) {
+        if (checkArgCountAndNotify(sender, length)) {
             return;
         }
 
@@ -49,7 +50,7 @@ class JoinCommand extends AbstractChannelCommand implements CartCommandExecutor 
     }
 
     private boolean isAlreadyMember(@NotNull CommandSender sender, @NotNull StringsUser target, @NotNull Channel channel) {
-        return checkAlreadySet(
+        return checkConditionAndNotify(
                 target.memberOf(channel),
                 sender,
                 target,
@@ -60,7 +61,7 @@ class JoinCommand extends AbstractChannelCommand implements CartCommandExecutor 
     }
 
     private void sendFinalMessages(@NotNull CommandSender sender, @NotNull User target, @NotNull Channel channel) {
-        sendFinalMessages(sender, target, channel, CHANNEL_JOINED, OTHER_USER_JOINED_CHANNEL);
+        sendAlternateMessages(sender, target, channel, CHANNEL_JOINED, OTHER_USER_JOINED_CHANNEL);
     }
 
 }

@@ -293,26 +293,45 @@ use-on-other: "&fYou cannot use that command on yourself."
 
 # Sent when the /ignore command is used on a player
 # Available placeholders:
-# {player} - the player that has been ignored
-player-ignored: "&fIgnored player &7{player}&f."
+# {target} - the player that has been ignored
+player-ignored: "&fIgnored player &7{target}&f."
 
 # Sent when the /ignore command is used with two args
 # (meaning the command is used to have a player ignore another player)
 # Available placeholders:
 # {player} - the player that is now ignoring the other player
-# {ignored} - the player that is now being ignored
+# {target} - the player that is now being ignored
 ignored-other: "&7{player} &fis now ignoring &7{ignored}&f."
+
+# Sent when the /unignore command is used on a player
+# Available placeholders:
+# {target} - the player that had been ignored
+player-unignored: "&fUn-ignored player &7{target}&f."
+
+# Sent when the /unignore command is used with two args
+# (meaning the command is used to have a player ignore another player)
+# Available placeholders:
+# {player} - the player that was ignoring the other player
+# {target} - the player that was being ignored
+player-unignored-other: "&7{player} &fis no longer ignoring &7{ignored}&f."
+
 
 # Sent when /ignore is used on a player that cannot be ignored.
 # Available placeholders:
 # {player} - the player that cannot be ignored
-not-ignorable: "&cYou cannot ignore that player."
+not-ignorable: "&cPlayer &7{player} &ccannot be ignored."
 
 # Sent when a players attempt to use /ignore on themselves
 cant-ignore-self: "&fYou can't ignore yourself!"
 
 # Sent when a player attempts to set another player as ignoring themself
 cant-ignore-self-other: "&fPlayers can't ignore themselves!"
+
+# Sent when a player attempts to ignore a player they're already ignoring
+already-ignored: "&7{player} &fis already being ignored!"
+
+# Sent when a player attempts to un-ignore a player that's not being ignored
+not-ignored: "&7{player} &fis already not being ignored."
 
 # Sent when a player tries to mute a Channel that's already muted.
 already-muted: "&fChannel &7{channel} &fis already muted."
