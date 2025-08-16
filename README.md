@@ -1,4 +1,4 @@
-![banner](https://cdn.modrinth.com/data/cached_images/a8a22692f6bbd15d3bb12969826334e8796cf7f4.png)
+![banner](https://cdn.modrinth.com/data/cached_images/9cf4de9eef2f71dcbecbf70f9b8d9f7dc8ffa7cd.jpeg)
 ## Channels, mentions, chat color, broadcasts, formatting, and more - all in one.
 
 <p align="center">
