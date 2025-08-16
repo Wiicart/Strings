@@ -148,6 +148,9 @@ public interface Channel extends Comparable<Channel> {
      * To ensure this change is properly updated with the plugin, reload Strings or unregister then re-register
      * this Channel with the {@link ChannelLoader}
      *
+     * If another Channel registered with the ChannelLoader already has the new name,
+     * an <code>IllegalArgumentException</code> will be thrown.
+     *
      * @param name The new name.
      */
     void setName(@NotNull String name);
@@ -206,6 +209,18 @@ public interface Channel extends Comparable<Channel> {
      * @param doCooldown Should the Channel do cool downs?
      */
     void setDoCooldown(boolean doCooldown);
+
+    /**
+     * Tells if the Channel allows messages to be deleted.
+     * @return A boolean
+     */
+    boolean allowsMessageDeletion();
+
+    /**
+     * Sets if the Channel allows message deletion
+     * @param allowMessageDeletion The new value
+     */
+    void setAllowMessageDeletion(boolean allowMessageDeletion);
 
     /**
      * For internal usage - use {@link StringsUser#joinChannel(Channel)} instead.

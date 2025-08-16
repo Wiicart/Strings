@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.api.channel.data;
 
-import com.pedestriamc.strings.api.annotation.Agnostic;
+import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Membership;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +13,7 @@ import static org.jetbrains.annotations.ApiStatus.Internal;
  * Implemented by {@link ChannelBuilder} and {@link LocalChannelBuilder}
  * @param <B> The ChannelBuilder implementation
  */
-@Agnostic
+@Platform.Agnostic
 @Internal
 public sealed interface IChannelBuilder<B extends IChannelBuilder<B>> permits AbstractChannelBuilder {
 
@@ -151,6 +151,20 @@ public sealed interface IChannelBuilder<B extends IChannelBuilder<B>> permits Ab
      */
     @NotNull
     B setCallEvent(boolean callEvent);
+
+    /**
+     * Sets if this Channel allows message deletion
+     * @param allowMessageDeletion If messages should be allowed to be deleted or not
+     * @return this
+     */
+    B setAllowMessageDeletion(boolean allowMessageDeletion);
+
+    /**
+     * Tells if this Channel allows message deletion
+     * @return A boolean
+     */
+    @Internal
+    boolean allowsMessageDeletion();
 
     /**
      * Provides the Channel priority

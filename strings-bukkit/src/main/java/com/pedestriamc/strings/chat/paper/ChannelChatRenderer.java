@@ -10,18 +10,27 @@ import com.pedestriamc.strings.chat.MessageProcessor;
 import com.pedestriamc.strings.user.User;
 import io.papermc.paper.chat.ChatRenderer;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("unused")
+@Deprecated
 public class ChannelChatRenderer extends MessageProcessor implements ChatRenderer {
+
+    private final Channel channel;
+
+    private final DeletionManager deletionManager;
+    private final SignedMessage signedMessage;
 
     private final boolean mentionsEnabled;
 
-    public ChannelChatRenderer(final @NotNull Strings strings, final @NotNull Channel channel) {
+    public ChannelChatRenderer(@NotNull Strings strings, @NotNull Channel channel, @NotNull DeletionManager deletionManager, @NotNull SignedMessage message) {
         super(strings, channel);
+        this.channel = channel;
+        this.signedMessage = message;
+        this.deletionManager = deletionManager;
         mentionsEnabled = strings.getConfiguration().getBoolean(Option.Bool.ENABLE_MENTIONS);
     }
 
@@ -29,7 +38,17 @@ public class ChannelChatRenderer extends MessageProcessor implements ChatRendere
     public @NotNull Component render(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {
         String template = generateTemplateNonChatColor(source);
         Component component = ComponentConverter.fromString(template);
-        return setPlaceholder(component, "{message}", processMessage(source, message));
+        component = setPlaceholder(component, "{message}", processMessage(source, message));
+
+        if (
+                channel.allowsMessageDeletion() &&
+                viewer instanceof Player p &&
+                deletionManager.hasDeletionPermission(source, p)
+        ) {
+            return component.append(deletionManager.getDeletionButton(signedMessage));
+        }
+
+        return component;
     }
 
     private @NotNull Component processMessage(@NotNull Player source, @NotNull Component message) {

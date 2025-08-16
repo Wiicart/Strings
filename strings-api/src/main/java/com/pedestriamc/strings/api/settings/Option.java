@@ -49,7 +49,9 @@ public final class Option {
         MENTION_IN_CHAT_FORMAT("mention-chat-format", "&7"),
         MENTION_COLOR("mention-color", "&e"),
         MENTION_TEXT_ACTION_BAR("mention-format","&e%sender% mentioned you."),
-        MENTION_SOUND("mention-sound", "BLOCK_NOTE_BLOCK_PLING"),;
+        MENTION_SOUND("mention-sound", "BLOCK_NOTE_BLOCK_PLING"),
+        DELETION_BUTTON_FORMAT("deletion-button", "<dark_gray>[<red>×</red>]</dark_gray>"),
+        DELETION_BUTTON_HOVER("deletion-hover", "<red>Click this to delete the message.</red>");
 
         final String key;
         final String defaultValue;

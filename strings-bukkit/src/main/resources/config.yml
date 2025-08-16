@@ -192,6 +192,17 @@ enable-helpop: true
 # Set this to true if so.
 other-helpop: false
 
+# Message Deletion Options
+# Message deletion must be enabled on a per-channel basis.
+
+# Message Delete Button
+# (Appended after the message for players that can delete messages)
+# This uses MiniMessage - do not use traditional color codes.
+deletion-button: " <dark_gray>[<red>×</red>]</dark_gray>"
+
+# What text should appear when hovering over the message delete button?
+# This uses MiniMessage - do not use traditional color codes.
+deletion-hover: "<red>Click this to delete the message.</red>"
 
 
 

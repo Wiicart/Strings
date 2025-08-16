@@ -1,5 +1,5 @@
 name: Strings
-version: '1.6.0'
+version: '1.7.0'
 main: com.pedestriamc.strings.Strings
 api-version: 1.16
 prefix: Strings
@@ -179,3 +179,9 @@ permissions:
   strings.chat.bypass-unignorable:
     default: op
     description: "Allows ignoring players that have the strings.chat.unignorable permission."
+  strings.chat.delete-messages:
+    default: true
+    description: "Allows players to delete their own messages in Channels that allow message deletion."
+  strings.chat.delete-messages.others:
+    default: op
+    description: "Allows players to delete any player's message in a Channel that allows message deletion."

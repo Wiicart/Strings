@@ -1,13 +1,16 @@
 package com.pedestriamc.strings.chat;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.wiicart.commands.permission.Permissions;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +26,8 @@ public final class Mentioner {
     private final String format;
     private Sound sound;
 
+    private final String mentionColor;
+
     public Mentioner(@NotNull Strings strings) {
         this.userUtil = strings.users();
 
@@ -30,6 +35,7 @@ public final class Mentioner {
         pitch = config.getFloat(Option.Double.MENTION_PITCH);
         volume = config.getFloat(Option.Double.MENTION_VOLUME);
         format = config.getColored(Option.Text.MENTION_TEXT_ACTION_BAR);
+        mentionColor = config.getColored(Option.Text.MENTION_COLOR);
 
         try {
             sound = Sound.valueOf(config.getString(Option.Text.MENTION_SOUND));
@@ -70,6 +76,38 @@ public final class Mentioner {
     public void sendMention(@NotNull Player player, @NotNull String message) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
         player.playSound(player.getLocation(), sound, volume, pitch);
+    }
+
+    @NotNull
+    public String processMentions(@NotNull Player sender, @NotNull Channel channel, @NotNull String str) {
+        if (!str.contains("@")) {
+            return str;
+        }
+
+        String chatColor = userUtil.getUser(sender).getChatColor(channel);
+        String[] splitStr = str.split("((?=@))"); //https://www.baeldung.com/java-split-string-keep-delimiters
+        StringBuilder sb = new StringBuilder();
+        for (String segment : splitStr) {
+            if (!segment.contains("@")) {
+                sb.append(chatColor).append(segment);
+                continue;
+            }
+
+            if (sender.hasPermission("strings.mention.all") && segment.contains("@everyone")) {
+                segment = segment.replace("@everyone", mentionColor + "@everyone" + ChatColor.RESET + chatColor);
+            }
+
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (userUtil.getUser(p).isMentionsEnabled() && segment.contains(p.getName())) {
+                    String original = "@" + p.getName();
+                    String replacement = mentionColor + "@" + p.getName() + ChatColor.RESET + chatColor;
+                    segment = segment.replace(original, replacement);
+                }
+            }
+
+            sb.append(segment);
+        }
+        return sb.toString();
     }
 
 }

@@ -50,31 +50,34 @@ public final class ChannelManager implements ChannelLoader {
     }
 
     @Override
-    public @Nullable Channel getChannel(@NotNull String name) {
+    @Nullable
+    public Channel getChannel(@NotNull String name) {
         Objects.requireNonNull(name);
         Channel channel = channels.get(name);
-        // Refresh to check for a change.
-        if(channel == null) {
-            refreshChannelMap();
+
+        if (channel == null) {
+            refresh();
             channel = channels.get(name);
         }
-        if(channel != null && !channel.getName().equals(name)) {
-            refreshChannelMap();
+
+        if (channel != null && !channel.getName().equals(name)) {
+            refresh();
             channel = channels.get(name);
         }
 
         return channel;
     }
 
-    private void refreshChannelMap() {
-        Set<Channel> channelSet = getChannels();
-        channels.clear();
-        for(Channel channel : channelSet) {
-            Channel previous = channels.putIfAbsent(channel.getName(), channel);
-            if(previous != null) {
-                strings.warning("Two or more Channels are registered with the name '" + channel.getName() + "'.");
-                strings.warning("Channel " + channel.getName() + " with type identifier '" + channel.getIdentifier() + "' is being skipped.");
+    @Override
+    public void refresh() {
+        synchronized (channels) {
+            Map<String, Channel> refreshed = new HashMap<>();
+            for (Channel c : getChannels()) {
+                refreshed.put(c.getName(), c);
             }
+
+            channels.clear();
+            channels.putAll(refreshed);
         }
     }
 
@@ -179,7 +182,7 @@ public final class ChannelManager implements ChannelLoader {
         return new HashMap<>(channelSymbols);
     }
 
-    public void addChannelSymbol(String symbol, Channel channel) {
+    public void registerChannelSymbol(String symbol, Channel channel) {
         channelSymbols.put(symbol, channel);
     }
 

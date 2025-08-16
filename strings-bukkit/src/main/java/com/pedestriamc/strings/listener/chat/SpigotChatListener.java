@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.listener.chat;
 
+import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.channel.Channel;
@@ -11,6 +12,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
+@Platform.Spigot
 public class SpigotChatListener extends AbstractChatListener {
 
     private final Channel defaultChannel;

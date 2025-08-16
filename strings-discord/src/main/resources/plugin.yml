@@ -1,5 +1,5 @@
 name: StringsDiscord
-version: '1.6'
+version: '1.7'
 main: com.pedestriamc.strings.discord.StringsDiscord
 api-version: '1.20'
 prefix: StringsDiscord

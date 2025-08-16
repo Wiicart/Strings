@@ -45,4 +45,9 @@ public interface ChannelLoader {
      */
     @NotNull
     Set<Channel> getChannels();
+
+    /**
+     * Refreshes the internal Channel Map
+     */
+    void refresh();
 }

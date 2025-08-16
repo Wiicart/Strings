@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.api.channel.data;
 
-import com.pedestriamc.strings.api.annotation.Agnostic;
+import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.api.channel.local.Locality;
@@ -15,7 +15,7 @@ import java.util.Set;
  * Ensure this is parameterized correctly with the World implementation on your platform, or construction will fail.
  * @param <T> The World implementation on the current platform, such as <code>org.bukkit.World</code>
  */
-@Agnostic
+@Platform.Agnostic
 public final class LocalChannelBuilder<T> extends AbstractChannelBuilder<LocalChannelBuilder<T>> {
 
     private Set<Locality<T>> worlds;

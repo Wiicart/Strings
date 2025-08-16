@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.api.channel.data;
 
-import com.pedestriamc.strings.api.annotation.Agnostic;
+import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Membership;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * Standard ChannelBuilder implementation.
  * If building a LocalChannel, use {@link LocalChannelBuilder} instead.
  */
-@Agnostic
+@Platform.Agnostic
 public final class ChannelBuilder extends AbstractChannelBuilder<ChannelBuilder> {
 
     /**

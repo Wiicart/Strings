@@ -1,9 +1,9 @@
 # Strings - Channels
 
 # All channels are defined in this channel, and information about them is stored here.
-# Permission to join a channel is given by the permission strings.channel.<channel-name>
+# Permission to join a channel is given by the permission strings.channel.<channel-name>.
 # The channels a player is a member of are stored in users.yml, if none of those channels exist,
-# the player will join the channel "default" which will determine what channel to send the message to..
+# the player will join the channel "default" which will determine what channel to send the message to.
 
 channels:
   global:
@@ -51,6 +51,9 @@ channels:
     # When a player has the channel of default, the channel that the player's message will be sent to is determined by
     # priority.  The higher the number, the higher the priority.
     priority: 1
+    # Message Deletion
+    # Should messages be allowed to be deleted in this Channel?
+    message-deletion: false
     # Symbol
     # When a player types this symbol before their message in chat, it will be sent to this channel, as long as the
     # player has permission.  Despite its name, this may contain multiple characters.
@@ -73,6 +76,7 @@ channels:
     cooldown: false
     type: stringchannel
     membership: permission
+    message-deletion: false
     symbol: "$"
     broadcast-format: "&8[&cStaff&8] &f{message}"
 
@@ -80,7 +84,6 @@ channels:
   # This channel does not behave like a normal channel, as membership of the channel and
   # sending messages in the channel is different.  Typical channel commands will not work with this channel,
   # everything that can be done with this channel should be done with the /helpop command.
-  # (!) WARNING: THIS CHANNEL'S OPTIONS WILL EVENTUALLY MOVE TO config.yml
   helpop:
     format: "&8[&4HelpOP&8] &f{displayname} &7» &c{message}"
     call-event: false
@@ -88,6 +91,7 @@ channels:
     block-urls: false
     cooldown: false
     type: helpop
+    message-deletion: false
     membership: protected
     symbol: "?"
 
@@ -109,6 +113,7 @@ channels:
   #  worlds:
   #    - "world2"
   #  membership: default
+  #  message-deletion: false
   #  priority: 10
   #  symbol: "^"
   #  broadcast-format: "&8[&3World2&8] &f{message}"
@@ -125,9 +130,11 @@ channels:
   #  worlds:
   #    - "world2"
   #  priority: 11
+  #  message-deletion: false
   #  symbol: "!"
   #  broadcast-format: "&8[&cProximity&8] &f{message}"
 
   # SocialSpy also runs on a type of channel, and customizations for it are found in config.yml
-  # Just as the HelpOP channel, it does not behave like a normal channel and normal channel commands will not work with it.
+  # Just as the HelpOP channel, it does not behave like a normal channel,
+  # and normal channel commands will not work with it.
   # In game, the /socialspy command is how you use the socialspy channel.

@@ -146,6 +146,16 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
+    public boolean allowsMessageDeletion() {
+        return false;
+    }
+
+    @Override
+    public void setAllowMessageDeletion(boolean allowMessageDeletion) {
+
+    }
+
+    @Override
     public void addMember(@NotNull StringsUser user) {
         throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }

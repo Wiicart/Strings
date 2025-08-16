@@ -44,6 +44,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     private boolean doCooldown;
     private boolean doProfanityFilter;
     private boolean doUrlFilter;
+    private boolean allowMessageDeletion;
 
     private final boolean callEvent;
     private final boolean mentionsEnabled;
@@ -69,6 +70,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         doProfanityFilter = data.isDoProfanityFilter();
         doUrlFilter = data.isDoUrlFilter();
         callEvent = data.isCallEvent();
+        allowMessageDeletion = data.allowsMessageDeletion();
         priority = data.getPriority();
 
         messageProcessor = new MessageProcessor(strings, this);
@@ -253,6 +255,10 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     @Override
     public void setName(@NotNull String name) {
+        if (strings.getChannelLoader().getChannel(name) != null) {
+            throw new IllegalArgumentException("Failed to rename Channel " + getName() + ". Channel " + name + " already exists.");
+        }
+
         // Unregister permissions w/ old name
         Permissions util = new Permissions(strings);
         String permission = CHANNEL_PERMISSION + getName();
@@ -324,6 +330,16 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     @Override
     public void setDoCooldown(boolean doCooldown) {
         this.doCooldown = doCooldown;
+    }
+
+    @Override
+    public void setAllowMessageDeletion(boolean allowMessageDeletion) {
+        this.allowMessageDeletion = allowMessageDeletion;
+    }
+
+    @Override
+    public boolean allowsMessageDeletion() {
+        return allowMessageDeletion;
     }
 
     @Override

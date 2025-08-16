@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.listener.chat;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.user.User;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+@Platform.Agnostic
 abstract class AbstractChatListener implements Listener {
 
     private final ChannelManager channelLoader;

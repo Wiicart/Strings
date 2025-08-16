@@ -1,6 +1,6 @@
 main: com.pedestriamc.strings.moderation.StringsModeration
 name: StringsModeration
-version: '1.6'
+version: '1.7'
 author: wiicart
 description: "Moderation expansion for Strings"
 api-version: '1.16'

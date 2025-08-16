@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.api.channel.data;
 
 import com.google.common.base.Preconditions;
-import com.pedestriamc.strings.api.annotation.Agnostic;
+import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Membership;
 import org.jetbrains.annotations.Contract;
@@ -14,7 +14,7 @@ import static org.jetbrains.annotations.ApiStatus.Internal;
 /**
  * A class that holds data to create a new {@link Channel}.
  */
-@Agnostic
+@Platform.Agnostic
 @Internal
 @SuppressWarnings("unchecked")
 abstract sealed class AbstractChannelBuilder<B extends IChannelBuilder<B>> implements IChannelBuilder<B> permits ChannelBuilder, LocalChannelBuilder {
@@ -29,11 +29,12 @@ abstract sealed class AbstractChannelBuilder<B extends IChannelBuilder<B>> imple
     private @Nullable String broadcastFormat;
 
     @Range(from = -1, to = Integer.MAX_VALUE)
-    private int priority;
-    private boolean doCooldown;
-    private boolean doProfanityFilter;
-    private boolean doUrlFilter;
-    private boolean callEvent;
+    private int priority = 0;
+    private boolean doCooldown = false;
+    private boolean doProfanityFilter = false;
+    private boolean doUrlFilter = false;
+    private boolean callEvent = true;
+    private boolean allowMessageDeletion = true;
 
     /**
      * ChannelBuilder constructor with universally required parameters.
@@ -223,6 +224,17 @@ abstract sealed class AbstractChannelBuilder<B extends IChannelBuilder<B>> imple
     public @NotNull B setCallEvent(boolean callEvent) {
         this.callEvent = callEvent;
         return (B) this;
+    }
+
+    @Override
+    public B setAllowMessageDeletion(boolean allowMessageDeletion) {
+        this.allowMessageDeletion = allowMessageDeletion;
+        return (B) this;
+    }
+
+    @Override
+    public boolean allowsMessageDeletion() {
+        return allowMessageDeletion;
     }
 
     /**

@@ -97,7 +97,7 @@ class ChannelFileReader {
 
         IChannelBuilder<?> builder;
         if (isLocal(type)) {
-            LocalChannelBuilder<World> temp = Channel.localBuilder(
+            LocalChannelBuilder<World> localBuilder = Channel.localBuilder(
                     name,
                     format,
                     membership,
@@ -105,10 +105,10 @@ class ChannelFileReader {
             );
 
             if (isProximity(type)) {
-                temp.setDistance(getDistance(section));
+                localBuilder.setDistance(getDistance(section));
             }
 
-            builder = temp;
+            builder = localBuilder;
         } else {
             builder = Channel.builder(name, format, membership);
         }
@@ -119,16 +119,16 @@ class ChannelFileReader {
                 .setDoProfanityFilter(section.getBoolean("filter-profanity", false))
                 .setDoUrlFilter(section.getBoolean("block-urls", false))
                 .setCallEvent(section.getBoolean("call-event", true))
+                .setAllowMessageDeletion(section.getBoolean("message-deletion", false))
                 .setPriority(section.getInt("priority", -1))
                 .setBroadcastFormat(section.getString("broadcast-format", "&8[&cBroadcast&8] &f{message}"));
 
-        final Channel channel = builder.build(type);
+        Channel channel = builder.build(type);
         manager.register(channel);
 
-        // Handle symbol registration if present
-        final String symbol = section.getString("symbol");
+        String symbol = section.getString("symbol");
         if(symbol != null) {
-            manager.addChannelSymbol(symbol, channel);
+            manager.registerChannelSymbol(symbol, channel);
         }
     }
 
