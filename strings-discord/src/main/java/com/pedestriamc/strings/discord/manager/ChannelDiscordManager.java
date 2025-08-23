@@ -118,7 +118,7 @@ public final class ChannelDiscordManager extends AbstractDiscordManager {
         formatted = sanitizeMentions(formatted, directory.getMembers(event.getGuild()));
 
         final String finalString = formatted;
-        strings.sync(() -> channel.broadcastPlain(finalString));
+        strings.synchronous(() -> channel.broadcastPlain(finalString));
     }
 
     public void sendDiscordMessageFromEvent(@NotNull ChannelChatEvent event) {

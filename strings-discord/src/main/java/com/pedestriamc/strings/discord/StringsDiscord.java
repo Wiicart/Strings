@@ -230,15 +230,18 @@ public final class StringsDiscord extends JavaPlugin {
         jda.addEventListener(listener);
     }
 
-    public @NotNull JDA getJda() {
+    @NotNull
+    public JDA getJda() {
         return jda;
     }
 
-    public @NotNull Settings getSettings() {
+    @NotNull
+    public Settings getSettings() {
         return settings;
     }
 
-    public @NotNull  DiscordManager getManager() {
+    @NotNull
+    public DiscordManager getManager() {
         return manager;
     }
 
@@ -248,7 +251,7 @@ public final class StringsDiscord extends JavaPlugin {
     }
 
     // Runs a task on the Server's main Thread
-    public void sync(@NotNull Runnable runnable) {
+    public void synchronous(@NotNull Runnable runnable) {
         getServer().getScheduler().runTask(this, runnable);
     }
 

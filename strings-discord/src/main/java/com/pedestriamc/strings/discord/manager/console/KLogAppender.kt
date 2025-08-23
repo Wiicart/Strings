@@ -7,7 +7,7 @@ import org.apache.logging.log4j.core.config.Property
 import org.apache.logging.log4j.core.Logger
 
 /* https://www.spigotmc.org/threads/capturing-console-output.307132/ */
-class KLogAppender(private val m: ConsoleDiscordManager) : AbstractAppender("Strings", null, null, false, Property.EMPTY_ARRAY) {
+class KLogAppender(private val m: KConsoleManager) : AbstractAppender("Strings", null, null, false, Property.EMPTY_ARRAY) {
 
     init {
         // org.apache.logging.log4j.core.Logger
@@ -16,7 +16,7 @@ class KLogAppender(private val m: ConsoleDiscordManager) : AbstractAppender("Str
 
     override fun append(event: LogEvent?) {
         val immut = event?.toImmutable() ?: return
-        m.postMessage("[${immut.loggerName} | ${immut.level}] ${immut.message.formattedMessage}")
+        m.post("[${immut.loggerName} | ${immut.level}] ${immut.message.formattedMessage}")
     }
 
 }

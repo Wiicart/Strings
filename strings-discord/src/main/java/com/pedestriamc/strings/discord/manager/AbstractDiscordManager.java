@@ -7,7 +7,7 @@ import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.discord.StringsDiscord;
 import com.pedestriamc.strings.discord.configuration.Option;
 import com.pedestriamc.strings.discord.configuration.Settings;
-import com.pedestriamc.strings.discord.manager.console.ConsoleDiscordManager;
+import com.pedestriamc.strings.discord.manager.console.KConsoleManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -35,7 +35,7 @@ abstract class AbstractDiscordManager implements DiscordManager {
 
     private final StringsDiscord strings;
 
-    private final ConsoleDiscordManager consoleManager;
+    private final KConsoleManager consoleManager;
 
     private final String discordFormat; // Used for messages coming from Minecraft, going to Discord
     private final String craftFormat; // Used for messages coming from Discord, going to Minecraft
@@ -48,7 +48,7 @@ abstract class AbstractDiscordManager implements DiscordManager {
     protected AbstractDiscordManager(@NotNull StringsDiscord strings) {
         this.strings = strings;
 
-        consoleManager = new ConsoleDiscordManager(strings);
+        consoleManager = new KConsoleManager(strings);
 
         Settings settings = strings.getSettings();
 

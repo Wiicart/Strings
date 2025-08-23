@@ -78,7 +78,7 @@ public class GlobalDiscordManager extends AbstractDiscordManager {
         formatted = sanitizeMentions(formatted, directory.getMembers(event.getGuild()));
 
         String finalString = formatted; // final for lambda
-        strings.sync(() -> broadcastCraftMessage(finalString));
+        strings.synchronous(() -> broadcastCraftMessage(finalString));
     }
 
     @Override
