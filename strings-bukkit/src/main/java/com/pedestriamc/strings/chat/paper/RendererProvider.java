@@ -50,76 +50,6 @@ public class RendererProvider {
         return new ChannelChatRenderer(channel, signedMessage);
     }
 
-    @NotNull
-    private Component generateBase(@NotNull Channel channel, @NotNull User source) {
-        String base = channel.getFormat();
-
-        base = base
-                .replace("{prefix}", source.getPrefix())
-                .replace("{suffix}", source.getSuffix())
-                .replace("{displayname}", source.getDisplayName());
-
-        if (strings.isUsingPlaceholderAPI()) {
-            base = setPlaceholderAPIPlaceholders(source.player(), base);
-        }
-
-        base = MessageUtilities.colorHex(base);
-        base = MessageUtilities.translateColorCodes(base);
-
-        return ComponentConverter.fromString(base);
-    }
-
-    @NotNull
-    private Component insertMessage(@NotNull Component base, @NotNull Component message, @NotNull Channel channel, @NotNull User source) {
-        Component finalComponent = base;
-        Player player = source.player();
-        String msg = ComponentConverter.toString(message);
-
-        if (shouldReplacePlaceholders(source.player())) {
-            msg = setPlaceholderAPIPlaceholders(player, msg);
-        }
-
-        if (shouldColorMessage(player)) {
-            msg = MessageUtilities.colorHex(msg);
-            msg = MessageUtilities.translateColorCodes(msg);
-        }
-
-        if (mentionsEnabled && Mentioner.hasMentionPermission(player)) {
-            msg = mentioner.processMentions(player, channel, msg);
-        }
-
-        StringsComponent messageComponent = source
-                .getChatColorComponent()
-                .append(StringsComponent.fromString(msg));
-
-        finalComponent = MessageUtilities.setPlaceholder(
-                finalComponent,
-                "{message}",
-                messageComponent.asComponent()
-        );
-
-        return finalComponent;
-    }
-
-    @NotNull
-    private String setPlaceholderAPIPlaceholders(@NotNull Player sender, @NotNull String str) {
-        try {
-            return PlaceholderAPI.setPlaceholders(sender, str);
-        } catch (NoClassDefFoundError e) {
-            strings.getLogger().warning("Failed to set placeholders for message from " + sender.getName() + ".");
-            return str;
-        }
-    }
-
-    private boolean shouldReplacePlaceholders(Player sender) {
-        return processingMessagePlaceholders &&
-                Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.placeholdermsg");
-    }
-
-    private boolean shouldColorMessage(Player sender) {
-        return parsingMessageChatColors &&
-                Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.colormsg");
-    }
 
     class ChannelChatRenderer implements ChatRenderer {
 
@@ -140,14 +70,85 @@ public class RendererProvider {
             component = generateBase(channel, user);
             component = insertMessage(component, message, channel, user);
 
-            if (shouldAppendDeleteButton(source, viewer) && signedMessage.canDelete()) {
+            if (shouldAppendDeleteButton(channel, source, viewer) && signedMessage.canDelete()) {
                 component = component.append(deletionManager.getDeletionButton(signedMessage));
             }
 
             return component;
         }
 
-        private boolean shouldAppendDeleteButton(@NotNull Player source, @NotNull Audience viewer) {
+        @NotNull
+        private Component generateBase(@NotNull Channel channel, @NotNull User source) {
+            String base = channel.getFormat();
+
+            base = base
+                    .replace("{prefix}", source.getPrefix())
+                    .replace("{suffix}", source.getSuffix())
+                    .replace("{displayname}", source.getDisplayName());
+
+            if (strings.isUsingPlaceholderAPI()) {
+                base = setPlaceholderAPIPlaceholders(source.player(), base);
+            }
+
+            base = MessageUtilities.colorHex(base);
+            base = MessageUtilities.translateColorCodes(base);
+
+            return ComponentConverter.fromString(base);
+        }
+
+        @NotNull
+        private Component insertMessage(@NotNull Component base, @NotNull Component message, @NotNull Channel channel, @NotNull User source) {
+            Component finalComponent = base;
+            Player player = source.player();
+            String msg = ComponentConverter.toString(message);
+
+            if (shouldReplacePlaceholders(source.player())) {
+                msg = setPlaceholderAPIPlaceholders(player, msg);
+            }
+
+            if (shouldColorMessage(player)) {
+                msg = MessageUtilities.colorHex(msg);
+                msg = MessageUtilities.translateColorCodes(msg);
+            }
+
+            if (mentionsEnabled && Mentioner.hasMentionPermission(player)) {
+                msg = mentioner.processMentions(player, channel, msg);
+            }
+
+            StringsComponent messageComponent = source
+                    .getChatColorComponent()
+                    .append(StringsComponent.fromString(msg));
+
+            finalComponent = MessageUtilities.setPlaceholder(
+                    finalComponent,
+                    "{message}",
+                    messageComponent.asComponent()
+            );
+
+            return finalComponent;
+        }
+
+        @NotNull
+        private String setPlaceholderAPIPlaceholders(@NotNull Player sender, @NotNull String str) {
+            try {
+                return PlaceholderAPI.setPlaceholders(sender, str);
+            } catch (NoClassDefFoundError e) {
+                strings.getLogger().warning("Failed to set placeholders for message from " + sender.getName() + ".");
+                return str;
+            }
+        }
+
+        private boolean shouldReplacePlaceholders(Player sender) {
+            return processingMessagePlaceholders &&
+                    Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.placeholdermsg");
+        }
+
+        private boolean shouldColorMessage(Player sender) {
+            return parsingMessageChatColors &&
+                    Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.colormsg");
+        }
+
+        private boolean shouldAppendDeleteButton(@NotNull Channel channel, @NotNull Player source, @NotNull Audience viewer) {
             return channel.allowsMessageDeletion() &&
                     viewer instanceof Player p &&
                     deletionManager.hasDeletionPermission(source, p);
