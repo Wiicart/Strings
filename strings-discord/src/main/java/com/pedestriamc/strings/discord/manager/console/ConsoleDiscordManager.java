@@ -14,7 +14,7 @@ public class ConsoleDiscordManager extends ListenerAdapter {
 
     private final StringsDiscord strings;
 
-    private final LogAppender appender;
+    private final KLogAppender appender;
 
     private final MessageChannel consoleChannel;
 
@@ -27,7 +27,7 @@ public class ConsoleDiscordManager extends ListenerAdapter {
      */
     public ConsoleDiscordManager(@NotNull StringsDiscord strings) {
         this.strings = strings;
-        appender = new LogAppender(this);
+        appender = new KLogAppender(this);
         consoleChannel = getConsoleChannel();
         consoleSender = strings.getServer().getConsoleSender();
         strings.getJda().addEventListener(this);
