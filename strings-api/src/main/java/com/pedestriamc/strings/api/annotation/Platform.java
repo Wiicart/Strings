@@ -6,16 +6,16 @@ package com.pedestriamc.strings.api.annotation;
 public @interface Platform {
 
     /**
-     * Signifies a class is only intended for Paper
+     * Signifies a class is only intended for Spigot
      */
-    @interface Paper {
+    @interface Spigot {
 
     }
 
     /**
-     * Signifies a class is only intended for Spigot
+     * Signifies a class is only intended for Paper
      */
-    @interface Spigot {
+    @interface Paper {
 
     }
 

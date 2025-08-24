@@ -11,6 +11,7 @@ import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.chat.SignedMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -70,13 +71,13 @@ public class PaperChatListener extends AbstractChatListener {
 
         event.renderer(provider.createRenderer(channel, event.signedMessage()));
 
-        callEvent(player, container.message(), convertToPlayers(recipients), channel);
+        callEvent(player, container.message(), convertToPlayers(recipients), channel, event.signedMessage());
     }
 
     // Calls a non-cancellable ChannelChatEvent
-    private void callEvent(Player sender, String message, Set<Player> players, Channel channel) {
+    private void callEvent(Player sender, String message, Set<Player> players, Channel channel, SignedMessage signedMessage) {
         Bukkit.getScheduler().runTask(strings, () -> strings.getServer().getPluginManager()
-                .callEvent(new ChannelChatEvent(false, sender, message, players, channel, false)));
+                .callEvent(new ChannelChatEvent(false, sender, message, players, channel, signedMessage, false)));
     }
 
     private @NotNull Set<Player> convertToPlayers(@NotNull Set<StringsUser> users) {

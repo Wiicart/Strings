@@ -2,6 +2,8 @@ package com.pedestriamc.strings.discord.configuration;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public final class Option {
 
     private Option() {}
@@ -37,12 +39,25 @@ public final class Option {
         ENABLE_MENTIONS_TO_GAME("mentions-to-game", true),
         ENABLE_JOIN_LEAVE_MESSAGES("send-join-leave", true),
         ENABLE_DEATH_MESSAGES("send-death-messages", true),
-        ENABLE_ADVANCEMENT_MESSAGES("send-advancements", true),;
+        ENABLE_ADVANCEMENT_MESSAGES("send-advancements", true),
+        SYNCHRONIZE_DELETIONS("sync-deletion", true);
 
         final String key;
         final boolean defaultValue;
 
         Bool(@NotNull String key, boolean defaultValue) {
+            this.key = key;
+            this.defaultValue = defaultValue;
+        }
+    }
+
+    public enum StringList {
+        GLOBAL_CHANNELS("global-channels", List.of());
+
+        final String key;
+        final List<String> defaultValue;
+
+        StringList(@NotNull String key, List<String> defaultValue) {
             this.key = key;
             this.defaultValue = defaultValue;
         }

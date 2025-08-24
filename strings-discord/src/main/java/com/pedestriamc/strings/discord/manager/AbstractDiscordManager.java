@@ -2,6 +2,7 @@ package com.pedestriamc.strings.discord.manager;
 
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
+import com.pedestriamc.strings.api.collections.BoundedLinkedBuffer;
 import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.discord.StringsDiscord;
@@ -11,8 +12,10 @@ import com.pedestriamc.strings.discord.manager.console.KConsoleManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.kyori.adventure.chat.SignedMessage;
 import net.wiicart.commands.permission.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,21 +38,28 @@ abstract class AbstractDiscordManager implements DiscordManager {
     public static final Pattern DISCORD_ROLE_MENTION = Pattern.compile("<@&(\\d+)>");
 
     private final StringsDiscord strings;
-
     private final KConsoleManager consoleManager;
 
+    private final BoundedLinkedBuffer<Map.Entry<SignedMessage, Message>> buffer;
+
+    private final String discordToGameMentionFormat;
     private final String discordFormat; // Used for messages coming from Minecraft, going to Discord
     private final String craftFormat; // Used for messages coming from Discord, going to Minecraft
 
     private final boolean mentionsFromGameEnabled; // If this plugin should convert text-mentions to Discord's format
     private final boolean mentionsToGameEnabled; // If Strings should parse mentions from Discord messages
-
-    private final String discordToGameMentionFormat;
+    private final boolean shouldSyncDeletions;
 
     protected AbstractDiscordManager(@NotNull StringsDiscord strings) {
         this.strings = strings;
 
-        consoleManager = new KConsoleManager(strings);
+        KConsoleManager tempConsoleManager = null;
+        try {
+            tempConsoleManager = new KConsoleManager(strings);
+        } catch(Exception ignored) {}
+        consoleManager = tempConsoleManager;
+
+        buffer = new BoundedLinkedBuffer<>(100);
 
         Settings settings = strings.getSettings();
 
@@ -57,6 +68,7 @@ abstract class AbstractDiscordManager implements DiscordManager {
 
         mentionsFromGameEnabled = settings.getBoolean(Option.Bool.ENABLE_MENTIONS_FROM_GAME);
         mentionsToGameEnabled = settings.getBoolean(Option.Bool.ENABLE_MENTIONS_TO_GAME);
+        shouldSyncDeletions = settings.getBoolean(Option.Bool.SYNCHRONIZE_DELETIONS);
 
         discordToGameMentionFormat = settings.getColoredString(Option.Text.MENTION_FORMAT);
     }
@@ -250,6 +262,35 @@ abstract class AbstractDiscordManager implements DiscordManager {
         userMatcher.appendTail(userBuffer);
 
         return userBuffer.toString();
+    }
+
+    @Override
+    public void deleteMessage(@NotNull SignedMessage signedMessage) {
+        if (!shouldSyncDeletions) {
+            return;
+        }
+
+        strings.getLogger().info("Deleting message: " + signedMessage);
+
+        buffer.forEach(entry -> {
+            if (entry.getKey().equals(signedMessage)) {
+                strings.getLogger().info("Deleting message: " + entry.getValue());
+                try {
+                    entry.getValue().delete().queue(
+                            success -> {},
+                            failure -> {
+                                strings.getLogger().warning("Failed to delete message.");
+                                strings.getLogger().warning(failure.getMessage());
+                            }
+                    );
+                } catch(Exception ignored) {}
+            }
+        });
+    }
+
+    public void registerMessageAndSignature(@NotNull SignedMessage signedMessage, @NotNull Message discordMessage) {
+        buffer.add(Map.entry(signedMessage, discordMessage));
+        strings.getLogger().info("Registered Discord Message: " + signedMessage);
     }
 
     private @Nullable Member findMemberById(@NotNull Set<Member> members, @NotNull String id) {

@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.kyori.adventure.chat.SignedMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Queue;
@@ -111,6 +112,15 @@ public final class QueuedDiscordManager implements DiscordManager {
             return impl.getDiscordChannels();
         } else {
             return Set.of();
+        }
+    }
+
+    @Override
+    public void deleteMessage(@NotNull SignedMessage signedMessage) {
+        if (impl != null) {
+            impl.deleteMessage(signedMessage);
+        } else {
+            queue.offer(manager -> manager.deleteMessage(signedMessage));
         }
     }
 }

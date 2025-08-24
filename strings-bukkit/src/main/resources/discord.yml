@@ -30,6 +30,9 @@ global-channels:
 channels:
 # global: 000000000000000000
 
+# Should messages that are deleted in-game be deleted in Discord?
+sync-deletion: true
+
 # Discord Format
 # The format used when sending in-game messages to a Discord Channel
 # Placeholders:

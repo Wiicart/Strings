@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.kyori.adventure.chat.SignedMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -56,5 +57,7 @@ public interface DiscordManager {
     void sendDiscordEmbed(@NotNull MessageEmbed embed);
 
     Set<MessageChannel> getDiscordChannels();
+
+    void deleteMessage(@NotNull SignedMessage signedMessage);
 
 }

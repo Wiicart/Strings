@@ -3,6 +3,8 @@ package com.pedestriamc.strings.discord.manager;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.discord.StringsDiscord;
+import com.pedestriamc.strings.discord.configuration.Option;
+import com.pedestriamc.strings.discord.configuration.Settings;
 import com.pedestriamc.strings.discord.manager.member.MemberDirectory;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -12,13 +14,14 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.kyori.adventure.chat.SignedMessage;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 // Implementation that makes no consideration to Channels.
@@ -39,11 +42,12 @@ public class GlobalDiscordManager extends AbstractDiscordManager {
 
     @NotNull
     private Set<MessageChannel> loadDiscordChannels() {
-        final Set<MessageChannel> channels = new HashSet<>();
-        final JDA jda = strings.getJda();
-        final FileConfiguration config = strings.getConfig();
+        Set<MessageChannel> channels = new HashSet<>();
+        JDA jda = strings.getJda();
+        Settings settings = strings.getSettings();
 
-        final List<String> channelIds = config.getStringList("global-channels");
+        final List<String> channelIds = settings.getStringList(Option.StringList.GLOBAL_CHANNELS);
+        strings.getLogger().info("Loading Discord channels...");
         for(String id : channelIds) {
             GuildChannel channel = jda.getGuildChannelById(id);
             if(channel instanceof MessageChannel messageChannel) {
@@ -54,7 +58,8 @@ public class GlobalDiscordManager extends AbstractDiscordManager {
                     strings.getLogger().info("Could not load Discord Channel " + id);
                 } else {
                     strings.getLogger().info("Failed to load Discord Channel " + channel.getName() +
-                            " (is it a text Channel)?");
+                            " (is it a text Channel)?"
+                    );
                 }
             }
         }
@@ -89,7 +94,12 @@ public class GlobalDiscordManager extends AbstractDiscordManager {
         for(MessageChannel channel : discordChannels) {
             final String finalMessage = processMentionsIfNecessary(message, player, channel);
             try {
-                channel.sendMessage(finalMessage).queue();
+                channel.sendMessage(finalMessage).queue(msg -> {
+                    Optional<SignedMessage> signedMessage = event.getSignedMessage();
+                    signedMessage.ifPresent(
+                            value -> registerMessageAndSignature(value, msg)
+                    );
+                });
             } catch(Exception e) {
                 strings.getLogger().warning("Failed to pass message to Channel " + channel.getName());
                 strings.getLogger().warning(e.getMessage());

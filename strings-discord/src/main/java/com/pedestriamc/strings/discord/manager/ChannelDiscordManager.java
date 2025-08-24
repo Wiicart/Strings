@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.kyori.adventure.chat.SignedMessage;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
@@ -24,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public final class ChannelDiscordManager extends AbstractDiscordManager {
@@ -42,6 +44,7 @@ public final class ChannelDiscordManager extends AbstractDiscordManager {
         directory = new MemberDirectory(this, strings.getJda());
     }
 
+    // todo move to new Settings system or at least get the config file properly, this does not work.
     public void loadChannels() {
         try {
             StringsAPI api = StringsProvider.get();
@@ -132,7 +135,12 @@ public final class ChannelDiscordManager extends AbstractDiscordManager {
         String finalMessage = processMentionsIfNecessary(message, event.getPlayer(), channel);
 
         try {
-            channel.sendMessage(finalMessage).queue();
+            channel.sendMessage(finalMessage).queue(msg -> {
+                Optional<SignedMessage> signedMessage = event.getSignedMessage();
+                signedMessage.ifPresent(
+                        value -> registerMessageAndSignature(value, msg)
+                );
+            });
         } catch(Exception e) {
             strings.getLogger().warning("Failed to pass message to Channel " + channel.getName());
             strings.getLogger().warning(e.getMessage());

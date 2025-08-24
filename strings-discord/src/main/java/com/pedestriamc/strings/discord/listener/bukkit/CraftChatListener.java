@@ -24,4 +24,10 @@ public final class CraftChatListener implements Listener {
             manager.sendDiscordMessageFromEvent(event);
         }
     }
+
+    // todo no messages is paper related check if paper then proceed
+    @EventHandler(priority = HIGH)
+    void onEvent(@NotNull ChannelChatEvent event) {
+        manager.sendDiscordMessageFromEvent(event);
+    }
 }

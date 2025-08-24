@@ -248,6 +248,10 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         getServer().getScheduler().runTaskAsynchronously(this, runnable);
     }
 
+    public void sync(Runnable runnable) {
+        getServer().getScheduler().runTask(this, runnable);
+    }
+
     public @NotNull FileManager files() {
         return fileManager;
     }

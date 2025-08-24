@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.EnumMap;
+import java.util.List;
 
 public final class Settings {
 
@@ -18,12 +19,15 @@ public final class Settings {
 
     private final EnumMap<Option.Bool, Boolean> booleanMap = new EnumMap<>(Option.Bool.class);
 
+    private final EnumMap<Option.StringList, List<String>> lists = new EnumMap<>(Option.StringList.class);
+
     public Settings(@NotNull StringsDiscord strings) throws IllegalStateException {
         stringsDiscord = strings;
         FileConfiguration config = getConfig();
 
         loadStrings(config);
         loadBooleans(config);
+        loadStringLists(config);
     }
 
     private @NotNull FileConfiguration getConfig() throws IllegalStateException {
@@ -61,12 +65,26 @@ public final class Settings {
         }
     }
 
+    private void loadStringLists(@NotNull FileConfiguration config) {
+        for (Option.StringList stringList : Option.StringList.values()) {
+            if (config.contains(stringList.key)) {
+                lists.put(stringList, config.getStringList(stringList.key));
+            } else {
+                lists.put(stringList, stringList.defaultValue);
+            }
+        }
+    }
+
     public @NotNull String getColoredString(@NotNull Option.Text text) {
         return ChatColor.translateAlternateColorCodes('&', getString(text));
     }
 
     public @NotNull String getString(@NotNull Option.Text text) {
         return stringMap.get(text);
+    }
+
+    public @NotNull List<String> getStringList(@NotNull Option.StringList list) {
+        return lists.get(list);
     }
 
     public boolean getBoolean(@NotNull Option.Bool bool) {

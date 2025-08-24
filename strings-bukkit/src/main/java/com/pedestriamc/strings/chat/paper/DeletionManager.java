@@ -2,6 +2,7 @@ package com.pedestriamc.strings.chat.paper;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.annotation.Platform;
+import com.pedestriamc.strings.api.event.MessageDeletionEvent;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.settings.Settings;
 import net.kyori.adventure.audience.Audience;
@@ -32,7 +33,10 @@ public class DeletionManager {
 
     public Component getDeletionButton(@NotNull SignedMessage message) {
         return deletionButton.clickEvent(ClickEvent.callback(
-                audience -> ((Audience) strings.getServer()).deleteMessage(message))
+                audience -> {
+                    ((Audience) strings.getServer()).deleteMessage(message);
+                    dispatchDeleteEvent(message);
+                })
         );
     }
 
@@ -51,5 +55,13 @@ public class DeletionManager {
                     "strings.chat.delete-messages.others"
             );
         }
+    }
+
+    private void dispatchDeleteEvent(@NotNull SignedMessage message) {
+        strings.sync(() -> strings
+                .getServer()
+                .getPluginManager()
+                .callEvent(new MessageDeletionEvent(message))
+        );
     }
 }
