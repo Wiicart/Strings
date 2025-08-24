@@ -60,7 +60,7 @@ channels:
     # WARNING:
     # If used with world and proximity channels, this allows players to communicate in these channels, regardless of
     # if they are in the right world to use the channel.
-    symbol: "#"
+    symbol: ""
     # Broadcast Format
     # When a message is broadcast using the /broadcast command, what should the format be?
     # Valid placeholders:

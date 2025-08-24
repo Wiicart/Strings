@@ -50,6 +50,7 @@ public final class FileManager {
         File deathMessagesFile = new File(strings.getDataFolder(), "death-messages.yml");
         File logsFile = new File(strings.getDataFolder(), "logs.yml");
         File moderationFile = new File(strings.getDataFolder(), "moderation.yml");
+        File discordFile = new File(strings.getDataFolder(), "discord.yml");
 
         createIfDoesNotExist(broadcastsFile, "broadcasts.yml");
         createIfDoesNotExist(messagesFile, "messages.yml");
@@ -58,6 +59,7 @@ public final class FileManager {
         createIfDoesNotExist(deathMessagesFile, "death-messages.yml");
         createIfDoesNotExist(logsFile, "logs.yml");
         createIfDoesNotExist(moderationFile, "moderation.yml");
+        createIfDoesNotExist(discordFile, "discord.yml");
 
         broadcastsFileConfig = YamlConfiguration.loadConfiguration(broadcastsFile);
         messagesFileConfig = YamlConfiguration.loadConfiguration(messagesFile);
@@ -85,6 +87,7 @@ public final class FileManager {
         updateIfPresent("messages.yml");
         updateIfPresent("moderation.yml");
         updateIfPresent("death-messages.yml");
+        updateIfPresent("channels.yml");
     }
 
     private void updateIfPresent(String resourceName) {
@@ -93,7 +96,7 @@ public final class FileManager {
             try {
                 ConfigUpdater.update(strings, resourceName, file);
             } catch(IOException e) {
-                strings.warning("Failed to update file " + resourceName + ". " + e.getMessage());
+                strings.warning("Failed to update file " + resourceName + ".\n" + e.getMessage());
             }
         }
     }

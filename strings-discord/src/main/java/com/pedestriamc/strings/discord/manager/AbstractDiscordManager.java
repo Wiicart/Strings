@@ -270,11 +270,8 @@ abstract class AbstractDiscordManager implements DiscordManager {
             return;
         }
 
-        strings.getLogger().info("Deleting message: " + signedMessage);
-
         buffer.forEach(entry -> {
             if (entry.getKey().equals(signedMessage)) {
-                strings.getLogger().info("Deleting message: " + entry.getValue());
                 try {
                     entry.getValue().delete().queue(
                             success -> {},
@@ -290,7 +287,6 @@ abstract class AbstractDiscordManager implements DiscordManager {
 
     public void registerMessageAndSignature(@NotNull SignedMessage signedMessage, @NotNull Message discordMessage) {
         buffer.add(Map.entry(signedMessage, discordMessage));
-        strings.getLogger().info("Registered Discord Message: " + signedMessage);
     }
 
     private @Nullable Member findMemberById(@NotNull Set<Member> members, @NotNull String id) {

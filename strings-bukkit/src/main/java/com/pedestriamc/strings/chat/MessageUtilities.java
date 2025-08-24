@@ -36,9 +36,9 @@ public final class MessageUtilities {
                 Color color = Color.decode(stringHex.substring(1));
                 colorCode = ChatColor.of(color);
 
-                matcher.appendReplacement(sb, colorCode.toString());
+                matcher.appendReplacement(sb, Matcher.quoteReplacement(colorCode.toString()));
             } catch(NumberFormatException e) {
-                matcher.appendReplacement(sb, matcher.group());
+                matcher.appendReplacement(sb,  Matcher.quoteReplacement(matcher.group()));
             }
         }
 
