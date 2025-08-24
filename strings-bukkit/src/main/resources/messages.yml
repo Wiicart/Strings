@@ -366,3 +366,13 @@ channel-entry: "&7• {channel}"
 
 # Sent when no Channels are available:
 no-channels-available: "&cNo channels available."
+
+# Tells a player what their current Channel is
+# Placeholder: {channel} - the Channel
+current-channel: "&fYour current channel is &7{channel}&f."
+
+# Tells a player what another player's current Channel is
+# Placeholders:
+# {channel} - the Channel
+# {player} - the player
+current-channel-other: "&7{player}&f's current channel is &7{channel}&f."

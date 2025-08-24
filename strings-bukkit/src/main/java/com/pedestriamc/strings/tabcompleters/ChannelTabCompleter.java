@@ -34,7 +34,12 @@ public class ChannelTabCompleter extends AbstractTabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
         return switch (args.length) {
             case 0 -> combine(HELP, getAllowedChannels(sender), CASES);
-            case 1 -> filter(combine(HELP, getAllowedChannels(sender), CASES), args[0]);
+            case 1 -> filter(combine(
+                    HELP,
+                    getAllowedChannels(sender),
+                    CASES,
+                    List.of("current")
+            ), args[0]);
             case 2 -> {
                 if(CASES.contains(args[0].toLowerCase())) {
                     yield filter(getAllowedChannels(sender), args[1]);

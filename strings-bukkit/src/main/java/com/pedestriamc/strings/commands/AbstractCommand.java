@@ -48,6 +48,10 @@ public abstract class AbstractCommand {
         return users().getUser(player);
     }
 
+    protected User getUser(@NotNull String name) {
+        return users().getUser(name);
+    }
+
     protected Channel getChannel(@NotNull String name) {
         return strings.getChannelLoader().getChannel(name);
     }

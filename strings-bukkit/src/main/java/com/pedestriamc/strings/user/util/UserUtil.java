@@ -55,7 +55,8 @@ public sealed interface UserUtil permits YamlUserUtil {
     @NotNull
     User getUser(Player player);
 
-    @Nullable User getUser(@NotNull String name);
+    @Nullable
+    User getUser(@NotNull String name);
 
     void addUser(User user);
 
