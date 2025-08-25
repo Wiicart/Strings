@@ -8,7 +8,6 @@ import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.wiicart.commands.permission.Permissions;
-import org.bukkit.Bukkit;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +23,6 @@ public class MessageProcessor {
     private final boolean usingPlaceholderAPI;
     private final boolean processingMessagePlaceholders;
     private final boolean parsingMessageChatColors;
-    private final String mentionColor;
 
     public MessageProcessor(@NotNull Strings strings, Channel channel) {
         this.channel = channel;
@@ -34,7 +32,6 @@ public class MessageProcessor {
         usingPlaceholderAPI = strings.isUsingPlaceholderAPI();
         processingMessagePlaceholders = config.getBoolean(Option.Bool.PROCESS_PLACEHOLDERS) && usingPlaceholderAPI;
         parsingMessageChatColors = config.getBoolean(Option.Bool.PROCESS_CHATCOLOR);
-        mentionColor = config.getColored(Option.Text.MENTION_COLOR);
     }
 
     /**
@@ -82,37 +79,6 @@ public class MessageProcessor {
             message = ChatColor.translateAlternateColorCodes('&', message);
         }
         return message;
-    }
-
-    public String processMentions(Player sender, @NotNull String str) {
-        if (!str.contains("@")) {
-            return str;
-        }
-
-        String chatColor = userUtil.getUser(sender).getChatColor(channel);
-        String[] splitStr = str.split("((?=@))"); //https://www.baeldung.com/java-split-string-keep-delimiters
-        StringBuilder sb = new StringBuilder();
-        for (String segment : splitStr) {
-            if (!segment.contains("@")) {
-                sb.append(chatColor).append(segment);
-                continue;
-            }
-
-            if (sender.hasPermission("strings.mention.all") && segment.contains("@everyone")) {
-                segment = segment.replace("@everyone", mentionColor + "@everyone" + ChatColor.RESET + chatColor);
-            }
-
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (userUtil.getUser(p).isMentionsEnabled() && segment.contains(p.getName())) {
-                    String original = "@" + p.getName();
-                    String replacement = mentionColor + "@" + p.getName() + ChatColor.RESET + chatColor;
-                    segment = segment.replace(original, replacement);
-                }
-            }
-
-            sb.append(segment);
-        }
-        return sb.toString();
     }
 
     /**

@@ -21,11 +21,13 @@ import static org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 // Vanilla death messages: https://minecraft.wiki/w/Death_messages
 public class DeathMessageManager {
 
-    private final DeathMessageProvider registry;
+    private final Strings strings;
 
+    private final DeathMessageProvider registry;
     private final UserUtil userUtil;
 
     public DeathMessageManager(@NotNull Strings strings) {
+        this.strings = strings;
         registry = new DeathMessageProvider(strings);
         userUtil = strings.users();
     }
@@ -52,6 +54,8 @@ public class DeathMessageManager {
 
         message = replacePlaceholders(message, placeholders);
         message = ChatColor.translateAlternateColorCodes('&', message);
+
+        message = strings.applyPlaceholders(message, deceased);
 
         return message;
     }

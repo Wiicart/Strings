@@ -19,6 +19,7 @@ import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import com.pedestriamc.strings.user.util.YamlUserUtil;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
@@ -250,6 +251,16 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
 
     public void sync(Runnable runnable) {
         getServer().getScheduler().runTask(this, runnable);
+    }
+
+    @NotNull
+    public String applyPlaceholders(@NotNull String string, @NotNull Player player) {
+        if (usingPlaceholderAPI) {
+            try {
+                return PlaceholderAPI.setPlaceholders(player, string);
+            } catch(Exception ignored) {}
+        }
+        return string;
     }
 
     public @NotNull FileManager files() {

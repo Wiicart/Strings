@@ -89,7 +89,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         String processedMessage = messageProcessor.processMessage(p, message);
 
         if (mentionsEnabled && Mentioner.hasMentionPermission(p)) {
-            processedMessage = messageProcessor.processMentions(p, processedMessage);
+            processedMessage = strings.getMentioner().processMentions(p, this, processedMessage);
         }
 
         if (callsEvents()) {
