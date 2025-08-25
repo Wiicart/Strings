@@ -63,6 +63,9 @@ commands:
   unignore:
     description: "Lets a player stop ignoring another player"
     usage: "/unignore <player-to-unignore> <player-ignoring (optional)>"
+  rules:
+    description: "Provides the server rules"
+    usage: "/rules"
 permissions:
   strings.*:
     description: "All Strings permissions"

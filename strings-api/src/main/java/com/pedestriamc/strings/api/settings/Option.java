@@ -20,7 +20,8 @@ public final class Option {
         DISABLE_HELPOP_COMMAND("other-helpop", false),
         ENABLE_DIRECT_MESSAGES("msg-enabled", true),
         ENABLE_DEATH_MESSAGES("death-messages.enable", true),
-        USE_CUSTOM_DEATH_MESSAGES("death-messages.custom", true),;
+        USE_CUSTOM_DEATH_MESSAGES("death-messages.custom", true),
+        ENABLE_RULES_COMMAND("enable-rules", true);
 
         final String key;
         final boolean defaultValue;
@@ -51,7 +52,8 @@ public final class Option {
         MENTION_TEXT_ACTION_BAR("mention-format","&e%sender% mentioned you."),
         MENTION_SOUND("mention-sound", "BLOCK_NOTE_BLOCK_PLING"),
         DELETION_BUTTON_FORMAT("deletion-button", "<dark_gray>[<red>×</red>]</dark_gray>"),
-        DELETION_BUTTON_HOVER("deletion-hover", "<red>Click this to delete the message.</red>");
+        DELETION_BUTTON_HOVER("deletion-hover", "<red>Click this to delete the message.</red>"),
+        RULES_MESSAGE("rules-message", "<b>Rules\n - Example Rule");
 
         final String key;
         final String defaultValue;

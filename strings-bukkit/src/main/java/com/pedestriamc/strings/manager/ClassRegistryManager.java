@@ -7,6 +7,7 @@ import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.commands.BroadcastCommand;
 import com.pedestriamc.strings.commands.ChatColorCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
+import com.pedestriamc.strings.commands.RulesCommand;
 import com.pedestriamc.strings.commands.StringsCommand;
 import com.pedestriamc.strings.commands.ignore.IgnoreCommand;
 import com.pedestriamc.strings.commands.ignore.UnIgnoreCommand;
@@ -38,6 +39,8 @@ import com.pedestriamc.strings.tabcompleters.StringsTabCompleter;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Registers CommandExecutors and Listeners
@@ -118,9 +121,13 @@ public class ClassRegistryManager {
                 }
             } catch(Exception ignored) {}
         }
+
+        if (config.getBoolean(Option.Bool.ENABLE_RULES_COMMAND)) {
+            registerCommand("rules", new RulesCommand(strings), null);
+        }
     }
 
-    private void registerCommand(String commandName, CommandExecutor executor, TabCompleter tabCompleter) {
+    private void registerCommand(@NotNull String commandName, @NotNull CommandExecutor executor, @Nullable TabCompleter tabCompleter) {
         var command = strings.getCommand(commandName);
         if(command == null) {
             return;

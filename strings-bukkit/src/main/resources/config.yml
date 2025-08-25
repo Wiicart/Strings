@@ -198,11 +198,24 @@ other-helpop: false
 # Message Delete Button
 # (Appended after the message for players that can delete messages)
 # This uses MiniMessage - do not use traditional color codes.
+# MiniMessage editor: https://webui.advntr.dev
 deletion-button: " <dark_gray>[<red>×</red>]</dark_gray>"
 
 # What text should appear when hovering over the message delete button?
 # This uses MiniMessage - do not use traditional color codes.
+# MiniMessage editor: https://webui.advntr.dev
 deletion-hover: "<red>Click this to delete the message.</red>"
+
+# Enable the /rules command
+# This uses MiniMessage - traditional color codes do not work
+# MiniMessage editor: https://webui.advntr.dev
+enable-rules: true
+
+# Sent when a player runs the /rules command
+# This uses MiniMessage - traditional color codes do not work
+# MiniMessage editor: https://webui.advntr.dev
+# Use <newline> to start a new line.
+rules-message: "<b><dark_aqua>Rules</dark_aqua></b><newline><dark_gray>•</dark_gray> Example Rule"
 
 
 
