@@ -4,6 +4,7 @@ import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.internal.APIRegistrar;
 import com.pedestriamc.strings.moderation.impl.APIImplementation;
 import com.pedestriamc.strings.moderation.listener.ReloadListener;
+import com.pedestriamc.strings.moderation.listener.SignChangeListener;
 import com.pedestriamc.strings.moderation.manager.ChatFilter;
 import com.pedestriamc.strings.moderation.manager.CooldownManager;
 import com.pedestriamc.strings.moderation.manager.LinkFilter;
@@ -79,6 +80,7 @@ public final class StringsModeration extends JavaPlugin {
         repetitionManager = new RepetitionManager(this);
         registerListener(new ChatListener(this));
         registerListener(new ReloadListener(this));
+        registerListener(new SignChangeListener(this));
     }
 
     private void registerAPI() {
@@ -140,6 +142,10 @@ public final class StringsModeration extends JavaPlugin {
 
     public void info(String message) {
         getLogger().info(message);
+    }
+
+    public void synchronous(@NotNull Runnable runnable) {
+        getServer().getScheduler().runTask(this, runnable);
     }
 
 }

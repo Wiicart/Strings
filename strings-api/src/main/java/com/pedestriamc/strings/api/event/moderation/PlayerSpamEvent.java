@@ -4,8 +4,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
+
 
 @SuppressWarnings("unused")
 public final class PlayerSpamEvent extends Event {
@@ -15,7 +16,7 @@ public final class PlayerSpamEvent extends Event {
     private final Player player;
     private final AsyncPlayerChatEvent event;
 
-    @ApiStatus.Internal
+    @Internal
     public PlayerSpamEvent(Player player, AsyncPlayerChatEvent event) {
         this.player = player;
         this.event = event;

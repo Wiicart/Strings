@@ -15,6 +15,8 @@ public class StatusListener extends ListenerAdapter {
 
     private final QueuedDiscordManager manager;
 
+    private boolean connected = false;
+
     // Use this if JDA isn't ready at onEnable - this will invoke loadChannels when JDA is ready.
     public StatusListener(@NotNull StringsDiscord strings, @NotNull QueuedDiscordManager manager) {
         this.strings = strings;
@@ -37,6 +39,11 @@ public class StatusListener extends ListenerAdapter {
     }
 
     private void completeManager() {
+        if (connected) {
+            return;
+        }
+        connected = true;
+
         if (manager == null) {
             return;
         }

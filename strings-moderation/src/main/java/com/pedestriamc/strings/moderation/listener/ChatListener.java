@@ -82,7 +82,7 @@ public class ChatListener implements Listener {
                 ChatFilter.FilteredChat filtered = chatFilter.filter(message);
                 if(!filtered.message().equals(message)) {
                     messenger.sendMessage(Message.BANNED_WORD, new MessageableSender(player));
-                    Bukkit.getScheduler().runTask(stringsModeration, () -> {
+                    stringsModeration.synchronous(() -> {
                         PlayerChatFilteredEvent filterEvent = new PlayerChatFilteredEvent(
                                 player,
                                 original,
