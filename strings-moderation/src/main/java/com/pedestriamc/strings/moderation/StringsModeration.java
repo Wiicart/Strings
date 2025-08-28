@@ -2,6 +2,7 @@ package com.pedestriamc.strings.moderation;
 
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.internal.APIRegistrar;
+import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.moderation.impl.APIImplementation;
 import com.pedestriamc.strings.moderation.listener.ReloadListener;
 import com.pedestriamc.strings.moderation.listener.SignChangeListener;
@@ -10,23 +11,19 @@ import com.pedestriamc.strings.moderation.manager.CooldownManager;
 import com.pedestriamc.strings.moderation.manager.LinkFilter;
 import com.pedestriamc.strings.moderation.manager.RepetitionManager;
 import com.pedestriamc.strings.moderation.listener.ChatListener;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-
 public final class StringsModeration extends JavaPlugin {
 
-    private FileConfiguration config;
     private ChatFilter chatFilter;
     private CooldownManager cooldownManager;
     private LinkFilter linkFilter;
     private RepetitionManager repetitionManager;
+    private Configuration config;
 
     @Override
     public void onEnable() {
@@ -43,8 +40,7 @@ public final class StringsModeration extends JavaPlugin {
             return;
         }
 
-        File file = new File(plugin.getDataFolder(), "moderation.yml");
-        config = YamlConfiguration.loadConfiguration(file);
+        config = new Configuration(plugin);
 
         instantiate();
         registerAPI();
@@ -95,12 +91,6 @@ public final class StringsModeration extends JavaPlugin {
         getServer().getPluginManager().registerEvents(listener, this);
     }
 
-    @Override
-    @NotNull
-    public FileConfiguration getConfig() {
-        return config;
-    }
-
     public ChatFilter getChatFilter() {
         return chatFilter;
     }
@@ -115,6 +105,10 @@ public final class StringsModeration extends JavaPlugin {
 
     public CooldownManager getCooldownManager() {
         return cooldownManager;
+    }
+
+    public Configuration getConfiguration() {
+        return config;
     }
 
     /**

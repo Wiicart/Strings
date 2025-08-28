@@ -7,6 +7,7 @@ import com.pedestriamc.strings.api.event.moderation.PlayerChatFilteredEvent;
 import com.pedestriamc.strings.api.message.MessageableSender;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.message.Message;
+import com.pedestriamc.strings.api.moderation.Option;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import com.pedestriamc.strings.moderation.manager.ChatFilter;
 import com.pedestriamc.strings.moderation.manager.LinkFilter;
@@ -36,7 +37,7 @@ public class ChatListener implements Listener {
     public ChatListener(@NotNull StringsModeration stringsModeration) {
         this.stringsModeration = stringsModeration;
         cooldownPlaceholders = new HashMap<>();
-        cooldownPlaceholders.put("{cooldown_length}", (String) stringsModeration.getConfig().get("cooldown-time"));
+        cooldownPlaceholders.put("{cooldown_length}", stringsModeration.getConfiguration().get(Option.Text.COOLDOWN_DURATION));
         linkFilter = stringsModeration.getLinkFilter();
         repetitionManager = stringsModeration.getRepetitionManager();
         cooldownManager = stringsModeration.getCooldownManager();

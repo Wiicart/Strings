@@ -1,9 +1,10 @@
 package com.pedestriamc.strings.moderation.manager;
 
+import com.pedestriamc.strings.api.moderation.Option;
+import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import com.pedestriamc.strings.moderation.listener.PlayerQuitListener;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,23 +25,19 @@ public class RepetitionManager {
     //The cooldown length in ticks for a repeating message to be ignored.
     private long cooldownLength;
 
-    public RepetitionManager(@NotNull StringsModeration stringsModeration) {
-        this.stringsModeration = stringsModeration;
+    public RepetitionManager(@NotNull StringsModeration strings) {
+        this.stringsModeration = strings;
         map = new HashMap<>();
-        configure(stringsModeration.getConfig());
-        stringsModeration.registerListener(new PlayerQuitListener(this));
+        loadOptions(strings.getConfiguration());
+        strings.registerListener(new PlayerQuitListener(this));
     }
 
-    private void configure(@NotNull FileConfiguration config) {
-        enabled = config.getBoolean("forbid-repetition");
-        ignoreSpaces = config.getBoolean("ignore-spaces");
+    private void loadOptions(@NotNull Configuration config) {
+        enabled = config.get(Option.Bool.FORBID_REPETITION);
+        ignoreSpaces = config.get(Option.Bool.IGNORE_SPACES_FOR_REPETITION);
 
-        String cooldownString = config.getString("repetition-cooldown");
-        if(cooldownString != null) {
-            cooldownLength = StringsModeration.calculateTicks(cooldownString);
-        } else {
-            cooldownLength = -1L;
-        }
+        String cooldownString = config.get(Option.Text.COOLDOWN_DURATION);
+        cooldownLength = StringsModeration.calculateTicks(cooldownString);
     }
 
     public void setPreviousMessage(Player player, String message) {

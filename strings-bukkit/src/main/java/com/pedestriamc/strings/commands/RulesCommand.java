@@ -18,7 +18,7 @@ public class RulesCommand implements CommandExecutor {
     public RulesCommand(@NotNull Strings strings) {
         this.strings = strings;
 
-        String raw = strings.getConfiguration().getString(Option.Text.RULES_MESSAGE);
+        String raw = strings.getConfiguration().get(Option.Text.RULES_MESSAGE);
         message = MiniMessage.miniMessage().deserialize(raw);
     }
 

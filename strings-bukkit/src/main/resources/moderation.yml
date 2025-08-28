@@ -42,3 +42,9 @@ url-whitelist:
 # BYPASS PERMISSION: strings.chat.filterbypass
 banned-words:
   - "%mzungu@yupo$3sfe"
+
+#
+
+# Should the text on signs be filtered?
+# If enabled, the same filtering that occurs on chat messages will be done on Sign text.
+filter-signs: true

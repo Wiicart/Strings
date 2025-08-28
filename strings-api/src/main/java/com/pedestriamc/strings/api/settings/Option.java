@@ -1,12 +1,18 @@
 package com.pedestriamc.strings.api.settings;
 
+import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public final class Option {
 
     private Option() {}
 
-    public enum Bool {
+    @Internal
+    public interface CoreKey<T> extends Key<T> {}
+
+    public enum Bool implements CoreKey<Boolean> {
         PROCESS_CHATCOLOR("process-in-chat-colors", true),
         ENABLE_CHATCOLOR_COMMAND("enable-chatcolor", true),
         PROCESS_PLACEHOLDERS("process-in-chat-placeholders", true),
@@ -31,16 +37,20 @@ public final class Option {
             this.defaultValue = defaultValue;
         }
 
-        public String getKey() {
+        @Override
+        @NotNull
+        public String key() {
             return key;
         }
 
-        public boolean getDefault() {
+        @Override
+        @NotNull
+        public Boolean defaultValue() {
             return defaultValue;
         }
     }
 
-    public enum Text {
+    public enum Text implements CoreKey<String> {
         DIRECT_MESSAGE_FORMAT_OUT("msg-format-outgoing", "&8(&7me &8» &7{recipient_username}&8) &e{message}"),
         DIRECT_MESSAGE_FORMAT_IN("msg-format-receiving", "&8(&7{sender_username} &8» &7me&8) &e{message}"),
         SOCIAL_SPY_FORMAT("social-spy-format", "&8[&cSocialSpy&8] &8(&7{sender_username} &8» &7{recipient_username}&8) &7{message}"),
@@ -63,16 +73,20 @@ public final class Option {
             this.defaultValue = defaultValue;
         }
 
-        public String getKey() {
+        @Override
+        @NotNull
+        public String key() {
             return key;
         }
 
-        public String getDefault() {
+        @Override
+        @NotNull
+        public String defaultValue() {
             return defaultValue;
         }
     }
 
-    public enum Double {
+    public enum Double implements CoreKey<java.lang.Double> {
         MENTION_PITCH("mention-pitch", 0.594604),
         MENTION_VOLUME("mention-vol", 10D);
 
@@ -84,16 +98,20 @@ public final class Option {
             this.defaultValue = defaultValue;
         }
 
-        public String getKey() {
+        @Override
+        @NotNull
+        public String key() {
             return key;
         }
 
-        public double getDefault() {
+        @Override
+        @NotNull
+        public java.lang.Double defaultValue() {
             return defaultValue;
         }
     }
 
-    public enum StringList {
+    public enum StringList implements CoreKey<List<String>> {
         MOTD("motd", java.util.List.of("&fWelcome to the server, {username}!", "&fHave fun!"));
 
         final String key;
@@ -104,11 +122,15 @@ public final class Option {
             this.defaultValue = defaultValue;
         }
 
-        public String getKey() {
+        @Override
+        @NotNull
+        public String key() {
             return key;
         }
 
-        public List<String> getDefault() {
+        @Override
+        @NotNull
+        public List<String> defaultValue() {
             return defaultValue;
         }
     }

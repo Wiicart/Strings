@@ -4,7 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.event.MessageDeletionEvent;
 import com.pedestriamc.strings.api.settings.Option;
-import com.pedestriamc.strings.api.settings.Settings;
+import com.pedestriamc.strings.configuration.Configuration;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.Component;
@@ -23,9 +23,9 @@ public class DeletionManager {
     public DeletionManager(@NotNull Strings strings) {
         this.strings = strings;
 
-        Settings settings = strings.getConfiguration();
-        String buttonFormat = settings.getString(Option.Text.DELETION_BUTTON_FORMAT);
-        String buttonHover = settings.getString(Option.Text.DELETION_BUTTON_HOVER);
+        Configuration settings = strings.getConfiguration();
+        String buttonFormat = settings.get(Option.Text.DELETION_BUTTON_FORMAT);
+        String buttonHover = settings.get(Option.Text.DELETION_BUTTON_HOVER);
 
         Component component = MiniMessage.miniMessage().deserialize(buttonFormat);
         deletionButton = component.hoverEvent(MiniMessage.miniMessage().deserialize(buttonHover));

@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.api.event.moderation;
 
-import com.pedestriamc.strings.api.StringsModeration;
+import com.pedestriamc.strings.api.moderation.StringsModeration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerEvent;

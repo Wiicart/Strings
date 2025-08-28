@@ -26,9 +26,9 @@ public class ServerMessages {
         usePAPI = strings.isUsingPlaceholderAPI();
 
         Configuration config = strings.getConfiguration();
-        joinMessageTemplate = config.getString(Option.Text.JOIN_MESSAGE);
-        leaveMessageTemplate = config.getString(Option.Text.LEAVE_MESSAGE);
-        motd = config.getStringList(Option.StringList.MOTD);
+        joinMessageTemplate = config.get(Option.Text.JOIN_MESSAGE);
+        leaveMessageTemplate = config.get(Option.Text.LEAVE_MESSAGE);
+        motd = config.get(Option.StringList.MOTD);
     }
 
     public String joinMessage(Player player) {

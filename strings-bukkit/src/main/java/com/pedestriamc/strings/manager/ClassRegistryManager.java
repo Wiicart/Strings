@@ -92,7 +92,7 @@ public class ClassRegistryManager {
         registerCommand("mention", mentionCommand, mentionCommandTabCompleter);
         registerCommand("mentions", mentionCommand, mentionCommandTabCompleter);
 
-        if(config.getBoolean(Option.Bool.ENABLE_DIRECT_MESSAGES)) {
+        if(config.get(Option.Bool.ENABLE_DIRECT_MESSAGES)) {
             DirectMessageCommand directMessageCommand = new DirectMessageCommand(strings);
             MessageTabCompleter messageTabCompleter = new MessageTabCompleter();
             registerCommand("msg", directMessageCommand, messageTabCompleter);
@@ -103,14 +103,14 @@ public class ClassRegistryManager {
             registerCommand("r", replyCommand, null);
         }
 
-        if(config.getBoolean(Option.Bool.ENABLE_CHATCOLOR_COMMAND)) {
+        if(config.get(Option.Bool.ENABLE_CHATCOLOR_COMMAND)) {
             registerCommand("chatcolor", new ChatColorCommand(strings), new ChatColorTabCompleter());
         }
 
-        if(config.getBoolean(Option.Bool.ENABLE_HELPOP)) {
+        if(config.get(Option.Bool.ENABLE_HELPOP)) {
             registerCommand("helpop", new HelpOPCommand(strings), null);
         } else {
-            if(!config.getBoolean(Option.Bool.DISABLE_HELPOP_COMMAND)) {
+            if(!config.get(Option.Bool.DISABLE_HELPOP_COMMAND)) {
                 registerCommand("helpop", new MessengerCommand(strings, Message.HELPOP_DISABLED), null);
             }
 
@@ -122,7 +122,7 @@ public class ClassRegistryManager {
             } catch(Exception ignored) {}
         }
 
-        if (config.getBoolean(Option.Bool.ENABLE_RULES_COMMAND)) {
+        if (config.get(Option.Bool.ENABLE_RULES_COMMAND)) {
             registerCommand("rules", new RulesCommand(strings), null);
         }
     }
@@ -154,7 +154,7 @@ public class ClassRegistryManager {
         registerListener(new PlayerDeathListener(strings));
         registerListener(new PlayerDamageListener(strings));
 
-        if(strings.getConfiguration().getBoolean(Option.Bool.ENABLE_MENTIONS)) {
+        if(strings.getConfiguration().get(Option.Bool.ENABLE_MENTIONS)) {
             if(strings.isUsingLuckPerms()) {
                 registerListener(new LuckPermsMentionListener(strings));
             } else {

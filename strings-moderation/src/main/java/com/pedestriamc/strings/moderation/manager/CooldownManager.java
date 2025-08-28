@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.moderation.manager;
 
+import com.pedestriamc.strings.api.moderation.Option;
+import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.moderation.StringsModeration;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
@@ -18,18 +18,19 @@ public class CooldownManager {
     private long cooldownLength;
     private final BukkitScheduler scheduler;
 
-    public CooldownManager(@NotNull StringsModeration stringsModeration) {
-        this.stringsModeration = stringsModeration;
+    public CooldownManager(@NotNull StringsModeration strings) {
+        this.stringsModeration = strings;
         cooldowns = new HashSet<>();
-        configure(stringsModeration.getConfig());
-        scheduler = stringsModeration.getServer().getScheduler();
+        loadOptions(strings);
+        scheduler = strings.getServer().getScheduler();
     }
 
-    private void configure(FileConfiguration config) {
-        long cooldown = StringsModeration.calculateTicks(config.getString("cooldown-time"));
+    private void loadOptions(@NotNull StringsModeration strings) {
+        Configuration config = strings.getConfiguration();
+        long cooldown = StringsModeration.calculateTicks(config.get(Option.Text.COOLDOWN_DURATION));
         if(cooldown < 0) {
             cooldownLength = 1200L;
-            Bukkit.getLogger().info("[StringsModeration] Invalid cooldown time in config, using 1m as cooldown time.");
+            strings.getLogger().info("Invalid cooldown time in config, using 1m as cooldown time.");
         } else {
             cooldownLength = cooldown;
         }

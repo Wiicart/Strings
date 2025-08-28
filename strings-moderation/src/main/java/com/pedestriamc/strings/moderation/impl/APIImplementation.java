@@ -1,9 +1,11 @@
 package com.pedestriamc.strings.moderation.impl;
 
+import com.pedestriamc.strings.api.moderation.ModerationSettings;
+import com.pedestriamc.strings.api.moderation.StringsModeration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class APIImplementation implements com.pedestriamc.strings.api.StringsModeration {
+public class APIImplementation implements StringsModeration {
 
     private final com.pedestriamc.strings.moderation.StringsModeration moderation;
 
@@ -26,4 +28,8 @@ public class APIImplementation implements com.pedestriamc.strings.api.StringsMod
         return moderation.getRepetitionManager().isRepeating(player, message);
     }
 
+    @Override
+    public @NotNull ModerationSettings getSettings() {
+        return moderation.getConfiguration();
+    }
 }

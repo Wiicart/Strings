@@ -2,6 +2,7 @@ package com.pedestriamc.strings.api;
 
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.message.Messenger;
+import com.pedestriamc.strings.api.moderation.StringsModeration;
 import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.bukkit.entity.Player;

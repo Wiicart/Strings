@@ -23,8 +23,8 @@ public class PlayerQuitListener implements Listener {
         serverMessages = strings.getServerMessages();
 
         Configuration config = strings.getConfiguration();
-        modifyLeaveMessage = config.getBoolean(Option.Bool.USE_CUSTOM_JOIN_LEAVE);
-        doQuitMessage = config.getBoolean(Option.Bool.ENABLE_JOIN_LEAVE_MESSAGE);
+        modifyLeaveMessage = config.get(Option.Bool.USE_CUSTOM_JOIN_LEAVE);
+        doQuitMessage = config.get(Option.Bool.ENABLE_JOIN_LEAVE_MESSAGE);
     }
 
     @EventHandler

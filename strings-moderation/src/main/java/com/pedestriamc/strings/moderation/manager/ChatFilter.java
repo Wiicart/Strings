@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.moderation.manager;
 
+import com.pedestriamc.strings.api.moderation.Option;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import org.apache.commons.lang3.StringUtils;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -14,29 +14,15 @@ import java.util.regex.Pattern;
 
 public class ChatFilter {
 
+    //private static final LevenshteinDistance LEVENSHTEIN = LevenshteinDistance.getDefaultInstance();
+
     private final Set<String> bannedWords;
 
-    public ChatFilter(@NotNull StringsModeration stringsModeration) {
-        bannedWords = loadBannedWords(stringsModeration.getConfig());
+    public ChatFilter(@NotNull StringsModeration strings) {
+        bannedWords = new HashSet<>(strings.getConfiguration().get(Option.StringList.BANNED_WORDS));
     }
 
-    private @NotNull Set<String> loadBannedWords(@NotNull FileConfiguration config) {
-        HashSet<String> banned = new HashSet<>();
-        List<?> bannedWordList = config.getList("banned-words");
-        if(bannedWordList == null || bannedWordList.isEmpty()) {
-            return Set.of();
-        }
-
-        for(Object object : bannedWordList) {
-            if(object instanceof String str) {
-                banned.add(str.toLowerCase());
-            }
-        }
-
-        return banned;
-    }
-
-    public FilteredChat filter(String message) {
+    public FilteredChat filter(@NotNull String message) {
         List<String> filteredElements = new ArrayList<>();
         for(String str : bannedWords) {
             if(StringUtils.containsIgnoreCase(message, str)) {
@@ -46,6 +32,19 @@ public class ChatFilter {
         }
         return new FilteredChat(message, filteredElements);
     }
+
+    public FilteredChat fuzzyFilter(@NotNull String message) {
+        List<String> filteredElements = new ArrayList<>();
+        for(String str : bannedWords) {
+            if(StringUtils.containsIgnoreCase(message, str)) {
+                message = message.replaceAll("(?i)" + Pattern.quote(str), "");
+                filteredElements.add(str);
+            }
+        }
+        return new FilteredChat(message, filteredElements);
+
+    }
+
 
     public record FilteredChat(String message, List<String> filteredElements) {
         public FilteredChat {

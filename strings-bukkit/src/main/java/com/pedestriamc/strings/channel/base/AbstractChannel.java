@@ -74,7 +74,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         priority = data.getPriority();
 
         messageProcessor = new MessageProcessor(strings, this);
-        mentionsEnabled = strings.getConfiguration().getBoolean(Option.Bool.ENABLE_MENTIONS);
+        mentionsEnabled = strings.getConfiguration().get(Option.Bool.ENABLE_MENTIONS);
         updatePermissions();
         members = new HashSet<>();
         monitors = new HashSet<>();

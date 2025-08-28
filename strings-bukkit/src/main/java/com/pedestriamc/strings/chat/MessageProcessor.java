@@ -30,8 +30,8 @@ public class MessageProcessor {
         logger = strings.getLogger();
         Configuration config = strings.getConfiguration();
         usingPlaceholderAPI = strings.isUsingPlaceholderAPI();
-        processingMessagePlaceholders = config.getBoolean(Option.Bool.PROCESS_PLACEHOLDERS) && usingPlaceholderAPI;
-        parsingMessageChatColors = config.getBoolean(Option.Bool.PROCESS_CHATCOLOR);
+        processingMessagePlaceholders = config.get(Option.Bool.PROCESS_PLACEHOLDERS) && usingPlaceholderAPI;
+        parsingMessageChatColors = config.get(Option.Bool.PROCESS_CHATCOLOR);
     }
 
     /**

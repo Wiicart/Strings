@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.api;
 
+import com.pedestriamc.strings.api.moderation.StringsModeration;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;

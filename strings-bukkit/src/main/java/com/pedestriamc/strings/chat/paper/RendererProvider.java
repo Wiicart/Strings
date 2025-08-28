@@ -4,11 +4,11 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.settings.Option;
-import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
 import com.pedestriamc.strings.chat.MessageUtilities;
 import com.pedestriamc.strings.chat.Mentioner;
+import com.pedestriamc.strings.configuration.Configuration;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import io.papermc.paper.chat.ChatRenderer;
@@ -39,10 +39,10 @@ public class RendererProvider {
         deletionManager = new DeletionManager(strings);
         mentioner = strings.getMentioner();
 
-        Settings config = strings.getConfiguration();
-        mentionsEnabled = config.getBoolean(Option.Bool.ENABLE_MENTIONS);
-        processingMessagePlaceholders = config.getBoolean(Option.Bool.PROCESS_PLACEHOLDERS) && strings.isUsingPlaceholderAPI();
-        parsingMessageChatColors = config.getBoolean(Option.Bool.PROCESS_CHATCOLOR);
+        Configuration config = strings.getConfiguration();
+        mentionsEnabled = config.get(Option.Bool.ENABLE_MENTIONS);
+        processingMessagePlaceholders = config.get(Option.Bool.PROCESS_PLACEHOLDERS) && strings.isUsingPlaceholderAPI();
+        parsingMessageChatColors = config.get(Option.Bool.PROCESS_CHATCOLOR);
     }
 
     @NotNull

@@ -4,6 +4,7 @@ import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.event.moderation.PlayerChatFilteredEvent;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.MessageableSender;
+import com.pedestriamc.strings.api.moderation.Option;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -24,9 +25,8 @@ public class LinkFilter {
     public LinkFilter(@NotNull StringsModeration stringsModeration) {
         this.stringsModeration = stringsModeration;
         this.urlWhitelist = new ArrayList<>();
-        List<?> tempList = stringsModeration.getConfig().getList("url-whitelist");
-        if(tempList != null)
-            for(Object obj : tempList) {
+        List<?> tempList = stringsModeration.getConfiguration().get(Option.StringList.URL_WHITELIST);
+        for(Object obj : tempList) {
             if(obj instanceof String str) {
                 this.urlWhitelist.add(normalizeUrl(str));
             }

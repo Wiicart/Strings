@@ -65,7 +65,7 @@ class ChannelFileReader {
             registerHelpOp();
         }
 
-        String socialSpyFormat = strings.getConfiguration().getString(Option.Text.SOCIAL_SPY_FORMAT);
+        String socialSpyFormat = strings.getConfiguration().get(Option.Text.SOCIAL_SPY_FORMAT);
         manager.register(new SocialSpyChannel(strings.getPlayerDirectMessenger(), socialSpyFormat));
 
         manager.register(new DefaultChannel(manager));

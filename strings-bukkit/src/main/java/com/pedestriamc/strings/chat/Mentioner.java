@@ -38,7 +38,7 @@ public final class Mentioner {
         mentionColor = config.getColored(Option.Text.MENTION_COLOR);
 
         try {
-            sound = Sound.valueOf(config.getString(Option.Text.MENTION_SOUND));
+            sound = Sound.valueOf(config.get(Option.Text.MENTION_SOUND));
         } catch(IllegalArgumentException e) {
             strings.warning("Invalid sound-type for mentions in config.yml, defaulting to: BLOCK_NOTE_BLOCK_PLING");
             sound = Sound.BLOCK_NOTE_BLOCK_PLING;
