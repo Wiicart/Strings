@@ -21,12 +21,14 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
+import static com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
+
 import java.util.HashSet;
 import java.util.Set;
 
 public class HelpOPChannel extends ProtectedChannel {
 
-    public static final String IDENTIFIER = "helpop";
+    public static final Identifier IDENTIFIER = Identifier.HELPOP;
 
     private final Strings strings;
     private final MessageProcessor messageProcessor;
@@ -176,11 +178,6 @@ public class HelpOPChannel extends ProtectedChannel {
     @Override
     public boolean allows(@NotNull Permissible permissible) {
         return Permissions.anyOfOrAdmin(permissible, "strings.*", "strings.helpop.use");
-    }
-
-    @Override
-    public @NotNull String getIdentifier() {
-        return IDENTIFIER;
     }
 
 }

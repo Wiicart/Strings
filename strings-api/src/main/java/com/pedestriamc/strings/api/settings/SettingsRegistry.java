@@ -33,7 +33,7 @@ public final class SettingsRegistry {
      */
     @NotNull
     @SuppressWarnings("unchecked")
-    public <E extends Enum<E> & Key<V>, V> V get(@NotNull E key) {
+    public <E extends Enum<E> & Key<V>, V> V get(@NotNull E key) { 
         EnumMap<E, V> map = (EnumMap<E, V>) master.get(key.getDeclaringClass());
         if (map == null) {
             return key.defaultValue();

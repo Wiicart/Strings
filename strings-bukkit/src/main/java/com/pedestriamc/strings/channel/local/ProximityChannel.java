@@ -15,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+import static com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +28,7 @@ import java.util.Set;
  */
 public class ProximityChannel extends AbstractLocalChannel {
 
-    public static final String IDENTIFIER = "proximity";
+    public static final Identifier IDENTIFIER = Identifier.PROXIMITY;
 
     @Range(from = -1, to = Integer.MAX_VALUE)
     private double distance;
@@ -97,8 +99,4 @@ public class ProximityChannel extends AbstractLocalChannel {
         distanceSquared = distance * distance;
     }
 
-    @Override
-    public @NotNull String getIdentifier() {
-        return IDENTIFIER;
-    }
 }

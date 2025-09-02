@@ -28,8 +28,4 @@ public class SystemChannel extends ProtectedChannel {
         return Set.of();
     }
 
-    @Override
-    public @NotNull String getIdentifier() {
-        return "system";
-    }
 }

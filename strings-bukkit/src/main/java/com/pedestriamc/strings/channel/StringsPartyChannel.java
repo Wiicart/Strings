@@ -49,11 +49,6 @@ public class StringsPartyChannel extends AbstractChannel implements PartyChannel
     }
 
     @Override
-    public @NotNull String getIdentifier() {
-        return "partychannel";
-    }
-
-    @Override
     public Set<StringsUser> getRecipients(@NotNull StringsUser user) {
         return Set.of();
     }

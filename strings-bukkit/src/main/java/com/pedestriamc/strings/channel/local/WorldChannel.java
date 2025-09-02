@@ -13,6 +13,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import static com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +24,7 @@ import java.util.Set;
  */
 public class WorldChannel extends AbstractLocalChannel {
 
-    public static final String IDENTIFIER = "world";
+    public static final Identifier IDENTIFIER = Identifier.WORLD;
 
     public WorldChannel(StringsPlatform plugin, LocalChannelBuilder<?> builder) {
         this((Strings) plugin, builder);
@@ -66,11 +68,6 @@ public class WorldChannel extends AbstractLocalChannel {
     @Override
     public void setProximity(double proximity) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("setProximity() called on WorldChannel instance, which is unsupported.");
-    }
-
-    @Override
-    public @NotNull String getIdentifier() {
-        return IDENTIFIER;
     }
 
 }

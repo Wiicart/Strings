@@ -12,6 +12,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import static com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
  */
 public final class StringChannel extends AbstractChannel {
 
-    public static final String IDENTIFIER = "stringchannel";
+    public static final Identifier IDENTIFIER = Identifier.NORMAL;
 
     public StringChannel(StringsPlatform plugin, IChannelBuilder<?> builder) {
         this((Strings) plugin, builder);
@@ -75,8 +77,4 @@ public final class StringChannel extends AbstractChannel {
         return Type.NORMAL;
     }
 
-    @Override
-    public @NotNull String getIdentifier() {
-        return IDENTIFIER;
-    }
 }

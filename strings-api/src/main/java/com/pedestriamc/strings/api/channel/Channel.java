@@ -5,10 +5,13 @@ import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.user.StringsUser;
+import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import java.util.Map;
 import java.util.Set;
@@ -40,21 +43,10 @@ public interface Channel extends Comparable<Channel> {
     }
 
     /**
-     * Provides the Channel identifier, i.e., {@code StringChannel.class} -> {@code stringchannel}.
-     * This must be constant across instances of an implementation, and already set at compile-time.
-     * This must be unique from other implementations.
-     *
-     * @return The Channel type identifier
-     */
-    @NotNull
-    @Contract(pure = true)
-    String getIdentifier();
-
-    /**
      * Sends a message from a player to the channel.
-     * Internally, messages might not be processed using this method.
+     * On Paper servers, this is only called if {@link Channel#callsEvents()} is false.<br/>
      * For custom implementations, ensure {@link Channel#getFormat()}, {@link Channel#getRecipients(StringsUser)}, etc.
-     * behave as intended, to ensure consistent behavior.
+     * behave as intended, to ensure consistent behavior if this method is not invoked.
      *
      * @param user The player sending the message.
      * @param message The player's message.
@@ -105,13 +97,32 @@ public interface Channel extends Comparable<Channel> {
     void broadcast(@NotNull String message);
 
     /**
+     * Broadcasts a Component to a Channel.
+     * Broadcast recipients are determined using {@link Channel#getPlayersInScope()}
+     *
+     * @param message The broadcast message.
+     */
+    void broadcast(@NotNull Component message);
+
+    /**
      * Broadcasts a message to the Channel.
      * Unlike {@link Channel#broadcast(String)}, no formatting will be applied,
      * and the String will be broadcast to the Channel as is.
+     * No sound will be played either.
      * Broadcast recipients are determined using {@link Channel#getPlayersInScope()}.
      * @param message The message to broadcast.
      */
     void broadcastPlain(@NotNull String message);
+
+    /**
+     * Broadcasts a message to the Channel.
+     * Unlike {@link Channel#broadcast(Component)}, no formatting will be applied,
+     * and the String will be broadcast to the Channel as is.
+     * No sound will be played either.
+     * Broadcast recipients are determined using {@link Channel#getPlayersInScope()}.
+     * @param message The message to broadcast.
+     */
+    void broadcastPlain(@NotNull Component message);
 
     /**
      * Provides the formatting of the Channel.
@@ -127,6 +138,21 @@ public interface Channel extends Comparable<Channel> {
      * @return A String of the broadcast format.
      */
     @NotNull String getBroadcastFormat();
+
+    /**
+     * Sets the Sound played when a message is broadcast.<br/>
+     * Set to null to disable.
+     * @param sound The {@link Sound} from Adventure.
+     */
+    void setBroadcastSound(@Nullable Sound sound);
+
+    /**
+     * Provides the Sound played when a message is broadcast.<br/>
+     * If null, no Sound is played.
+     * @return The {@link Sound}
+     */
+    @Nullable
+    Sound getBroadcastSound();
 
     /**
      * Sets the Channel's format.

@@ -1,9 +1,11 @@
 package com.pedestriamc.strings.api.channel.local;
 
+import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+@Internal
 class LocalityImpl<W> implements Locality<W> {
 
     private final W w;

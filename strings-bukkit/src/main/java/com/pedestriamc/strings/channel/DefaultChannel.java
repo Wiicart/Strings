@@ -98,9 +98,4 @@ public final class DefaultChannel extends ProtectedChannel {
         return new HashSet<>(members);
     }
 
-    @Override
-    public @NotNull String getIdentifier() {
-        return "defaultchannel";
-    }
-
 }

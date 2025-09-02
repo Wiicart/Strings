@@ -27,7 +27,8 @@ public final class Option {
         ENABLE_DIRECT_MESSAGES("msg-enabled", true),
         ENABLE_DEATH_MESSAGES("death-messages.enable", true),
         USE_CUSTOM_DEATH_MESSAGES("death-messages.custom", true),
-        ENABLE_RULES_COMMAND("enable-rules", true);
+        ENABLE_RULES_COMMAND("enable-rules", true),
+        BROADCAST_SOUND_ENABLE("broadcast-sound.enable", true);
 
         final String key;
         final boolean defaultValue;
@@ -63,7 +64,8 @@ public final class Option {
         MENTION_SOUND("mention-sound", "BLOCK_NOTE_BLOCK_PLING"),
         DELETION_BUTTON_FORMAT("deletion-button", "<dark_gray>[<red>×</red>]</dark_gray>"),
         DELETION_BUTTON_HOVER("deletion-hover", "<red>Click this to delete the message.</red>"),
-        RULES_MESSAGE("rules-message", "<b>Rules\n - Example Rule");
+        RULES_MESSAGE("rules-message", "<b>Rules\n - Example Rule"),
+        BROADCAST_SOUND_NAME("broadcast-sound.name", "block.note_block.bell");
 
         final String key;
         final String defaultValue;
@@ -87,8 +89,10 @@ public final class Option {
     }
 
     public enum Double implements CoreKey<java.lang.Double> {
-        MENTION_PITCH("mention-pitch", 0.594604),
-        MENTION_VOLUME("mention-vol", 10D);
+        MENTION_PITCH("mention-pitch", 0.594604D),
+        MENTION_VOLUME("mention-vol", 10D),
+        BROADCAST_SOUND_PITCH("broadcast-sound.pitch", 0.5D),
+        BROADCAST_SOUND_VOLUME("broadcast-sound.volume", 1.0D);
 
         final String key;
         final double defaultValue;

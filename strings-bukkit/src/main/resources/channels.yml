@@ -15,22 +15,27 @@ channels:
     # {message} - the player's message
     # (!) NOTE: Compatible with PlaceholderAPI placeholders
     format: "{prefix}{displayname}{suffix} &7» &f{message}"
+
     # Should an event be called when players send a message?
     # This allows other plugins to receive the message and modify it.
     # It's recommended to keep this on unless you want no other plugins to receive or modify chat.
     # BUG: This will be fixed, but currently if events are not called, cool downs will not work.
     call-event: true
+
     # Should chat be filtered for profanity?
     # Requires StringsModeration expansion available on Modrinth
     filter-profanity: false
+
     # Requires StringsModeration expansion available on Modrinth
     # Should chat be filtered for URLs?
     # A URL whitelist can be found in moderation.yml
     block-urls: false
+
     # Requires StringsModeration expansion available on Modrinth
     # Should this channel have a message cooldown?
     # Cooldown duration is configured in config.yml
     cooldown: false
+
     # Channel Type
     # Options:
     # - stringchannel - a server wide channel, messages are sent to every player that is a member.
@@ -38,6 +43,7 @@ channels:
     # - world - a channel that only works for one world
     # Global MUST be a stringchannel.
     type: stringchannel
+
     # The Channel membership.
     # Options:
     # - default
@@ -47,13 +53,16 @@ channels:
     #     Players are not members of permission membership channels by default, but may still recieve messages by default if
     #     they have the proper permission.
     membership: default
+
     # Priority
     # When a player has the channel of default, the channel that the player's message will be sent to is determined by
     # priority.  The higher the number, the higher the priority.
     priority: 1
+
     # Message Deletion
     # Should messages be allowed to be deleted in this Channel?
     message-deletion: false
+
     # Symbol
     # When a player types this symbol before their message in chat, it will be sent to this channel, as long as the
     # player has permission.  Despite its name, this may contain multiple characters.
@@ -61,11 +70,26 @@ channels:
     # If used with world and proximity channels, this allows players to communicate in these channels, regardless of
     # if they are in the right world to use the channel.
     symbol: ""
+
     # Broadcast Format
     # When a message is broadcast using the /broadcast command, what should the format be?
     # Valid placeholders:
     # {message} - the message being broadcast
     broadcast-format: "&8[&2Global&8] &f{message}"
+
+    # Broadcast Sound
+    # What sound should be played when a message is broadcast?
+    # (enable-broadcast-sound must be enabled)
+    broadcast-sound:
+      # Should a sound be played at all?
+      enable: true
+      # The Sound name
+      # List of sounds: https://www.digminecraft.com/lists/sound_list_pc.php
+      name: block.note_block.bell
+      # The Sound pitch (float)
+      pitch: 0.5
+      # The sound volume (float)
+      volume: 1.0
 
   # Staff channel, which by default will not call events, to hide messages from external plugin interference.
   staff:

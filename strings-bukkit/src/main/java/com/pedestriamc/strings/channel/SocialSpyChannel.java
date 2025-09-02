@@ -93,8 +93,4 @@ public class SocialSpyChannel extends ProtectedChannel {
         return spiesList;
     }
 
-    @Override
-    public @NotNull String getIdentifier() {
-        return "socialspychannel";
-    }
 }

@@ -5,6 +5,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
+import com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.settings.Option;
@@ -12,6 +13,9 @@ import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.channel.HelpOPChannel;
 import com.pedestriamc.strings.channel.SocialSpyChannel;
+import net.kyori.adventure.key.InvalidKeyException;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -23,15 +27,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-class ChannelFileReader {
+final class ChannelFileReader {
     
-    private static final Set<String> LEGAL_TYPES = Set.of(
-            "stringchannel", "world", "world_strict",
-            "proximity", "proximity_strict", "helpop"
-    );
-    
-    private static final Set<String> LOCAL_TYPES = Set.of(
-            "world", "world_strict", "proximity", "proximity_strict"
+    private static final Set<Identifier> LOCAL_TYPES = Set.of(
+            Identifier.WORLD, Identifier.WORLD_STRICT, Identifier.PROXIMITY, Identifier.PROXIMITY_STRICT
     );
 
     private final @NotNull Strings strings;
@@ -89,14 +88,14 @@ class ChannelFileReader {
     }
 
     private void loadChannel(@NotNull String name, @NotNull ConfigurationSection section) {
-        final String format = section.getString("format");
+        String format = section.getString("format");
         Preconditions.checkNotNull(format, "Channel format cannot be null.");
-        
-        final String type = getTypeString(section); // throws IllegalArgumentException if illegal
-        final Membership membership = getMembership(section); // throws IllegalArgumentException if illegal
+
+        Identifier identifier = getTypeIdentifier(section); // throws IllegalArgumentException
+        Membership membership = getMembership(section); // throws IllegalArgumentException
 
         IChannelBuilder<?> builder;
-        if (isLocal(type)) {
+        if (isLocal(identifier)) {
             LocalChannelBuilder<World> localBuilder = Channel.localBuilder(
                     name,
                     format,
@@ -104,7 +103,7 @@ class ChannelFileReader {
                     loadWorlds(section)
             );
 
-            if (isProximity(type)) {
+            if (isProximity(identifier)) {
                 localBuilder.setDistance(getDistance(section));
             }
 
@@ -122,8 +121,9 @@ class ChannelFileReader {
                 .setAllowMessageDeletion(section.getBoolean("message-deletion", false))
                 .setPriority(section.getInt("priority", -1))
                 .setBroadcastFormat(section.getString("broadcast-format", "&8[&cBroadcast&8] &f{message}"));
+        loadBroadcastSound(builder, section);
 
-        Channel channel = builder.build(type);
+        Channel channel = builder.build(identifier);
         manager.register(channel);
 
         String symbol = section.getString("symbol");
@@ -142,20 +142,19 @@ class ChannelFileReader {
         }
     }
 
-    private @NotNull String getTypeString(@NotNull ConfigurationSection section) {
+    private @NotNull Identifier getTypeIdentifier(@NotNull ConfigurationSection section) {
         String type = section.getString("type");
         Preconditions.checkNotNull(type, "Channel type cannot be null.");
 
-        if(LEGAL_TYPES.contains(type.toLowerCase(Locale.ROOT))) {
-            return type;
+        try {
+            return Identifier.of(type);
+        } catch(IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid channel type: '" + type + "'");
         }
-
-        throw new IllegalArgumentException("Invalid channel type: '" + type + "'");
     }
 
-    private boolean isProximity(@NotNull String type) {
-        type = type.toLowerCase(Locale.ROOT);
-        return type.equals("proximity") || type.equals("proximity_strict");
+    private boolean isProximity(@NotNull Identifier identifier) {
+        return identifier == Identifier.PROXIMITY || identifier == Identifier.PROXIMITY_STRICT;
     }
 
     private double getDistance(@NotNull ConfigurationSection section) {
@@ -195,8 +194,39 @@ class ChannelFileReader {
         return worlds;
     }
 
-    private boolean isLocal(@NotNull String type) {
-        return LOCAL_TYPES.contains(type.toLowerCase(Locale.ROOT));
+    @SuppressWarnings("PatternValidation")
+    private void loadBroadcastSound(@NotNull IChannelBuilder<?> builder, @NotNull ConfigurationSection section) {
+        ConfigurationSection soundSection = section.getConfigurationSection("broadcast-sound");
+        if (soundSection == null) {
+            return;
+        }
+
+        if (soundSection.getBoolean("enable")) {
+            String name = soundSection.getString("name", "");
+            try {
+                Key key = Key.key(name);
+                Sound.Builder soundBuilder = Sound.sound().type(key);
+                if (soundSection.contains("pitch")) {
+                    soundBuilder.pitch((float) soundSection.getDouble("pitch"));
+                }
+
+                if (soundSection.contains("volume")) {
+                    soundBuilder.volume((float) soundSection.getDouble("volume"));
+                }
+
+                builder.setBroadcastSound(soundBuilder.build());
+            } catch(IllegalArgumentException e) {
+                strings.getLogger().warning("Invalid broadcast sound: '" + name + "'");
+                strings.getLogger().warning(e.getMessage());
+            } catch(InvalidKeyException e) {
+                strings.getLogger().warning("Invalid key for broadcast sound: '" + name + "'");
+                strings.getLogger().warning(e.getMessage());
+            }
+        }
+    }
+
+    private boolean isLocal(@NotNull Identifier identifier) {
+        return LOCAL_TYPES.contains(identifier);
     }
 
     private void registerGlobal() {
@@ -209,7 +239,7 @@ class ChannelFileReader {
                     .setDoUrlFilter(false)
                     .setCallEvent(true)
                     .setPriority(-1)
-                    .build("stringchannel")
+                    .build(Identifier.NORMAL)
             );
         } catch(Exception e) {
             strings.warning("An error occurred while loading global channel fallback");
@@ -225,5 +255,6 @@ class ChannelFileReader {
                 false,
                 false
         ));
+
     }
 }

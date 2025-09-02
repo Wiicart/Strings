@@ -41,7 +41,8 @@ public final class Option {
     public enum Bool implements ModerationKey<Boolean> {
         FORBID_REPETITION("forbid-repetition", true),
         IGNORE_SPACES_FOR_REPETITION("ignore-spaces", true),
-        FILTER_SIGN_TEXT("filter-signs", false);
+        FILTER_SIGN_TEXT("filter-signs", false),
+        FUZZY_FILTERING("fuzzy", true);
 
         private final String key;
         private final boolean defaultValue;
@@ -63,7 +64,7 @@ public final class Option {
     }
 
     public enum Double implements ModerationKey<java.lang.Double> {
-        ;
+        LEVENSHTEIN_THRESHOLD("max-percentage", 0.2);
 
         private final String key;
         private final double defaultValue;

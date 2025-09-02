@@ -1,4 +1,8 @@
-# Strings - Broadcasts
+# Strings - Auto Broadcasts
+
+# (!) THIS ONLY DEALS WITH AUTOMATED BROADCASTS
+# Despite this file's name, configuration for the /broadcast command is in config.yml
+
 # This plugin can automatically post broadcasts periodically.
 # This file contains options for the broadcasts, and the broadcasts themselves.
 

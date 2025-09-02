@@ -4,7 +4,6 @@ import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.channel.base.ProtectedChannel;
-import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,8 +34,4 @@ public class MockChannel extends ProtectedChannel {
         return Membership.DEFAULT;
     }
 
-    @Override
-    public @NotNull String getIdentifier() {
-        return "mockchannel";
-    }
 }

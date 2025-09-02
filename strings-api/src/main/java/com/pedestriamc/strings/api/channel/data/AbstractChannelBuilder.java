@@ -4,10 +4,13 @@ import com.google.common.base.Preconditions;
 import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Membership;
+import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+
+import java.util.Objects;
 
 import static org.jetbrains.annotations.ApiStatus.Internal;
 
@@ -27,6 +30,9 @@ abstract sealed class AbstractChannelBuilder<B extends IChannelBuilder<B>> imple
     // Nullable fields, default values should be provided where necessary if null.
     private @Nullable String defaultColor;
     private @Nullable String broadcastFormat;
+
+    // May remain null after Channel construction
+    private @Nullable Sound broadcastSound = null;
 
     @Range(from = -1, to = Integer.MAX_VALUE)
     private int priority = 0;
@@ -59,7 +65,7 @@ abstract sealed class AbstractChannelBuilder<B extends IChannelBuilder<B>> imple
      */
     @Contract("_ -> new")
     @Override
-    public Channel build(@NotNull String type) throws IllegalArgumentException {
+    public Channel build(@NotNull Identifier type) throws IllegalArgumentException {
         return BuilderRegistry.build(this, type);
     }
 
@@ -279,11 +285,24 @@ abstract sealed class AbstractChannelBuilder<B extends IChannelBuilder<B>> imple
         return (B) this;
     }
 
-    static boolean isLocal(@NotNull String identifier) {
+    @Override
+    @Nullable
+    public Sound getBroadcastSound() {
+        return broadcastSound;
+    }
+
+    @Override
+    public B setBroadcastSound(@Nullable Sound broadcastSound) {
+        Objects.requireNonNull(broadcastSound, "Broadcast sound cannot be null.");
+        this.broadcastSound = broadcastSound;
+        return null;
+    }
+
+    static boolean isLocal(@NotNull Identifier identifier) {
         return
-                identifier.equalsIgnoreCase("world") ||
-                identifier.equalsIgnoreCase("proximity") ||
-                identifier.equalsIgnoreCase("world_strict") ||
-                identifier.equalsIgnoreCase("proximity_strict");
+                identifier == Identifier.WORLD ||
+                identifier == Identifier.PROXIMITY ||
+                identifier == Identifier.WORLD_STRICT ||
+                identifier == Identifier.PROXIMITY_STRICT;
     }
 }

@@ -19,6 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.jetbrains.annotations.Unmodifiable;
 
+import static com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +31,7 @@ import java.util.Set;
  */
 public class StrictProximityChannel extends AbstractLocalChannel {
 
-    public static final String IDENTIFIER = "proximity_strict";
+    public static final Identifier IDENTIFIER = Identifier.PROXIMITY_STRICT;
 
     @Range(from = 0, to = Integer.MAX_VALUE)
     private double distance;
@@ -92,11 +94,6 @@ public class StrictProximityChannel extends AbstractLocalChannel {
     @Contract(" -> new")
     private @NotNull @Unmodifiable Map<String, String> getPlaceholders() {
         return Map.of("{channel}", getName());
-    }
-
-    @Override
-    public @NotNull String getIdentifier() {
-        return IDENTIFIER;
     }
 
     @Override

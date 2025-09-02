@@ -130,6 +130,17 @@ motd:
 # Prefix for messages sent using the /broadcast command
 broadcast-format: "&8[&3Broadcast&8] &f"
 
+broadcast-sound:
+  # Should a sound be played when a message is broadcast with /broadcast?
+  enable: true
+  # What Sound should be played when a message is broadcast?
+  # https://www.digminecraft.com/lists/sound_list_pc.php
+  name: block.note_block.bell
+  # The Sound pitch (float)
+  pitch: 0.5
+  # The sound volume (float)
+  volume: 1.0
+
 # Enable PlaceholderAPI support?
 # It is advised to keep this enabled
 placeholder-api: true

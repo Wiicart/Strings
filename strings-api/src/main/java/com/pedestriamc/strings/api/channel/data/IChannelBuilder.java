@@ -3,8 +3,13 @@ package com.pedestriamc.strings.api.channel.data;
 import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Membership;
+import com.pedestriamc.strings.api.channel.Type;
+import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+
+import java.util.Locale;
 
 import static org.jetbrains.annotations.ApiStatus.Internal;
 
@@ -19,14 +24,13 @@ public sealed interface IChannelBuilder<B extends IChannelBuilder<B>> permits Ab
 
     /**
      * Builds a Channel
-     * @param type The Type of Channel to construct.
-     *             Options: {@code stringchannel, proximity, proximity_strict, world, world_strict, helpop}
+     * @param type The Type of Channel to construct. Refer to {@link Identifier}
      *
      * @return A new Channel of the specified type.
      * @throws IllegalArgumentException If not all required values are filled out in this ChannelBuilder,
      * or the Channel type is unknown.
      */
-    Channel build(@NotNull String type) throws IllegalArgumentException;
+    Channel build(@NotNull Identifier type) throws IllegalArgumentException;
 
     /**
      * Provides the Channel name.
@@ -195,5 +199,68 @@ public sealed interface IChannelBuilder<B extends IChannelBuilder<B>> permits Ab
      */
     @NotNull
     B setBroadcastFormat(@NotNull String broadcastFormat);
+
+    /**
+     * Provides the broadcast Sound
+     * @return The adventure Sound
+     */
+    @Internal
+    @Nullable
+    Sound getBroadcastSound();
+
+    /**
+     * Sets the Sound played when a message is broadcast to this Channel
+     * @param broadcastSound The {@link Sound}
+     * @return this
+     */
+    B setBroadcastSound(@Nullable Sound broadcastSound);
+
+    /**
+     * As some Channel {@link Type}(s) have multiple implementations, this enum exists to specify which one to build.
+     */
+    enum Identifier {
+        /**
+         * A standard StringChannel.
+         * Corresponds to Type.NORMAL
+         */
+        NORMAL,
+        /**
+         * A standard WorldChannel.
+         * Corresponds to Type.WORLD
+         */
+        WORLD,
+        /**
+         * A strict WorldChannel.
+         * Corresponds to Type.WORLD
+         */
+        WORLD_STRICT,
+        /**
+         * A standard ProximityChannel.
+         * Corresponds to Type.PROXIMITY
+         */
+        PROXIMITY,
+        /**
+         * A strict ProximityChannel.
+         * Corresponds to Type.PROXIMITY
+         */
+        PROXIMITY_STRICT,
+        /**
+         * A HelpOPChannel.
+         * Corresponds to Type.PROTECTED
+         */
+        HELPOP;
+
+        public static Identifier of(@NotNull String identifier) {
+            return switch(identifier.toLowerCase(Locale.ROOT)) {
+                case "stringchannel" -> NORMAL;
+                case "proximity" -> PROXIMITY;
+                case "proximity_strict" -> PROXIMITY_STRICT;
+                case "world" -> WORLD;
+                case "world_strict" -> WORLD_STRICT;
+                case "helpop" -> HELPOP;
+                default -> throw new IllegalArgumentException("Unknown identifier '" + identifier + "'");
+            };
+        }
+    }
 }
 

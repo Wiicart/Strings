@@ -5,8 +5,11 @@ import com.pedestriamc.strings.api.exception.ChannelUnsupportedOperationExceptio
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Type;
+import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -87,6 +90,16 @@ public abstract class ProtectedChannel implements Channel {
 
     @Override
     public void broadcastPlain(@NotNull String message) {
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
+    }
+
+    @Override
+    public void broadcast(@NotNull Component message) {
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
+    }
+
+    @Override
+    public void broadcastPlain(@NotNull Component message) {
         throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 
@@ -173,6 +186,16 @@ public abstract class ProtectedChannel implements Channel {
     @Override
     public boolean callsEvents() {
         return false;
+    }
+
+    @Override
+    public void setBroadcastSound(@Nullable Sound sound) {
+
+    }
+
+    @Override
+    public Sound getBroadcastSound() {
+        return null;
     }
 
     @Override

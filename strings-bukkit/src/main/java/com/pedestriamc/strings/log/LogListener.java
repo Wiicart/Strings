@@ -22,7 +22,7 @@ final class LogListener {
 
     static final class SignListener implements Listener {
 
-        private static final String TEMPLATE =
+        private static final String STANDARD_TEMPLATE =
                 "[{date}] Player {name} updated or placed a sign: \"{content}\"";
 
         private final LogManager logManager;
@@ -33,12 +33,13 @@ final class LogListener {
 
         @EventHandler
         void onEvent(@NotNull SignChangeEvent event) {
-            String log = TEMPLATE
+            String log = STANDARD_TEMPLATE
                     .replace("{date}", LocalDateTime.now().toString())
                     .replace("{name}", event.getPlayer().getName())
                     .replace("{content}", Arrays.toString(event.getLines()));
             logManager.log(LogType.SIGN, log);
         }
+
     }
 
     static final class DirectMessageListener implements Listener {

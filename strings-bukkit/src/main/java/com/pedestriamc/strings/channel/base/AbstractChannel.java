@@ -3,6 +3,7 @@ package com.pedestriamc.strings.channel.base;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
 import com.pedestriamc.strings.api.settings.Option;
+import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
@@ -12,6 +13,10 @@ import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.chat.MessageProcessor;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
 import net.wiicart.commands.permission.Permissions;
 import org.bukkit.Bukkit;
@@ -19,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -28,6 +34,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class AbstractChannel implements Channel, Monitorable {
+
+    protected static final String CHANNEL_PERMISSION = "strings.channels.";
+    protected static final String MESSAGE_PLACEHOLDER = "{message}";
+    protected static final String DEFAULT_BROADCAST_FORMAT = "&8[&3Broadcast&8] &f{message}";
 
     private final Strings strings;
 
@@ -46,6 +56,8 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     private boolean doUrlFilter;
     private boolean allowMessageDeletion;
 
+    private @Nullable Sound broadcastSound;
+
     private final boolean callEvent;
     private final boolean mentionsEnabled;
 
@@ -53,10 +65,6 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     private final Set<StringsUser> monitors;
     private final Set<StringsUser> members;
-
-    protected static final String CHANNEL_PERMISSION = "strings.channels.";
-    protected static final String MESSAGE_PLACEHOLDER = "{message}";
-    protected static final String DEFAULT_BROADCAST_FORMAT = "&8[&3Broadcast&8] &f{message}";
 
     protected AbstractChannel(@NotNull Strings strings, @NotNull IChannelBuilder<?> data) {
         this.strings = strings;
@@ -72,6 +80,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         callEvent = data.isCallEvent();
         allowMessageDeletion = data.allowsMessageDeletion();
         priority = data.getPriority();
+        broadcastSound = data.getBroadcastSound();
 
         messageProcessor = new MessageProcessor(strings, this);
         mentionsEnabled = strings.getConfiguration().get(Option.Bool.ENABLE_MENTIONS);
@@ -206,6 +215,17 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         return userUtil;
     }
 
+    @NotNull
+    protected Audience getPlayersInScopeAsAudience() {
+        BukkitAudiences adventure = strings.adventure();
+        Set<Audience> audienceSet = getPlayersInScope().stream()
+                .map(p -> adventure.player(p.getUniqueId()))
+                .collect(Collectors.toSet());
+        audienceSet.add(adventure.console());
+
+        return Audience.audience(audienceSet);
+    }
+
     @Override
     public boolean allows(@NotNull Permissible permissible) {
         if(permissible instanceof Player player && getMembers().contains(strings.users().getUser(player))) {
@@ -228,14 +248,31 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     public void broadcast(@NotNull String message) {
         String finalString = getBroadcastFormat().replace(MESSAGE_PLACEHOLDER, message);
         finalString = ChatColor.translateAlternateColorCodes('&', finalString);
-        broadcastPlain(finalString);
+
+        Audience recipients = getPlayersInScopeAsAudience();
+        recipients.sendMessage(ComponentConverter.fromString(finalString));
+        if (broadcastSound != null) {
+            recipients.playSound(broadcastSound);
+        }
+    }
+
+    @Override
+    public void broadcast(@NotNull Component message) {
+        Audience recipients = getPlayersInScopeAsAudience();
+        recipients.sendMessage(message);
+        if (broadcastSound != null) {
+            recipients.playSound(broadcastSound);
+        }
     }
 
     @Override
     public void broadcastPlain(@NotNull String message) {
-        for (StringsUser user : getPlayersInScope()) {
-            user.sendMessage(message);
-        }
+        getPlayersInScopeAsAudience().sendMessage(ComponentConverter.fromString(message));
+    }
+
+    @Override
+    public void broadcastPlain(@NotNull Component message) {
+        getPlayersInScopeAsAudience().sendMessage(message);
     }
 
     @Override
@@ -352,6 +389,18 @@ public abstract class AbstractChannel implements Channel, Monitorable {
         Objects.requireNonNull(format);
         this.format = format;
     }
+
+    @Override
+    public void setBroadcastSound(@Nullable Sound sound) {
+        broadcastSound = sound;
+    }
+
+    @Override
+    @Nullable
+    public Sound getBroadcastSound() {
+        return broadcastSound;
+    }
+
 
     @Override
     public @NotNull String getFormat() {

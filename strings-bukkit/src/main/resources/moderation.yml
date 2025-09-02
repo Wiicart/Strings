@@ -43,7 +43,15 @@ url-whitelist:
 banned-words:
   - "%mzungu@yupo$3sfe"
 
-#
+# Fuzzy Filtering
+# This allows words that aren't exact matches to still be filtered in chat,
+# as long as its similar enough.
+fuzzy: true
+
+# Percentage similarity allowed for "fuzzy" matching.
+# Range: 0-1
+# (Higher number = more similar)
+max-percentage: 0.2
 
 # Should the text on signs be filtered?
 # If enabled, the same filtering that occurs on chat messages will be done on Sign text.
