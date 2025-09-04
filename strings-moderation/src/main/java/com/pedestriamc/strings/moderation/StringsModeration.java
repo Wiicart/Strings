@@ -28,14 +28,14 @@ public final class StringsModeration extends JavaPlugin {
     @Override
     public void onEnable() {
         info("Enabling...");
-        if(!StringsProvider.isEnabled()) {
+        if (!StringsProvider.isEnabled()) {
             getLogger().warning("Failed to connect to Strings API, disabling.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
         Plugin plugin = getServer().getPluginManager().getPlugin("Strings");
-        if(plugin == null) {
+        if (plugin == null) {
             getLogger().warning("Failed to get Strings config file, disabling.");
             getServer().getPluginManager().disablePlugin(this);
             return;
