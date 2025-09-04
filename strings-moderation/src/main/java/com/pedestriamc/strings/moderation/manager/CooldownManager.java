@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.moderation.manager;
 
 import com.pedestriamc.strings.api.moderation.Option;
-import com.pedestriamc.strings.configuration.Configuration;
+import com.pedestriamc.strings.moderation.configuration.Configuration;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;

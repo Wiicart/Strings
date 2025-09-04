@@ -6,9 +6,11 @@ import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.discord.StringsDiscord;
-import com.pedestriamc.strings.discord.configuration.Option;
-import com.pedestriamc.strings.discord.configuration.Settings;
+import com.pedestriamc.strings.api.discord.Option;
+import com.pedestriamc.strings.discord.configuration.Configuration;
 import com.pedestriamc.strings.discord.manager.DiscordManager;
+import com.pedestriamc.strings.discord.misc.AvatarProvider;
+import com.pedestriamc.strings.discord.misc.ColorProvider;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
@@ -27,20 +29,34 @@ public class PlayerJoinQuitListener implements Listener {
 
     private final DiscordManager manager;
 
-    private final String avatarLink;
+    private final AvatarProvider avatars;
 
     private final String joinMessage;
     private final String leaveMessage;
+
+    private final Color joinColor;
+    private final Color leaveColor;
 
     private final @Nullable  Plugin essentials;
 
     public PlayerJoinQuitListener(@NotNull StringsDiscord strings) {
         manager = strings.getManager();
+        avatars = strings.getAvatarProvider();
 
-        Settings settings = strings.getSettings();
-        avatarLink = settings.getString(Option.Text.AVATAR_URL);
-        joinMessage = settings.getString(Option.Text.JOIN_MESSAGE);
-        leaveMessage = settings.getString(Option.Text.LEAVE_MESSAGE);
+        Configuration config = strings.getConfiguration();
+        joinMessage = config.get(Option.Text.JOIN_MESSAGE);
+        leaveMessage = config.get(Option.Text.LEAVE_MESSAGE);
+
+        joinColor = ColorProvider.parse(
+                config.get(Option.Text.JOIN_COLOR),
+                Color.GREEN,
+                strings.getLogger()
+        );
+        leaveColor = ColorProvider.parse(
+                config.get(Option.Text.LEAVE_COLOR),
+                Color.RED,
+                strings.getLogger()
+        );
 
         essentials = strings.getServer().getPluginManager().getPlugin("Essentials");
     }
@@ -53,11 +69,11 @@ public class PlayerJoinQuitListener implements Listener {
         }
 
         EmbedBuilder builder = new EmbedBuilder()
-                .setColor(Color.GREEN)
+                .setColor(joinColor)
                 .setAuthor(
                         applyPlaceholders(joinMessage, player),
                         null,
-                        avatarLink.replace("{uuid}", player.getUniqueId().toString())
+                        avatars.getLink(player)
                 );
 
         manager.sendDiscordEmbed(builder.build());
@@ -71,11 +87,11 @@ public class PlayerJoinQuitListener implements Listener {
         }
 
         EmbedBuilder builder = new EmbedBuilder()
-                .setColor(Color.RED)
+                .setColor(leaveColor)
                 .setAuthor(
                         applyPlaceholders(leaveMessage, player),
                         null,
-                        avatarLink.replace("{uuid}", player.getUniqueId().toString())
+                        avatars.getLink(player)
                 );
 
         manager.sendDiscordEmbed(builder.build());

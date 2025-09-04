@@ -3,8 +3,8 @@ package com.pedestriamc.strings.discord.manager;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.discord.StringsDiscord;
-import com.pedestriamc.strings.discord.configuration.Option;
-import com.pedestriamc.strings.discord.configuration.Settings;
+import com.pedestriamc.strings.api.discord.Option;
+import com.pedestriamc.strings.discord.configuration.Configuration;
 import com.pedestriamc.strings.discord.manager.member.MemberDirectory;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -44,9 +44,9 @@ public class GlobalDiscordManager extends AbstractDiscordManager {
     private Set<MessageChannel> loadDiscordChannels() {
         Set<MessageChannel> channels = new HashSet<>();
         JDA jda = strings.getJda();
-        Settings settings = strings.getSettings();
+        Configuration config = strings.getConfiguration();
 
-        final List<String> channelIds = settings.getStringList(Option.StringList.GLOBAL_CHANNELS);
+        List<String> channelIds = config.get(Option.StringList.GLOBAL_CHANNELS);
         strings.getLogger().info("Loading Discord channels...");
         for(String id : channelIds) {
             GuildChannel channel = jda.getGuildChannelById(id);
@@ -76,7 +76,7 @@ public class GlobalDiscordManager extends AbstractDiscordManager {
         String formatted = super.processCraftPlaceholders(event);
 
         Member sender = event.getMember();
-        if(sender != null) { // don't need to check if enabled, method will.
+        if (sender != null) { // don't need to check if enabled, method will.
             handleMentionsFromDiscord(formatted, sender);
         }
 
@@ -88,10 +88,10 @@ public class GlobalDiscordManager extends AbstractDiscordManager {
 
     @Override
     public void sendDiscordMessageFromEvent(@NotNull ChannelChatEvent event) {
-        String message = ChatColor.stripColor(super.processDiscordPlaceholders(event));
+        String message = ChatColor.stripColor(color(super.processDiscordPlaceholders(event)));
         Player player = event.getPlayer();
 
-        for(MessageChannel channel : discordChannels) {
+        for (MessageChannel channel : discordChannels) {
             final String finalMessage = processMentionsIfNecessary(message, player, channel);
             try {
                 channel.sendMessage(finalMessage).queue(msg -> {
@@ -109,7 +109,7 @@ public class GlobalDiscordManager extends AbstractDiscordManager {
 
     @Override
     public void broadcastDiscordMessage(@NotNull String message) {
-        for(MessageChannel channel : discordChannels) {
+        for (MessageChannel channel : discordChannels) {
             try {
                 channel.sendMessage(message).queue();
             } catch(Exception ignored) {}
@@ -161,5 +161,9 @@ public class GlobalDiscordManager extends AbstractDiscordManager {
     @Override
     public Set<MessageChannel> getDiscordChannels() {
         return new HashSet<>(discordChannels);
+    }
+
+    private String color(@NotNull String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 }

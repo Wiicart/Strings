@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.discord.manager.console
 
 import com.pedestriamc.strings.discord.StringsDiscord
-import com.pedestriamc.strings.discord.configuration.Option
+import com.pedestriamc.strings.api.discord.Option
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -15,7 +15,7 @@ class KConsoleManager(private val strings: StringsDiscord) : ListenerAdapter() {
     private val sender : ConsoleCommandSender = strings.server.consoleSender;
 
     private fun resolveChannel() : MessageChannel {
-        val consoleId = strings.settings.getString(Option.Text.DISCORD_CONSOLE_ID);
+        val consoleId = strings.configuration[Option.Text.DISCORD_CONSOLE_ID];
 
         val gc = strings.jda.getGuildById(consoleId);
         if (gc is MessageChannel) {

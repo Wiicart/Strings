@@ -4,7 +4,7 @@ import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.api.event.moderation.PlayerChatFilteredEvent;
-import com.pedestriamc.strings.api.message.MessageableSender;
+import com.pedestriamc.strings.moderation.api.MessageableSender;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.moderation.Option;

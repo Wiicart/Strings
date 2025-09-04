@@ -3,7 +3,7 @@ package com.pedestriamc.strings.moderation.commands;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.Messenger;
-import com.pedestriamc.strings.api.message.MessageableSender;
+import com.pedestriamc.strings.moderation.api.MessageableSender;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

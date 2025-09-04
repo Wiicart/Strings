@@ -3,7 +3,7 @@ package com.pedestriamc.strings.moderation.manager;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.event.moderation.PlayerChatFilteredEvent;
 import com.pedestriamc.strings.api.message.Message;
-import com.pedestriamc.strings.api.message.MessageableSender;
+import com.pedestriamc.strings.moderation.api.MessageableSender;
 import com.pedestriamc.strings.api.moderation.Option;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import org.bukkit.Bukkit;

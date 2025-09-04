@@ -1,10 +1,12 @@
 package com.pedestriamc.strings.api.moderation;
 
+import com.pedestriamc.strings.api.StringsProvider;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Provides methods to interact with the StringsModeration module.
+ * Provides methods to interact with the StringsModeration module.<br/>
+ * Get instance with {@link StringsProvider#getModeration()}
  */
 @SuppressWarnings("unused")
 public interface StringsModeration {

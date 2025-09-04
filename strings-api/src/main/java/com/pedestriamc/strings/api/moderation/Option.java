@@ -42,7 +42,8 @@ public final class Option {
         FORBID_REPETITION("forbid-repetition", true),
         IGNORE_SPACES_FOR_REPETITION("ignore-spaces", true),
         FILTER_SIGN_TEXT("filter-signs", false),
-        FUZZY_FILTERING("fuzzy", true);
+        FUZZY_FILTERING("fuzzy", true),
+        REPLACE_FILTERED_TEXT_WITH_ASTERISKS("asterisks", true);
 
         private final String key;
         private final boolean defaultValue;

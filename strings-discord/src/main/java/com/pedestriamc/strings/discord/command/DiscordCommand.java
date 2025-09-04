@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.discord.command;
 
 import com.pedestriamc.strings.discord.StringsDiscord;
-import com.pedestriamc.strings.discord.configuration.Option;
+import com.pedestriamc.strings.api.discord.Option;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,7 +13,7 @@ public class DiscordCommand implements CommandExecutor {
     private final String message; // config value "discord-cmd-message"
 
     public DiscordCommand(@NotNull StringsDiscord strings) {
-        message = strings.getSettings().getColoredString(Option.Text.DISCORD_COMMAND_MESSAGE);
+        message = strings.getConfiguration().getColored(Option.Text.DISCORD_COMMAND_MESSAGE);
     }
 
     @Override

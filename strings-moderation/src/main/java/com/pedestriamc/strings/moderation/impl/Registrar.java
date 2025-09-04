@@ -1,15 +1,16 @@
-package com.pedestriamc.strings.api.internal;
+package com.pedestriamc.strings.moderation.impl;
 
 import com.pedestriamc.strings.api.moderation.StringsModeration;
 import com.pedestriamc.strings.api.StringsProvider;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 
 // Reflection-based registrar, based off LuckPerms implementation.
-public final class APIRegistrar {
+public final class Registrar {
+
+    private Registrar() {}
 
     private static final Method REGISTER;
     private static final Method UNREGISTER;
@@ -26,9 +27,7 @@ public final class APIRegistrar {
         }
     }
 
-    private APIRegistrar() {}
-
-    public static void register(StringsModeration moderation, Plugin plugin) {
+    public static void register(@NotNull StringsModeration moderation, @NotNull com.pedestriamc.strings.moderation.StringsModeration plugin) {
         try {
             REGISTER.invoke(null, moderation);
             plugin.getServer().getServicesManager().register(StringsModeration.class, moderation, plugin, ServicePriority.Highest);
@@ -39,14 +38,16 @@ public final class APIRegistrar {
         }
     }
 
-    public static void unregister() {
+    public static void unregister(@NotNull com.pedestriamc.strings.moderation.StringsModeration plugin) {
         try {
             UNREGISTER.invoke(null);
-            Bukkit.getServer().getServicesManager().unregister(StringsModeration.class);
-            Bukkit.getLogger().info("[StringModeration] Unregistered from StringsAPI");
+            plugin.getServer()
+                    .getServicesManager()
+                    .unregisterAll(plugin);
+            plugin.getLogger().info("[StringModeration] Unregistered from StringsAPI");
         } catch(Exception e) {
-            Bukkit.getLogger().warning("[StringsModeration] Failed to register StringsModeration API");
-            Bukkit.getLogger().warning("[StringsModeration] Error: " + e.getMessage());
+            plugin.getLogger().warning("[StringsModeration] Failed to unregister StringsModeration API");
+            plugin.getLogger().warning("[StringsModeration] Error: " + e.getMessage());
         }
     }
 

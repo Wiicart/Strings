@@ -112,13 +112,25 @@ online-status: online
 # Should join and leave messages be sent to Discord?
 send-join-leave: true
 
+# The embed color for join messages sent to Discord
+join-color: "#00FF00"
+
+# The embed color for leave messages sent to Discord
+leave-color: "#FF0000"
+
 # Advancement Messages
 # Should advancement messages be sent to Discord?
 send-advancements: true
 
+# The embed color for advancement messages sent to Discord
+advancement-color: "#FF00FF"
+
 # Discord Death Messages
 # Should player death messages be sent to Discord?
 send-death-messages: true
+
+# The embed color for death messages sent to Discord
+death-color: "#FF6F00"
 
 # Avatar Handling URL
 # Used when a player joins or leaves.

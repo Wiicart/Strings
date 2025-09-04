@@ -6,8 +6,8 @@ import com.pedestriamc.strings.api.collections.BoundedLinkedBuffer;
 import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.discord.StringsDiscord;
-import com.pedestriamc.strings.discord.configuration.Option;
-import com.pedestriamc.strings.discord.configuration.Settings;
+import com.pedestriamc.strings.api.discord.Option;
+import com.pedestriamc.strings.discord.configuration.Configuration;
 import com.pedestriamc.strings.discord.manager.console.KConsoleManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -61,16 +61,16 @@ abstract class AbstractDiscordManager implements DiscordManager {
 
         buffer = new BoundedLinkedBuffer<>(100);
 
-        Settings settings = strings.getSettings();
+        Configuration config = strings.getConfiguration();
 
-        discordFormat = settings.getString(Option.Text.DISCORD_FORMAT);
-        craftFormat = settings.getColoredString(Option.Text.MINECRAFT_FORMAT);
+        discordFormat = config.get(Option.Text.DISCORD_FORMAT);
+        craftFormat = config.getColored(Option.Text.MINECRAFT_FORMAT);
 
-        mentionsFromGameEnabled = settings.getBoolean(Option.Bool.ENABLE_MENTIONS_FROM_GAME);
-        mentionsToGameEnabled = settings.getBoolean(Option.Bool.ENABLE_MENTIONS_TO_GAME);
-        shouldSyncDeletions = settings.getBoolean(Option.Bool.SYNCHRONIZE_DELETIONS);
+        mentionsFromGameEnabled = config.get(Option.Bool.ENABLE_MENTIONS_FROM_GAME);
+        mentionsToGameEnabled = config.get(Option.Bool.ENABLE_MENTIONS_TO_GAME);
+        shouldSyncDeletions = config.get(Option.Bool.SYNCHRONIZE_DELETIONS);
 
-        discordToGameMentionFormat = settings.getColoredString(Option.Text.MENTION_FORMAT);
+        discordToGameMentionFormat = config.getColored(Option.Text.MENTION_FORMAT);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.discord.listener.discord;
 
 import com.pedestriamc.strings.discord.StringsDiscord;
-import com.pedestriamc.strings.discord.configuration.Option;
+import com.pedestriamc.strings.api.discord.Option;
 import com.pedestriamc.strings.discord.manager.ChannelDiscordManager;
 import com.pedestriamc.strings.discord.manager.GlobalDiscordManager;
 import com.pedestriamc.strings.discord.manager.QueuedDiscordManager;
@@ -50,7 +50,7 @@ public class StatusListener extends ListenerAdapter {
 
         try {
             strings.getLogger().info("DiscordManager initializing...");
-            if(strings.getSettings().getBoolean(Option.Bool.GLOBAL)) {
+            if (strings.getConfiguration().get(Option.Bool.GLOBAL)) {
                 manager.complete(new GlobalDiscordManager(strings));
             } else {
                 manager.complete(new ChannelDiscordManager(strings));

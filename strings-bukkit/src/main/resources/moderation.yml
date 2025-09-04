@@ -53,6 +53,10 @@ fuzzy: true
 # (Higher number = more similar)
 max-percentage: 0.2
 
+# Replace filtered words with asterisks?
+# (If false, the word will be removed entirely)
+asterisks: true
+
 # Should the text on signs be filtered?
 # If enabled, the same filtering that occurs on chat messages will be done on Sign text.
 filter-signs: true

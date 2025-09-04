@@ -170,7 +170,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
 
 
     private void instantiateObjects() {
-        configClass = new Configuration(getConfig());
+        configClass = new Configuration(this);
         messenger = new BukkitMessenger(fileManager.getMessagesFileConfig());
         playerDirectMessenger = new PlayerDirectMessenger(this);
         channelLoader = new ChannelManager(this);

@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.configuration;
 
+import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.settings.SettingsRegistry;
@@ -7,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -15,12 +17,14 @@ public class Configuration implements Settings {
 
     private final SettingsRegistry registry;
 
-    public Configuration(@NotNull FileConfiguration config) {
+    public Configuration(@NotNull Strings strings) {
+        FileConfiguration config = strings.files().getConfig();
         registry = new SettingsRegistry(builder -> builder
                 .putAll(loadValues(config, Option.Bool.class, FileConfiguration::getBoolean))
                 .putAll(loadValues(config, Option.Double.class, FileConfiguration::getDouble))
                 .putAll(loadValues(config, Option.StringList.class, FileConfiguration::getStringList))
                 .putAll(loadValues(config, Option.Text.class, FileConfiguration::getString))
+                .putAll(loadDeathMessageOptions(strings)) // stored in a different file
         );
     }
 
@@ -38,6 +42,24 @@ public class Configuration implements Settings {
             }
             map.put(key, val);
         }
+
+        return map;
+    }
+
+    @NotNull
+    private Map<Option.Bool, Boolean> loadDeathMessageOptions(@NotNull Strings strings) {
+        FileConfiguration config = strings.files().getDeathMessagesFileConfig();
+        Map<Option.Bool, Boolean> map = new EnumMap<>(Option.Bool.class);
+
+        map.put(
+                Option.Bool.DEATH_MESSAGES_ENABLE,
+                config.getBoolean("enable", Option.Bool.DEATH_MESSAGES_ENABLE.defaultValue())
+        );
+
+        map.put(
+                Option.Bool.DEATH_MESSAGES_USE_CUSTOM,
+                config.getBoolean("custom", Option.Bool.DEATH_MESSAGES_USE_CUSTOM.defaultValue())
+        );
 
         return map;
     }

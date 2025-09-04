@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.moderation;
 
 import com.pedestriamc.strings.api.StringsProvider;
-import com.pedestriamc.strings.api.internal.APIRegistrar;
-import com.pedestriamc.strings.configuration.Configuration;
+import com.pedestriamc.strings.moderation.impl.Registrar;
+import com.pedestriamc.strings.moderation.configuration.Configuration;
 import com.pedestriamc.strings.moderation.impl.APIImplementation;
 import com.pedestriamc.strings.moderation.listener.ReloadListener;
 import com.pedestriamc.strings.moderation.listener.SignChangeListener;
@@ -27,6 +27,7 @@ public final class StringsModeration extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        info("Enabling...");
         if(!StringsProvider.isEnabled()) {
             getLogger().warning("Failed to connect to Strings API, disabling.");
             getServer().getPluginManager().disablePlugin(this);
@@ -50,6 +51,7 @@ public final class StringsModeration extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        info("Disabling...");
         config = null;
         chatFilter = null;
         cooldownManager = null;
@@ -58,7 +60,7 @@ public final class StringsModeration extends JavaPlugin {
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
         try {
-            APIRegistrar.unregister();
+            Registrar.unregister(this);
         } catch(Exception ignored) {}
         info("StringsModeration disabled.");
     }
@@ -81,7 +83,7 @@ public final class StringsModeration extends JavaPlugin {
 
     private void registerAPI() {
         try {
-            APIRegistrar.register(new APIImplementation(this), this);
+            Registrar.register(new APIImplementation(this), this);
         } catch(Exception ex) {
             getLogger().warning("Failed to register StringsModeration API");
         }

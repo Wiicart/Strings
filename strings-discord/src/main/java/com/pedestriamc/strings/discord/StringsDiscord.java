@@ -3,8 +3,10 @@ package com.pedestriamc.strings.discord;
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.discord.command.DiscordCommand;
-import com.pedestriamc.strings.discord.configuration.Option;
-import com.pedestriamc.strings.discord.configuration.Settings;
+import com.pedestriamc.strings.api.discord.Option;
+import com.pedestriamc.strings.discord.configuration.Configuration;
+import com.pedestriamc.strings.discord.impl.Registrar;
+import com.pedestriamc.strings.discord.impl.StringsDiscordImpl;
 import com.pedestriamc.strings.discord.listener.bukkit.CraftChatListener;
 import com.pedestriamc.strings.discord.listener.bukkit.MessageDeletionListener;
 import com.pedestriamc.strings.discord.listener.bukkit.PlayerAdvancementListener;
@@ -19,6 +21,7 @@ import com.pedestriamc.strings.discord.manager.DiscordManager;
 import com.pedestriamc.strings.discord.manager.GlobalDiscordManager;
 import com.pedestriamc.strings.discord.manager.QueuedDiscordManager;
 import com.pedestriamc.strings.discord.misc.ActivityType;
+import com.pedestriamc.strings.discord.misc.AvatarProvider;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -42,7 +45,8 @@ public final class StringsDiscord extends JavaPlugin {
 
     private DiscordManager manager;
 
-    private Settings settings;
+    private Configuration configuration;
+    private AvatarProvider avatarProvider;
 
     public StringsDiscord() {
         try {
@@ -53,7 +57,7 @@ public final class StringsDiscord extends JavaPlugin {
     @Override
     public void onLoad() {
         try {
-            settings = new Settings(this);
+            configuration = new Configuration(this);
         } catch(Exception e) {
             getLogger().info("Failed to load discord.yml, disabling...");
             getServer().getPluginManager().disablePlugin(this);
@@ -66,6 +70,7 @@ public final class StringsDiscord extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        avatarProvider = new AvatarProvider(this);
         checkForStrings();
         if(jda == null) {
             getLogger().severe("Failed to connect to Bot, disabling...");
@@ -87,6 +92,7 @@ public final class StringsDiscord extends JavaPlugin {
 
         registerListeners();
         registerCommands();
+        Registrar.register(new StringsDiscordImpl(this), this);
     }
 
     @Override
@@ -98,11 +104,12 @@ public final class StringsDiscord extends JavaPlugin {
 
         jda = null;
         manager = null;
-        settings = null;
+        configuration = null;
 
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
         getLogger().info("Disabled.");
+        Registrar.unregister(this);
     }
 
     public void reload() {
@@ -118,7 +125,7 @@ public final class StringsDiscord extends JavaPlugin {
     @Contract(" -> new")
     private @NotNull DiscordManager createProperManager() {
         getLogger().info("DiscordManager initializing...");
-        if(settings.getBoolean(Option.Bool.GLOBAL)) {
+        if (configuration.get(Option.Bool.GLOBAL)) {
             getLogger().info("DiscordManager instance created.");
             return new GlobalDiscordManager(this);
         } else {
@@ -143,7 +150,7 @@ public final class StringsDiscord extends JavaPlugin {
 
     // Connect to the Discord Bot profile
     private void initJda() {
-        String token = settings.getString(Option.Text.TOKEN);
+        String token = configuration.get(Option.Text.TOKEN);
         try {
             JDABuilder builder = JDABuilder.createDefault(token)
                     .enableIntents(
@@ -153,8 +160,8 @@ public final class StringsDiscord extends JavaPlugin {
                             GatewayIntent.GUILD_MEMBERS
                     );
 
-            String activity = settings.getString(Option.Text.ACTIVITY);
-            String activityItem = settings.getString(Option.Text.ACTIVITY_ITEM);
+            String activity = configuration.get(Option.Text.ACTIVITY);
+            String activityItem = configuration.get(Option.Text.ACTIVITY_ITEM);
             builder.setActivity(ActivityType.of(activity).apply(activityItem));
             builder.setStatus(getOnlineStatus());
 
@@ -168,7 +175,7 @@ public final class StringsDiscord extends JavaPlugin {
 
     // Reads status from the config
     private OnlineStatus getOnlineStatus() {
-        String status = settings.getString(Option.Text.DISCORD_STATUS);
+        String status = configuration.get(Option.Text.DISCORD_STATUS);
         return switch(status.toLowerCase(Locale.ROOT)) {
             case "offline" -> OnlineStatus.OFFLINE;
             case "idle" -> OnlineStatus.IDLE;
@@ -189,14 +196,14 @@ public final class StringsDiscord extends JavaPlugin {
     }
 
     private void sendServerDisablingMessage() {
-        String message = settings.getString(Option.Text.SERVER_OFFLINE_MESSAGE);
+        String message = configuration.get(Option.Text.SERVER_OFFLINE_MESSAGE);
         if(manager != null) {
             manager.broadcastDiscordMessage(message);
         }
     }
 
     private void registerCommands() {
-        if (!settings.getString(Option.Text.DISCORD_COMMAND_MESSAGE).isEmpty()) {
+        if (!configuration.get(Option.Text.DISCORD_COMMAND_MESSAGE).isEmpty()) {
             PluginCommand command = getCommand("discord");
             if (command != null) {
                 command.setExecutor(new DiscordCommand(this));
@@ -211,15 +218,15 @@ public final class StringsDiscord extends JavaPlugin {
         registerBukkitListener(new CraftChatListener(this));
         registerBukkitListener(new StringsReloadListener(this));
 
-        if (settings.getBoolean(Option.Bool.ENABLE_JOIN_LEAVE_MESSAGES)) {
+        if (configuration.get(Option.Bool.ENABLE_JOIN_LEAVE_MESSAGES)) {
             registerBukkitListener(new PlayerJoinQuitListener(this));
         }
 
-        if (settings.getBoolean(Option.Bool.ENABLE_DEATH_MESSAGES)) {
+        if (configuration.get(Option.Bool.ENABLE_DEATH_MESSAGES)) {
             registerBukkitListener(new PlayerDeathListener(this));
         }
 
-        if (settings.getBoolean(Option.Bool.ENABLE_ADVANCEMENT_MESSAGES)) {
+        if (configuration.get(Option.Bool.ENABLE_ADVANCEMENT_MESSAGES)) {
             registerBukkitListener(new PlayerAdvancementListener(this));
         }
 
@@ -244,8 +251,13 @@ public final class StringsDiscord extends JavaPlugin {
     }
 
     @NotNull
-    public Settings getSettings() {
-        return settings;
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    @NotNull
+    public AvatarProvider getAvatarProvider() {
+        return avatarProvider;
     }
 
     @NotNull

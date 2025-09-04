@@ -126,7 +126,6 @@ public final class SettingsRegistry {
                 throw new NullPointerException("Maps used with RegistryBuilder cannot contain null keys or values.");
             }
 
-
             Map.Entry<E, V> first;
             if (!map.isEmpty()) {
                 first = map.entrySet().iterator().next();

@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.api;
 
 import com.pedestriamc.strings.api.channel.ChannelLoader;
+import com.pedestriamc.strings.api.discord.StringsDiscord;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.moderation.StringsModeration;
 import com.pedestriamc.strings.api.settings.Settings;
@@ -103,6 +104,14 @@ public interface StringsAPI {
     default StringsModeration getModeration() {
         return StringsProvider.getModeration();
     }
+
+    /**
+     * Provides the {@link StringsDiscord} instance
+     * Only available after onEnable
+     * @throws IllegalStateException If not available.
+     * @return The StringsDiscord instance
+     */
+    default StringsDiscord getDiscord() { return StringsProvider.getDiscord(); }
 
 }
 

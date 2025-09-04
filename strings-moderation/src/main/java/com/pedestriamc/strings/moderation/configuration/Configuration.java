@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.configuration;
+package com.pedestriamc.strings.moderation.configuration;
 
 import com.pedestriamc.strings.api.moderation.ModerationSettings;
 import com.pedestriamc.strings.api.moderation.Option;

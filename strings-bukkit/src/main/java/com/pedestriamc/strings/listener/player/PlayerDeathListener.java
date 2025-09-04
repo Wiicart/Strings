@@ -19,8 +19,8 @@ public class PlayerDeathListener implements Listener {
 
     public PlayerDeathListener(@NotNull Strings strings) {
         Configuration settings = strings.getConfiguration();
-        enableDeathMessages = settings.get(Option.Bool.ENABLE_DEATH_MESSAGES);
-        useCustomDeathMessages = settings.get(Option.Bool.USE_CUSTOM_DEATH_MESSAGES);
+        enableDeathMessages = settings.get(Option.Bool.DEATH_MESSAGES_ENABLE);
+        useCustomDeathMessages = settings.get(Option.Bool.DEATH_MESSAGES_USE_CUSTOM);
 
         if (useCustomDeathMessages) {
             manager = new DeathMessageManager(strings);
@@ -33,6 +33,7 @@ public class PlayerDeathListener implements Listener {
     void onEvent(@NotNull PlayerDeathEvent event) {
         if (!enableDeathMessages) {
             event.setDeathMessage(null);
+            return;
         }
 
         if (!useCustomDeathMessages) {

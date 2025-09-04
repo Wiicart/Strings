@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.discord.listener.bukkit;
 
 import com.pedestriamc.strings.discord.StringsDiscord;
-import com.pedestriamc.strings.discord.configuration.Option;
+import com.pedestriamc.strings.api.discord.Option;
 import com.pedestriamc.strings.discord.manager.DiscordManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +16,7 @@ public class ServerLoadListener implements Listener {
 
     public ServerLoadListener(@NotNull StringsDiscord strings) {
         manager = strings.getManager();
-        onlineMessage = strings.getSettings().getString(Option.Text.SERVER_ONLINE_MESSAGE);
+        onlineMessage = strings.getConfiguration().get(Option.Text.SERVER_ONLINE_MESSAGE);
     }
 
     @EventHandler

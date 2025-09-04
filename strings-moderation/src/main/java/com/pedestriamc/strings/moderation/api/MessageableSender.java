@@ -1,5 +1,6 @@
-package com.pedestriamc.strings.api.message;
+package com.pedestriamc.strings.moderation.api;
 
+import com.pedestriamc.strings.api.message.Messageable;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;

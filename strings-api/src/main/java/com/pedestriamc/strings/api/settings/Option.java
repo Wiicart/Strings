@@ -25,8 +25,10 @@ public final class Option {
         ENABLE_HELPOP("enable-helpop", true),
         DISABLE_HELPOP_COMMAND("other-helpop", false),
         ENABLE_DIRECT_MESSAGES("msg-enabled", true),
-        ENABLE_DEATH_MESSAGES("death-messages.enable", true),
-        USE_CUSTOM_DEATH_MESSAGES("death-messages.custom", true),
+        // start "death-messages.yml" options
+        DEATH_MESSAGES_ENABLE("enable", true),
+        DEATH_MESSAGES_USE_CUSTOM("custom", true),
+        // end "death-messages.yml" options
         ENABLE_RULES_COMMAND("enable-rules", true),
         BROADCAST_SOUND_ENABLE("broadcast-sound.enable", true);
 

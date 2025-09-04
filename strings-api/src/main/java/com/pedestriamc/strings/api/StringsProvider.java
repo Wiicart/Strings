@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.api;
 
+import com.pedestriamc.strings.api.discord.StringsDiscord;
 import com.pedestriamc.strings.api.moderation.StringsModeration;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
@@ -19,7 +20,9 @@ public final class StringsProvider {
     private static StringsAPI api;
     private static UUID apiUuid;
     private static boolean invoked = false;
+
     private static StringsModeration moderation;
+    private static StringsDiscord discord;
 
     // Class should not be instantiated.
     private StringsProvider() {}
@@ -43,10 +46,24 @@ public final class StringsProvider {
      */
     public static StringsModeration getModeration() {
         if(moderation == null) {
-            throw new IllegalStateException("Strings Moderation is not available.");
+            throw new IllegalStateException("StringsModeration is not available.");
         }
         invoked = true;
         return StringsProvider.moderation;
+    }
+
+    /**
+     * Provides the {@link StringsDiscord} instance
+     * Only available after onEnable
+     * @throws IllegalStateException If not available.
+     * @return The StringsDiscord instance
+     */
+    public static StringsDiscord getDiscord() {
+        if (discord == null) {
+            throw new IllegalStateException("StringsDiscord is not available.");
+        }
+        invoked = true;
+        return StringsProvider.discord;
     }
 
     /**
@@ -113,6 +130,16 @@ public final class StringsProvider {
     @Internal
     static void unregisterModeration() {
         StringsProvider.moderation = null;
+    }
+
+    @Internal
+    static void registerDiscord(@NotNull StringsDiscord discord) {
+        StringsProvider.discord = discord;
+    }
+
+    @Internal
+    static void unregisterDiscord() {
+        StringsProvider.discord = null;
     }
 
 }
