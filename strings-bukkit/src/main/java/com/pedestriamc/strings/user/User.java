@@ -317,6 +317,7 @@ public final class User implements StringsUser, Permissible {
 
     @Override
     public void setPrefix(@NotNull String prefix) {
+        Objects.requireNonNull(prefix);
         this.prefix = prefix;
         if(strings.isUsingVault()) {
             strings.getVaultChat().setPlayerPrefix(player, prefix);
@@ -338,6 +339,7 @@ public final class User implements StringsUser, Permissible {
 
     @Override
     public void setSuffix(@NotNull String suffix) {
+        Objects.requireNonNull(suffix);
         this.suffix = suffix;
         if(strings.isUsingVault()) {
             strings.getVaultChat().setPlayerSuffix(player, suffix);

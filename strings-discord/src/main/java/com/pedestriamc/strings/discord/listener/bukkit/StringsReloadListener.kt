@@ -6,7 +6,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.jetbrains.annotations.NotNull
 
-class StringsDiscordListener(private val strings: StringsDiscord) : Listener {
+class StringsReloadListener(private val strings: StringsDiscord) : Listener {
 
     @EventHandler
     internal fun onEvent(@NotNull event: StringsReloadEvent) {

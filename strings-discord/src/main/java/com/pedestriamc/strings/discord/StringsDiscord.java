@@ -8,7 +8,7 @@ import com.pedestriamc.strings.discord.configuration.Configuration;
 import com.pedestriamc.strings.discord.impl.Registrar;
 import com.pedestriamc.strings.discord.impl.StringsDiscordImpl;
 import com.pedestriamc.strings.discord.listener.bukkit.CraftChatListener;
-import com.pedestriamc.strings.discord.listener.bukkit.StringsDiscordListener;
+import com.pedestriamc.strings.discord.listener.bukkit.StringsReloadListener;
 import com.pedestriamc.strings.discord.listener.bukkit.PlayerAdvancementListener;
 import com.pedestriamc.strings.discord.listener.bukkit.PlayerDeathListener;
 import com.pedestriamc.strings.discord.listener.bukkit.MessageDeletionListener;
@@ -215,7 +215,7 @@ public final class StringsDiscord extends JavaPlugin {
         registerDiscordListener(new MessageListener(this));
 
         registerBukkitListener(new CraftChatListener(this));
-        registerBukkitListener(new StringsDiscordListener(this));
+        registerBukkitListener(new StringsReloadListener(this));
 
         if (configuration.get(Option.Bool.ENABLE_JOIN_LEAVE_MESSAGES)) {
             registerBukkitListener(new PlayerJoinQuitListener(this));

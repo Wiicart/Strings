@@ -1,135 +1,88 @@
-package com.pedestriamc.strings.discord.listener.bukkit;
+package com.pedestriamc.strings.discord.listener.bukkit
 
-import com.earth2me.essentials.Essentials;
-import com.earth2me.essentials.User;
-import com.pedestriamc.strings.api.StringsAPI;
-import com.pedestriamc.strings.api.StringsProvider;
-import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.discord.StringsDiscord;
-import com.pedestriamc.strings.api.discord.Option;
-import com.pedestriamc.strings.discord.configuration.Configuration;
-import com.pedestriamc.strings.discord.misc.ColorProvider;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.earth2me.essentials.Essentials
+import com.pedestriamc.strings.api.StringsProvider
+import com.pedestriamc.strings.api.discord.Option
+import com.pedestriamc.strings.api.user.StringsUser
+import com.pedestriamc.strings.discord.StringsDiscord
+import com.pedestriamc.strings.discord.misc.ColorProvider
+import net.dv8tion.jda.api.EmbedBuilder
+import net.md_5.bungee.api.ChatColor
+import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
+import org.jetbrains.annotations.NotNull
+import java.awt.Color
 
-import java.awt.Color;
+class PlayerJoinQuitListener(@NotNull strings: StringsDiscord) : AbstractBukkitListener(strings) {
 
-//todo to kotlin
-public class PlayerJoinQuitListener extends AbstractBukkitListener {
+    private val essentials : Essentials? = strings.server.pluginManager.getPlugin("Essentials") as? Essentials;
 
-    private final String joinMessage;
-    private final String leaveMessage;
+    private val joinMessage: String = strings.configuration[Option.Text.JOIN_MESSAGE];
+    private val quitMessage: String = strings.configuration[Option.Text.LEAVE_MESSAGE];
 
-    private final Color joinColor;
-    private final Color leaveColor;
+    private val joinColor: Color = ColorProvider.parse(
+        strings.configuration[Option.Text.JOIN_COLOR],
+        Color.decode(Option.Text.JOIN_COLOR.defaultValue()),
+        strings.logger
+    );
 
-    private final @Nullable  Plugin essentials;
+    private val leaveColor: Color = ColorProvider.parse(
+        strings.configuration[Option.Text.LEAVE_COLOR],
+        Color.decode(Option.Text.LEAVE_COLOR.defaultValue()),
+        strings.logger
+    );
 
-    public PlayerJoinQuitListener(@NotNull StringsDiscord strings) {
-        super(strings);
-
-        Configuration config = strings.getConfiguration();
-        joinMessage = config.get(Option.Text.JOIN_MESSAGE);
-        leaveMessage = config.get(Option.Text.LEAVE_MESSAGE);
-
-        joinColor = ColorProvider.parse(
-                config.get(Option.Text.JOIN_COLOR),
-                Color.GREEN,
-                strings.getLogger()
-        );
-        leaveColor = ColorProvider.parse(
-                config.get(Option.Text.LEAVE_COLOR),
-                Color.RED,
-                strings.getLogger()
-        );
-
-        essentials = strings.getServer().getPluginManager().getPlugin("Essentials");
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    void onEvent(@NotNull PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        if (isPlayerVanished(player)) {
-            return;
-        }
-
-        EmbedBuilder builder = new EmbedBuilder()
+    @EventHandler
+    internal fun onJoin(event: PlayerJoinEvent) {
+        val player: Player = event.player.takeUnless { isVanished(it) } ?: return;
+        sendEmbed(
+            EmbedBuilder()
                 .setColor(joinColor)
                 .setAuthor(
-                        applyPlaceholders(joinMessage, player),
-                        null,
-                        avatars().getLink(player)
-                );
-
-        manager().sendDiscordEmbed(builder.build());
+                    applyPlaceholders(joinMessage, player),
+                    null,
+                    avatars.getLink(player)
+                )
+                .build()
+        );
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    void onEvent(@NotNull PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        if (isPlayerVanished(player)) {
-            return;
-        }
-
-        EmbedBuilder builder = new EmbedBuilder()
+    @EventHandler
+    internal fun onQuit(event: PlayerQuitEvent) {
+        val player: Player = event.player.takeUnless { isVanished(it) } ?: return;
+        sendEmbed(
+            EmbedBuilder()
                 .setColor(leaveColor)
                 .setAuthor(
-                        applyPlaceholders(leaveMessage, player),
-                        null,
-                        avatars().getLink(player)
-                );
-
-        manager().sendDiscordEmbed(builder.build());
+                    applyPlaceholders(quitMessage, player),
+                    null,
+                    avatars.getLink(player)
+                )
+                .build()
+        );
     }
 
-    // Placeholders are the same for join and leave
-    private @NotNull String applyPlaceholders(@NotNull String original, @NotNull Player player) {
-        try {
-            StringsAPI api = StringsProvider.get();
+    private fun applyPlaceholders(original: String, player: Player) : String {
+        fun setPrefixAndSuffix(original: String, prefix: String, suffix: String) : String = original
+            .replace("{prefix}", prefix)
+            .replace("{suffix}", suffix);
 
-            String prefix = "";
-            String suffix = "";
-            String displayName = player.getDisplayName();
+        val base: String = ChatColor.stripColor(original)
+            .replace("{username}", player.name)
+            .replace("{display-name}", player.displayName);
 
-            StringsUser user = api.getUser(player.getUniqueId());
-            if(user != null) {
-                prefix = user.getPrefix();
-                suffix = user.getSuffix();
-                displayName = user.getDisplayName();
-            }
-
-            return ChatColor.stripColor(original
-                    .replace("{username}", player.getName())
-                    .replace("{display-name}", displayName)
-                    .replace("{prefix}", prefix)
-                    .replace("{suffix}", suffix)
-            );
-        } catch(Exception e) {
-            return ChatColor.stripColor(original
-                    .replace("{username}", player.getName())
-                    .replace("{display-name}", player.getDisplayName())
-                    .replace("{prefix}", "")
-                    .replace("{suffix}", "")
-            );
+        return runCatching {
+            val user: StringsUser = StringsProvider.get().getUser(player.uniqueId) ?: throw Exception();
+            return setPrefixAndSuffix(base, user.prefix, user.suffix);
+        }.getOrElse {
+            setPrefixAndSuffix(base, "", "");
         }
     }
 
-    private boolean isPlayerVanished(@NotNull Player player) {
-        if (essentials instanceof Essentials ess) {
-            User user = ess.getUser(player.getUniqueId());
-            if (user != null ) {
-                return user.isHidden();
-            }
-        }
 
-        return player.isInvisible();
-    }
+
+    private fun isVanished(player: Player): Boolean =
+        essentials?.getUser(player)?.isVanished ?: player.isInvisible;
 }

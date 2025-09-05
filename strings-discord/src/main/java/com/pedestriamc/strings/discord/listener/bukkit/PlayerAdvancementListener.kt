@@ -29,7 +29,7 @@ class PlayerAdvancementListener(strings: StringsDiscord) : AbstractBukkitListene
                     avatars.getLink(player)
                 )
                 .build()
-        )
+        );
     }
 
 }

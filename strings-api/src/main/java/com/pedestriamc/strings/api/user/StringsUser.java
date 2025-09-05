@@ -68,9 +68,11 @@ public interface StringsUser extends Messageable {
     void setChatColorComponent(StringsComponent chatColor);
 
     /**
-     * Provides the prefix of the StringsUser, if it exists.
+     * Provides the prefix of the StringsUser if it exists.
+     * Returns an empty String if not present
      * @return A String of the prefix.
      */
+    @NotNull
     String getPrefix();
 
     /**
@@ -80,9 +82,11 @@ public interface StringsUser extends Messageable {
     void setPrefix(@NotNull String prefix);
 
     /**
-     * Provides the suffix of the StringsUser, if it exists.
+     * Provides the suffix of the StringsUser if it exists.
+     * Returns an empty String if not present
      * @return A String of the suffix.
      */
+    @NotNull
     String getSuffix();
 
     /**
