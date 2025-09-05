@@ -102,11 +102,11 @@ public class RendererProvider {
             Player player = source.player();
             String msg = ComponentConverter.toString(message);
 
-            if (shouldReplacePlaceholders(source.player())) {
+            if (shouldReplacePlaceholders(source)) {
                 msg = setPlaceholderAPIPlaceholders(player, msg);
             }
 
-            if (shouldColorMessage(player)) {
+            if (shouldColorMessage(source)) {
                 msg = MessageUtilities.colorHex(msg);
                 msg = MessageUtilities.translateColorCodes(msg);
             }
@@ -138,14 +138,14 @@ public class RendererProvider {
             }
         }
 
-        private boolean shouldReplacePlaceholders(Player sender) {
+        private boolean shouldReplacePlaceholders(User user) {
             return processingMessagePlaceholders &&
-                    Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.placeholdermsg");
+                    Permissions.anyOfOrAdmin(user, "strings.*", "strings.chat.*", "strings.chat.placeholdermsg");
         }
 
-        private boolean shouldColorMessage(Player sender) {
+        private boolean shouldColorMessage(User user) {
             return parsingMessageChatColors &&
-                    Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.colormsg");
+                    Permissions.anyOfOrAdmin(user, "strings.*", "strings.chat.*", "strings.chat.colormsg");
         }
 
         private boolean shouldAppendDeleteButton(@NotNull Channel channel, @NotNull Player source, @NotNull Audience viewer) {

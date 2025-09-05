@@ -16,6 +16,11 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.permissions.Permissible;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +40,7 @@ import java.util.UUID;
  * Stores information about players for Strings.
  * Defaults to Vault values where available.
  */
-public final class User implements StringsUser {
+public final class User implements StringsUser, Permissible {
 
     // should almost always be true, see YamlUserUtil for usage.
     private final boolean retain;
@@ -87,7 +92,7 @@ public final class User implements StringsUser {
         return new UserBuilder(strings, uuid, retained);
     }
 
-    User(final @NotNull UserBuilder builder) {
+    User(@NotNull UserBuilder builder) {
         this.strings = builder.strings;
         this.channelLoader = strings.getChannelLoader();
         this.uuid = builder.uuid;
@@ -218,33 +223,38 @@ public final class User implements StringsUser {
 
 
 
-    public @NotNull Player player() {
+    @NotNull
+    public Player player() {
         return player;
     }
 
-    public @NotNull World getWorld() {
+    @NotNull
+    public World getWorld() {
         return player.getWorld();
     }
 
     @Override
-    public @NotNull UUID getUniqueId() {
+    @NotNull
+    public UUID getUniqueId() {
         return uuid;
     }
 
     @Override
-    public @NotNull String getName() {
+    @NotNull
+    public String getName() {
         return name;
     }
 
 
 
     @Override
-    public @NotNull StringsComponent getChatColorComponent() {
+    @NotNull
+    public StringsComponent getChatColorComponent() {
         return chatColorComponent;
     }
 
     @Override
-    public void setChatColorComponent(final StringsComponent chatColor) {
+    public void setChatColorComponent(@NotNull StringsComponent chatColor) {
         Objects.requireNonNull(chatColor);
         if(!chatColorComponent.equals(chatColor)) {
             chatColorComponent = chatColor;
@@ -258,7 +268,7 @@ public final class User implements StringsUser {
      */
     @Override
     @ApiStatus.Obsolete
-    public void setChatColor(final String chatColor) {
+    public void setChatColor(@NotNull String chatColor) {
         setChatColorComponent(StringsComponent.fromString(chatColor));
         dirty = true;
     }
@@ -282,8 +292,8 @@ public final class User implements StringsUser {
      */
     @SuppressWarnings("java:S1874")
     @ApiStatus.Obsolete
-    public String getChatColor(final @NotNull Channel channel) {
-        final String chatColor = getChatColor();
+    public String getChatColor(@NotNull Channel channel) {
+        String chatColor = getChatColor();
         if (chatColor.isEmpty()) {
             return channel.getDefaultColor();
         }
@@ -291,7 +301,7 @@ public final class User implements StringsUser {
     }
 
     @Override
-    public void setDisplayName(final @NotNull String displayName) {
+    public void setDisplayName(@NotNull String displayName) {
         this.displayName = displayName;
         this.player.setDisplayName(displayName);
         dirty = true;
@@ -543,14 +553,87 @@ public final class User implements StringsUser {
         return retain;
     }
 
+    @Override
+    public boolean isPermissionSet(@NotNull String name) {
+        return player().isPermissionSet(name);
+    }
+
+    @Override
+    public boolean isPermissionSet(@NotNull Permission perm) {
+        return player().isPermissionSet(perm);
+    }
+
+    @Override
+    public boolean hasPermission(@NotNull String name) {
+        return player().hasPermission(name);
+    }
+
+    @Override
+    public boolean hasPermission(@NotNull Permission perm) {
+        return player().hasPermission(perm);
+    }
+
+    @Override
+    @NotNull
+    public PermissionAttachment addAttachment(@NotNull Plugin plugin, @NotNull String name, boolean value) {
+        return player().addAttachment(plugin, name, value);
+    }
+
+    @Override
+    @NotNull
+    public PermissionAttachment addAttachment(@NotNull Plugin plugin) {
+        return player().addAttachment(plugin);
+    }
+
+    @Override
+    @Nullable
+    public PermissionAttachment addAttachment(@NotNull Plugin plugin, @NotNull String name, boolean value, int ticks) {
+        return player().addAttachment(plugin, name, value, ticks);
+    }
+
+    @Override
+    @Nullable
+    public PermissionAttachment addAttachment(@NotNull Plugin plugin, int ticks) {
+        return player().addAttachment(plugin, ticks);
+    }
+
+    @Override
+    public void removeAttachment(@NotNull PermissionAttachment attachment) {
+        player().removeAttachment(attachment);
+    }
+
+    @Override
+    public void recalculatePermissions() {
+        player().recalculatePermissions();
+    }
+
+    @Override
+    @NotNull
+    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+        return player().getEffectivePermissions();
+    }
+
+    @Override
+    public boolean isOp() {
+        return player().isOp();
+    }
+
+    @Override
+    public void setOp(boolean value) {
+        player.setOp(value);
+    }
+
     @Contract("_ -> new")
     private @NotNull String color(String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
     private void callEvent(@NotNull Event event) {
-        strings.getServer().getScheduler().runTask(
-                strings, () -> strings.getServer().getPluginManager().callEvent(event)
+        strings.sync(
+                () -> strings
+                .getServer()
+                .getPluginManager()
+                .callEvent(event)
         );
     }
 

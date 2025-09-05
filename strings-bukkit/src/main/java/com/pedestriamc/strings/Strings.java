@@ -146,6 +146,10 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
                 "using_stringsmoderation_expansion",
                 () -> String.valueOf(getServer().getPluginManager().getPlugin("StringsModeration") != null))
         );
+        metrics.addCustomChart(new SimplePie(
+                "using_stringsdiscord",
+                () -> String.valueOf(getServer().getPluginManager().getPlugin("StringsDiscord") != null)
+        ));
     }
 
     private void logOutAll() {

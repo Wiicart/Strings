@@ -84,7 +84,7 @@ abstract class AbstractDiscordManager implements DiscordManager {
         try {
             StringsAPI api = StringsProvider.get();
 
-            StringsUser user = api.getStringsUser(event.getPlayer());
+            StringsUser user = api.getUser(event.getPlayer().getUniqueId());
             if(user == null) {
                 throw new IllegalStateException("User not found");
             }
@@ -213,12 +213,13 @@ abstract class AbstractDiscordManager implements DiscordManager {
 
         try {
             StringsAPI api = StringsProvider.get();
-            for(Player player : Bukkit.getOnlinePlayers()) {
-                if(string.contains("@" + player.getName())) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                StringsUser target = api.getUser(player.getUniqueId());
+                if(string.contains("@" + player.getName()) && target != null) {
                     String mention = discordToGameMentionFormat.
                             replace("{username}", sender.getUser().getName())
                             .replace("{nickname}", sender.getEffectiveName());
-                    api.sendMention(player, mention);
+                    api.sendMention(target, mention);
                 }
             }
         } catch(Exception ignored) {}

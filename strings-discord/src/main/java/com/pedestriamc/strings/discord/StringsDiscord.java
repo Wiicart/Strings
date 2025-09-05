@@ -8,12 +8,11 @@ import com.pedestriamc.strings.discord.configuration.Configuration;
 import com.pedestriamc.strings.discord.impl.Registrar;
 import com.pedestriamc.strings.discord.impl.StringsDiscordImpl;
 import com.pedestriamc.strings.discord.listener.bukkit.CraftChatListener;
-import com.pedestriamc.strings.discord.listener.bukkit.MessageDeletionListener;
+import com.pedestriamc.strings.discord.listener.bukkit.StringsDiscordListener;
 import com.pedestriamc.strings.discord.listener.bukkit.PlayerAdvancementListener;
 import com.pedestriamc.strings.discord.listener.bukkit.PlayerDeathListener;
+import com.pedestriamc.strings.discord.listener.bukkit.MessageDeletionListener;
 import com.pedestriamc.strings.discord.listener.bukkit.PlayerJoinQuitListener;
-import com.pedestriamc.strings.discord.listener.bukkit.ServerLoadListener;
-import com.pedestriamc.strings.discord.listener.bukkit.StringsReloadListener;
 import com.pedestriamc.strings.discord.listener.discord.MessageListener;
 import com.pedestriamc.strings.discord.listener.discord.StatusListener;
 import com.pedestriamc.strings.discord.manager.ChannelDiscordManager;
@@ -93,6 +92,7 @@ public final class StringsDiscord extends JavaPlugin {
         registerListeners();
         registerCommands();
         Registrar.register(new StringsDiscordImpl(this), this);
+        manager.broadcastDiscordMessage(configuration.get(Option.Text.SERVER_ONLINE_MESSAGE));
     }
 
     @Override
@@ -214,9 +214,8 @@ public final class StringsDiscord extends JavaPlugin {
     private void registerListeners() {
         registerDiscordListener(new MessageListener(this));
 
-        registerBukkitListener(new ServerLoadListener(this));
         registerBukkitListener(new CraftChatListener(this));
-        registerBukkitListener(new StringsReloadListener(this));
+        registerBukkitListener(new StringsDiscordListener(this));
 
         if (configuration.get(Option.Bool.ENABLE_JOIN_LEAVE_MESSAGES)) {
             registerBukkitListener(new PlayerJoinQuitListener(this));

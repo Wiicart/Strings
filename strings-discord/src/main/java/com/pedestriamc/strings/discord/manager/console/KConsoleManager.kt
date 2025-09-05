@@ -30,7 +30,6 @@ class KConsoleManager(private val strings: StringsDiscord) : ListenerAdapter() {
     }
 
     init {
-        appender.start();
         strings.jda.addEventListener(this);
     }
 
@@ -55,12 +54,7 @@ class KConsoleManager(private val strings: StringsDiscord) : ListenerAdapter() {
     }
 
     private fun sanitizeForDiscord(@NotNull message : String) : String {
-        var sanitized = message;
-        if (sanitized.startsWith("[ | ")) {
-            sanitized = message.replaceFirst("[ | ", "[")
-        }
-
-        sanitized = stripColor(sanitized);
+        var sanitized = stripColor(message);
 
         sanitized = sanitized
             .replace("@everyone", "@/everyone")

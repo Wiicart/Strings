@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.api.moderation;
 
 import com.pedestriamc.strings.api.StringsProvider;
-import org.bukkit.entity.Player;
+import com.pedestriamc.strings.api.user.StringsUser;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -16,13 +16,13 @@ public interface StringsModeration {
      * @param user The Player to check.
      * @return A boolean containing if the Player is on cooldown.
      */
-    boolean isOnCooldown(@NotNull Player user);
+    boolean isOnCooldown(@NotNull StringsUser user);
 
     /**
      * Starts a chat cooldown for a Player
      * @param user The Player to start the cooldown on.
      */
-    void startCooldown(@NotNull Player user);
+    void startCooldown(@NotNull StringsUser user);
 
     /**
      * Checks if the last message the player sent was the same.
@@ -30,7 +30,7 @@ public interface StringsModeration {
      * @param message The message
      * @return A boolean containing the value of if the last message is a duplicate.
      */
-    boolean isRepeating(@NotNull Player user, @NotNull String message);
+    boolean isRepeating(@NotNull StringsUser user, @NotNull String message);
 
     /**
      * Provides the {@link ModerationSettings} instance

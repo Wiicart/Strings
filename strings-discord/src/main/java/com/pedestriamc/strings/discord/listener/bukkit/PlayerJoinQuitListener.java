@@ -8,15 +8,12 @@ import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.discord.StringsDiscord;
 import com.pedestriamc.strings.api.discord.Option;
 import com.pedestriamc.strings.discord.configuration.Configuration;
-import com.pedestriamc.strings.discord.manager.DiscordManager;
-import com.pedestriamc.strings.discord.misc.AvatarProvider;
 import com.pedestriamc.strings.discord.misc.ColorProvider;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
@@ -25,11 +22,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.Color;
 
-public class PlayerJoinQuitListener implements Listener {
-
-    private final DiscordManager manager;
-
-    private final AvatarProvider avatars;
+//todo to kotlin
+public class PlayerJoinQuitListener extends AbstractBukkitListener {
 
     private final String joinMessage;
     private final String leaveMessage;
@@ -40,8 +34,7 @@ public class PlayerJoinQuitListener implements Listener {
     private final @Nullable  Plugin essentials;
 
     public PlayerJoinQuitListener(@NotNull StringsDiscord strings) {
-        manager = strings.getManager();
-        avatars = strings.getAvatarProvider();
+        super(strings);
 
         Configuration config = strings.getConfiguration();
         joinMessage = config.get(Option.Text.JOIN_MESSAGE);
@@ -73,10 +66,10 @@ public class PlayerJoinQuitListener implements Listener {
                 .setAuthor(
                         applyPlaceholders(joinMessage, player),
                         null,
-                        avatars.getLink(player)
+                        avatars().getLink(player)
                 );
 
-        manager.sendDiscordEmbed(builder.build());
+        manager().sendDiscordEmbed(builder.build());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -91,10 +84,10 @@ public class PlayerJoinQuitListener implements Listener {
                 .setAuthor(
                         applyPlaceholders(leaveMessage, player),
                         null,
-                        avatars.getLink(player)
+                        avatars().getLink(player)
                 );
 
-        manager.sendDiscordEmbed(builder.build());
+        manager().sendDiscordEmbed(builder.build());
     }
 
     // Placeholders are the same for join and leave
@@ -106,7 +99,7 @@ public class PlayerJoinQuitListener implements Listener {
             String suffix = "";
             String displayName = player.getDisplayName();
 
-            StringsUser user = api.getStringsUser(player);
+            StringsUser user = api.getUser(player.getUniqueId());
             if(user != null) {
                 prefix = user.getPrefix();
                 suffix = user.getSuffix();

@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static org.bukkit.event.EventPriority.HIGH;
 
+// todo to kotlin
 public final class CraftChatListener implements Listener {
 
     private final DiscordManager manager;

@@ -9,7 +9,6 @@ import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -27,13 +26,9 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public @NotNull StringsUser getStringsUser(@NotNull UUID uuid) {
+    @NotNull
+    public StringsUser getUser(@NotNull UUID uuid) {
         return userUtil.getUser(uuid);
-    }
-
-    @Override
-    public @NotNull StringsUser getStringsUser(@NotNull Player player) {
-        return getStringsUser(player.getUniqueId());
     }
 
     @Override
@@ -49,22 +44,18 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public void mention(@NotNull Player subject, @NotNull Player sender) {
-        mentioner.mention(subject, sender);
-    }
-
-    @Override
     public void mention(@NotNull StringsUser subject, @NotNull StringsUser sender) {
         mentioner.mention(User.playerOf(subject), User.playerOf(sender));
     }
 
     @Override
-    public void sendMention(@NotNull Player player, @NotNull String message) {
-        mentioner.sendMention(player, message);
+    public void sendMention(@NotNull StringsUser subject, @NotNull String message) {
+        mentioner.sendMention(User.playerOf(subject), message);
     }
 
     @Override
-    public @NotNull ChannelLoader getChannelLoader() {
+    @NotNull
+    public ChannelLoader getChannelLoader() {
         return strings.getChannelLoader();
     }
 
@@ -72,12 +63,14 @@ public final class StringsImpl implements StringsAPI {
         return Strings.VERSION_NUM;
     }
 
-    public @NotNull Messenger getMessenger() {
+    @NotNull
+    public Messenger getMessenger() {
         return strings.getMessenger();
     }
 
     @Override
-    public @NotNull Settings getSettings() {
+    @NotNull
+    public Settings getSettings() {
         return strings.getConfiguration();
     }
 

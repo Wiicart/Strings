@@ -3,7 +3,7 @@ package com.pedestriamc.strings.moderation;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.moderation.impl.Registrar;
 import com.pedestriamc.strings.moderation.configuration.Configuration;
-import com.pedestriamc.strings.moderation.impl.APIImplementation;
+import com.pedestriamc.strings.moderation.impl.StringsModerationImpl;
 import com.pedestriamc.strings.moderation.listener.ReloadListener;
 import com.pedestriamc.strings.moderation.listener.SignChangeListener;
 import com.pedestriamc.strings.moderation.manager.ChatFilter;
@@ -83,7 +83,7 @@ public final class StringsModeration extends JavaPlugin {
 
     private void registerAPI() {
         try {
-            Registrar.register(new APIImplementation(this), this);
+            Registrar.register(new StringsModerationImpl(this), this);
         } catch(Exception ex) {
             getLogger().warning("Failed to register StringsModeration API");
         }

@@ -1,11 +1,11 @@
 package com.pedestriamc.strings.moderation.manager;
 
 import com.pedestriamc.strings.api.moderation.Option;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.moderation.configuration.Configuration;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import com.pedestriamc.strings.moderation.listener.PlayerQuitListener;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import java.util.Map;
 public class RepetitionManager {
 
     private final StringsModeration stringsModeration;
-    private final Map<Player, PreviousMessage> map;
+    private final Map<StringsUser, PreviousMessage> map;
 
     // Is forbidding repetition enabled
     private boolean enabled;
@@ -40,17 +40,17 @@ public class RepetitionManager {
         cooldownLength = StringsModeration.calculateTicks(cooldownString);
     }
 
-    public void setPreviousMessage(Player player, String message) {
-        map.computeIfAbsent(player, p -> new PreviousMessage(stringsModeration, p));
-        map.get(player).setPrevious(message, cooldownLength);
+    public void setPreviousMessage(StringsUser user, String message) {
+        map.computeIfAbsent(user, p -> new PreviousMessage(stringsModeration, p));
+        map.get(user).setPrevious(message, cooldownLength);
     }
 
-    public boolean isRepeating(Player player, String message) {
+    public boolean isRepeating(StringsUser user, String message) {
         if(!enabled) {
             return false;
         }
 
-        PreviousMessage prev = map.get(player);
+        PreviousMessage prev = map.get(user);
         if(prev == null || prev.getPrevious() == null) {
             return false;
         }
@@ -62,21 +62,21 @@ public class RepetitionManager {
         return prev.getPrevious().equals(message);
     }
 
-    public void logOut(Player player) {
-        map.remove(player);
+    public void logOut(StringsUser user) {
+        map.remove(user);
     }
 
     @SuppressWarnings("unused")
     private static class PreviousMessage {
 
         private final StringsModeration stringsModeration;
-        private final Player player;
+        private final StringsUser user;
 
         private String previous;
 
-        public PreviousMessage(StringsModeration stringsModeration, Player player) {
+        public PreviousMessage(StringsModeration stringsModeration, StringsUser user) {
             this.stringsModeration = stringsModeration;
-            this.player = player;
+            this.user = user;
         }
 
         public String getPrevious() {
@@ -100,8 +100,8 @@ public class RepetitionManager {
             }
         }
 
-        public Player getPlayer() {
-            return player;
+        public StringsUser getUser() {
+            return user;
         }
 
         /**

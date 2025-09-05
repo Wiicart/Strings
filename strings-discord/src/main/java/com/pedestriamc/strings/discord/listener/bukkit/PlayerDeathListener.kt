@@ -1,49 +1,38 @@
-package com.pedestriamc.strings.discord.listener.bukkit;
+package com.pedestriamc.strings.discord.listener.bukkit
 
-import com.pedestriamc.strings.api.discord.Option;
-import com.pedestriamc.strings.discord.StringsDiscord;
-import com.pedestriamc.strings.discord.manager.DiscordManager;
-import com.pedestriamc.strings.discord.misc.AvatarProvider;
-import com.pedestriamc.strings.discord.misc.ColorProvider;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.jetbrains.annotations.NotNull;
+import com.pedestriamc.strings.api.discord.Option
+import com.pedestriamc.strings.discord.StringsDiscord
+import com.pedestriamc.strings.discord.misc.ColorProvider
+import net.dv8tion.jda.api.EmbedBuilder
+import net.md_5.bungee.api.ChatColor
+import org.bukkit.event.EventHandler
+import org.bukkit.event.entity.PlayerDeathEvent
+import java.awt.Color
 
-import java.awt.Color;
+class PlayerDeathListener(strings: StringsDiscord) : AbstractBukkitListener(strings) {
 
-public class PlayerDeathListener implements Listener {
+    companion object {
+        val ORANGE: Color = Color(255, 111, 0);
+    }
 
-    private static final Color ORANGE = new Color(255, 111, 0);
+    private val color: Color = ColorProvider.parse(
+        strings.configuration[Option.Text.DEATH_COLOR],
+        ORANGE,
+        strings.logger
+    );
 
-    private final DiscordManager manager;
-    private final AvatarProvider avatars;
-
-    private final Color color;
-
-    public PlayerDeathListener(@NotNull StringsDiscord strings) {
-        manager = strings.getManager();
-        avatars = strings.getAvatarProvider();
-        color = ColorProvider.parse(
-                strings.getConfiguration().get(Option.Text.DEATH_COLOR),
-                ORANGE,
-                strings.getLogger()
+    @EventHandler
+    internal fun onEvent(event: PlayerDeathEvent) {
+        sendEmbed(
+            EmbedBuilder()
+                .setColor(color)
+                .setAuthor(
+                    ChatColor.stripColor(event.deathMessage),
+                    null,
+                    avatars.getLink(event.entity)
+                )
+            .build()
         );
     }
 
-    @EventHandler
-    void onEvent(@NotNull PlayerDeathEvent event) {
-        MessageEmbed embed = new EmbedBuilder()
-                .setColor(color)
-                .setAuthor(
-                        ChatColor.stripColor(event.getDeathMessage()),
-                        null,
-                        avatars.getLink(event.getEntity())
-                ).build();
-
-        manager.sendDiscordEmbed(embed);
-    }
 }

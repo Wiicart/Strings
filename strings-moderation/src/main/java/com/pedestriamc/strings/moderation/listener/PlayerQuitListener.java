@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.moderation.listener;
 
+import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.moderation.manager.RepetitionManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +17,8 @@ public class PlayerQuitListener implements Listener {
 
     @EventHandler
     public void onEvent(@NotNull PlayerQuitEvent event) {
-        manager.logOut(event.getPlayer());
+        try {
+            manager.logOut(StringsProvider.get().getUser(event.getPlayer().getUniqueId()));
+        } catch(Exception ignored) {}
     }
 }

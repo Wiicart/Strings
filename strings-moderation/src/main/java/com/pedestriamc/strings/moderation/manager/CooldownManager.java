@@ -1,9 +1,9 @@
 package com.pedestriamc.strings.moderation.manager;
 
 import com.pedestriamc.strings.api.moderation.Option;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.moderation.configuration.Configuration;
 import com.pedestriamc.strings.moderation.StringsModeration;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +14,7 @@ public class CooldownManager {
 
     private final StringsModeration stringsModeration;
 
-    private final Set<Player> cooldowns;
+    private final Set<StringsUser> cooldowns;
     private long cooldownLength;
     private final BukkitScheduler scheduler;
 
@@ -36,12 +36,12 @@ public class CooldownManager {
         }
     }
 
-    public void startCooldown(Player player) {
-        cooldowns.add(player);
-        scheduler.runTaskLater(stringsModeration, () -> cooldowns.remove(player), cooldownLength);
+    public void startCooldown(StringsUser user) {
+        cooldowns.add(user);
+        scheduler.runTaskLater(stringsModeration, () -> cooldowns.remove(user), cooldownLength);
     }
 
-    public boolean isOnCooldown(Player player) {
-        return cooldowns.contains(player);
+    public boolean isOnCooldown(StringsUser user) {
+        return cooldowns.contains(user);
     }
 }

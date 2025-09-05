@@ -24,7 +24,7 @@ public class Configuration implements Settings {
                 .putAll(loadValues(config, Option.Double.class, FileConfiguration::getDouble))
                 .putAll(loadValues(config, Option.StringList.class, FileConfiguration::getStringList))
                 .putAll(loadValues(config, Option.Text.class, FileConfiguration::getString))
-                .putAll(loadDeathMessageOptions(strings)) // stored in a different file
+                .putAll(loadDeathMessageOptions(strings)) // stored in a death-messages.yml
         );
     }
 

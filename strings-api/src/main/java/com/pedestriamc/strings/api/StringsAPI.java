@@ -6,7 +6,6 @@ import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.moderation.StringsModeration;
 import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.user.StringsUser;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,15 +35,7 @@ public interface StringsAPI {
      * @return A StringsUser, if it exists.
      */
     @Nullable
-    StringsUser getStringsUser(@NotNull UUID uuid);
-
-    /**
-     * Provides a {@link StringsUser} based off a Player if it exists.
-     * @param player The Player to search under.
-     * @return A StringsUser, if it exists.
-     */
-    @Nullable
-    StringsUser getStringsUser(Player player);
+    StringsUser getUser(@NotNull UUID uuid);
 
     /**
      * Saves a {@link StringsUser}.
@@ -62,14 +53,6 @@ public interface StringsAPI {
     /**
      * Mentions a Player.
      * Uses the format found in the Strings config.yml
-     * @param subject The player to be mentioned.
-     * @param sender The sender of the mention.
-     */
-    void mention(@NotNull Player subject, @NotNull  Player sender);
-
-    /**
-     * Mentions a Player.
-     * Uses the format found in the Strings config.yml
      * @param subject The StringsUser object of the player to be mentioned.
      * @param sender The StringsUser object of the sender of the mention.
      */
@@ -79,10 +62,10 @@ public interface StringsAPI {
      * Mentions a Player.
      * Sends a message to the Player's action bar, and plays the mention Sound.
      *
-     * @param player The Player to mention
+     * @param user The Player to mention
      * @param message The message to display in the Player's actionbar.
      */
-    void sendMention(@NotNull Player player, @NotNull String message);
+    void sendMention(@NotNull StringsUser user, @NotNull String message);
 
     /**
      * Provides the {@link Messenger} instance
