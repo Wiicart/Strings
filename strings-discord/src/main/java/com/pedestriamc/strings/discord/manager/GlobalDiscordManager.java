@@ -68,7 +68,7 @@ public class GlobalDiscordManager extends AbstractDiscordManager {
     }
 
     @Override
-    public void sendCraftMessageFromEvent(@NotNull MessageReceivedEvent event) {
+    public void processDiscordEvent(@NotNull MessageReceivedEvent event) {
         if (!hasDiscordChannel(event.getChannel())) {
             return;
         }
@@ -87,7 +87,7 @@ public class GlobalDiscordManager extends AbstractDiscordManager {
     }
 
     @Override
-    public void sendDiscordMessageFromEvent(@NotNull ChannelChatEvent event) {
+    public void processCraftEvent(@NotNull ChannelChatEvent event) {
         String message = ChatColor.stripColor(color(super.processDiscordPlaceholders(event)));
         Player player = event.getPlayer();
 

@@ -42,7 +42,7 @@ public interface StringsAPI {
      * Modifications to Users do not persist by default, you must save it to persist.
      * @param user The user to be saved.
      */
-    void saveStringsUser(@NotNull StringsUser user);
+    void saveUser(@NotNull StringsUser user);
 
     /**
      * Returns true if the server is running Paper or a fork.

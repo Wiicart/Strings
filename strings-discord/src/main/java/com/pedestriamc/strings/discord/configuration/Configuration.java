@@ -18,9 +18,10 @@ import java.util.function.BiFunction;
 public class Configuration implements DiscordSettings {
 
     private final SettingsRegistry registry;
+    private final FileConfiguration config;
 
     public Configuration(@NotNull StringsDiscord strings) {
-        FileConfiguration config = getConfig(strings);
+        config = loadConfig(strings);
         registry = new SettingsRegistry(builder ->
                 builder
                         .putAll(loadValues(config, Option.Bool.class, FileConfiguration::getBoolean))
@@ -48,7 +49,7 @@ public class Configuration implements DiscordSettings {
     }
 
     @NotNull
-    private FileConfiguration getConfig(@NotNull StringsDiscord strings) throws IllegalStateException {
+    private FileConfiguration loadConfig(@NotNull StringsDiscord strings) throws IllegalStateException {
         Plugin plugin = strings.getServer().getPluginManager().getPlugin("Strings");
         if (plugin == null) {
             throw new IllegalStateException("Strings plugin not found");
@@ -71,6 +72,10 @@ public class Configuration implements DiscordSettings {
     @NotNull
     public String getColored(@NotNull Option.Text key) {
         return ChatColor.translateAlternateColorCodes('&', get(key));
+    }
+
+    public FileConfiguration getFileConfiguration() {
+        return config;
     }
 
 }

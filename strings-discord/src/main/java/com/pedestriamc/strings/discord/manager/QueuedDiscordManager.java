@@ -61,20 +61,20 @@ public final class QueuedDiscordManager implements DiscordManager {
     }
 
     @Override
-    public void sendCraftMessageFromEvent(@NotNull MessageReceivedEvent event) {
+    public void processDiscordEvent(@NotNull MessageReceivedEvent event) {
         if (impl != null) {
-            impl.sendCraftMessageFromEvent(event);
+            impl.processDiscordEvent(event);
         } else {
-            queue.offer(manager -> manager.sendCraftMessageFromEvent(event));
+            queue.offer(manager -> manager.processDiscordEvent(event));
         }
     }
 
     @Override
-    public void sendDiscordMessageFromEvent(@NotNull ChannelChatEvent event) {
+    public void processCraftEvent(@NotNull ChannelChatEvent event) {
         if (impl != null) {
-            impl.sendDiscordMessageFromEvent(event);
+            impl.processCraftEvent(event);
         } else {
-            queue.offer(manager -> manager.sendDiscordMessageFromEvent(event));
+            queue.offer(manager -> manager.processCraftEvent(event));
         }
     }
 

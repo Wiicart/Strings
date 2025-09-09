@@ -32,7 +32,7 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
-    public void saveStringsUser(@NotNull StringsUser user) {
+    public void saveUser(@NotNull StringsUser user) {
         if(user instanceof User u) {
             userUtil.saveUser(u);
         }

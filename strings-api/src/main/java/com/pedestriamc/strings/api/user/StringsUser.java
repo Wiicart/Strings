@@ -5,7 +5,8 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.message.Messageable;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.ApiStatus.Obsolete;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,10 +16,21 @@ import java.util.UUID;
 
 /**
  * This represents the Strings internal User object which stores data on individual players.
- * Changes are not saved by default, you must use {@link StringsAPI#saveStringsUser(StringsUser)} to save.
+ * Changes are not saved by default, you must use {@link StringsAPI#saveUser(StringsUser)} to save.
  */
 @SuppressWarnings("unused")
 public interface StringsUser extends Messageable {
+
+    /**
+     * Provides a copy of the User that automatically saves itself.
+     * If saving fails, it will fail silently.
+     * @param user The user
+     * @return A auto-saving version of the User
+     */
+    @NotNull
+    static StringsUser autoSaving(@NotNull StringsUser user) {
+        return new AutoSavingUser(user);
+    }
 
     /**
      * Provides the StringsUser's UUID.
@@ -42,7 +54,7 @@ public interface StringsUser extends Messageable {
      * @return A chat color.
      */
     @Nullable
-    @ApiStatus.Obsolete
+    @Obsolete
     String getChatColor();
 
     /**
@@ -50,7 +62,7 @@ public interface StringsUser extends Messageable {
      * @deprecated Use {@link StringsUser#getChatColorComponent()} instead.
      * @param chatColor The new chat color.
      */
-    @ApiStatus.Obsolete
+    @Obsolete
     void setChatColor(String chatColor);
 
     /**
@@ -128,6 +140,7 @@ public interface StringsUser extends Messageable {
      * @return A populated Set.
      */
     @Contract("-> new")
+    @NotNull
     Set<Channel> getChannels();
 
     /**
@@ -140,14 +153,14 @@ public interface StringsUser extends Messageable {
      * Has the StringsUser leave a Channel.
      * @param channel The channel to leave.
      */
-    void leaveChannel(Channel channel);
+    void leaveChannel(@NotNull Channel channel);
 
     /**
      * Checks if the User is a member of a Channel
      * @param channel The Channel to check
      * @return True/false if the User is a member.
      */
-    boolean memberOf(Channel channel);
+    boolean memberOf(@NotNull Channel channel);
 
     /**
      * Tells if the StringsUser has mentions enabled.
@@ -250,4 +263,19 @@ public interface StringsUser extends Messageable {
      * @param msgEnabled True/false
      */
     void setDirectMessagesEnabled(boolean msgEnabled);
+
+    /**
+     * Provides the User's Discord ID if present.
+     * If not present, returns 0
+     * @return The ID
+     */
+    long getDiscordId();
+
+    /**
+     * Internal - if you change the ID, StringsDiscord may behave unexpectedly.<br/>
+     * Sets the User's Discord ID
+     * @param id The new ID
+     */
+    @Internal
+    void setDiscordId(long id);
 }

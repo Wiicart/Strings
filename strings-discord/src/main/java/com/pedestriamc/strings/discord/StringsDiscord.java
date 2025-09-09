@@ -24,9 +24,13 @@ import com.pedestriamc.strings.discord.misc.AvatarProvider;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import okhttp3.OkHttpClient;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -47,10 +51,20 @@ public final class StringsDiscord extends JavaPlugin {
     private Configuration configuration;
     private AvatarProvider avatarProvider;
 
-    public StringsDiscord() {
+    static {
         try {
             System.setProperty("org.slf4j.simpleLogger.log.net.dv8tion.jda", "off");
-        } catch(Exception ignored) {}
+        } catch(Exception e) {
+            Bukkit.getLogger().warning(e.getMessage());
+        }
+    }
+
+    public StringsDiscord() {
+        try {
+            Configurator.setLevel("com.pedestriamc.shaded.jda", Level.OFF);
+        } catch(Exception e) {
+            Bukkit.getLogger().warning(e.getMessage());
+        }
     }
 
     @Override

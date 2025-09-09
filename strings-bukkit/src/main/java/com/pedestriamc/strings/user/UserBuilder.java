@@ -14,8 +14,8 @@ import java.util.UUID;
  */
 public final class UserBuilder {
 
-    final @NotNull Strings strings;
-    final @NotNull UUID uuid;
+    final Strings strings;
+    final UUID uuid;
     final boolean retained;
 
     Channel activeChannel;
@@ -30,8 +30,10 @@ public final class UserBuilder {
     String suffix;
     String displayName;
 
-    boolean mentionsEnabled = true; // Mentions are enabled by default
-    boolean msgEnabled = true; // /msg enabled by default
+    boolean mentionsEnabled = true; // default
+    boolean msgEnabled = true; // default
+
+    long discordId = 0;
 
     UserBuilder(@NotNull Strings strings, @NotNull UUID uuid, boolean retained) {
         this.strings = strings;
@@ -39,58 +41,75 @@ public final class UserBuilder {
         this.retained = retained;
     }
 
+    @NotNull
     public UserBuilder channels(Set<Channel> channels) {
         this.channels = channels;
         return this;
     }
 
+    @NotNull
     public UserBuilder monitoredChannels(Set<Monitorable> monitoredChannels) {
         this.monitoredChannels = monitoredChannels;
         return this;
     }
 
+    @NotNull
     public UserBuilder ignoredPlayers(Set<UUID> ignored) {
         this.ignored = ignored;
         return this;
     }
 
+    @NotNull
     public UserBuilder mutedChannels(Set<Channel> mutes) {
         this.mutes = mutes;
         return this;
     }
 
+    @NotNull
     public UserBuilder chatColor(String chatColor) {
         this.chatColor = chatColor;
         return this;
     }
 
+    @NotNull
     public UserBuilder prefix(String prefix) {
         this.prefix = prefix;
         return this;
     }
 
+    @NotNull
     public UserBuilder suffix(String suffix) {
         this.suffix = suffix;
         return this;
     }
 
+    @NotNull
     public UserBuilder displayName(String displayName) {
         this.displayName = displayName;
         return this;
     }
 
+    @NotNull
     public UserBuilder activeChannel(Channel activeChannel) {
         this.activeChannel = activeChannel;
         return this;
     }
 
+    @NotNull
     public UserBuilder mentionsEnabled(boolean mentionsEnabled) {
         this.mentionsEnabled = mentionsEnabled;
         return this;
     }
 
+    @NotNull
     public UserBuilder msgEnabled(boolean msgEnabled) {
         this.msgEnabled = msgEnabled;
+        return this;
+    }
+
+    @NotNull
+    public UserBuilder discordId(long discordId) {
+        this.discordId = discordId;
         return this;
     }
 

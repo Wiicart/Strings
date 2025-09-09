@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Monitorable;
+import com.pedestriamc.strings.api.event.StringsUserLoadEvent;
 import com.pedestriamc.strings.user.User;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -99,6 +100,7 @@ public final class YamlUserUtil implements UserUtil {
                     .mutedChannels(getChannels(section.getList(".muted-channels")))
                     .monitoredChannels(getMonitorables(section.getList(".monitored-channels")))
                     .ignoredPlayers(getUniqueIds(section.getList(".ignored-players")))
+                    .discordId(section.getLong("discord-id"))
                     .build();
 
             addUser(user);
@@ -190,6 +192,11 @@ public final class YamlUserUtil implements UserUtil {
     @Override
     public void addUser(User user) {
         map.put(user.getUniqueId(), user);
+        strings.sync(() -> strings
+                .getServer()
+                .getPluginManager()
+                .callEvent(new StringsUserLoadEvent(user))
+        );
     }
 
     @Override

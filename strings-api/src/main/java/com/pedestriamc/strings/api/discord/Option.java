@@ -28,8 +28,8 @@ public final class Option {
         DISCORD_COMMAND_MESSAGE("discord-cmd-message", "&9discord.com"),
         DISCORD_STATUS("online-status", "online"),
         DISCORD_CONSOLE_ID("console-id", "0"),
-        JOIN_COLOR("join-color", "#FF0000"),
-        LEAVE_COLOR("leave-color", "#00FF00"),
+        JOIN_COLOR("join-color", "#00FF00"),
+        LEAVE_COLOR("leave-color", "#FF0000"),
         DEATH_COLOR("death-color", "#FF6F00"),
         ADVANCEMENT_COLOR("advancement-color", "#FF00FF");
 

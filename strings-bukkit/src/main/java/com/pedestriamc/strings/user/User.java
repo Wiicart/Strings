@@ -68,6 +68,8 @@ public final class User implements StringsUser, Permissible {
     private boolean mentionsEnabled;
     private boolean msgEnabled;
 
+    private long discordId;
+
     BoundedLinkedBuffer<EntityDamageEvent> previousDamage = new BoundedLinkedBuffer<>(2);
 
     public static User of(@NotNull StringsUser user) {
@@ -111,6 +113,7 @@ public final class User implements StringsUser, Permissible {
         this.monitored = Objects.requireNonNullElseGet(builder.monitoredChannels, HashSet::new);
         this.ignored = Objects.requireNonNullElseGet(builder.ignored, HashSet::new);
         this.mutes = Objects.requireNonNullElseGet(builder.mutes, HashSet::new);
+        this.discordId = builder.discordId;
 
         // Join the DefaultChannel if not a member of any other Channels
         if (channels.isEmpty()) {
@@ -214,6 +217,7 @@ public final class User implements StringsUser, Permissible {
                 map.put("ignored-players", new ArrayList<>(ignored));
                 map.put("mentions-enabled", mentionsEnabled);
                 map.put("msg-enabled", msgEnabled);
+                map.put("discord-id", discordId);
                 data = map;
             }
 
@@ -402,7 +406,7 @@ public final class User implements StringsUser, Permissible {
 
 
     @Override
-    public boolean memberOf(Channel channel) {
+    public boolean memberOf(@NotNull Channel channel) {
         return channels.contains(channel);
     }
 
@@ -462,7 +466,8 @@ public final class User implements StringsUser, Permissible {
     }
 
     @Override
-    public @NotNull Set<Channel> getChannels() {
+    @NotNull
+    public Set<Channel> getChannels() {
         return new HashSet<>(channels);
     }
 
@@ -544,6 +549,16 @@ public final class User implements StringsUser, Permissible {
     public void setDirectMessagesEnabled(boolean msgEnabled) {
         this.msgEnabled = msgEnabled;
         dirty = true;
+    }
+
+    @Override
+    public long getDiscordId() {
+        return discordId;
+    }
+
+    @Override
+    public void setDiscordId(long id) {
+        this.discordId = id;
     }
 
     /**

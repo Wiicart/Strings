@@ -103,15 +103,34 @@ public class ClassRegistryManager {
             registerCommand("r", replyCommand, null);
         }
 
-        if(config.get(Option.Bool.ENABLE_CHATCOLOR_COMMAND)) {
-            registerCommand("chatcolor", new ChatColorCommand(strings), new ChatColorTabCompleter());
+        if (config.get(Option.Bool.ENABLE_CHATCOLOR_COMMAND)) {
+            tryOrLog(() -> registerCommand(
+                    "chatcolor",
+                    new ChatColorCommand(strings),
+                    new ChatColorTabCompleter())
+            );
         }
 
-        if(config.get(Option.Bool.ENABLE_HELPOP)) {
-            registerCommand("helpop", new HelpOPCommand(strings), null);
+        if (config.get(Option.Bool.ENABLE_RULES_COMMAND)) {
+            tryOrLog(() -> registerCommand(
+                    "rules",
+                    new RulesCommand(strings),
+                    null)
+            );
+        }
+
+        if (config.get(Option.Bool.ENABLE_HELPOP)) {
+            registerCommand(
+                    "helpop",
+                    new HelpOPCommand(strings),
+                    null
+            );
         } else {
             if(!config.get(Option.Bool.DISABLE_HELPOP_COMMAND)) {
-                registerCommand("helpop", new MessengerCommand(strings, Message.HELPOP_DISABLED), null);
+                registerCommand(
+                        "helpop",
+                        new MessengerCommand(strings, Message.HELPOP_DISABLED), null
+                );
             }
 
             try {
@@ -120,10 +139,6 @@ public class ClassRegistryManager {
                     strings.getChannelLoader().unregister(helpOpChannel);
                 }
             } catch(Exception ignored) {}
-        }
-
-        if (config.get(Option.Bool.ENABLE_RULES_COMMAND)) {
-            registerCommand("rules", new RulesCommand(strings), null);
         }
     }
 
@@ -165,6 +180,14 @@ public class ClassRegistryManager {
 
     private void registerListener(Listener listener) {
         strings.getServer().getPluginManager().registerEvents(listener, strings);
+    }
+
+    private void tryOrLog(Runnable runnable) {
+        try {
+            runnable.run();
+        } catch(Exception e) {
+            strings.getLogger().warning(e.getMessage());
+        }
     }
 
 }

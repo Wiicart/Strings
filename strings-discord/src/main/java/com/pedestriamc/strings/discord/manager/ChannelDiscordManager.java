@@ -44,13 +44,16 @@ public final class ChannelDiscordManager extends AbstractDiscordManager {
         directory = new MemberDirectory(this, strings.getJda());
     }
 
-    // todo move to new Settings system or at least get the config file properly, this does not work.
     public void loadChannels() {
         try {
             StringsAPI api = StringsProvider.get();
             ChannelLoader loader = api.getChannelLoader();
 
-            ConfigurationSection section = strings.getConfig().getConfigurationSection("channels");
+            ConfigurationSection section = strings
+                    .getConfiguration()
+                    .getFileConfiguration()
+                    .getConfigurationSection("channels");
+
             if (section == null) {
                 return;
             }
@@ -104,7 +107,7 @@ public final class ChannelDiscordManager extends AbstractDiscordManager {
         return channels.containsKey(channel);
     }
 
-    public void sendCraftMessageFromEvent(@NotNull MessageReceivedEvent event) {
+    public void processDiscordEvent(@NotNull MessageReceivedEvent event) {
         MessageChannelUnion union = event.getChannel();
         Channel channel = channels.getKey(union);
         if (channel == null) {
@@ -124,7 +127,7 @@ public final class ChannelDiscordManager extends AbstractDiscordManager {
         strings.synchronous(() -> channel.broadcastPlain(finalString));
     }
 
-    public void sendDiscordMessageFromEvent(@NotNull ChannelChatEvent event) {
+    public void processCraftEvent(@NotNull ChannelChatEvent event) {
         MessageChannel channel = channels.get(event.getChannel());
         if (channel == null) {
             return;

@@ -48,9 +48,6 @@ commands:
   strings:
     description: "Tells the plugin version and allows reloading"
     usage: "/strings version/reload"
-  chatcolor:
-    description: "Allows changing chat colors"
-    usage: "/chatcolor <color>"
   mention:
     description: "Toggles whether you receive mentions or not"
     usage: "/mention <enable|disable>"
@@ -63,9 +60,6 @@ commands:
   unignore:
     description: "Lets a player stop ignoring another player"
     usage: "/unignore <player-to-unignore> <player-ignoring (optional)>"
-  rules:
-    description: "Provides the server rules"
-    usage: "/rules"
 permissions:
   strings.*:
     description: "All Strings permissions"

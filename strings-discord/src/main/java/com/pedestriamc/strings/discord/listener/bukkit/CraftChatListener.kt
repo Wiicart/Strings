@@ -1,34 +1,27 @@
-package com.pedestriamc.strings.discord.listener.bukkit;
+package com.pedestriamc.strings.discord.listener.bukkit
 
-import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
-import com.pedestriamc.strings.discord.StringsDiscord;
-import com.pedestriamc.strings.discord.manager.DiscordManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.jetbrains.annotations.NotNull;
+import com.pedestriamc.strings.api.event.channel.ChannelChatEvent
+import com.pedestriamc.strings.discord.StringsDiscord
+import com.pedestriamc.strings.discord.manager.DiscordManager
+import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
+import org.bukkit.event.Listener
+import org.bukkit.event.player.AsyncPlayerChatEvent
 
-import static org.bukkit.event.EventPriority.HIGH;
+class CraftChatListener(strings: StringsDiscord) : Listener {
 
-// todo to kotlin
-public final class CraftChatListener implements Listener {
+    private val manager: DiscordManager = strings.manager;
 
-    private final DiscordManager manager;
-
-    public CraftChatListener(@NotNull StringsDiscord strings) {
-        manager = strings.getManager();
+    // ChannelChatEvent should either be called as an AsyncPlayerChatEvent, or a ChannelChatEvent directly
+    @EventHandler(priority = EventPriority.HIGHEST)
+    fun onEvent(event: AsyncPlayerChatEvent) {
+        if (event !is ChannelChatEvent) return;
+        manager.processCraftEvent(event);
     }
 
-    @EventHandler(priority = HIGH)
-    void onEvent(@NotNull AsyncPlayerChatEvent asyncPlayerChatEvent) {
-        if(asyncPlayerChatEvent instanceof ChannelChatEvent event) {
-            manager.sendDiscordMessageFromEvent(event);
-        }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    fun onEvent(event: ChannelChatEvent) {
+        manager.processCraftEvent(event);
     }
 
-    // todo no messages is paper related check if paper then proceed
-    @EventHandler(priority = HIGH)
-    void onEvent(@NotNull ChannelChatEvent event) {
-        manager.sendDiscordMessageFromEvent(event);
-    }
 }

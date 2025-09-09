@@ -17,7 +17,7 @@ public final class MessageListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if(!event.getAuthor().isBot()) {
-            manager.sendCraftMessageFromEvent(event);
+            manager.processDiscordEvent(event);
         }
     }
 }

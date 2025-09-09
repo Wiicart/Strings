@@ -34,13 +34,13 @@ public interface DiscordManager {
      * Accepts a Discord MessageReceivedEvent, and sends it to the appropriate players in chat, if necessary.
      * @param event The Discord Event
      */
-    void sendCraftMessageFromEvent(@NotNull MessageReceivedEvent event);
+    void processDiscordEvent(@NotNull MessageReceivedEvent event);
 
     /**
      * Accepts a Strings ChannelChatEvent, and sends it to the appropriate Discord Channels.
      * @param event The Event
      */
-    void sendDiscordMessageFromEvent(@NotNull ChannelChatEvent event);
+    void processCraftEvent(@NotNull ChannelChatEvent event);
 
     /**
      * Sends a message to Discord
