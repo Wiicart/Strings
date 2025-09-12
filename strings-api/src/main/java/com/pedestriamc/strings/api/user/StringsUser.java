@@ -265,6 +265,12 @@ public interface StringsUser extends Messageable {
     void setDirectMessagesEnabled(boolean msgEnabled);
 
     /**
+     * Tells if this User has been linked to a Discord accoun
+     * @return true/false
+     */
+    boolean isDiscordLinked();
+
+    /**
      * Provides the User's Discord ID if present.
      * If not present, returns 0
      * @return The ID

@@ -220,6 +220,11 @@ final class AutoSavingUser implements StringsUser {
     }
 
     @Override
+    public boolean isDiscordLinked() {
+        return user.isDiscordLinked();
+    }
+
+    @Override
     public long getDiscordId() {
         return user.getDiscordId();
     }
