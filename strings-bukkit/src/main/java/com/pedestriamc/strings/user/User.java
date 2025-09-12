@@ -552,13 +552,18 @@ public final class User implements StringsUser, Permissible {
     }
 
     @Override
+    public boolean isDiscordLinked() {
+        return false; //todo IMPL
+    }
+
+    @Override
     public long getDiscordId() {
-        return discordId;
+        return discordId; //todo SNOWFLAKE
     }
 
     @Override
     public void setDiscordId(long id) {
-        this.discordId = id;
+        this.discordId = id; //todo SNOWFLAKE
     }
 
     /**
