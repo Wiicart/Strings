@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@Key.From(path = "config.yml")
 public final class Option {
 
     private Option() {}
@@ -25,14 +26,16 @@ public final class Option {
         ENABLE_HELPOP("enable-helpop", true),
         DISABLE_HELPOP_COMMAND("other-helpop", false),
         ENABLE_DIRECT_MESSAGES("msg-enabled", true),
-        // start "death-messages.yml" options
+        @From(path = "death-messages.yml")
         DEATH_MESSAGES_ENABLE("enable", true),
+        @From(path = "death-messages.yml")
         DEATH_MESSAGES_USE_CUSTOM("custom", true),
-        // end "death-messages.yml" options
         ENABLE_RULES_COMMAND("enable-rules", true),
         BROADCAST_SOUND_ENABLE("broadcast-sound.enable", true),
-        ENABLE_EMOJI_REPLACEMENT("emojis", true),
-        ENABLE_EMOJI_RESOURCE_PACK("emoji-resource-pack", true);
+        @From(path = "emojis/emoji-config.yml")
+        ENABLE_EMOJI_REPLACEMENT("replacement", true),
+        @From(path = "emojis/emoji-config.yml")
+        ENABLE_EMOJI_RESOURCE_PACK("resource-pack", true);
 
         final String key;
         final boolean defaultValue;
@@ -70,7 +73,12 @@ public final class Option {
         DELETION_BUTTON_HOVER("deletion-hover", "<red>Click this to delete the message.</red>"),
         RULES_MESSAGE("rules-message", "<b>Rules\n - Example Rule"),
         BROADCAST_SOUND_NAME("broadcast-sound.name", "block.note_block.bell"),
-        TEXTURES_MODRINTH_ID("texture-pack-id", "mh6HfOTP");
+        @From(path = "emojis/emoji-config.yml")
+        TEXTURES_MODRINTH_ID("pack-id", "mh6HfOTP"),
+        @From(path = "emojis/emoji-config.yml")
+        EMOJI_COMMAND_HEADER("command-header", "<dark_gray><st>+-----------</st>[<yellow>Emoji Menu</yellow>]<st>-----------+</st></dark_gray>"),
+        @From(path = "emojis/emoji-config.yml")
+        EMOJI_COMMAND_FOOTER("command-footer", "Textures from the <click:open_url:'https://modrinth.com/resourcepack/allure-emoji-pack'><aqua>Allure Emoji Pack</aqua></click>");
 
         final String key;
         final String defaultValue;
@@ -121,7 +129,9 @@ public final class Option {
     }
 
     public enum StringList implements CoreKey<List<String>> {
-        MOTD("motd", java.util.List.of("&fWelcome to the server, {username}!", "&fHave fun!"));
+        MOTD("motd", java.util.List.of("&fWelcome to the server, {username}!", "&fHave fun!")),
+        @From(path = "emojis/emoji-config.yml")
+        TEXTURED_EMOJIS("textured-list", java.util.List.of());
 
         final String key;
         final List<String> defaultValue;

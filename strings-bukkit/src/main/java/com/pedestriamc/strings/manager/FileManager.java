@@ -30,6 +30,7 @@ public final class FileManager {
     private FileConfiguration logsFileConfig;
     private FileConfiguration moderationFileConfig;
     private FileConfiguration deathMessagesFileConfig;
+    private FileConfiguration emojiFileConfig;
 
     public FileManager(@NotNull Strings strings) {
         this.strings = strings;
@@ -48,21 +49,23 @@ public final class FileManager {
         messagesFile = new File(strings.getDataFolder(), "messages.yml");
         usersFile = new File(strings.getDataFolder(), "users.yml");
         channelsFile = new File(strings.getDataFolder(), "channels.yml");
-        emojisFile = new File(strings.getDataFolder(), "emojis.json");
+        emojisFile = new File(strings.getDataFolder(), "emojis/emojis.json");
         File deathMessagesFile = new File(strings.getDataFolder(), "death-messages.yml");
         File logsFile = new File(strings.getDataFolder(), "logs.yml");
         File moderationFile = new File(strings.getDataFolder(), "moderation.yml");
         File discordFile = new File(strings.getDataFolder(), "discord.yml");
+        File emojiFile = new File(strings.getDataFolder(), "emojis/emoji-config.yml");
 
         createIfDoesNotExist(broadcastsFile, "broadcasts.yml");
         createIfDoesNotExist(messagesFile, "messages.yml");
         createIfDoesNotExist(usersFile, "users.yml");
         createIfDoesNotExist(channelsFile, "channels.yml");
-        createIfDoesNotExist(emojisFile, "emojis.json");
+        createIfDoesNotExist(emojisFile, "emojis/emojis.json");
         createIfDoesNotExist(deathMessagesFile, "death-messages.yml");
         createIfDoesNotExist(logsFile, "logs.yml");
         createIfDoesNotExist(moderationFile, "moderation.yml");
         createIfDoesNotExist(discordFile, "discord.yml");
+        createIfDoesNotExist(emojiFile, "emojis/emoji-config.yml");
 
         broadcastsFileConfig = YamlConfiguration.loadConfiguration(broadcastsFile);
         messagesFileConfig = YamlConfiguration.loadConfiguration(messagesFile);
@@ -71,6 +74,7 @@ public final class FileManager {
         deathMessagesFileConfig = YamlConfiguration.loadConfiguration(deathMessagesFile);
         logsFileConfig = YamlConfiguration.loadConfiguration(logsFile);
         moderationFileConfig = YamlConfiguration.loadConfiguration(moderationFile);
+        emojiFileConfig = YamlConfiguration.loadConfiguration(emojiFile);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -90,11 +94,12 @@ public final class FileManager {
         updateIfPresent("messages.yml");
         updateIfPresent("moderation.yml");
         updateIfPresent("death-messages.yml");
+        updateIfPresent("emojis/emoji-config.yml");
     }
 
     private void updateIfPresent(String resourceName) {
         File file = new File(strings.getDataFolder(), resourceName);
-        if(file.exists()) {
+        if (file.exists()) {
             try {
                 ConfigUpdater.update(strings, resourceName, file);
             } catch(IOException e) {
@@ -146,6 +151,11 @@ public final class FileManager {
     @NotNull
     public FileConfiguration getModerationFileConfig() {
         return moderationFileConfig;
+    }
+
+    @NotNull
+    public FileConfiguration getEmojiFileConfig() {
+        return emojiFileConfig;
     }
 
     private static final Object userLock = new Object();

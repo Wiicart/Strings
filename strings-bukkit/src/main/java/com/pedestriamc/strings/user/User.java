@@ -216,7 +216,7 @@ public final class User implements StringsUser, Permissible {
                 map.put("ignored-players", new ArrayList<>(ignored));
                 map.put("mentions-enabled", mentionsEnabled);
                 map.put("msg-enabled", msgEnabled);
-                map.put("discord-id", discordId);
+                map.put("discord-id", discordId.get());
                 data = map;
             }
 

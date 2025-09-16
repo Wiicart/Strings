@@ -15,6 +15,7 @@
 #   - messages.yml
 #   - channels.yml
 #   - logs.yml
+#   - emojis/emojis-config.yml
 # Main Configuration Options:
 
 # (!) PREFIX HAS BEEN MOVED TO "messages.yml" (!)
@@ -38,19 +39,6 @@ enable-chatcolor: true
 # (Players with proper permissions can use
 #  placeholders in their messages)
 process-in-chat-placeholders: true
-
-# Should emojis in chat messages (like :smile:) be replaced with emoji equivalents?
-emojis: true
-
-# Should players be asked to apply the Allure Emoji Pack by P4ncake?
-# This resource pack adds better emoji textures.
-# (Players will be prompted by their client to accept or decline the pack)
-# https://modrinth.com/resourcepack/allure-emoji-pack
-emoji-resource-pack: true
-
-# The Modrinth ID of the texture pack used if "emoji-resource-pack" is enabled.
-# https://modrinth.com/resourcepack/allure-emoji-pack
-texture-pack-id: "mh6HfOTP"
 
 # Enable direct messages:
 # Should the Strings /msg system be enabled?
@@ -236,7 +224,7 @@ deletion-hover: "<red>Click this to delete the message.</red>"
 # Enable the /rules command
 # This uses MiniMessage - traditional color codes do not work
 # MiniMessage editor: https://webui.advntr.dev
-# If disables, refer to this:
+# If disabled, refer to this:
 # https://bukkit.fandom.com/wiki/Commands.yml#aliases
 enable-rules: true
 

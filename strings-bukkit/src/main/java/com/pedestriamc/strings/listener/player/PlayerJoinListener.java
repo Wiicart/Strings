@@ -60,12 +60,14 @@ public class PlayerJoinListener implements Listener {
             return;
         }
 
-        modrinth.getPack().thenAccept(pack ->
-                strings.sync(() -> player.setResourcePack(
-                        pack.url(),
-                        pack.hash(),
-                        "Please enable the Emoji resource pack"
-                ))
-        );
+        try {
+            modrinth.getPack().thenAccept(pack ->
+                    strings.sync(() -> player.setResourcePack(
+                            pack.url(),
+                            pack.hash(),
+                            "Please enable the Emoji resource pack"
+                    ))
+            );
+        } catch(Exception ignored) {}
     }
 }

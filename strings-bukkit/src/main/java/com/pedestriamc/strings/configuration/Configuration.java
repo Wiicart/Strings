@@ -4,12 +4,15 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.settings.SettingsRegistry;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
@@ -19,13 +22,35 @@ public class Configuration implements Settings {
 
     public Configuration(@NotNull Strings strings) {
         FileConfiguration config = strings.files().getConfig();
-        registry = new SettingsRegistry(builder -> builder
-                .putAll(loadValues(config, Option.Bool.class, FileConfiguration::getBoolean))
-                .putAll(loadValues(config, Option.Double.class, FileConfiguration::getDouble))
-                .putAll(loadValues(config, Option.StringList.class, FileConfiguration::getStringList))
-                .putAll(loadValues(config, Option.Text.class, FileConfiguration::getString))
-                .putAll(loadDeathMessageOptions(strings)) // stored in a death-messages.yml
-        );
+        registry = new SettingsRegistry(builder -> {
+            builder.putAll(loadValues(config, Option.Bool.class, FileConfiguration::getBoolean))
+                    .putAll(loadValues(config, Option.Double.class, FileConfiguration::getDouble))
+                    .putAll(loadValues(config, Option.StringList.class, FileConfiguration::getStringList))
+                    .putAll(loadValues(config, Option.Text.class, FileConfiguration::getString));
+
+            loadDeathMessageOptions(strings, builder);
+            loadEmojiOptions(strings, builder);
+        });
+    }
+
+    @Override
+    @NotNull
+    public <E extends Enum<E> & Option.CoreKey<V>, V> V get(@NotNull E key) {
+        return registry.get(key);
+    }
+
+    @NotNull
+    public String getColored(@NotNull Option.Text option) {
+        return ChatColor.translateAlternateColorCodes('&', get(option));
+    }
+
+    @NotNull
+    public Component getAsComponent(@NotNull Option.Text option) {
+        return MiniMessage.miniMessage().deserialize(get(option));
+    }
+
+    public float getFloat(@NotNull Option.Double option) {
+        return get(option).floatValue();
     }
 
     @NotNull
@@ -46,8 +71,7 @@ public class Configuration implements Settings {
         return map;
     }
 
-    @NotNull
-    private Map<Option.Bool, Boolean> loadDeathMessageOptions(@NotNull Strings strings) {
+    private void loadDeathMessageOptions(@NotNull Strings strings, @NotNull SettingsRegistry.RegistryBuilder builder) {
         FileConfiguration config = strings.files().getDeathMessagesFileConfig();
         Map<Option.Bool, Boolean> map = new EnumMap<>(Option.Bool.class);
 
@@ -61,21 +85,37 @@ public class Configuration implements Settings {
                 config.getBoolean("custom", Option.Bool.DEATH_MESSAGES_USE_CUSTOM.defaultValue())
         );
 
-        return map;
+        builder.putAll(map);
     }
 
-    @Override
-    @NotNull
-    public <E extends Enum<E> & Option.CoreKey<V>, V> V get(@NotNull E key) {
-        return registry.get(key);
+    private void loadEmojiOptions(@NotNull Strings strings, @NotNull SettingsRegistry.RegistryBuilder builder) {
+        FileConfiguration config = strings.files().getEmojiFileConfig();
+
+        Map<Option.Bool, Boolean> bools = new HashMap<>();
+        Map<Option.Text, String> texts = new HashMap<>();
+        Map<Option.StringList, List<String>> lists = new HashMap<>();
+
+        Option.Bool replacement = Option.Bool.ENABLE_EMOJI_REPLACEMENT;
+        bools.put(replacement, config.getBoolean(replacement.key(), replacement.defaultValue()));
+
+        Option.Bool usePack = Option.Bool.ENABLE_EMOJI_RESOURCE_PACK;
+        bools.put(usePack, config.getBoolean(usePack.key(), usePack.defaultValue()));
+
+        Option.Text packId = Option.Text.TEXTURES_MODRINTH_ID;
+        texts.put(packId, config.getString(packId.key(), packId.defaultValue()));
+
+        Option.Text header = Option.Text.EMOJI_COMMAND_HEADER;
+        texts.put(header, config.getString(header.key(), header.defaultValue()));
+
+        Option.Text footer = Option.Text.EMOJI_COMMAND_FOOTER;
+        texts.put(footer, config.getString(footer.key(), footer.defaultValue()));
+
+        Option.StringList textured = Option.StringList.TEXTURED_EMOJIS;
+        lists.put(textured, config.getStringList(textured.key()));
+
+        builder.putAll(bools);
+        builder.putAll(texts);
+        builder.putAll(lists);
     }
 
-    @NotNull
-    public String getColored(@NotNull Option.Text option) {
-        return ChatColor.translateAlternateColorCodes('&', get(option));
-    }
-
-    public float getFloat(@NotNull Option.Double option) {
-        return get(option).floatValue();
-    }
 }
