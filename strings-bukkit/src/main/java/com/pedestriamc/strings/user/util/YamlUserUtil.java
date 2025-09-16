@@ -4,6 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Monitorable;
+import com.pedestriamc.strings.api.discord.Snowflake;
 import com.pedestriamc.strings.api.event.StringsUserLoadEvent;
 import com.pedestriamc.strings.user.User;
 import org.bukkit.configuration.ConfigurationSection;
@@ -88,7 +89,7 @@ public final class YamlUserUtil implements UserUtil {
                 return user;
             }
 
-            User user = User.builder(strings, uuid, true)
+            User user = User.builder(strings, uuid, false)
                     .suffix(section.getString(".suffix"))
                     .prefix(section.getString(".prefix"))
                     .displayName(section.getString(".display-name"))
@@ -100,7 +101,7 @@ public final class YamlUserUtil implements UserUtil {
                     .mutedChannels(getChannels(section.getList(".muted-channels")))
                     .monitoredChannels(getMonitorables(section.getList(".monitored-channels")))
                     .ignoredPlayers(getUniqueIds(section.getList(".ignored-players")))
-                    .discordId(section.getLong("discord-id"))
+                    .discordId(Snowflake.ofOrEmpty(section.getLong("discord-id")))
                     .build();
 
             addUser(user);
@@ -168,8 +169,8 @@ public final class YamlUserUtil implements UserUtil {
     @Override
     public @NotNull User getUser(UUID uuid) {
         User user = map.get(uuid);
-        if(user == null) {
-            return User.builder(strings, uuid, false).build();
+        if (user == null) {
+            return loadUser(uuid);
         }
         return user;
     }

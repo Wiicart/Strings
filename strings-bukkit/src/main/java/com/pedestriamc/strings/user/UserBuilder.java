@@ -3,6 +3,7 @@ package com.pedestriamc.strings.user;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
+import com.pedestriamc.strings.api.discord.Snowflake;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +17,7 @@ public final class UserBuilder {
 
     final Strings strings;
     final UUID uuid;
-    final boolean retained;
+    final boolean isNew;
 
     Channel activeChannel;
 
@@ -33,12 +34,12 @@ public final class UserBuilder {
     boolean mentionsEnabled = true; // default
     boolean msgEnabled = true; // default
 
-    long discordId = 0;
+    Snowflake discordId = Snowflake.empty();
 
-    UserBuilder(@NotNull Strings strings, @NotNull UUID uuid, boolean retained) {
+    UserBuilder(@NotNull Strings strings, @NotNull UUID uuid, boolean isNew) {
         this.strings = strings;
         this.uuid = uuid;
-        this.retained = retained;
+        this.isNew = isNew;
     }
 
     @NotNull
@@ -108,7 +109,7 @@ public final class UserBuilder {
     }
 
     @NotNull
-    public UserBuilder discordId(long discordId) {
+    public UserBuilder discordId(@NotNull Snowflake discordId) {
         this.discordId = discordId;
         return this;
     }

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public class ChannelCommand extends CommandTree {
 
     public ChannelCommand(@NotNull Strings strings) {
-        super(CommandTree.builder()
+        super(builder()
                 .executes(new RootCommand(strings))
                 .withChild("join", b -> {
                     b.withAliases("j");

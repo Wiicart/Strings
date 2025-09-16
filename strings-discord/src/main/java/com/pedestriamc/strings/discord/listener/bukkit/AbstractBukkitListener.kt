@@ -8,12 +8,9 @@ import org.bukkit.event.Listener
 import org.jetbrains.annotations.NotNull
 
 abstract class AbstractBukkitListener(@NotNull strings: StringsDiscord): Listener {
+
     protected val manager: DiscordManager = strings.manager;
     protected val avatars: AvatarProvider = strings.avatarProvider;
-
-    protected fun manager(): DiscordManager = manager;
-
-    protected fun avatars(): AvatarProvider = avatars;
 
     protected fun sendEmbed(embed : MessageEmbed) {
         manager.sendDiscordEmbed(embed);

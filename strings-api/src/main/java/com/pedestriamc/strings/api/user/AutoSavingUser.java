@@ -3,6 +3,7 @@ package com.pedestriamc.strings.api.user;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
+import com.pedestriamc.strings.api.discord.Snowflake;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 import java.util.UUID;
 
-@SuppressWarnings("UsagesOfObsoleteApi")
+@SuppressWarnings("deprecation")
 final class AutoSavingUser implements StringsUser {
 
     private final StringsUser user;
@@ -225,14 +226,20 @@ final class AutoSavingUser implements StringsUser {
     }
 
     @Override
-    public long getDiscordId() {
+    @NotNull
+    public Snowflake getDiscordId() {
         return user.getDiscordId();
     }
 
     @Override
-    public void setDiscordId(long id) {
-        user.setDiscordId(id);
+    public void setDiscordId(@NotNull Snowflake snowflake) {
+        user.setDiscordId(snowflake);
         save();
+    }
+
+    @Override
+    public boolean isNew() {
+        return user.isNew();
     }
 
     @Override

@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 
 public class MessageProcessor {
 
+    private final Strings strings;
+
     private final UserUtil userUtil;
     private final Channel channel;
     private final Logger logger;
@@ -23,8 +25,10 @@ public class MessageProcessor {
     private final boolean usingPlaceholderAPI;
     private final boolean processingMessagePlaceholders;
     private final boolean parsingMessageChatColors;
+    private final boolean emojisEnabled;
 
     public MessageProcessor(@NotNull Strings strings, Channel channel) {
+        this.strings = strings;
         this.channel = channel;
         userUtil = strings.users();
         logger = strings.getLogger();
@@ -32,6 +36,7 @@ public class MessageProcessor {
         usingPlaceholderAPI = strings.isUsingPlaceholderAPI();
         processingMessagePlaceholders = config.get(Option.Bool.PROCESS_PLACEHOLDERS) && usingPlaceholderAPI;
         parsingMessageChatColors = config.get(Option.Bool.PROCESS_CHATCOLOR);
+        emojisEnabled = config.get(Option.Bool.ENABLE_EMOJI_REPLACEMENT);
     }
 
     /**
@@ -72,12 +77,14 @@ public class MessageProcessor {
      * @return A processed message
      */
     public String processMessage(Player sender, String message) {
-        if(shouldReplacePlaceholders(sender)) {
+        if (shouldReplacePlaceholders(sender)) {
             message = setPlaceholders(sender, message);
         }
-        if(shouldColorMessage(sender)) {
+        if (shouldColorMessage(sender)) {
             message = ChatColor.translateAlternateColorCodes('&', message);
         }
+
+        message = setEmojisIfAllowed(sender, message);
         return message;
     }
 
@@ -95,6 +102,13 @@ public class MessageProcessor {
             logger.warning("Failed to set placeholders for message from " + sender.getName() + ".");
             return str;
         }
+    }
+
+    private String setEmojisIfAllowed(@NotNull Player sender, @NotNull String input) {
+        if (emojisEnabled && EmojiProvider.allows(sender)) {
+            return strings.getEmojiManager().applyEmojis(input);
+        }
+        return input;
     }
 
     private boolean shouldReplacePlaceholders(Player sender) {

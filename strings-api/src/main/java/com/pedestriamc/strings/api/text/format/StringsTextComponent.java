@@ -10,20 +10,20 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
-public final class StringsTextComponent implements TextComponent, Element<TextComponent> {
+public sealed class StringsTextComponent implements TextComponent, Element<TextComponent> permits StringsTextComponent2 {
 
     private final @NotNull String content;
 
     @Contract(value = "_ -> new", pure = true)
     public static @NotNull StringsTextComponent of(@NotNull String content) {
-        return new StringsTextComponent(content);
+        return new StringsTextComponent2(content);
     }
 
     public static @NotNull StringsTextComponent of() {
-        return new StringsTextComponent("");
+        return new StringsTextComponent2("");
     }
 
-    private StringsTextComponent(@NotNull String content) {
+    protected StringsTextComponent(@NotNull String content) {
         this.content = content;
     }
 
@@ -52,7 +52,7 @@ public final class StringsTextComponent implements TextComponent, Element<TextCo
 
     @Override
     public @NotNull @Unmodifiable List<Component> children() {
-        return List.of();
+        return asComponent().children();
     }
 
     @Override
@@ -82,6 +82,11 @@ public final class StringsTextComponent implements TextComponent, Element<TextCo
     @Override
     public @NotNull Type getType() {
         return Type.TEXT;
+    }
+
+    @Override
+    public @NotNull Component asComponent() {
+        return Component.text(content);
     }
 
     @Override

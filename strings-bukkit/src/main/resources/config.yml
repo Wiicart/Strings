@@ -29,12 +29,28 @@ process-in-chat-colors: true
 # Enable the /chatcolor command?
 # Disable this if you're using an alternate chat color plugin
 # to avoid conflicts with command registration.
+# NOTE: If disabled, plugins still may fail to register.
+# Look at "commands.yml" to override.
+# https://bukkit.fandom.com/wiki/Commands.yml#aliases
 enable-chatcolor: true
 
 # Process placeholders in player chat messages?
 # (Players with proper permissions can use
 #  placeholders in their messages)
 process-in-chat-placeholders: true
+
+# Should emojis in chat messages (like :smile:) be replaced with emoji equivalents?
+emojis: true
+
+# Should players be asked to apply the Allure Emoji Pack by P4ncake?
+# This resource pack adds better emoji textures.
+# (Players will be prompted by their client to accept or decline the pack)
+# https://modrinth.com/resourcepack/allure-emoji-pack
+emoji-resource-pack: true
+
+# The Modrinth ID of the texture pack used if "emoji-resource-pack" is enabled.
+# https://modrinth.com/resourcepack/allure-emoji-pack
+texture-pack-id: "mh6HfOTP"
 
 # Enable direct messages:
 # Should the Strings /msg system be enabled?
@@ -220,6 +236,8 @@ deletion-hover: "<red>Click this to delete the message.</red>"
 # Enable the /rules command
 # This uses MiniMessage - traditional color codes do not work
 # MiniMessage editor: https://webui.advntr.dev
+# If disables, refer to this:
+# https://bukkit.fandom.com/wiki/Commands.yml#aliases
 enable-rules: true
 
 # Sent when a player runs the /rules command

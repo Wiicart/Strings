@@ -4,6 +4,10 @@ import com.pedestriamc.strings.api.APIRegistrar;
 import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.data.BuildableRegistrar;
 import com.pedestriamc.strings.api.event.StringsReloader;
+import com.pedestriamc.strings.api.settings.Option;
+import com.pedestriamc.strings.api.text.EmojiManager;
+import com.pedestriamc.strings.chat.EmojiProvider;
+import com.pedestriamc.strings.external.ModrinthService;
 import com.pedestriamc.strings.placeholder.StringsPlaceholderExpansion;
 import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.chat.Mentioner;
@@ -29,6 +33,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -65,6 +70,8 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
     @SuppressWarnings("unused")
     private LogManager logManager;
     private Configuration configClass;
+    private EmojiManager emojiManager;
+    private ModrinthService modrinth;
 
     public Strings() {
         super();
@@ -180,6 +187,13 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         channelLoader = new ChannelManager(this);
         serverMessages = new ServerMessages(this);
         mentioner = new Mentioner(this);
+
+        if (getConfiguration().get(Option.Bool.ENABLE_EMOJI_REPLACEMENT)) {
+            emojiManager = new EmojiProvider(this);
+        }
+        if (getConfiguration().get(Option.Bool.ENABLE_EMOJI_RESOURCE_PACK)) {
+            modrinth = new ModrinthService(this);
+        }
     }
 
     /**
@@ -295,24 +309,37 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         return isPaper;
     }
 
-    public Mentioner getMentioner() {
+    public @NotNull Mentioner getMentioner() {
         return mentioner;
     }
 
-    public ChannelManager getChannelLoader() {
+    public @NotNull ChannelManager getChannelLoader() {
         return channelLoader;
     }
 
-    public ServerMessages getServerMessages() {
+    public @NotNull ServerMessages getServerMessages() {
         return serverMessages;
     }
 
-    public PlayerDirectMessenger getPlayerDirectMessenger() {
+    public @NotNull PlayerDirectMessenger getPlayerDirectMessenger() {
         return playerDirectMessenger;
     }
 
-    public BukkitMessenger getMessenger() {
+    public @NotNull BukkitMessenger getMessenger() {
         return messenger;
+    }
+
+    @NotNull
+    public EmojiManager getEmojiManager() {
+        if (emojiManager == null) {
+            emojiManager = new EmojiProvider(this);
+        }
+        return emojiManager;
+    }
+
+    @Nullable
+    public ModrinthService modrinth() {
+        return modrinth;
     }
 
     public @NotNull BukkitAudiences adventure() {

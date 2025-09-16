@@ -5,7 +5,7 @@ import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
-import com.pedestriamc.strings.api.text.format.StringsComponent;
+import com.pedestriamc.strings.chat.EmojiProvider;
 import com.pedestriamc.strings.chat.MessageUtilities;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.configuration.Configuration;
@@ -32,6 +32,7 @@ public class RendererProvider {
     private final boolean processingMessagePlaceholders;
     private final boolean parsingMessageChatColors;
     private final boolean mentionsEnabled;
+    private final boolean emojisEnabled;
 
     public RendererProvider(@NotNull Strings strings) {
         this.strings = strings;
@@ -43,6 +44,7 @@ public class RendererProvider {
         mentionsEnabled = config.get(Option.Bool.ENABLE_MENTIONS);
         processingMessagePlaceholders = config.get(Option.Bool.PROCESS_PLACEHOLDERS) && strings.isUsingPlaceholderAPI();
         parsingMessageChatColors = config.get(Option.Bool.PROCESS_CHATCOLOR);
+        emojisEnabled = config.get(Option.Bool.ENABLE_EMOJI_REPLACEMENT);
     }
 
     @NotNull
@@ -115,14 +117,16 @@ public class RendererProvider {
                 msg = mentioner.processMentions(player, channel, msg);
             }
 
-            StringsComponent messageComponent = source
-                    .getChatColorComponent()
-                    .append(StringsComponent.fromString(msg));
+            String string = source.getChatColor() + msg;
+            Component messageComponent = ComponentConverter.fromString(string);
+
+            messageComponent = setEmojisIfAllowed(player, messageComponent);
+
 
             finalComponent = MessageUtilities.setPlaceholder(
                     finalComponent,
                     "{message}",
-                    messageComponent.asComponent()
+                    messageComponent
             );
 
             return finalComponent;
@@ -136,6 +140,21 @@ public class RendererProvider {
                 strings.getLogger().warning("Failed to set placeholders for message from " + sender.getName() + ".");
                 return str;
             }
+        }
+
+        @SuppressWarnings("unused")
+        private String setEmojisIfAllowed(@NotNull Player sender, @NotNull String input) {
+            if (emojisEnabled && EmojiProvider.allows(sender)) {
+                return strings.getEmojiManager().applyEmojis(input);
+            }
+            return input;
+        }
+
+        private Component setEmojisIfAllowed(@NotNull Player sender, @NotNull Component input) {
+            if (emojisEnabled && EmojiProvider.allows(sender)) {
+                return strings.getEmojiManager().applyEmojis(input);
+            }
+            return input;
         }
 
         private boolean shouldReplacePlaceholders(User user) {

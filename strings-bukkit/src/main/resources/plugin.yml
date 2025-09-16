@@ -60,6 +60,15 @@ commands:
   unignore:
     description: "Lets a player stop ignoring another player"
     usage: "/unignore <player-to-unignore> <player-ignoring (optional)>"
+  rules:
+    description: "Shows the server rules"
+    usage: "/rules"
+  chatcolor:
+    description: "Sets a player's chat color"
+    usage: "/chatcolor <color>"
+  emoji:
+    description: "Shows the emoji menu"
+    usage: "/emoji"
 permissions:
   strings.*:
     description: "All Strings permissions"
@@ -182,3 +191,6 @@ permissions:
   strings.chat.delete-messages.others:
     default: op
     description: "Allows players to delete any player's message in a Channel that allows message deletion."
+  strings.chat.emojis:
+    default: true
+    description: "Players with this permission will have emoji placeholders like :smile: replaced with emoji equivalents, if enabled."

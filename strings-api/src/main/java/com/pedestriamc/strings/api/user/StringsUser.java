@@ -3,10 +3,10 @@ package com.pedestriamc.strings.api.user;
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
+import com.pedestriamc.strings.api.discord.Snowflake;
 import com.pedestriamc.strings.api.message.Messageable;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
 import org.jetbrains.annotations.ApiStatus.Internal;
-import org.jetbrains.annotations.ApiStatus.Obsolete;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,15 +17,17 @@ import java.util.UUID;
 /**
  * This represents the Strings internal User object which stores data on individual players.
  * Changes are not saved by default, you must use {@link StringsAPI#saveUser(StringsUser)} to save.
+ * Only intended for use when the User is online.
+ * Storing an instance beyond a Player's session can cause unexpected behavior.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "all"}) // figure out the deprecation suppression so "all" can be removed
 public interface StringsUser extends Messageable {
 
     /**
      * Provides a copy of the User that automatically saves itself.
      * If saving fails, it will fail silently.
      * @param user The user
-     * @return A auto-saving version of the User
+     * @return An auto-saving version of the User
      */
     @NotNull
     static StringsUser autoSaving(@NotNull StringsUser user) {
@@ -54,7 +56,7 @@ public interface StringsUser extends Messageable {
      * @return A chat color.
      */
     @Nullable
-    @Obsolete
+    @Deprecated
     String getChatColor();
 
     /**
@@ -62,7 +64,7 @@ public interface StringsUser extends Messageable {
      * @deprecated Use {@link StringsUser#getChatColorComponent()} instead.
      * @param chatColor The new chat color.
      */
-    @Obsolete
+    @Deprecated
     void setChatColor(String chatColor);
 
     /**
@@ -271,11 +273,11 @@ public interface StringsUser extends Messageable {
     boolean isDiscordLinked();
 
     /**
-     * Provides the User's Discord ID if present.
-     * If not present, returns 0
+     * Provides the User's Discord ID if present.<br/>
+     * Refer to {@link Snowflake#isPresent()}
      * @return The ID
      */
-    long getDiscordId();
+    @NotNull Snowflake getDiscordId();
 
     /**
      * Internal - if you change the ID, StringsDiscord may behave unexpectedly.<br/>
@@ -283,5 +285,11 @@ public interface StringsUser extends Messageable {
      * @param id The new ID
      */
     @Internal
-    void setDiscordId(long id);
+    void setDiscordId(@NotNull Snowflake snowflake);
+
+    /**
+     * Tells if Strings had any prior data of this user before the current session.
+     * @return If the Player is new
+     */
+    boolean isNew();
 }

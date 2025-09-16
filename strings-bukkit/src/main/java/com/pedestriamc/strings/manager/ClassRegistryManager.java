@@ -7,6 +7,7 @@ import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.commands.BroadcastCommand;
 import com.pedestriamc.strings.commands.ChatColorCommand;
 import com.pedestriamc.strings.commands.ClearChatCommand;
+import com.pedestriamc.strings.commands.EmojiCommand;
 import com.pedestriamc.strings.commands.RulesCommand;
 import com.pedestriamc.strings.commands.StringsCommand;
 import com.pedestriamc.strings.commands.ignore.IgnoreCommand;
@@ -67,6 +68,8 @@ public class ClassRegistryManager {
         Configuration config = strings.getConfiguration();
 
         registerCommand("strings", new StringsCommand(strings), new StringsTabCompleter());
+
+        registerCommand("emoji", new EmojiCommand(strings), null);
 
         registerCommand("ignore", new IgnoreCommand(strings), new IgnoreTabCompleter());
         registerCommand("unignore", new UnIgnoreCommand(strings), new IgnoreTabCompleter());

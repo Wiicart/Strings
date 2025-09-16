@@ -5,6 +5,7 @@ import com.pedestriamc.strings.api.discord.StringsDiscord;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.moderation.StringsModeration;
 import com.pedestriamc.strings.api.settings.Settings;
+import com.pedestriamc.strings.api.text.EmojiManager;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -78,6 +79,14 @@ public interface StringsAPI {
      * @return The Settings instance
      */
     @NotNull Settings getSettings();
+
+    /**
+     * Provides a {@link EmojiManager}.<br/>
+     * An instance is not always present by default,
+     * so an instance may need to be created.
+     * @return A EmojiManager
+     */
+    @NotNull EmojiManager emojiManager();
 
     /**
      * Provides the StringsModeration instance, offering some moderation methods.

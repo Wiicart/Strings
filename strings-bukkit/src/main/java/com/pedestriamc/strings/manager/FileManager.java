@@ -21,6 +21,7 @@ public final class FileManager {
     private File messagesFile;
     private File channelsFile;
     private File usersFile;
+    private File emojisFile;
 
     private FileConfiguration broadcastsFileConfig;
     private FileConfiguration messagesFileConfig;
@@ -47,6 +48,7 @@ public final class FileManager {
         messagesFile = new File(strings.getDataFolder(), "messages.yml");
         usersFile = new File(strings.getDataFolder(), "users.yml");
         channelsFile = new File(strings.getDataFolder(), "channels.yml");
+        emojisFile = new File(strings.getDataFolder(), "emojis.json");
         File deathMessagesFile = new File(strings.getDataFolder(), "death-messages.yml");
         File logsFile = new File(strings.getDataFolder(), "logs.yml");
         File moderationFile = new File(strings.getDataFolder(), "moderation.yml");
@@ -56,6 +58,7 @@ public final class FileManager {
         createIfDoesNotExist(messagesFile, "messages.yml");
         createIfDoesNotExist(usersFile, "users.yml");
         createIfDoesNotExist(channelsFile, "channels.yml");
+        createIfDoesNotExist(emojisFile, "emojis.json");
         createIfDoesNotExist(deathMessagesFile, "death-messages.yml");
         createIfDoesNotExist(logsFile, "logs.yml");
         createIfDoesNotExist(moderationFile, "moderation.yml");
@@ -87,7 +90,6 @@ public final class FileManager {
         updateIfPresent("messages.yml");
         updateIfPresent("moderation.yml");
         updateIfPresent("death-messages.yml");
-        updateIfPresent("channels.yml");
     }
 
     private void updateIfPresent(String resourceName) {
@@ -99,6 +101,11 @@ public final class FileManager {
                 strings.warning("Failed to update file " + resourceName + ".\n" + e.getMessage());
             }
         }
+    }
+
+    @NotNull
+    public File getEmojisFile() {
+        return emojisFile;
     }
 
     @NotNull

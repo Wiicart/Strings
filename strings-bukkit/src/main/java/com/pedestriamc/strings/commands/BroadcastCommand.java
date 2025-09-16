@@ -70,6 +70,7 @@ public final class BroadcastCommand implements CommandExecutor {
         if(sender.hasPermission("strings.chat.placeholdermsg") && usePAPI && (sender instanceof Player p)) {
             PlaceholderAPI.setPlaceholders(p, builder.toString());
         }
+
         for(String arg : args) {
             builder.append(arg);
             builder.append(" ");

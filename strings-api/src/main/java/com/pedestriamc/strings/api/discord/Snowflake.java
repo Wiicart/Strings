@@ -5,12 +5,12 @@ import org.jetbrains.annotations.NotNull;
 
 public final class Snowflake {
 
-    public static final Snowflake EMPTY = new Snowflake(0);
+    private static final Snowflake EMPTY = new Snowflake(0);
 
     private final long id;
 
     /**
-     * Constructs a DiscordID instance.
+     * Makes a Snowflake.
      * @param id A long with 18 digits, representing a Discord ID
      * @throws IllegalArgumentException If the ID cannot represent a valid Discord ID
      */
@@ -22,6 +22,25 @@ public final class Snowflake {
         }
 
         return new Snowflake(id);
+    }
+
+    /**
+     * Makes a Snowflake.
+     * If the id is invalid, returns {@link Snowflake#empty()}
+     * @param id The id of the snowflake
+     * @return A Snowflake
+     */
+    @NotNull
+    public static Snowflake ofOrEmpty(long id) {
+        try {
+            return of(id);
+        } catch(IllegalArgumentException e) {
+            return EMPTY;
+        }
+    }
+
+    public static Snowflake empty() {
+        return EMPTY;
     }
 
     private static boolean isInvalid(long id) {

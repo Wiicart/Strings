@@ -5,6 +5,7 @@ import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.*;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.settings.Settings;
+import com.pedestriamc.strings.api.text.EmojiManager;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.user.User;
@@ -72,6 +73,11 @@ public final class StringsImpl implements StringsAPI {
     @NotNull
     public Settings getSettings() {
         return strings.getConfiguration();
+    }
+
+    @Override
+    public @NotNull EmojiManager emojiManager() {
+        return strings.getEmojiManager();
     }
 
 }

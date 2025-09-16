@@ -70,14 +70,14 @@ public class StrictProximityChannel extends AbstractLocalChannel {
         HashSet<StringsUser> recipients = new HashSet<>(getMonitors());
 
         Location senderLocation = player.getLocation();
-        for(Player p : senderWorld.getPlayers()) {
+        for (Player p : senderWorld.getPlayers()) {
             Location pLocation = p.getLocation();
             if(senderLocation.distanceSquared(pLocation) < distanceSquared) {
                 recipients.add(userUtil.getUser(p));
             }
         }
 
-        for(Player p : Bukkit.getOnlinePlayers()) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
             if(p.hasPermission(CHANNEL_PERMISSION + getName() + ".receive")) {
                 recipients.add(userUtil.getUser(p));
             }

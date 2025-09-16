@@ -28,9 +28,10 @@ public class StringsCommand extends CommandTree {
                         "reload",
                         b -> b.executes(new ReloadCommand(strings))
                 )
-                .withChild(
-                        "help",
-                        b -> b.executes(new CartMessengerCommand(strings, Message.STRINGS_HELP))
+                .withChild("help",
+                        b -> b
+                                .executes(new CartMessengerCommand(strings, Message.STRINGS_HELP))
+                                .withAliases("h")
                 )
                 .build()
         );

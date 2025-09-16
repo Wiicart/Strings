@@ -2,6 +2,7 @@ package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.collections.BoundedLinkedBuffer;
+import com.pedestriamc.strings.api.discord.Snowflake;
 import com.pedestriamc.strings.api.event.channel.UserChannelEvent;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
 import com.pedestriamc.strings.api.user.StringsUser;
@@ -42,8 +43,7 @@ import java.util.UUID;
  */
 public final class User implements StringsUser, Permissible {
 
-    // should almost always be true, see YamlUserUtil for usage.
-    private final boolean retain;
+    private final boolean isNew;
 
     private final Strings strings;
     private final ChannelManager channelLoader;
@@ -60,6 +60,7 @@ public final class User implements StringsUser, Permissible {
 
     private Channel activeChannel;
     private StringsComponent chatColorComponent;
+    private Snowflake discordId;
 
     private @Nullable String prefix;
     private @Nullable String suffix;
@@ -67,8 +68,6 @@ public final class User implements StringsUser, Permissible {
 
     private boolean mentionsEnabled;
     private boolean msgEnabled;
-
-    private long discordId;
 
     BoundedLinkedBuffer<EntityDamageEvent> previousDamage = new BoundedLinkedBuffer<>(2);
 
@@ -90,15 +89,15 @@ public final class User implements StringsUser, Permissible {
     }
 
     @Contract(value = "_, _, _ -> new", pure = true)
-    public static @NotNull UserBuilder builder(Strings strings, UUID uuid, boolean retained) {
-        return new UserBuilder(strings, uuid, retained);
+    public static @NotNull UserBuilder builder(Strings strings, UUID uuid, boolean isNew) {
+        return new UserBuilder(strings, uuid, isNew);
     }
 
     User(@NotNull UserBuilder builder) {
         this.strings = builder.strings;
         this.channelLoader = strings.getChannelLoader();
         this.uuid = builder.uuid;
-        this.retain = builder.retained;
+        this.isNew = builder.isNew;
         this.player = Objects.requireNonNull(strings.getServer().getPlayer(uuid));
         this.audience = loadAudience(uuid);
         this.name = player.getName();
@@ -283,7 +282,6 @@ public final class User implements StringsUser, Permissible {
      */
     @NotNull
     @Override
-    @ApiStatus.Obsolete
     public String getChatColor() {
         return color(getChatColorComponent().toString());
     }
@@ -295,7 +293,6 @@ public final class User implements StringsUser, Permissible {
      * @return A chat color.
      */
     @SuppressWarnings("java:S1874")
-    @ApiStatus.Obsolete
     public String getChatColor(@NotNull Channel channel) {
         String chatColor = getChatColor();
         if (chatColor.isEmpty()) {
@@ -553,26 +550,23 @@ public final class User implements StringsUser, Permissible {
 
     @Override
     public boolean isDiscordLinked() {
-        return false; //todo IMPL
+        return discordId.isPresent();
     }
 
     @Override
-    public long getDiscordId() {
-        return discordId; //todo SNOWFLAKE
+    @NotNull
+    public Snowflake getDiscordId() {
+        return discordId;
     }
 
     @Override
-    public void setDiscordId(long id) {
-        this.discordId = id; //todo SNOWFLAKE
+    public void setDiscordId(@NotNull Snowflake snowflake) {
+        this.discordId = snowflake;
     }
 
-    /**
-     * Provides if this User instance is retained.
-     * @return True if the user is retained, false otherwise.
-     */
-    @SuppressWarnings("unused")
-    public boolean isRetained() {
-        return retain;
+    @Override
+    public boolean isNew() {
+        return isNew;
     }
 
     @Override
