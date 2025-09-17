@@ -22,8 +22,8 @@ abstract class AbstractChatListener implements Listener {
 
     @Contract("_, _ -> new")
     protected @NotNull Container processSymbol(@NotNull String msg, @NotNull User user) {
-        for(Map.Entry<String, Channel> entry : channelLoader.getChannelSymbols().entrySet()) {
-            if(msg.startsWith(entry.getKey())) {
+        for (Map.Entry<String, Channel> entry : channelLoader.getChannelSymbols().entrySet()) {
+            if (msg.startsWith(entry.getKey())) {
                 Channel c = entry.getValue();
                 if (c.allows(user) && !c.equals(user.getActiveChannel())) {
                     msg = msg.substring(entry.getKey().length());

@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 /**
- * This signifies a {@link Channel} can be Monitored using /channel monitor <channel>.
+ * This signifies a {@link Channel} can be Monitored using /channel monitor (channel).
  * Monitors are not members of the Channel, but will receive all messages from the Channel.
  */
 public interface Monitorable extends Channel {

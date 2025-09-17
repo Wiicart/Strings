@@ -275,7 +275,7 @@ abstract sealed class AbstractChannelBuilder<B extends IChannelBuilder<B>> imple
 
 
     /**
-     * Sets the broadcast format used with /channel broadcast <channel>
+     * Sets the broadcast format used with /channel broadcast (channel)
      * @param broadcastFormat The broadcast format
      * @return this
      */

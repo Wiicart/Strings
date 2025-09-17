@@ -27,6 +27,7 @@ public final class LocalChannelBuilder<T> extends AbstractChannelBuilder<LocalCh
      * @param name       The Channel name.
      * @param format     The Channel format.
      * @param membership The Channel membership
+     * @param worlds The worlds the Channel will be used in
      */
     public LocalChannelBuilder(@NotNull String name, @NotNull String format, @NotNull Membership membership, Set<Locality<T>> worlds) {
         super(name, format, membership);
@@ -56,6 +57,7 @@ public final class LocalChannelBuilder<T> extends AbstractChannelBuilder<LocalCh
      * Sets the proximity that messages will be sent around a player.
      * Only applicable to ProximityChannel.
      * @param distance The double value of the distance.
+     * @return this
      */
     public LocalChannelBuilder<T> setDistance(double distance) {
         this.distance = distance;

@@ -127,7 +127,7 @@ final class ChannelFileReader {
         manager.register(channel);
 
         String symbol = section.getString("symbol");
-        if(symbol != null) {
+        if(symbol != null && !symbol.isBlank()) {
             manager.registerChannelSymbol(symbol, channel);
         }
     }

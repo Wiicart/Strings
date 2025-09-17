@@ -36,7 +36,7 @@ public abstract class OneToTwoArgAbstractCommand extends AbstractCommand {
             return null;
         }
 
-        if(channel.getType() == Type.PROTECTED && !(channel instanceof HelpOPChannel)) {
+        if(channel.getType() == Type.PROTECTED || (channel instanceof HelpOPChannel)) {
             sendMessage(PROTECTED_CHANNEL_UNSUPPORTED_OPERATION, sender);
             return null;
         }

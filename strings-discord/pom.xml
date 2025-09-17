@@ -4,9 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.pedestriamc.strings</groupId>
+    <parent>
+        <artifactId>Strings</artifactId>
+        <groupId>com.pedestriamc.strings</groupId>
+        <version>1.7.0</version>
+    </parent>
+
   <artifactId>strings-discord</artifactId>
-  <version>1.7</version>
+  <version>1.7.0</version>
   <packaging>jar</packaging>
 
   <name>strings-discord</name>
@@ -153,7 +158,7 @@
     <dependency>
       <groupId>com.pedestriamc.strings</groupId>
       <artifactId>strings-api</artifactId>
-      <version>1.7</version>
+      <version>1.7.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

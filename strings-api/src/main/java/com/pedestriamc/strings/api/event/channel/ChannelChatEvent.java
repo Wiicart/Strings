@@ -13,7 +13,8 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * An AsyncPlayerChatEvent with the additional field of a {@link Channel}.
+ * The primary chat event for Strings
+ * All player messages handled by Strings will have a ChannelChatEvent called.
  */
 @SuppressWarnings("unused")
 public final class ChannelChatEvent extends AsyncPlayerChatEvent {
@@ -82,6 +83,10 @@ public final class ChannelChatEvent extends AsyncPlayerChatEvent {
         return channel;
     }
 
+    /**
+     * Provides an Optional of a potential SignedMessage
+     * @return The SignedMessage if present
+     */
     @NotNull
     @Contract(pure = true)
     public Optional<SignedMessage> getSignedMessage() {

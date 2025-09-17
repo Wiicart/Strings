@@ -107,7 +107,28 @@ Example images of Strings
 
 
 ## Developer
-I've added a public API which will be available through Maven soon.  The API is currently published through [GitHub releases](https://github.com/Wiicart/Strings/releases).
+Integrations with Strings can be made with the StringsAPI
+
+## Developer
+Integrations with Strings can be made with the StringsAPI.
+
+### Maven
+```xml
+<repositories>
+    <repository>
+        <id>pedestriamc-repo</id>
+        <url>https://repo.pedestriamc.com/release/</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>com.pedestriamc.strings</groupId>
+        <artifactId>strings-api</artifactId>
+        <version>1.7.0</version>
+    </dependency>
+</dependencies>
+```
 
 ## Additional Links
 [Website](https://www.wiicart.net/strings.html) |

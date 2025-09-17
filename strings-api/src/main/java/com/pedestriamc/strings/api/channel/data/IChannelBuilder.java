@@ -193,7 +193,7 @@ public sealed interface IChannelBuilder<B extends IChannelBuilder<B>> permits Ab
     String getBroadcastFormat();
 
     /**
-     * Sets the broadcast format used with /channel broadcast <channel>
+     * Sets the broadcast format used with /channel broadcast (channel)
      * @param broadcastFormat The broadcast format
      * @return this
      */

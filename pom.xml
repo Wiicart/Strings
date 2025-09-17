@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.pedestriamc</groupId>
+    <groupId>com.pedestriamc.strings</groupId>
     <artifactId>Strings</artifactId>
-    <version>1.7</version>
+    <version>1.7.0</version>
     <packaging>pom</packaging>
 
     <name>Strings</name>
@@ -81,6 +81,10 @@
     </build>
 
     <repositories>
+        <repository>
+            <id>pedestriamc-repo</id>
+            <url>https://repo.pedestriamc.com/release/</url>
+        </repository>
     </repositories>
 
     <dependencies>

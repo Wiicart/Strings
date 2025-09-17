@@ -282,7 +282,7 @@ public interface StringsUser extends Messageable {
     /**
      * Internal - if you change the ID, StringsDiscord may behave unexpectedly.<br/>
      * Sets the User's Discord ID
-     * @param id The new ID
+     * @param snowflake The new snowflake
      */
     @Internal
     void setDiscordId(@NotNull Snowflake snowflake);

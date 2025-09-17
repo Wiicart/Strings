@@ -5,6 +5,7 @@ import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.user.StringsUser;
+import com.pedestriamc.strings.api.utlity.SerialComponent;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import org.bukkit.permissions.Permissible;
@@ -25,6 +26,9 @@ public interface Channel extends Comparable<Channel> {
     /**
      * Provides a new {@link ChannelBuilder}, with the Channel's name, format, and membership defined.
      * If constructing a {@link LocalChannel}, use {@link Channel#localBuilder(String, String, Membership, Set)} instead.
+     * @param name The Channel name
+     * @param format The Channel format
+     * @param membership the Channel {@link Membership}
      * @return A new {@link ChannelBuilder}
      */
     @Contract(value = "_, _, _ -> new", pure = true)
@@ -34,7 +38,9 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Provides a new {@link LocalChannelBuilder}, with the Channel's name, format, and membership defined.
-     *
+     * @param name The Channel name
+     * @param format The Channel format
+     * @param membership the Channel {@link Membership}
      * @return A new {@link LocalChannelBuilder}
      */
     @Contract(value = "_, _, _, _ -> new", pure = true)
@@ -72,7 +78,7 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Provides the recipients of a message if the sender were to send a message in the Channel.
-     * Implementations should account for Channel mutes & User ignores.
+     * Implementations should account for Channel mutes and User ignores.
      *
      * @param user The message sender.
      * @return A Set of Players.
@@ -123,6 +129,18 @@ public interface Channel extends Comparable<Channel> {
      * @param message The message to broadcast.
      */
     void broadcastPlain(@NotNull Component message);
+
+    /**
+     * Broadcasts a message to the Channel.
+     * Unlike {@link Channel#broadcast(Component)}, no formatting will be applied,
+     * and the String will be broadcast to the Channel as is.
+     * No sound will be played either.
+     * Broadcast recipients are determined using {@link Channel#getPlayersInScope()}.
+     * @param message The message to broadcast.
+     */
+    default void broadcastPlain(@NotNull SerialComponent message) {
+        broadcastPlain(message.asComponent());
+    }
 
     /**
      * Provides the formatting of the Channel.
