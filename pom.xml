@@ -81,10 +81,6 @@
     </build>
 
     <repositories>
-        <repository>
-            <id>pedestriamc-repo</id>
-            <url>https://repo.pedestriamc.com/release/</url>
-        </repository>
     </repositories>
 
     <dependencies>

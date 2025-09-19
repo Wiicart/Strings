@@ -10,7 +10,12 @@ public class ChannelCommand extends CommandTree {
 
     public ChannelCommand(@NotNull Strings strings) {
         super(builder()
-                .executes(new RootCommand(strings))
+                .run(builder -> {
+                    ListCommand command = new ListCommand(strings);
+                    builder.getWorkbench().store("list", () -> command);
+                    builder.executes(new RootCommand(strings, command));
+                })
+                .withChild("list", b -> b.executes("list"))
                 .withChild("join", b -> {
                     b.withAliases("j");
                     b.executes(new JoinCommand(strings));
@@ -31,7 +36,6 @@ public class ChannelCommand extends CommandTree {
                 .withChild("unmute", b -> b.executes(new UnmuteCommand(strings)))
                 .withChild("monitor", b -> b.executes(new MonitorCommand(strings)))
                 .withChild("unmonitor", b -> b.executes(new UnmonitorCommand(strings)))
-                .withChild("list", b -> b.executes(new ListCommand(strings)))
                 .withChild("current", b -> b.executes(new CurrentCommand(strings)))
                 .build()
         );

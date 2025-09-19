@@ -13,14 +13,22 @@ import static com.pedestriamc.strings.api.message.Message.*;
 
 class RootCommand extends OneToTwoArgAbstractCommand implements CartCommandExecutor {
 
-    RootCommand(@NotNull Strings strings) {
+    private final ListCommand listCommand;
+
+    RootCommand(@NotNull Strings strings, @NotNull ListCommand listCommand) {
         super(strings);
+        this.listCommand = listCommand;
     }
 
     @Override
     public void onCommand(@NotNull CommandData data) {
         CommandSender sender = data.sender();
         String[] args = data.args();
+
+        if (args.length == 0) {
+            listCommand.onCommand(data);
+            return;
+        }
 
         if (checkArgCountAndNotify(sender, args.length)) {
             return;
