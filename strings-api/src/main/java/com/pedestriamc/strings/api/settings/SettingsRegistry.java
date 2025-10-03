@@ -1,9 +1,10 @@
 package com.pedestriamc.strings.api.settings;
 
+import com.google.common.collect.ImmutableMap;
+import com.pedestriamc.strings.api.collections.ImmutableEnumMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,12 +17,12 @@ import java.util.function.Consumer;
 @Internal
 public final class SettingsRegistry {
 
-    private final Map<Class<?>, EnumMap<? extends Key<?>, ?>> master;
+    private final Map<Class<?>, ImmutableEnumMap<? extends Key<?>, ?>> master;
 
     public SettingsRegistry(@NotNull Consumer<RegistryBuilder> consumer) {
         RegistryBuilder builder = new RegistryBuilder();
         consumer.accept(builder);
-        master = Collections.unmodifiableMap(builder.master);
+        master = builder.buildImmutable();
     }
 
     /**
@@ -34,7 +35,7 @@ public final class SettingsRegistry {
     @NotNull
     @SuppressWarnings("unchecked")
     public <E extends Enum<E> & Key<V>, V> V get(@NotNull E key) { 
-        EnumMap<E, V> map = (EnumMap<E, V>) master.get(key.getDeclaringClass());
+        Map<E, V> map = (Map<E, V>) master.get(key.getDeclaringClass());
         if (map == null) {
             return key.defaultValue();
         } else {
@@ -48,18 +49,18 @@ public final class SettingsRegistry {
      * Used to construct a SettingsRegistry.
      * Null keys and values are not permitted.
      */
-    public static class RegistryBuilder {
+    public static final class RegistryBuilder {
 
         private final Map<Class<?>, EnumMap<? extends Key<?>, ?>> master = new HashMap<>();
 
-        private static boolean containsNoNulls(@NotNull Map<?, ?> map) {
-            for (Map.Entry<?, ?> entry : map.entrySet()) {
-                if (entry.getValue() == null || entry.getKey() == null) {
-                    return false;
-                }
+        @NotNull
+        private Map<Class<?>, ImmutableEnumMap<? extends Key<?>, ?>> buildImmutable() {
+            Map<Class<?>, ImmutableEnumMap<? extends Key<?>, ?>> map = new HashMap<>(master.size());
+            for (Map.Entry<Class<?>, EnumMap<? extends Key<?>, ?>> entry : master.entrySet()) {
+                map.put(entry.getKey(), ImmutableEnumMap.asImmutable(entry.getValue()));
             }
 
-            return true;
+            return ImmutableMap.copyOf(map);
         }
 
         /**
@@ -69,9 +70,9 @@ public final class SettingsRegistry {
          * @param <E> The enum type
          * @param <V> The value type
          */
-        public <E extends Enum<E> & Key<V>, V> RegistryBuilder createEnumMap(Class<E> clazz) {
-            this.master.put(clazz, new EnumMap<>(clazz));
-            return this;
+        @SuppressWarnings("unchecked")
+        public <E extends Enum<E> & Key<V>, V> Map<E, V> computeMapIfAbsent(Class<E> clazz) {
+            return (Map<E, V>) this.master.computeIfAbsent(clazz, v -> new EnumMap<>(clazz));
         }
 
         /**
@@ -97,16 +98,11 @@ public final class SettingsRegistry {
          * @param <E> The enum type
          * @param <V> The value type
          */
-        @SuppressWarnings("unchecked")
         public <E extends Enum<E> & Key<V>, V> RegistryBuilder put(@NotNull Map.Entry<E, V> entry) {
             E key = Objects.requireNonNull(entry.getKey());
             V value = Objects.requireNonNull(entry.getValue());
 
-            if (!this.master.containsKey(key.getDeclaringClass())) {
-                createEnumMap(key.getDeclaringClass());
-            }
-
-            Map<E, V> map = (Map<E, V>) this.master.get(key.getDeclaringClass());
+            Map<E, V> map = computeMapIfAbsent(key.getDeclaringClass());
             map.put(key, value);
 
             return this;
@@ -120,9 +116,8 @@ public final class SettingsRegistry {
          * @param <E> The enum type
          * @param <V> The value type
          */
-        @SuppressWarnings("unchecked")
         public <E extends Enum<E> & Key<V>, V> RegistryBuilder putAll(@NotNull Map<E, V> map) {
-            if (!containsNoNulls(map)) {
+            if (containsNulls(map)) {
                 throw new NullPointerException("Maps used with RegistryBuilder cannot contain null keys or values.");
             }
 
@@ -134,14 +129,20 @@ public final class SettingsRegistry {
             }
 
             Class<E> clazz = first.getKey().getDeclaringClass();
-            if (!this.master.containsKey(clazz)) {
-                createEnumMap(clazz);
-            }
-
-            Map<E, V> internal = (Map<E, V>) this.master.get(clazz);
+            Map<E, V> internal = computeMapIfAbsent(clazz);
             internal.putAll(map);
 
             return this;
+        }
+
+        private boolean containsNulls(@NotNull Map<?, ?> map) {
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                if (entry.getValue() == null || entry.getKey() == null) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
