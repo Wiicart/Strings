@@ -10,7 +10,6 @@ import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
-import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.channel.HelpOPChannel;
 import com.pedestriamc.strings.channel.SocialSpyChannel;
 import net.kyori.adventure.key.InvalidKeyException;
@@ -64,10 +63,8 @@ final class ChannelFileReader {
             registerHelpOp();
         }
 
-        String socialSpyFormat = strings.getConfiguration().get(Option.Text.SOCIAL_SPY_FORMAT);
+        String socialSpyFormat = strings.getSettings().get(Option.Text.SOCIAL_SPY_FORMAT);
         manager.register(new SocialSpyChannel(strings.getPlayerDirectMessenger(), socialSpyFormat));
-
-        manager.register(new DefaultChannel(manager));
     }
 
     private void read(@NotNull ConfigurationSection channels) {

@@ -1,18 +1,18 @@
 package com.pedestriamc.strings.user.util;
 
+import com.pedestriamc.strings.api.user.UserManager;
 import com.pedestriamc.strings.user.User;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
  * Loads and stores all Users for Strings
  */
-public sealed interface UserUtil permits YamlUserUtil {
+public sealed interface UserUtil extends UserManager permits YamlUserUtil {
 
     /**
      * Saves a User to either a file or database.
@@ -30,6 +30,8 @@ public sealed interface UserUtil permits YamlUserUtil {
     @SuppressWarnings("UnusedReturnValue")
     User loadUser(UUID uuid);
 
+    @NotNull User getUser(@NotNull UUID uuid);
+
     /**
      * Asynchronously loads a User from a file or database.
      * Automatically saves the User to the Map
@@ -38,14 +40,6 @@ public sealed interface UserUtil permits YamlUserUtil {
      */
     @SuppressWarnings("UnusedReturnValue")
     CompletableFuture<User> loadUserAsync(@NotNull UUID uuid);
-
-    /**
-     * Provides a User base off UUID. If there is no record of the User, a new User object will be returned.
-     * @param uuid The UUID of the Player
-     * @return A User
-     */
-    @NotNull
-    User getUser(UUID uuid);
 
     /**
      * Provides a User base off Player. If there is no record of the User, a new User object will be returned.
@@ -61,7 +55,5 @@ public sealed interface UserUtil permits YamlUserUtil {
     void addUser(User user);
 
     void removeUser(UUID uuid);
-
-    Set<User> getUsers();
     
 }

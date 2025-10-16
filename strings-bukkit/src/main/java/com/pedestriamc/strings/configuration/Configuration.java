@@ -71,7 +71,7 @@ public class Configuration implements Settings {
         return map;
     }
 
-    private void loadDeathMessageOptions(@NotNull Strings strings, @NotNull SettingsRegistry.RegistryBuilder builder) {
+    private void loadDeathMessageOptions(@NotNull Strings strings, @NotNull SettingsRegistry.Builder builder) {
         FileConfiguration config = strings.files().getDeathMessagesFileConfig();
         Map<Option.Bool, Boolean> map = new EnumMap<>(Option.Bool.class);
 
@@ -88,7 +88,7 @@ public class Configuration implements Settings {
         builder.putAll(map);
     }
 
-    private void loadEmojiOptions(@NotNull Strings strings, @NotNull SettingsRegistry.RegistryBuilder builder) {
+    private void loadEmojiOptions(@NotNull Strings strings, @NotNull SettingsRegistry.Builder builder) {
         FileConfiguration config = strings.files().getEmojiFileConfig();
 
         Map<Option.Bool, Boolean> bools = new HashMap<>();

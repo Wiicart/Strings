@@ -40,7 +40,7 @@ public class RendererProvider {
         deletionManager = new DeletionManager(strings);
         mentioner = strings.getMentioner();
 
-        Configuration config = strings.getConfiguration();
+        Configuration config = strings.getSettings();
         mentionsEnabled = config.get(Option.Bool.ENABLE_MENTIONS);
         processingMessagePlaceholders = config.get(Option.Bool.PROCESS_PLACEHOLDERS) && strings.isUsingPlaceholderAPI();
         parsingMessageChatColors = config.get(Option.Bool.PROCESS_CHATCOLOR);

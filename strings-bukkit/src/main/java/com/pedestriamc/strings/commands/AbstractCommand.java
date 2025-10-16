@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.UUID;
 
 public abstract class AbstractCommand {
 
@@ -50,6 +51,10 @@ public abstract class AbstractCommand {
 
     protected User getUser(@NotNull String name) {
         return users().getUser(name);
+    }
+
+    protected User getUser(@NotNull UUID uuid) {
+        return users().getUser(uuid);
     }
 
     protected Channel getChannel(@NotNull String name) {

@@ -7,7 +7,6 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Type;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
-import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,7 +67,7 @@ public abstract class ProtectedChannel implements Channel {
     }
 
     @Override
-    public boolean allows(@NotNull Permissible permissible) {
+    public boolean allows(@NotNull StringsUser user) {
         return false;
     }
 

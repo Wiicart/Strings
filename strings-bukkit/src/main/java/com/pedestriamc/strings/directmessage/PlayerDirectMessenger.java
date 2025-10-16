@@ -9,6 +9,7 @@ import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.impl.BukkitMessenger;
 import com.pedestriamc.strings.user.util.UserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.wiicart.commands.permission.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -30,10 +31,15 @@ public class PlayerDirectMessenger {
 
     private final boolean usePAPI;
 
+    public static boolean canMessage(@NotNull Player sender, @NotNull Player recipient) {
+        return Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.msg.*", "strings.chat.msg.admin") ||
+                !Permissions.anyOfOrAdmin(recipient, "strings.*", "strings.chat.*", "strings.chat.msg.*", "strings.chat.msg.exempt");
+    }
+
     public PlayerDirectMessenger(@NotNull Strings strings) {
         this.strings = strings;
         this.userUtil = strings.users();
-        Configuration config = strings.getConfiguration();
+        Configuration config = strings.getSettings();
         this.messageFormatSender = config.get(Option.Text.DIRECT_MESSAGE_FORMAT_OUT);
         this.messageFormatRecipient = config.get(Option.Text.DIRECT_MESSAGE_FORMAT_IN);
         this.usePAPI = strings.isUsingPlaceholderAPI();

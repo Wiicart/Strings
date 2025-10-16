@@ -18,7 +18,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
 import static com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
@@ -176,8 +175,8 @@ public class HelpOPChannel extends ProtectedChannel {
     }
 
     @Override
-    public boolean allows(@NotNull Permissible permissible) {
-        return Permissions.anyOfOrAdmin(permissible, "strings.*", "strings.helpop.use");
+    public boolean allows(@NotNull StringsUser user) {
+        return Permissions.anyOfOrAdmin(User.playerOf(user), "strings.*", "strings.helpop.use");
     }
 
 }

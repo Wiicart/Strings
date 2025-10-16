@@ -33,7 +33,7 @@ public class UnIgnoreCommand extends AbstractIgnoreCommand implements CommandExe
             return true;
         }
 
-        if (notIgnoring(sender, ignorer, target)) {
+        if (checkNotIgnoringAndNotify(sender, ignorer, target)) {
             return true;
         }
 
@@ -53,7 +53,7 @@ public class UnIgnoreCommand extends AbstractIgnoreCommand implements CommandExe
         return true;
     }
 
-    private boolean notIgnoring(@NotNull CommandSender sender, @NotNull User ignorer, @NotNull User target) {
+    private boolean checkNotIgnoringAndNotify(@NotNull CommandSender sender, @NotNull User ignorer, @NotNull User target) {
         if (!ignorer.isIgnoring(target)) {
             sendMessage(Message.NOT_IGNORED, Map.of("{player}", target.getName()), sender);
             return true;

@@ -2,9 +2,12 @@ package com.pedestriamc.strings.api.channel;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnmodifiableView;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Manages registration, un-registration, and access for all {@link Channel}(s)
@@ -50,4 +53,35 @@ public interface ChannelLoader {
      * Refreshes the internal Channel Map
      */
     void refresh();
+
+    /**
+     * Provides a SortedSet of all priority Channels, sorted by {@link Channel#getPriority()}
+     * @return A SortedSet
+     */
+    @NotNull SortedSet<Channel> getSortedChannelSet();
+
+    /**
+     * Provides the DefaultChannel instance.
+     * The DefaultChannel does not process any messages,
+     * it instead routes them to the appropriate Channel based on priority.
+     * @return The DefaultChannel
+     */
+    @NotNull Channel getDefaultChannel();
+
+    /**
+     * Provides a Map of Channel symbols and Channels.
+     * If a message starts with one of these keys, it should be routed to the mapped Channel if permissible
+     * @return An unmodifiable Set
+     */
+    @UnmodifiableView
+    @NotNull
+    Map<String, Channel> getChannelSymbols();
+
+    /**
+     * Registers Channel symbols
+     * @param symbol The symbol
+     * @param channel The channel
+     */
+    void registerChannelSymbol(@NotNull String symbol, @NotNull Channel channel);
+
 }

@@ -5,7 +5,6 @@ import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.Bukkit;
@@ -24,7 +23,7 @@ import java.util.Set;
 /**
  * Channel implementation that sends messages based off players in proximity in the sender's {@link World}.
  * Worlds this Channel is effective in must be defined.
- * Expected to be used with the {@link DefaultChannel}
+ * Expected to be used with the DefaultChannel
  */
 public class ProximityChannel extends AbstractLocalChannel {
 

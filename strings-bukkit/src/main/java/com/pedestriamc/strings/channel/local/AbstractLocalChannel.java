@@ -6,12 +6,11 @@ import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.channel.base.AbstractChannel;
+import com.pedestriamc.strings.channel.base.BukkitChannel;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * Class that implements common LocalChannel elements
  */
-abstract class AbstractLocalChannel extends AbstractChannel implements LocalChannel<World> {
+abstract class AbstractLocalChannel extends BukkitChannel implements LocalChannel<World> {
 
     private final UserUtil userUtil;
 
@@ -65,12 +64,9 @@ abstract class AbstractLocalChannel extends AbstractChannel implements LocalChan
     }
 
     @Override
-    public boolean allows(@NotNull Permissible permissible) {
-        if(permissible instanceof Player player &&
-                getMembership() == Membership.DEFAULT && containsWorld(player.getWorld())) {
-            return true;
-        }
-        return super.allows(permissible);
+    public boolean allows(@NotNull StringsUser user) {
+        Player player = User.playerOf(user);
+        return (getMembership() == Membership.DEFAULT && containsWorld(player.getWorld())) || super.allows(user);
     }
 
     @Override
@@ -86,7 +82,7 @@ abstract class AbstractLocalChannel extends AbstractChannel implements LocalChan
             case DEFAULT -> universalSet();
             case PERMISSION -> {
                 HashSet<StringsUser> scoped = new HashSet<>(universalSet());
-                scoped.removeIf(p -> !allows(User.playerOf(p)));
+                scoped.removeIf(user -> !allows(user));
                 yield scoped;
             }
             default -> {

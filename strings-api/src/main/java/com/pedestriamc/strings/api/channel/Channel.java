@@ -8,7 +8,6 @@ import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.utlity.SerialComponent;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
-import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -189,9 +188,8 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Sets the Channel's name.
-     * To ensure this change is properly updated with the plugin, reload Strings or unregister then re-register
-     * this Channel with the {@link ChannelLoader}
-     *
+     * To ensure this change is properly updated with the plugin, call {@link ChannelLoader#refresh()},
+     * or unexpected behavior may occur.
      * If another Channel registered with the ChannelLoader already has the new name,
      * an <code>IllegalArgumentException</code> will be thrown.
      *
@@ -318,10 +316,10 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Returns if a player has permission to use the Channel.
-     * @param permissible The player to check
+     * @param user The player to check
      * @return If the player has permission
      */
-    boolean allows(@NotNull Permissible permissible);
+    boolean allows(@NotNull StringsUser user);
 
     /**
      * Signifies if the Channel calls an Event when a message is sent in Spigot environments.

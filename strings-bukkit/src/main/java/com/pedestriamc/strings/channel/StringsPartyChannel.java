@@ -6,7 +6,7 @@ import com.pedestriamc.strings.api.channel.PartyChannel;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.channel.base.AbstractChannel;
+import com.pedestriamc.strings.channel.base.BukkitChannel;
 import com.pedestriamc.strings.user.User;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +19,7 @@ import java.util.Set;
  * A Channel used for Parties, these channels cannot be saved and are deleted on reboot or when all players leave.
  */
 @SuppressWarnings("all")
-public class StringsPartyChannel extends AbstractChannel implements PartyChannel {
+public class StringsPartyChannel extends BukkitChannel implements PartyChannel {
 
     private String name;
     

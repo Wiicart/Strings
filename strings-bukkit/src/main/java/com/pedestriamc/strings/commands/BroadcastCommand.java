@@ -31,7 +31,7 @@ public final class BroadcastCommand implements CommandExecutor {
 
     public BroadcastCommand(@NotNull Strings strings) {
         this.strings = strings;
-        broadcastFormat = strings.getConfiguration().get(Option.Text.BROADCAST_FORMAT);
+        broadcastFormat = strings.getSettings().get(Option.Text.BROADCAST_FORMAT);
         usePAPI = strings.isUsingPlaceholderAPI();
         messenger = strings.getMessenger();
         sound = loadSound();
@@ -40,7 +40,7 @@ public final class BroadcastCommand implements CommandExecutor {
     @Nullable
     @SuppressWarnings("PatternValidation")
     private Sound loadSound() {
-        Configuration config = strings.getConfiguration();
+        Configuration config = strings.getSettings();
         if (!config.get(Option.Bool.BROADCAST_SOUND_ENABLE)) {
             return null;
         }

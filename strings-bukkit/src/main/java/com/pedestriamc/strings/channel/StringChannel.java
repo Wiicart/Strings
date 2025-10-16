@@ -6,7 +6,7 @@ import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.channel.base.AbstractChannel;
+import com.pedestriamc.strings.channel.base.BukkitChannel;
 import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Standard Channel implementation
  */
-public final class StringChannel extends AbstractChannel {
+public final class StringChannel extends BukkitChannel {
 
     public static final Identifier IDENTIFIER = Identifier.NORMAL;
 
@@ -62,8 +62,8 @@ public final class StringChannel extends AbstractChannel {
             case PERMISSION -> {
                 HashSet<StringsUser> scoped = new HashSet<>(getMembers());
                 scoped.addAll(getMonitors());
-                for(Player p : Bukkit.getOnlinePlayers()) {
-                    if(allows(p)) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (allows(getUserUtil().getUser(p))) {
                         scoped.add(getUserUtil().getUser(p));
                     }
                 }

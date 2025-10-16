@@ -292,4 +292,11 @@ public interface StringsUser extends Messageable {
      * @return If the Player is new
      */
     boolean isNew();
+
+    /**
+     * Tells if this User has a permission
+     * @param permission The permission to check
+     * @return True/false if the user has the permission or not.
+     */
+    boolean hasPermission(@NotNull String permission);
 }

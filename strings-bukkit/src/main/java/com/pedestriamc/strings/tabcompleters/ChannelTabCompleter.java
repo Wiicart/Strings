@@ -4,8 +4,11 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.chat.ChannelManager;
+import com.pedestriamc.strings.user.User;
+import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -24,10 +27,12 @@ public class ChannelTabCompleter extends AbstractTabCompleter {
 
     private static final String HELP = "help";
 
-    private final @NotNull ChannelManager channelLoader;
+    private final ChannelManager channelLoader;
+    private final UserUtil userUtil;
 
     public ChannelTabCompleter(@NotNull Strings strings) {
-        this.channelLoader = strings.getChannelLoader();
+        channelLoader = strings.getChannelLoader();
+        userUtil = strings.users();
     }
 
     @Override
@@ -57,9 +62,14 @@ public class ChannelTabCompleter extends AbstractTabCompleter {
      * @return A List<String>
      */
     private List<String> getAllowedChannels(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            return List.of();
+        }
+
+        User user = userUtil.getUser(player);
         return channelLoader.getChannels().stream()
                 .filter(channel -> channel.getType() != Type.PROTECTED)
-                .filter(channel -> channel.allows(sender))
+                .filter(channel -> channel.allows(user))
                 .map(Channel::getName)
                 .toList();
     }

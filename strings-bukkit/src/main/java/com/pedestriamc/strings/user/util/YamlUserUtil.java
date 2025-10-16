@@ -6,6 +6,7 @@ import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.discord.Snowflake;
 import com.pedestriamc.strings.api.event.StringsUserLoadEvent;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.user.User;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -167,12 +168,17 @@ public final class YamlUserUtil implements UserUtil {
 
 
     @Override
-    public @NotNull User getUser(UUID uuid) {
+    public @NotNull User getUser(@NotNull UUID uuid) {
         User user = map.get(uuid);
         if (user == null) {
             return loadUser(uuid);
         }
         return user;
+    }
+
+    @Override
+    public void saveUser(@NotNull StringsUser user) {
+        saveUser((User) user);
     }
 
     @Override
@@ -207,7 +213,7 @@ public final class YamlUserUtil implements UserUtil {
 
     @Contract(" -> new")
     @Override
-    public @NotNull Set<User> getUsers() {
+    public @NotNull Set<StringsUser> getUsers() {
         return new HashSet<>(map.values());
     }
 

@@ -72,7 +72,7 @@ public final class StringsImpl implements StringsAPI {
     @Override
     @NotNull
     public Settings getSettings() {
-        return strings.getConfiguration();
+        return strings.getSettings();
     }
 
     @Override

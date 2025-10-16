@@ -19,8 +19,8 @@ public final class SettingsRegistry {
 
     private final Map<Class<?>, ImmutableEnumMap<? extends Key<?>, ?>> master;
 
-    public SettingsRegistry(@NotNull Consumer<RegistryBuilder> consumer) {
-        RegistryBuilder builder = new RegistryBuilder();
+    public SettingsRegistry(@NotNull Consumer<Builder> consumer) {
+        Builder builder = new Builder();
         consumer.accept(builder);
         master = builder.buildImmutable();
     }
@@ -49,9 +49,11 @@ public final class SettingsRegistry {
      * Used to construct a SettingsRegistry.
      * Null keys and values are not permitted.
      */
-    public static final class RegistryBuilder {
+    public static final class Builder {
 
         private final Map<Class<?>, EnumMap<? extends Key<?>, ?>> master = new HashMap<>();
+
+        private Builder() {}
 
         @NotNull
         private Map<Class<?>, ImmutableEnumMap<? extends Key<?>, ?>> buildImmutable() {
@@ -85,7 +87,7 @@ public final class SettingsRegistry {
          * @param <E> The enum type
          * @param <V> The value type
          */
-        public <E extends Enum<E> & Key<V>, V> RegistryBuilder put(@NotNull E key, @NotNull V value) {
+        public <E extends Enum<E> & Key<V>, V> Builder put(@NotNull E key, @NotNull V value) {
             return put(Map.entry(key, value));
         }
 
@@ -98,7 +100,7 @@ public final class SettingsRegistry {
          * @param <E> The enum type
          * @param <V> The value type
          */
-        public <E extends Enum<E> & Key<V>, V> RegistryBuilder put(@NotNull Map.Entry<E, V> entry) {
+        public <E extends Enum<E> & Key<V>, V> Builder put(@NotNull Map.Entry<E, V> entry) {
             E key = Objects.requireNonNull(entry.getKey());
             V value = Objects.requireNonNull(entry.getValue());
 
@@ -116,7 +118,7 @@ public final class SettingsRegistry {
          * @param <E> The enum type
          * @param <V> The value type
          */
-        public <E extends Enum<E> & Key<V>, V> RegistryBuilder putAll(@NotNull Map<E, V> map) {
+        public <E extends Enum<E> & Key<V>, V> Builder putAll(@NotNull Map<E, V> map) {
             if (containsNulls(map)) {
                 throw new NullPointerException("Maps used with RegistryBuilder cannot contain null keys or values.");
             }

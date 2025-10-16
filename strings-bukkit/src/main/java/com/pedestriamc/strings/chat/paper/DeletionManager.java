@@ -23,7 +23,7 @@ public class DeletionManager {
     public DeletionManager(@NotNull Strings strings) {
         this.strings = strings;
 
-        Configuration settings = strings.getConfiguration();
+        Configuration settings = strings.getSettings();
         String buttonFormat = settings.get(Option.Text.DELETION_BUTTON_FORMAT);
         String buttonHover = settings.get(Option.Text.DELETION_BUTTON_HOVER);
 

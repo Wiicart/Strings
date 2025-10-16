@@ -46,7 +46,14 @@ public abstract class OneToTwoArgAbstractCommand extends AbstractCommand {
 
     protected @Nullable Channel getChannelAndCheckAllows(@NotNull CommandSender sender, @NotNull String channelName) {
         Channel channel = getChannel(sender, channelName);
-        if (channel != null && !channel.allows(sender)) {
+        StringsUser user;
+        if (!(sender instanceof Player player)) {
+            return channel;
+        } else {
+            user = getUser(player);
+        }
+
+        if (channel != null && !channel.allows(user)) {
                 sendMessage(NO_PERMS_CHANNEL, Map.of("{channel}", channel.getName()), sender);
                 return null;
         }

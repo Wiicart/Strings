@@ -31,7 +31,7 @@ public final class Mentioner {
     public Mentioner(@NotNull Strings strings) {
         this.userUtil = strings.users();
 
-        Configuration config = strings.getConfiguration();
+        Configuration config = strings.getSettings();
         pitch = config.getFloat(Option.Double.MENTION_PITCH);
         volume = config.getFloat(Option.Double.MENTION_VOLUME);
         format = config.getColored(Option.Text.MENTION_TEXT_ACTION_BAR);
@@ -84,7 +84,7 @@ public final class Mentioner {
             return str;
         }
 
-        String chatColor = userUtil.getUser(sender).getChatColor(channel);
+        String chatColor = ChatColor.translateAlternateColorCodes('&', userUtil.getUser(sender).getChatColor(channel));
         String[] splitStr = str.split("((?=@))"); //https://www.baeldung.com/java-split-string-keep-delimiters
         StringBuilder sb = new StringBuilder();
         for (String segment : splitStr) {

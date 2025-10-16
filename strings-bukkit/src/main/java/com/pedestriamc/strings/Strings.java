@@ -160,7 +160,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
     }
 
     private void logOutAll() {
-        userUtil.getUsers().forEach(User::logOff);
+        userUtil.getUsers().forEach(u -> ((User) u).logOff());
     }
 
     private void determineEnvironment() {
@@ -188,10 +188,10 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         serverMessages = new ServerMessages(this);
         mentioner = new Mentioner(this);
 
-        if (getConfiguration().get(Option.Bool.ENABLE_EMOJI_REPLACEMENT)) {
+        if (getSettings().get(Option.Bool.ENABLE_EMOJI_REPLACEMENT)) {
             emojiManager = new EmojiProvider(this);
         }
-        if (getConfiguration().get(Option.Bool.ENABLE_EMOJI_RESOURCE_PACK)) {
+        if (getSettings().get(Option.Bool.ENABLE_EMOJI_RESOURCE_PACK)) {
             modrinth = new ModrinthService(this);
         }
     }
@@ -349,7 +349,8 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         return this.adventure;
     }
 
-    public Configuration getConfiguration() {
+    @NotNull
+    public Configuration getSettings() {
         return configClass;
     }
 

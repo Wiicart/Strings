@@ -376,3 +376,7 @@ current-channel: "&fYour current channel is &7{channel}&f."
 # {channel} - the Channel
 # {player} - the player
 current-channel-other: "&7{player}&f's current channel is &7{channel}&f."
+
+# Sent when a player does not have permission to /msg a player.
+# Placeholder: {player} - the player that the sender cannot message
+dm-no-perms: "&fYou don't have permission to message &7{player}&f."

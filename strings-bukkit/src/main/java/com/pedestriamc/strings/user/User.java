@@ -80,7 +80,7 @@ public final class User implements StringsUser, Permissible {
     }
 
     public static Player playerOf(@NotNull StringsUser user) {
-        if(user instanceof User u) {
+        if (user instanceof User u) {
             return u.player();
         } else {
             UUID uniqueId = user.getUniqueId();

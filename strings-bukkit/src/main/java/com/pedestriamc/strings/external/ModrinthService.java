@@ -39,7 +39,7 @@ public class ModrinthService {
 
     public ModrinthService(@NotNull Strings strings) {
         this.strings = strings;
-        textureId = strings.getConfiguration().get(Option.Text.TEXTURES_MODRINTH_ID);
+        textureId = strings.getSettings().get(Option.Text.TEXTURES_MODRINTH_ID);
         try {
             cache = getLatestPack();
         } catch(Exception e) {

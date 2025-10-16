@@ -43,7 +43,7 @@ public class SocialSpyChannel extends ProtectedChannel {
 
     @Override
     public void sendMessage(@NotNull StringsUser user, @NotNull String message) {
-        for(StringsUser p : spiesList) {
+        for (StringsUser p : spiesList) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
         }
     }
@@ -56,7 +56,7 @@ public class SocialSpyChannel extends ProtectedChannel {
 
     @Override
     public void broadcastPlain(@NotNull String message) {
-        for(StringsUser p : spiesList) {
+        for (StringsUser p : spiesList) {
             p.sendMessage(message);
         }
     }

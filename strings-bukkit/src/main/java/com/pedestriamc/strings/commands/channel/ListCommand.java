@@ -4,11 +4,13 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.MessageContext;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.commands.AbstractCommand;
 import com.pedestriamc.strings.impl.MessageableAdapter;
 import net.wiicart.commands.command.CartCommandExecutor;
 import net.wiicart.commands.command.CommandData;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -38,8 +40,15 @@ class ListCommand extends AbstractCommand implements CartCommandExecutor {
 
     private @NotNull Set<Channel> getAllowedChannels(@NotNull CommandSender sender) {
         Set<Channel> available = new HashSet<>();
+        StringsUser user;
+        if (!(sender instanceof Player player)) {
+            return strings().getChannelLoader().getChannels();
+        } else {
+            user = getUser(player);
+        }
+
         for (Channel channel : strings().getChannelLoader().getChannels()) {
-            if (channel.allows(sender)) {
+            if (channel.allows(user)) {
                 available.add(channel);
             }
         }

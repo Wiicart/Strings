@@ -243,6 +243,11 @@ final class AutoSavingUser implements StringsUser {
     }
 
     @Override
+    public boolean hasPermission(@NotNull String permission) {
+        return user.hasPermission(permission);
+    }
+
+    @Override
     public void sendMessage(@NotNull String message) {
         user.sendMessage(message);
     }

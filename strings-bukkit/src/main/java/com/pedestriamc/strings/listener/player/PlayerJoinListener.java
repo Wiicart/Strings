@@ -31,7 +31,7 @@ public class PlayerJoinListener implements Listener {
         serverMessages = strings.getServerMessages();
         modrinth = strings.modrinth();
 
-        Configuration configuration = strings.getConfiguration();
+        Configuration configuration = strings.getSettings();
         modifyJoinMessage = configuration.get(Option.Bool.USE_CUSTOM_JOIN_LEAVE);
         doMotd = configuration.get(Option.Bool.ENABLE_MOTD);
         doJoinMessage = configuration.get(Option.Bool.ENABLE_JOIN_LEAVE_MESSAGE);

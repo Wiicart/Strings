@@ -25,7 +25,7 @@ public class ServerMessages {
         userUtil = strings.users();
         usePAPI = strings.isUsingPlaceholderAPI();
 
-        Configuration config = strings.getConfiguration();
+        Configuration config = strings.getSettings();
         joinMessageTemplate = config.get(Option.Text.JOIN_MESSAGE);
         leaveMessageTemplate = config.get(Option.Text.LEAVE_MESSAGE);
         motd = config.get(Option.StringList.MOTD);

@@ -93,7 +93,8 @@ public enum Message {
     PLAYER_UNIGNORED("player-unignored"),
     PLAYER_UNIGNORED_OTHER("player-unignored-other"),
     CURRENT_CHANNEL("current-channel"),
-    CURRENT_CHANNEL_OTHER("current-channel-other"),;
+    CURRENT_CHANNEL_OTHER("current-channel-other"),
+    NO_PERMS_DIRECT_MESSAGE("dm-no-perms");
 
     private final String key;
 

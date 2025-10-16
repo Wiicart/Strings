@@ -27,7 +27,7 @@ public class EmojiCommand extends AbstractCommand implements CartCommandExecutor
     public EmojiCommand(@NotNull Strings strings) {
         super(strings);
 
-        Configuration config = strings.getConfiguration();
+        Configuration config = strings.getSettings();
         if (config.get(Option.Bool.ENABLE_EMOJI_REPLACEMENT)) {
             message = loadMessage(strings);
         } else {
@@ -49,7 +49,7 @@ public class EmojiCommand extends AbstractCommand implements CartCommandExecutor
 
     @NotNull
     private Component loadMessage(@NotNull Strings strings) {
-        Configuration config = strings.getConfiguration();
+        Configuration config = strings.getSettings();
 
         Component emojis = config.getAsComponent(Option.Text.EMOJI_COMMAND_HEADER)
                 .append(Component.text(" "));

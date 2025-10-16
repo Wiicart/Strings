@@ -105,6 +105,12 @@ permissions:
   strings.chat.msg:
     description: "Allows directly messaging players"
     default: true
+  strings.chat.msg.exempt:
+    description: "Makes it so this player cannot be messaged unless the sender has permission strings.chat.msg.admin"
+    default: false
+  strings.chat.msg.admin:
+    description: "Makes it so that this player can message any player, regardless of strings.chat.msg.exempt status"
+    default: false
   strings.socialspy:
     description: "Allows use of the /socialspy command"
     default: false

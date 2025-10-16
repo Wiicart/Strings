@@ -6,7 +6,6 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.channel.DefaultChannel;
 import com.pedestriamc.strings.user.util.UserUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -20,7 +19,7 @@ import java.util.Set;
 
 /**
  * Channel implementation that focuses on one or more {@link World}(s) on the server.
- * Expected to be used with the {@link DefaultChannel}
+ * Expected to be used with the DefaultChannel
  */
 public class WorldChannel extends AbstractLocalChannel {
 

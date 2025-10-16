@@ -32,7 +32,7 @@ public class MessageProcessor {
         this.channel = channel;
         userUtil = strings.users();
         logger = strings.getLogger();
-        Configuration config = strings.getConfiguration();
+        Configuration config = strings.getSettings();
         usingPlaceholderAPI = strings.isUsingPlaceholderAPI();
         processingMessagePlaceholders = config.get(Option.Bool.PROCESS_PLACEHOLDERS) && usingPlaceholderAPI;
         parsingMessageChatColors = config.get(Option.Bool.PROCESS_CHATCOLOR);

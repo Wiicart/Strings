@@ -27,6 +27,16 @@ public class ImmutableEnumMap<K extends Enum<K>, V> implements Map<K, V> {
     private final K[] keys;
     private final V[] vals;
 
+    @NotNull
+    public static ImmutableEnumMap<?, ?> of() {
+        return new ImmutableEnumMap<>(Generic.class);
+    }
+
+    @NotNull
+    public static <K extends Enum<K>, V> ImmutableEnumMap<K, V> ofEntries(@NotNull Class<K> clazz, @NotNull Map.Entry<K, V>... entries) {
+        return new ImmutableEnumMap<>(clazz, entries);
+    }
+
     /**
      * Converts an EnumMap into a ImmutableEnumMap
      * @param map The original Map
@@ -54,7 +64,7 @@ public class ImmutableEnumMap<K extends Enum<K>, V> implements Map<K, V> {
      * @param enumClass The enum class used for keys
      * @param entries The entries for the Map
      */
-    public ImmutableEnumMap(@NotNull Class<K> enumClass, @NotNull Entry<K, V>... entries) {
+    private ImmutableEnumMap(@NotNull Class<K> enumClass, @NotNull Entry<K, V>... entries) {
         if (!enumClass.isEnum()) {
             throw new IllegalArgumentException("The class used when creating a EnumMap must be an enum.");
         }
@@ -186,7 +196,7 @@ public class ImmutableEnumMap<K extends Enum<K>, V> implements Map<K, V> {
         for (Entry<K, V> entry : entries) {
             map.put(entry.getKey(), entry);
         }
-
+        
         return map.values().toArray(new Entry[0]);
     }
 

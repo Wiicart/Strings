@@ -65,7 +65,7 @@ public class ClassRegistryManager {
     }
 
     private void registerCommands() {
-        Configuration config = strings.getConfiguration();
+        Configuration config = strings.getSettings();
 
         registerCommand("strings", new StringsCommand(strings), new StringsTabCompleter());
 
@@ -172,7 +172,7 @@ public class ClassRegistryManager {
         registerListener(new PlayerDeathListener(strings));
         registerListener(new PlayerDamageListener(strings));
 
-        if(strings.getConfiguration().get(Option.Bool.ENABLE_MENTIONS)) {
+        if(strings.getSettings().get(Option.Bool.ENABLE_MENTIONS)) {
             if(strings.isUsingLuckPerms()) {
                 registerListener(new LuckPermsMentionListener(strings));
             } else {
