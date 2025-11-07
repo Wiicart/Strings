@@ -34,8 +34,10 @@ public final class StringsImpl implements StringsAPI {
 
     @Override
     public void saveUser(@NotNull StringsUser user) {
-        if(user instanceof User u) {
+        if (user instanceof User u) {
             userUtil.saveUser(u);
+        } else {
+            throw new IllegalArgumentException("Unrecognized user implementation provided: " + user.getClass().getName() + " Unable to save.");
         }
     }
 

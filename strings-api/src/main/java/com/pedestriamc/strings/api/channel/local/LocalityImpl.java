@@ -9,14 +9,21 @@ import java.util.Objects;
 class LocalityImpl<W> implements Locality<W> {
 
     private final W w;
+    private final String name;
 
-    LocalityImpl(@NotNull W w) {
+    LocalityImpl(@NotNull W w, @NotNull String name) {
         this.w = w;
+        this.name = name;
     }
 
     @Override
     public @NotNull W get() {
         return w;
+    }
+
+    @Override
+    public @NotNull String getName() {
+        return name;
     }
 
     @Override

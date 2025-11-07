@@ -26,10 +26,11 @@ public final class Option {
         ENABLE_HELPOP("enable-helpop", true),
         DISABLE_HELPOP_COMMAND("other-helpop", false),
         ENABLE_DIRECT_MESSAGES("msg-enabled", true),
+        ENABLE_RESOLUTION_VALIDATION("resolution-validation", true),
         @From(path = "death-messages.yml")
         DEATH_MESSAGES_ENABLE("enable", true),
         @From(path = "death-messages.yml")
-        DEATH_MESSAGES_USE_CUSTOM("custom", true),
+        DEATH_MESSAGES_USE_CUSTOM("custom", false),
         ENABLE_RULES_COMMAND("enable-rules", true),
         BROADCAST_SOUND_ENABLE("broadcast-sound.enable", true),
         @From(path = "emojis/emoji-config.yml")

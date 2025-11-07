@@ -34,6 +34,10 @@ public interface StringsUser extends Messageable {
         return new AutoSavingUser(user);
     }
 
+    default StringsUser autoSaving() {
+        return autoSaving(this);
+    }
+
     /**
      * Provides the StringsUser's UUID.
      * @return A UUID.
@@ -124,11 +128,20 @@ public interface StringsUser extends Messageable {
     void setDisplayName(@NotNull String displayName);
 
     /**
-     * Provides the active StringsChannel of the StringsUser.
-     * @return The active StringsChannel.
+     * Provides the active Channel of the StringsUser.
+     * @return The active Channel.
      */
     @NotNull
     Channel getActiveChannel();
+
+    /**
+     * Resolves the Channel a User's message would be sent to if the user sent a message at this time
+     * @return A Channel
+     */
+    @NotNull
+    default Channel resolveActiveChannel() {
+        return getActiveChannel().resolve(this);
+    }
 
     /**
      * Sets the StringsUser's active StringChannel.

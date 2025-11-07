@@ -16,22 +16,32 @@ import java.util.Set;
 
 /**
  * An immutable {@link Map} optimized for enums.
- * Looks up using Enum ordinals.
+ * Looks up by using Enum ordinals.
  * @param <K> The key type (An enum)
  * @param <V> The value type
  */
 @SuppressWarnings("unchecked")
 public class ImmutableEnumMap<K extends Enum<K>, V> implements Map<K, V> {
 
-    private final Class<K> enumClass;
-    private final K[] keys;
-    private final V[] vals;
+    private static final ImmutableEnumMap<?, ?> EMPTY = new ImmutableEnumMap<>(Generic.class);
 
+    /**
+     * Provides an empty ImmutableEnumMap
+     * @return An existing empty ImmutableEnumMap
+     */
     @NotNull
-    public static ImmutableEnumMap<?, ?> of() {
-        return new ImmutableEnumMap<>(Generic.class);
+    public static <K extends Enum<K>, V> ImmutableEnumMap<K, V> of() {
+        return (ImmutableEnumMap<K, V>) EMPTY;
     }
 
+    /**
+     * Creates an ImmutableEnumMap with the specified entries
+     * @param clazz The Enum class
+     * @param entries The entries
+     * @return a new ImmutableEnumMap
+     * @param <K> The Key type
+     * @param <V> The value type
+     */
     @NotNull
     public static <K extends Enum<K>, V> ImmutableEnumMap<K, V> ofEntries(@NotNull Class<K> clazz, @NotNull Map.Entry<K, V>... entries) {
         return new ImmutableEnumMap<>(clazz, entries);
@@ -46,17 +56,20 @@ public class ImmutableEnumMap<K extends Enum<K>, V> implements Map<K, V> {
      */
     @NotNull
     public static <K extends Enum<K>, V> ImmutableEnumMap<K, V> asImmutable(@NotNull EnumMap<K, V> map) {
-        Class<K> clazz = determineEnumClass(map);
-        return new ImmutableEnumMap<>(clazz, map.entrySet().toArray(new Entry[0]));
+        return new ImmutableEnumMap<>(map);
     }
 
     private static <K extends Enum<K>, V> Class<K> determineEnumClass(@NotNull EnumMap<K, V> map) {
         Object[] keys = map.keySet().toArray();
-        if (keys.length == 0) {
-            return (Class<K>) Generic.class;
-        } else {
-            return (Class<K>) keys[0].getClass();
-        }
+        return (Class<K>) (keys.length == 0 ? Generic.class : keys[0].getClass());
+    }
+
+    private final Class<K> enumClass;
+    private final K[] keys;
+    private final V[] vals;
+
+    private ImmutableEnumMap(@NotNull EnumMap<K, V> map) {
+        this(determineEnumClass(map), map.entrySet().toArray(new Entry[0]));
     }
 
     /**

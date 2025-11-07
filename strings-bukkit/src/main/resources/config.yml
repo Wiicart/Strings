@@ -207,6 +207,10 @@ enable-helpop: true
 # Set this to true if so.
 other-helpop: false
 
+# Should the plugin run tests to check for any potential chanel resolution issues?
+# This can help warn against scenarios where users are not eligible to send a message in any channel.
+resolution-validation: true
+
 # Message Deletion Options
 # Message deletion must be enabled on a per-channel basis.
 

@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -88,7 +87,10 @@ public final class SettingsRegistry {
          * @param <V> The value type
          */
         public <E extends Enum<E> & Key<V>, V> Builder put(@NotNull E key, @NotNull V value) {
-            return put(Map.entry(key, value));
+            Map<E, V> map = computeMapIfAbsent(key.getDeclaringClass());
+            map.put(key, value);
+
+            return this;
         }
 
         /**
@@ -101,13 +103,7 @@ public final class SettingsRegistry {
          * @param <V> The value type
          */
         public <E extends Enum<E> & Key<V>, V> Builder put(@NotNull Map.Entry<E, V> entry) {
-            E key = Objects.requireNonNull(entry.getKey());
-            V value = Objects.requireNonNull(entry.getValue());
-
-            Map<E, V> map = computeMapIfAbsent(key.getDeclaringClass());
-            map.put(key, value);
-
-            return this;
+            return put(entry.getKey(), entry.getValue());
         }
 
         /**

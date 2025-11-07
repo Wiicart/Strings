@@ -2,6 +2,7 @@ package com.pedestriamc.strings.api.channel.local;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,8 +18,8 @@ public interface Locality<T> {
      * @return The world wrapped as a <code>Locality</code>
      * @param <W> The World class
      */
-    static <W> @NotNull Locality<W> of(W w) {
-        return new LocalityImpl<>(w);
+    static <W> @NotNull Locality<W> of(W w, String name) {
+        return new LocalityImpl<>(w, name);
     }
 
     /**
@@ -27,10 +28,10 @@ public interface Locality<T> {
      * @return The Set converted to Localities
      * @param <W> The World class
      */
-    static <W> @NotNull Set<Locality<W>> convertToLocalities(@NotNull Set<W> worlds) {
+    static <W> @NotNull Set<Locality<W>> convertToLocalities(@NotNull Collection<W> worlds) {
         Set<Locality<W>> result = new HashSet<>();
         for (W world : worlds) {
-            result.add(of(world));
+            result.add(of(world, "unknown"));
         }
 
         return result;
@@ -56,5 +57,7 @@ public interface Locality<T> {
      * @return The platform-specific Object
      */
     @NotNull T get();
+
+    @NotNull String getName();
 
 }

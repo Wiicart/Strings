@@ -165,26 +165,26 @@ final class ChannelFileReader {
     private @NotNull Set<Locality<World>> loadWorlds(@NotNull ConfigurationSection section) {
         Set<Locality<World>> worlds = new HashSet<>();
         String legacyWorldName = section.getString("world");
-        if(legacyWorldName != null) {
+        if (legacyWorldName != null) {
             World world = Bukkit.getWorld(legacyWorldName);
-            if(world != null) {
-                worlds.add(Locality.of(world));
+            if (world != null) {
+                worlds.add(Locality.of(world, legacyWorldName));
             } else {
                 strings.warning("Unknown world '" + legacyWorldName + "' defined, skipping...");
             }
         }
 
         List<String> list = section.getStringList("worlds");
-        for(String str : list) {
+        for (String str : list) {
             World world = Bukkit.getWorld(str);
             if (world != null) {
-                worlds.add(Locality.of(world));
+                worlds.add(Locality.of(world, str));
             } else {
                 strings.warning("Unknown world '" + str + "' defined, skipping...");
             }
         }
 
-        if(worlds.isEmpty()) {
+        if (worlds.isEmpty()) {
             throw new IllegalArgumentException("No worlds found, LocalChannels must define one or more worlds.");
         }
 

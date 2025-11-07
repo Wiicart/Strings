@@ -18,6 +18,7 @@ import java.util.TreeSet;
 /**
  * Implements storage and retrieval of Channels,
  * subclasses must implement Channel loading and saving logic.
+ * Subclasses should also call ResolutionValidator when appropriate.
  */
 public abstract class AbstractChannelLoader implements ChannelLoader {
 

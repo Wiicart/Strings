@@ -24,7 +24,7 @@ public interface LocalChannel<T> extends Channel {
      */
     @Nullable
     static LocalChannel<?> of(Channel channel) {
-        if(channel instanceof LocalChannel<?> localChannel) {
+        if (channel instanceof LocalChannel<?> localChannel) {
             return localChannel;
         }
 
@@ -62,6 +62,17 @@ public interface LocalChannel<T> extends Channel {
      * @return If the LocalChannel contains the World or not.
      */
     boolean containsWorld(@NotNull T world);
+
+    /**
+     * Tells if this Channel contains a World behind a Locality.
+     * Accepts a Locality with a wildcard generic, but it must be of the same type as this channel.
+     * @param locality The Locality
+     * @return If this Channel contains the World behind the Locality
+     */
+    @SuppressWarnings("unchecked")
+    default boolean containsLocality(@NotNull Locality<?> locality) {
+        return containsWorld((T) locality.get());
+    }
 
     /**
      * If this is an instance of a {@code ProximityChannel}, this will provide the proximity the Channel is set to.
