@@ -43,12 +43,11 @@ public final class SettingsRegistry {
         }
     }
 
-
     /**
      * Used to construct a SettingsRegistry.
      * Null keys and values are not permitted.
      */
-    public static final class Builder {
+    public static sealed class Builder {
 
         private final Map<Class<?>, EnumMap<? extends Key<?>, ?>> master = new HashMap<>();
 
@@ -142,5 +141,10 @@ public final class SettingsRegistry {
 
             return false;
         }
+    }
+
+    @Deprecated
+    public static final class RegistryBuilder extends Builder {
+
     }
 }

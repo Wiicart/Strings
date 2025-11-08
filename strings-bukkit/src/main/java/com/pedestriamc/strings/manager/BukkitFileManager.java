@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.manager;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.files.FileManager;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,7 +14,7 @@ import java.io.IOException;
  * Manages plugin file loading, updating, access, and saving.
  */
 @SuppressWarnings("unused")
-public final class FileManager {
+public final class BukkitFileManager implements FileManager {
 
     private final Strings strings;
 
@@ -32,7 +33,7 @@ public final class FileManager {
     private FileConfiguration deathMessagesFileConfig;
     private FileConfiguration emojiFileConfig;
 
-    public FileManager(@NotNull Strings strings) {
+    public BukkitFileManager(@NotNull Strings strings) {
         this.strings = strings;
         load();
     }

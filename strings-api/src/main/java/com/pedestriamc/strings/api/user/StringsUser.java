@@ -3,8 +3,8 @@ package com.pedestriamc.strings.api.user;
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
+import com.pedestriamc.strings.api.command.Source;
 import com.pedestriamc.strings.api.discord.Snowflake;
-import com.pedestriamc.strings.api.message.Messageable;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Contract;
@@ -21,7 +21,7 @@ import java.util.UUID;
  * Storing an instance beyond a Player's session can cause unexpected behavior.
  */
 @SuppressWarnings({"unused", "all"}) // figure out the deprecation suppression so "all" can be removed
-public interface StringsUser extends Messageable {
+public interface StringsUser extends Source {
 
     /**
      * Provides a copy of the User that automatically saves itself.

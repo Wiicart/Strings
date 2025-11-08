@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.StringsPlatform;
+import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.resources.ResourcePack;
 import com.pedestriamc.strings.api.settings.Option;
 import org.apache.commons.codec.binary.Hex;
@@ -22,10 +23,10 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModrinthService {
 
-    private static final String HEADER_VALUE = "wiicart/strings/" + Strings.VERSION + " (wiicart.net)";
+    private static final String HEADER_VALUE = "wiicart/strings/" + StringsProvider.get().getVersion() + " (wiicart.net)";
     private static final String MODRINTH_URL = "https://api.modrinth.com/v2/";
 
-    private final Strings strings;
+    private final StringsPlatform strings;
 
     private final HttpClient client = HttpClient
             .newBuilder()
@@ -37,13 +38,13 @@ public class ModrinthService {
     private final String textureId;
     private ResourcePack cache;
 
-    public ModrinthService(@NotNull Strings strings) {
+    public ModrinthService(@NotNull StringsPlatform strings) {
         this.strings = strings;
         textureId = strings.getSettings().get(Option.Text.TEXTURES_MODRINTH_ID);
         try {
             cache = getLatestPack();
         } catch(Exception e) {
-            strings.getLogger().info(e.getMessage());
+            strings.info(e.getMessage());
         }
     }
 
@@ -85,8 +86,8 @@ public class ModrinthService {
             }
 
         } catch(IOException | InterruptedException | UnsupportedOperationException e) {
-            strings.getLogger().warning("Failed to fetch latest texture version");
-            strings.getLogger().warning(e.getMessage());
+            strings.warning("Failed to fetch latest texture version");
+            strings.warning(e.getMessage());
             throw new RuntimeException(e);
         }
 
@@ -116,8 +117,8 @@ public class ModrinthService {
 
             return Hex.decodeHex(hash.toCharArray());
         } catch(Exception e) {
-            strings.getLogger().warning("Failed to find SHA-1 hash");
-            strings.getLogger().warning(e.getMessage());
+            strings.warning("Failed to find SHA-1 hash");
+            strings.warning(e.getMessage());
             return null;
         }
     }

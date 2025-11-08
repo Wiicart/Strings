@@ -22,10 +22,10 @@ public class ResolutionValidator<L extends Locality<?>> {
     private static final String ERR = "Potential issues found.";
     private static final String LOCALITY_ERR = "[!] Can't guarantee channel resolution in world: %s\n";
 
-    private static final String HEADER = """
-           (Channel Resolution Report): {STATUS}
-           *NOTE: A "No issues found" status does not guarantee issues can't arise through player-specific issues, such as a Channel mute.
-    """;
+    @SuppressWarnings("TextBlockMigration")
+    private static final String HEADER =
+           "(Channel Resolution Report): {STATUS}\n" +
+           "*NOTE: \"No issues found\" status does not guarantee issues can't arise through specific issues, such as perms, etc.\n";
 
     private final ChannelLoader loader;
     private final Set<L> localities;

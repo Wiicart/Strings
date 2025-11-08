@@ -5,7 +5,6 @@ import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
-import com.pedestriamc.strings.chat.EmojiProvider;
 import com.pedestriamc.strings.chat.MessageUtilities;
 import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.configuration.Configuration;
@@ -142,16 +141,8 @@ public class RendererProvider {
             }
         }
 
-        @SuppressWarnings("unused")
-        private String setEmojisIfAllowed(@NotNull Player sender, @NotNull String input) {
-            if (emojisEnabled && EmojiProvider.allows(sender)) {
-                return strings.getEmojiManager().applyEmojis(input);
-            }
-            return input;
-        }
-
         private Component setEmojisIfAllowed(@NotNull Player sender, @NotNull Component input) {
-            if (emojisEnabled && EmojiProvider.allows(sender)) {
+            if (emojisEnabled && Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.emojis")) {
                 return strings.getEmojiManager().applyEmojis(input);
             }
             return input;

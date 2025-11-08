@@ -105,7 +105,7 @@ public class MessageProcessor {
     }
 
     private String setEmojisIfAllowed(@NotNull Player sender, @NotNull String input) {
-        if (emojisEnabled && EmojiProvider.allows(sender)) {
+        if (emojisEnabled && Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.emojis")) {
             return strings.getEmojiManager().applyEmojis(input);
         }
         return input;

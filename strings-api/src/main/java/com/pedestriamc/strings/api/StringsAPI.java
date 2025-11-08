@@ -82,8 +82,7 @@ public interface StringsAPI {
 
     /**
      * Provides a {@link EmojiManager}.<br/>
-     * An instance is not always present by default,
-     * so an instance may need to be created.
+     * Lazy method.
      * @return A EmojiManager
      */
     @NotNull EmojiManager emojiManager();

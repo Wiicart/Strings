@@ -2,12 +2,10 @@ package com.pedestriamc.strings.chat;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.text.EmojiManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.wiicart.commands.permission.Permissions;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -22,22 +20,18 @@ public class EmojiProvider implements EmojiManager {
 
     private static final Pattern EMOJI_PATTERN = Pattern.compile(":([^\\s:]+):");
 
-    public static boolean allows(@NotNull CommandSender sender) {
-        return Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.emojis");
-    }
+    private final StringsPlatform strings;
 
-    private final Strings strings;
+    @Unmodifiable
+    private final Map<String, String> map;
 
-    private final @Unmodifiable Map<String, String> map;
-
-    public EmojiProvider(@NotNull Strings strings) {
+    public EmojiProvider(@NotNull StringsPlatform strings) {
         this.strings = strings;
         map = loadMap();
     }
 
     @NotNull
     public String applyEmojis(@NotNull String input) {
-        input = input.replace(":cowboy:", "\uD83E\uDD20");
         Matcher matcher = EMOJI_PATTERN.matcher(input);
         return matcher.replaceAll(result -> map.getOrDefault(
                 result.group().toLowerCase(Locale.ROOT),

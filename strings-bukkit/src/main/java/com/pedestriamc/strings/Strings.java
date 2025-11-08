@@ -8,6 +8,7 @@ import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.EmojiManager;
 import com.pedestriamc.strings.chat.EmojiProvider;
 import com.pedestriamc.strings.external.ModrinthService;
+import com.pedestriamc.strings.impl.ServerSource;
 import com.pedestriamc.strings.placeholder.StringsPlaceholderExpansion;
 import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.chat.Mentioner;
@@ -17,7 +18,7 @@ import com.pedestriamc.strings.impl.StringsImpl;
 import com.pedestriamc.strings.log.LogManager;
 import com.pedestriamc.strings.impl.BukkitMessenger;
 import com.pedestriamc.strings.manager.ClassRegistryManager;
-import com.pedestriamc.strings.manager.FileManager;
+import com.pedestriamc.strings.manager.BukkitFileManager;
 import com.pedestriamc.strings.misc.AutoBroadcasts;
 import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.user.User;
@@ -57,7 +58,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
 
     private BukkitAudiences adventure;
 
-    private FileManager fileManager;
+    private BukkitFileManager fileManager;
     private UserUtil userUtil;
     private Chat chat = null;
     private ServerMessages serverMessages;
@@ -72,6 +73,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
     private Configuration configClass;
     private EmojiManager emojiManager;
     private ModrinthService modrinth;
+    private ServerSource serverSource;
 
     public Strings() {
         super();
@@ -81,7 +83,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
     public void onLoad() {
         info("Loading...");
 
-        fileManager = new FileManager(this);
+        fileManager = new BukkitFileManager(this);
         info("FileManager loaded.");
         userUtil = new YamlUserUtil(this);
         info("UserUtil loaded.");
@@ -95,6 +97,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
     @Override
     public void onEnable() {
         adventure = BukkitAudiences.create(this);
+        serverSource = new ServerSource(this);
         logManager = new LogManager(this);
         this.setupVault();
         channelLoader.loadChannels();
@@ -263,7 +266,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         }
     }
 
-    public void async(Runnable runnable) {
+    public void async(@NotNull Runnable runnable) {
         getServer().getScheduler().runTaskAsynchronously(this, runnable);
     }
 
@@ -281,7 +284,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         return string;
     }
 
-    public @NotNull FileManager files() {
+    public @NotNull BukkitFileManager files() {
         return fileManager;
     }
 
@@ -352,6 +355,10 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
     @NotNull
     public Configuration getSettings() {
         return configClass;
+    }
+
+    public @NotNull ServerSource serverSource() {
+        return serverSource;
     }
 
     public void info(@NotNull String message) {
