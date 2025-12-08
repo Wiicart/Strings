@@ -3,6 +3,7 @@ package com.pedestriamc.strings.impl;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.*;
+import com.pedestriamc.strings.api.event.strings.EventDispatcher;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.text.EmojiManager;
@@ -80,6 +81,11 @@ public final class StringsImpl implements StringsAPI {
     @Override
     public @NotNull EmojiManager emojiManager() {
         return strings.getEmojiManager();
+    }
+
+    @Override
+    public @NotNull EventDispatcher getEventDispatcher() {
+        return strings.getEventDispatcher();
     }
 
 }

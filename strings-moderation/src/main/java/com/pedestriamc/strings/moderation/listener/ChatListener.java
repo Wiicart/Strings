@@ -2,6 +2,7 @@ package com.pedestriamc.strings.moderation.listener;
 
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.event.StringsChatEvent;
 import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.api.event.moderation.PlayerChatFilteredEvent;
 import com.pedestriamc.strings.api.user.StringsUser;
@@ -112,6 +113,11 @@ public class ChatListener implements Listener {
         repetitionManager.setPreviousMessage(user, event.getMessage());
         cooldownManager.startCooldown(user);
         event.setMessage(message);
+    }
+
+    @com.pedestriamc.strings.api.event.strings.Listener
+    public void onEvent(@NotNull StringsChatEvent event) {
+        event.getMessage();
     }
 
     private boolean noPermOrAdmin(@NotNull Player player, @NotNull  String perm) {

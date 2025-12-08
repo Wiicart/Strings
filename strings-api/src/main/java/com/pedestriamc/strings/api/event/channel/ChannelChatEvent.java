@@ -1,6 +1,8 @@
 package com.pedestriamc.strings.api.event.channel;
 
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.event.StringsChatEvent;
+import com.pedestriamc.strings.api.user.StringsUser;
 import net.kyori.adventure.chat.SignedMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -8,6 +10,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Optional;
 import java.util.Set;
@@ -17,7 +20,7 @@ import java.util.Set;
  * All player messages handled by Strings will have a ChannelChatEvent called.
  */
 @SuppressWarnings("unused")
-public final class ChannelChatEvent extends AsyncPlayerChatEvent {
+public final class ChannelChatEvent extends AsyncPlayerChatEvent implements StringsChatEvent {
 
     private static final boolean IS_PAPER;
     static {
@@ -79,8 +82,19 @@ public final class ChannelChatEvent extends AsyncPlayerChatEvent {
      * Provides the Channel the message is being sent to.
      * @return The Channel.
      */
-    public Channel getChannel() {
+    @Override
+    public @NotNull Channel getChannel() {
         return channel;
+    }
+
+    @Override
+    public @NotNull @Unmodifiable Set<StringsUser> getMessageRecipients() {
+        return Set.of();
+    }
+
+    @Override
+    public @NotNull StringsUser getSender() {
+        return null;
     }
 
     /**

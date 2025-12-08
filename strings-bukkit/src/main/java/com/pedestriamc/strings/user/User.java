@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.user;
 
 import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.collections.BoundedLinkedBuffer;
 import com.pedestriamc.strings.api.discord.Snowflake;
 import com.pedestriamc.strings.api.event.channel.UserChannelEvent;
@@ -13,6 +14,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -234,6 +236,11 @@ public final class User implements StringsUser, Permissible {
     @NotNull
     public World getWorld() {
         return player.getWorld();
+    }
+
+    @Override
+    public @NotNull Audience audience() {
+        return strings.adventure().player(player());
     }
 
     @Override
@@ -582,6 +589,28 @@ public final class User implements StringsUser, Permissible {
     @Override
     public boolean hasPermission(@NotNull String name) {
         return player().hasPermission(name);
+    }
+
+    @Override
+    public boolean isOperator() {
+        return player.isOp();
+    }
+
+    @Override
+    public double distanceSquared(@NotNull StringsUser user) {
+        if (getLocality() != user.getLocality()) {
+            return Double.MAX_VALUE;
+        }
+
+        Location thisLocation = player().getLocation();
+        Location otherLocation = playerOf(user).getLocation();
+
+        return thisLocation.distanceSquared(otherLocation);
+    }
+
+    @Override
+    public Locality<?> getLocality() {
+        return null;
     }
 
     @Override

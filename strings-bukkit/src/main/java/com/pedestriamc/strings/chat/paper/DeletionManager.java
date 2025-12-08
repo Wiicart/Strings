@@ -31,7 +31,7 @@ public class DeletionManager {
         deletionButton = component.hoverEvent(MiniMessage.miniMessage().deserialize(buttonHover));
     }
 
-    public Component getDeletionButton(@NotNull SignedMessage message) {
+    public Component createDeleteButton(@NotNull SignedMessage message) {
         return deletionButton.clickEvent(ClickEvent.callback(
                 audience -> {
                     ((Audience) strings.getServer()).deleteMessage(message);

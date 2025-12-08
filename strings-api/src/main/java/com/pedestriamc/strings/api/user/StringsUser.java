@@ -3,13 +3,14 @@ package com.pedestriamc.strings.api.user;
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
+import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.command.Source;
 import com.pedestriamc.strings.api.discord.Snowflake;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
+import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.UUID;
@@ -39,6 +40,13 @@ public interface StringsUser extends Source {
     }
 
     /**
+     * Gets the Audience representing this User.
+     * @return
+     */
+    @NotNull
+    Audience audience();
+
+    /**
      * Provides the StringsUser's UUID.
      * @return A UUID.
      */
@@ -59,7 +67,7 @@ public interface StringsUser extends Source {
      * @deprecated Use {@link StringsUser#getChatColorComponent()} instead.
      * @return A chat color.
      */
-    @Nullable
+    @NotNull
     @Deprecated
     String getChatColor();
 
@@ -312,4 +320,20 @@ public interface StringsUser extends Source {
      * @return True/false if the user has the permission or not.
      */
     boolean hasPermission(@NotNull String permission);
+
+    boolean isOperator();
+
+    /**
+     * Gets the distance squared between two users.<br/>
+     * If the Users are in different worlds, {@link Double#MAX_VALUE} will be returned.
+     * @param user The user to compare distance to.
+     * @return The distance squared. or {@link Double#MAX_VALUE}
+     */
+    double distanceSquared(@NotNull StringsUser user);
+
+    /**
+     * Provides the {@link Locality} the User is currently in.
+     * @return The current Locality.
+     */
+    Locality<?> getLocality();
 }

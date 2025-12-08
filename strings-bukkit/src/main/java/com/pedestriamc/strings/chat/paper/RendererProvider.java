@@ -72,7 +72,7 @@ public class RendererProvider {
             component = insertMessage(component, message, channel, user);
 
             if (shouldAppendDeleteButton(channel, source, viewer) && signedMessage.canDelete()) {
-                component = component.append(deletionManager.getDeletionButton(signedMessage));
+                component = component.append(deletionManager.createDeleteButton(signedMessage));
             }
 
             return component;

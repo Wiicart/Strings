@@ -2,7 +2,7 @@ package com.pedestriamc.strings.channel;
 
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.channel.base.ProtectedChannel;
+import com.pedestriamc.common.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

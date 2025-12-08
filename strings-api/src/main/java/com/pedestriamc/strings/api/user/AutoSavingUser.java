@@ -3,11 +3,12 @@ package com.pedestriamc.strings.api.user;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
+import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.discord.Snowflake;
 import com.pedestriamc.strings.api.text.format.StringsComponent;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.UUID;
@@ -28,6 +29,11 @@ final class AutoSavingUser implements StringsUser {
     }
 
     @Override
+    public @NotNull Audience audience() {
+        return user.audience();
+    }
+
+    @Override
     public @NotNull UUID getUniqueId() {
         return user.getUniqueId();
     }
@@ -38,7 +44,7 @@ final class AutoSavingUser implements StringsUser {
     }
 
     @Override
-    @Nullable
+    @NotNull
     public String getChatColor() {
         return user.getChatColor();
     }
@@ -245,6 +251,21 @@ final class AutoSavingUser implements StringsUser {
     @Override
     public boolean hasPermission(@NotNull String permission) {
         return user.hasPermission(permission);
+    }
+
+    @Override
+    public boolean isOperator() {
+        return user.isOperator();
+    }
+
+    @Override
+    public double distanceSquared(@NotNull StringsUser user) {
+        return user.distanceSquared(user);
+    }
+
+    @Override
+    public Locality<?> getLocality() {
+        return user.getLocality();
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
 import com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
+import com.pedestriamc.strings.api.channel.local.LocalityManager;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.channel.HelpOPChannel;
@@ -32,8 +33,9 @@ final class ChannelFileReader {
             Identifier.WORLD, Identifier.WORLD_STRICT, Identifier.PROXIMITY, Identifier.PROXIMITY_STRICT
     );
 
-    private final @NotNull Strings strings;
-    private final @NotNull ChannelManager manager;
+    private final Strings strings;
+    private final ChannelManager manager;
+    private final LocalityManager<World> localityManager;
 
     static void loadChannels(@NotNull Strings strings, @NotNull FileConfiguration config, @NotNull ChannelManager manager) {
         new ChannelFileReader(strings, config, manager);
@@ -42,6 +44,7 @@ final class ChannelFileReader {
     private ChannelFileReader(@NotNull Strings strings, @NotNull FileConfiguration config, @NotNull ChannelManager manager) {
         this.strings = strings;
         this.manager = manager;
+        this.localityManager = strings.getLocalityManager();
 
         ConfigurationSection channels = config.getConfigurationSection("channels");
         if(channels == null) {
@@ -164,21 +167,17 @@ final class ChannelFileReader {
 
     private @NotNull Set<Locality<World>> loadWorlds(@NotNull ConfigurationSection section) {
         Set<Locality<World>> worlds = new HashSet<>();
+        List<String> list = section.getStringList("worlds");
+
         String legacyWorldName = section.getString("world");
         if (legacyWorldName != null) {
-            World world = Bukkit.getWorld(legacyWorldName);
-            if (world != null) {
-                worlds.add(Locality.of(world, legacyWorldName));
-            } else {
-                strings.warning("Unknown world '" + legacyWorldName + "' defined, skipping...");
-            }
+            list.add(legacyWorldName);
         }
 
-        List<String> list = section.getStringList("worlds");
         for (String str : list) {
             World world = Bukkit.getWorld(str);
             if (world != null) {
-                worlds.add(Locality.of(world, str));
+                worlds.add(localityManager.get(world));
             } else {
                 strings.warning("Unknown world '" + str + "' defined, skipping...");
             }

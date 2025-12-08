@@ -7,7 +7,7 @@ import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.MessageProcessor;
-import com.pedestriamc.strings.channel.base.ProtectedChannel;
+import com.pedestriamc.common.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.impl.BukkitMessenger;
 import com.pedestriamc.strings.user.User;

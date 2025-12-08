@@ -3,7 +3,7 @@ package com.pedestriamc.strings.mock;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.channel.base.ProtectedChannel;
+import com.pedestriamc.common.channel.base.ProtectedChannel;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")

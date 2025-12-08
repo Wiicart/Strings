@@ -77,6 +77,7 @@ public final class StringsModeration extends JavaPlugin {
         linkFilter = new LinkFilter(this);
         repetitionManager = new RepetitionManager(this);
         registerListener(new ChatListener(this));
+        StringsProvider.get().getEventDispatcher().subscribe(new ChatListener(this));
         registerListener(new ReloadListener(this));
         registerListener(new SignChangeListener(this));
     }

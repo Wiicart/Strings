@@ -61,7 +61,7 @@ public final class BroadcastCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if(!Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.broadcast")) {
+        if (!Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.broadcast")) {
             messenger.sendMessage(NO_PERMS, sender);
             return true;
         }
@@ -71,7 +71,7 @@ public final class BroadcastCommand implements CommandExecutor {
             PlaceholderAPI.setPlaceholders(p, builder.toString());
         }
 
-        for(String arg : args) {
+        for (String arg : args) {
             builder.append(arg);
             builder.append(" ");
         }

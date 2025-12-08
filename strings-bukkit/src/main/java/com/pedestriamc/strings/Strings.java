@@ -1,14 +1,20 @@
 package com.pedestriamc.strings;
 
+import com.pedestriamc.common.event.StringsEventDispatcher;
 import com.pedestriamc.strings.api.APIRegistrar;
 import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.data.BuildableRegistrar;
+import com.pedestriamc.strings.api.channel.local.LocalityManager;
 import com.pedestriamc.strings.api.event.StringsReloader;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.EmojiManager;
-import com.pedestriamc.strings.chat.EmojiProvider;
-import com.pedestriamc.strings.external.ModrinthService;
+import com.pedestriamc.common.chat.EmojiProvider;
+import com.pedestriamc.common.external.ModrinthService;
+import com.pedestriamc.strings.impl.BukkitEventFactory;
+import com.pedestriamc.strings.impl.BukkitPlatformAdapter;
 import com.pedestriamc.strings.impl.ServerSource;
+import com.pedestriamc.strings.impl.StringsBukkitEventDispatcher;
+import com.pedestriamc.strings.impl.local.BukkitLocalityManager;
 import com.pedestriamc.strings.placeholder.StringsPlaceholderExpansion;
 import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.chat.Mentioner;
@@ -29,6 +35,7 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -74,6 +81,10 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
     private EmojiManager emojiManager;
     private ModrinthService modrinth;
     private ServerSource serverSource;
+    private BukkitPlatformAdapter platformAdapter;
+    private StringsBukkitEventDispatcher eventDispatcher;
+    private BukkitEventFactory eventFactory;
+    private BukkitLocalityManager localityManager;
 
     public Strings() {
         super();
@@ -185,6 +196,10 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
 
     private void instantiateObjects() {
         configClass = new Configuration(this);
+        eventDispatcher = new StringsBukkitEventDispatcher(this);
+        eventFactory = new BukkitEventFactory();
+        localityManager = new BukkitLocalityManager(this);
+        platformAdapter = new BukkitPlatformAdapter(this);
         messenger = new BukkitMessenger(fileManager.getMessagesFileConfig());
         playerDirectMessenger = new PlayerDirectMessenger(this);
         channelLoader = new ChannelManager(this);
@@ -332,12 +347,19 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         return messenger;
     }
 
+    @Override
     @NotNull
     public EmojiManager getEmojiManager() {
         if (emojiManager == null) {
             emojiManager = new EmojiProvider(this);
         }
         return emojiManager;
+    }
+
+    @Override
+    @NotNull
+    public LocalityManager<World> getLocalityManager() {
+        return localityManager;
     }
 
     @Nullable
@@ -352,15 +374,35 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         return this.adventure;
     }
 
+    @Override
     @NotNull
     public Configuration getSettings() {
         return configClass;
     }
 
+    @Override
     public @NotNull ServerSource serverSource() {
         return serverSource;
     }
 
+    @Override
+    public @NotNull BukkitPlatformAdapter getAdapter() {
+        return platformAdapter;
+    }
+
+    @NotNull
+    @Override
+    public StringsEventDispatcher getEventDispatcher() {
+        return eventDispatcher;
+    }
+
+    @NotNull
+    @Override
+    public BukkitEventFactory getEventFactory() {
+        return eventFactory;
+    }
+
+    @Override
     public void info(@NotNull String message) {
         getLogger().info(message);
     }
@@ -370,6 +412,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         info(message.toString());
     }
 
+    @Override
     public void warning(@NotNull String message) {
         getLogger().warning(message);
     }

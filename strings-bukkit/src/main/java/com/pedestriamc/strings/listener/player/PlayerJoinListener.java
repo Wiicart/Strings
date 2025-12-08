@@ -2,7 +2,7 @@ package com.pedestriamc.strings.listener.player;
 
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.configuration.Configuration;
-import com.pedestriamc.strings.external.ModrinthService;
+import com.pedestriamc.common.external.ModrinthService;
 import com.pedestriamc.strings.user.util.UserUtil;
 import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.Strings;

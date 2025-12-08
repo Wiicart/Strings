@@ -9,6 +9,7 @@ channels:
   global:
     # The format messages should be posted as in the channel.
     # Valid placeholders:
+    # {username} - player name
     # {displayname} - player display name
     # {prefix} - player prefix
     # {suffix} - player suffix
@@ -19,7 +20,6 @@ channels:
     # Should an event be called when players send a message?
     # This allows other plugins to receive the message and modify it.
     # It's recommended to keep this on unless you want no other plugins to receive or modify chat.
-    # BUG: This will be fixed, but currently if events are not called, cool downs will not work.
     call-event: true
 
     # Should chat be filtered for profanity?

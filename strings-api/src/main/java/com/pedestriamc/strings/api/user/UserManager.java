@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.util.Set;
+import java.util.Collection;
 import java.util.UUID;
 
 public interface UserManager {
@@ -29,6 +29,6 @@ public interface UserManager {
      */
     @UnmodifiableView
     @NotNull
-    Set<StringsUser> getUsers();
+    Collection<StringsUser> getUsers();
 
 }
