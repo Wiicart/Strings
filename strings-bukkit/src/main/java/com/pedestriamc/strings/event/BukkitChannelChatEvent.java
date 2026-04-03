@@ -1,32 +1,25 @@
 package com.pedestriamc.strings.event;
 
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.event.StringsChatEvent;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.user.User;
 import net.kyori.adventure.chat.SignedMessage;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-public class ChannelChatEvent2 extends AsyncPlayerChatEvent implements StringsChatEvent {
-
-    private static Set<Player> convertToPlayers(@NotNull Set<StringsUser> users) {
-        return users.stream()
-                .map(User::playerOf)
-                .collect(Collectors.toSet());
-    }
+public class BukkitChannelChatEvent implements ChannelChatEvent {
 
     private final StringsUser sender;
     private final Set<StringsUser> recipients;
     private final Channel channel;
     private final SignedMessage signedMessage;
 
-    public ChannelChatEvent2(
+    private String message;
+    private boolean isCancelled = false;
+
+    public BukkitChannelChatEvent(
             boolean async,
             boolean cancellable,
             @NotNull StringsUser sender,
@@ -34,14 +27,13 @@ public class ChannelChatEvent2 extends AsyncPlayerChatEvent implements StringsCh
             @NotNull Set<StringsUser> recipients,
             @NotNull Channel channel
     ) {
-        super(async, User.playerOf(sender), message, convertToPlayers(recipients));
         this.sender = sender;
         this.recipients = recipients;
         this.channel = channel;
         signedMessage = null;
     }
 
-    public ChannelChatEvent2(
+    public BukkitChannelChatEvent(
             boolean async,
             boolean cancellable,
             @NotNull StringsUser sender,
@@ -50,7 +42,6 @@ public class ChannelChatEvent2 extends AsyncPlayerChatEvent implements StringsCh
             @NotNull Channel channel,
             SignedMessage signedMessage
     ) {
-        super(async, User.playerOf(sender), message, convertToPlayers(recipients));
         this.sender = sender;
         this.recipients = recipients;
         this.channel = channel;
@@ -75,9 +66,29 @@ public class ChannelChatEvent2 extends AsyncPlayerChatEvent implements StringsCh
         return sender;
     }
 
+    @Override
+    public @NotNull String getMessage() {
+        return message;
+    }
+
+    @Override
+    public void setMessage(@NotNull String message) {
+        this.message = message;
+    }
+
     @NotNull
     @Override
     public Optional<SignedMessage> getSignedMessage() {
         return Optional.ofNullable(signedMessage);
+    }
+
+    @Override
+    public void setCancelled(boolean cancel) {
+        isCancelled = cancel;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return isCancelled;
     }
 }

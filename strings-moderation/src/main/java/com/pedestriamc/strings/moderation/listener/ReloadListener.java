@@ -1,11 +1,11 @@
 package com.pedestriamc.strings.moderation.listener;
 
 import com.pedestriamc.strings.api.event.StringsReloadEvent;
+import com.pedestriamc.strings.api.event.strings.Listener;
 import com.pedestriamc.strings.moderation.StringsModeration;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 
-public class ReloadListener implements Listener {
+public class ReloadListener {
 
     private final StringsModeration plugin;
 
@@ -13,8 +13,8 @@ public class ReloadListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler
-    public void onEvent(StringsReloadEvent event) {
+    @Listener
+    void onEvent(@NotNull StringsReloadEvent event) {
         plugin.reload();
     }
 }

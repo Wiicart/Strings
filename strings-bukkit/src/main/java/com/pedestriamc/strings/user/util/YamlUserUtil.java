@@ -199,9 +199,8 @@ public final class YamlUserUtil implements UserUtil {
     public void addUser(User user) {
         map.put(user.getUniqueId(), user);
         strings.sync(() -> strings
-                .getServer()
-                .getPluginManager()
-                .callEvent(new StringsUserLoadEvent(user))
+                .eventManager()
+                .dispatch(new StringsUserLoadEvent(user))
         );
     }
 

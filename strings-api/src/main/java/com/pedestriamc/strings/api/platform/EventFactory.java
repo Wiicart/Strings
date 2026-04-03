@@ -2,7 +2,7 @@ package com.pedestriamc.strings.api.platform;
 
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.event.DirectMessageEvent;
-import com.pedestriamc.strings.api.event.StringsChatEvent;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.event.moderation.MessageDeletionEvent;
 import com.pedestriamc.strings.api.event.strings.StringsEvent;
 import com.pedestriamc.strings.api.event.strings.user.ActiveChannelUpdateEvent;
@@ -27,7 +27,7 @@ import java.util.Set;
 public interface EventFactory {
 
     /**
-     * Creates a new {@link StringsChatEvent}
+     * Creates a new {@link ChannelChatEvent}
      * @param async Is the event async?
      * @param cancellable Is the event cancellable?
      * @param sender The chat message sender
@@ -38,7 +38,7 @@ public interface EventFactory {
      * @return A new StringsChatEvent
      */
     @Contract("_, _, _, _, _, _, _ -> new")
-    @NotNull StringsChatEvent chatEvent(
+    @NotNull ChannelChatEvent chatEvent(
             boolean async,
             boolean cancellable,
             @NotNull StringsUser sender,

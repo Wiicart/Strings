@@ -9,7 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.Set;
 
-public interface StringsChatEvent extends StringsEvent {
+/**
+ * The chat event called for any message in Strings.
+ */
+public interface ChannelChatEvent extends StringsEvent {
 
     /**
      * Provides the Channel the message was sent in.
@@ -31,6 +34,14 @@ public interface StringsChatEvent extends StringsEvent {
      */
     @NotNull
     StringsUser getSender();
+
+    /**
+     * Provides the sender of the message.
+     * @return The sender
+     */
+    default StringsUser getPlayer() {
+        return getSender();
+    }
 
     /**
      * Provides the text of the message being set.

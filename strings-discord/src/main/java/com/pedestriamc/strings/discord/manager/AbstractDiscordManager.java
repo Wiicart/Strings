@@ -3,7 +3,7 @@ package com.pedestriamc.strings.discord.manager;
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.collections.BoundedLinkedBuffer;
-import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.discord.StringsDiscord;
 import com.pedestriamc.strings.api.discord.Option;
@@ -82,9 +82,7 @@ abstract class AbstractDiscordManager implements DiscordManager {
     @NotNull
     protected String processDiscordPlaceholders(@NotNull ChannelChatEvent event) {
         try {
-            StringsAPI api = StringsProvider.get();
-
-            StringsUser user = api.getUser(event.getPlayer().getUniqueId());
+            StringsUser user = event.getPlayer();
             if(user == null) {
                 throw new IllegalStateException("User not found");
             }

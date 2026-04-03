@@ -1,7 +1,8 @@
 package com.pedestriamc.strings.discord.manager;
 
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.discord.StringsDiscord;
 import com.pedestriamc.strings.api.discord.Option;
 import com.pedestriamc.strings.discord.configuration.Configuration;
@@ -16,7 +17,7 @@ import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.kyori.adventure.chat.SignedMessage;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -89,7 +90,7 @@ public class GlobalDiscordManager extends AbstractDiscordManager {
     @Override
     public void processCraftEvent(@NotNull ChannelChatEvent event) {
         String message = ChatColor.stripColor(color(super.processDiscordPlaceholders(event)));
-        Player player = event.getPlayer();
+        StringsUser player = event.getPlayer();
 
         for (MessageChannel channel : discordChannels) {
             final String finalMessage = processMentionsIfNecessary(message, player, channel);
@@ -128,18 +129,18 @@ public class GlobalDiscordManager extends AbstractDiscordManager {
         }
     }
 
-    private @NotNull String processMentionsIfNecessary(@NotNull String msg, @NotNull Player p, @NotNull MessageChannel c) {
-        if(!(c instanceof GuildChannel gc)) {
+    private @NotNull String processMentionsIfNecessary(@NotNull String msg, @NotNull StringsUser p, @NotNull MessageChannel c) {
+        if (!(c instanceof GuildChannel gc)) {
             return msg;
         }
 
-        if(playerHasBasicMentionPermission(p)) {
+        if (playerHasBasicMentionPermission((Permissible) p)) {
             Guild guild = gc.getGuild();
             msg = convertMentionsToDiscordFormat(msg, guild, directory.getMembers(guild));
         }
 
         // u200B is a zero-width space, looks the same but will no longer match
-        if(playerCannotMentionEveryone(p)) {
+        if (playerCannotMentionEveryone((Permissible) p)) {
             msg = msg
                     .replaceAll("(?i)@everyone", "@\u200Beveryone")
                     .replaceAll("(?i)@here", "@\u200Bhere");

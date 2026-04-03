@@ -94,7 +94,6 @@ public class StringsEventManager implements EventManager {
         return methods;
     }
 
-    // todo needs to traverse interfaces
     private Set<Class<?>> getAllClassTypes(@NotNull Class<? extends StringsEvent> clazz) {
         return typeMap.computeIfAbsent(clazz, c -> {
             Set<Class<?>> classes = new HashSet<>();

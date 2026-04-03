@@ -1,16 +1,13 @@
 package com.pedestriamc.strings.api.event;
 
+import com.pedestriamc.strings.api.event.strings.StringsEvent;
 import com.pedestriamc.strings.api.user.StringsUser;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Triggered after a player has joined and the {@link StringsUser} of the player has been loaded.
  */
-public class StringsUserLoadEvent extends Event {
-
-    private static final HandlerList HANDLERS = new HandlerList();
+public class StringsUserLoadEvent implements StringsEvent {
 
     private final StringsUser user;
 
@@ -21,17 +18,6 @@ public class StringsUserLoadEvent extends Event {
     @NotNull
     public StringsUser getUser() {
         return user;
-    }
-
-    @Override
-    @NotNull
-    public HandlerList getHandlers() {
-        return HANDLERS;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return HANDLERS;
     }
 
 }

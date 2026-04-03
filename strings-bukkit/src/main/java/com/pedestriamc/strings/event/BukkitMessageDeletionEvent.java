@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.api.event;
+package com.pedestriamc.strings.event;
 
 import com.pedestriamc.strings.api.event.moderation.MessageDeletionEvent;
 import net.kyori.adventure.chat.SignedMessage.Signature;

@@ -1,17 +1,16 @@
 package com.pedestriamc.strings.discord.listener.bukkit
 
-import com.pedestriamc.strings.api.event.BukkitMessageDeletionEvent
+import com.pedestriamc.strings.api.event.moderation.MessageDeletionEvent
+import com.pedestriamc.strings.api.event.strings.Listener
 import com.pedestriamc.strings.discord.StringsDiscord
 import com.pedestriamc.strings.discord.manager.DiscordManager
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
 
-class MessageDeletionListener(strings: StringsDiscord) : Listener {
+class MessageDeletionListener(strings: StringsDiscord) {
 
     val manager: DiscordManager = strings.manager;
 
-    @EventHandler
-    fun onEvent(event: BukkitMessageDeletionEvent) {
+    @Listener
+    fun onEvent(event: MessageDeletionEvent) {
         manager.deleteMessage(event.message);
     }
 

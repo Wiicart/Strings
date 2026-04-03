@@ -153,7 +153,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         reloadConfig();
         onLoad();
         onEnable();
-        getServer().getPluginManager().callEvent(StringsReloader.createEvent());
+        eventDispatcher.dispatch(StringsReloader.createEvent());
     }
 
     private void loadMetrics() {

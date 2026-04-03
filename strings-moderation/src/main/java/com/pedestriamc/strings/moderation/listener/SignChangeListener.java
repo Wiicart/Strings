@@ -1,8 +1,10 @@
 package com.pedestriamc.strings.moderation.listener;
 
 import com.pedestriamc.strings.api.event.moderation.SignTextFilterEvent;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import com.pedestriamc.strings.moderation.manager.ChatFilter;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
@@ -34,9 +36,12 @@ public class SignChangeListener implements Listener {
             event.setLine(i, filteredLine);
         }
 
-        strings.synchronous(() ->
-                strings.getServer()
-                .getPluginManager()
-                .callEvent(new SignTextFilterEvent(event, lineList)));
+        Player player = event.getPlayer();
+        StringsUser user = strings.api().getUser(player.getUniqueId());
+        if (user != null) {
+            strings.synchronous(() ->
+                    strings.eventDispatcher().dispatch(new SignTextFilterEvent(user, lineList))
+            );
+        }
     }
 }

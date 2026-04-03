@@ -1,10 +1,8 @@
 package com.pedestriamc.strings.api.event.moderation;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import com.pedestriamc.strings.api.event.strings.StringsEvent;
+import com.pedestriamc.strings.api.user.StringsUser;
 import org.jetbrains.annotations.ApiStatus.Internal;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -12,17 +10,15 @@ import java.util.List;
  * This Event will be called if a player's message is changed due to filtering, whether it be for containing a URL,
  * or having restricted words.
  */
-public final class PlayerChatFilteredEvent extends Event {
+public final class PlayerChatFilteredEvent implements StringsEvent {
 
-    public static final HandlerList HANDLER_LIST = new HandlerList();
-
-    private final Player player;
+    private final StringsUser player;
     private final String originalMessage;
     private final String filteredMessage;
     private final List<String> filteredElements;
 
     @Internal
-    public PlayerChatFilteredEvent(Player player, String originalMessage, String filteredMessage, List<String> filteredElements) {
+    public PlayerChatFilteredEvent(StringsUser player, String originalMessage, String filteredMessage, List<String> filteredElements) {
         this.player = player;
         this.originalMessage = originalMessage;
         this.filteredMessage = filteredMessage;
@@ -33,7 +29,7 @@ public final class PlayerChatFilteredEvent extends Event {
      * Provides the message sender.
      * @return The Player instance of the sender.
      */
-    public Player getPlayer() {
+    public StringsUser getPlayer() {
         return player;
     }
 
@@ -60,16 +56,6 @@ public final class PlayerChatFilteredEvent extends Event {
     @SuppressWarnings("unused")
     public List<String> getFilteredElements() {
         return filteredElements;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
-    }
-
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return HANDLER_LIST;
     }
 
 }

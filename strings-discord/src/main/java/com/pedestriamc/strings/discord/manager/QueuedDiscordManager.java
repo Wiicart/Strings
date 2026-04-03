@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.discord.manager;
 
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;

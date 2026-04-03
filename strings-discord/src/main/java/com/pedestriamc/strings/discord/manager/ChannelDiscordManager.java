@@ -4,7 +4,8 @@ import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
-import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.discord.StringsDiscord;
 import com.pedestriamc.strings.discord.manager.member.MemberDirectory;
 import net.dv8tion.jda.api.entities.Guild;
@@ -19,7 +20,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -127,6 +128,7 @@ public final class ChannelDiscordManager extends AbstractDiscordManager {
         strings.synchronous(() -> channel.broadcastPlain(finalString));
     }
 
+    @Override
     public void processCraftEvent(@NotNull ChannelChatEvent event) {
         MessageChannel channel = channels.get(event.getChannel());
         if (channel == null) {
@@ -150,17 +152,17 @@ public final class ChannelDiscordManager extends AbstractDiscordManager {
         }
     }
 
-    private @NotNull String processMentionsIfNecessary(@NotNull String msg, @NotNull Player p, @NotNull MessageChannel c) {
+    private @NotNull String processMentionsIfNecessary(@NotNull String msg, @NotNull StringsUser p, @NotNull MessageChannel c) {
         if (!(c instanceof GuildChannel gc)) {
             return msg;
         }
 
-        if(playerHasBasicMentionPermission(p)) {
+        if(playerHasBasicMentionPermission((Permissible) p)) {
             Guild guild = gc.getGuild();
             msg = convertMentionsToDiscordFormat(msg, guild, directory.getMembers(guild));
         }
 
-        if(playerCannotMentionEveryone(p)) {
+        if(playerCannotMentionEveryone((Permissible) p)) {
             msg = msg
                     .replaceAll("(?i)@everyone", "@\u200Beveryone")
                     .replaceAll("(?i)@here", "@\u200Bhere");

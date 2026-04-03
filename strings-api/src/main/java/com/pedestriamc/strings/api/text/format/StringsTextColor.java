@@ -138,24 +138,6 @@ public final class StringsTextColor implements Element<TextColor>, TextColor, Se
     }
 
     /**
-     * Provides a StringsTextColor representation of a Bungee {@link net.md_5.bungee.api.ChatColor}.
-     * @param color The Bungee ChatColor
-     * @return The StringsTextColor equivalent.
-     */
-    public static @NotNull StringsTextColor of(@NotNull net.md_5.bungee.api.ChatColor color) {
-        return new StringsTextColor(color);
-    }
-
-    /**
-     * Provides a StringsTextColor representation of a Bukkit {@link org.bukkit.ChatColor}.
-     * @param color The Bukkit ChatColor
-     * @return The StringsTextColor equivalent.
-     */
-    public static @NotNull StringsTextColor of(@NotNull org.bukkit.ChatColor color) {
-        return new StringsTextColor(color);
-    }
-
-    /**
      * Provides a StringsTextColor representation of a {@link Color}.
      * @param color The Color
      * @return The StringsTextColor equivalent.

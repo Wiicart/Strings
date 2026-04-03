@@ -3,7 +3,7 @@ package com.pedestriamc.strings.chat.paper;
 import com.pedestriamc.strings.common.util.PermissionChecker;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.annotation.Platform;
-import com.pedestriamc.strings.api.event.BukkitMessageDeletionEvent;
+import com.pedestriamc.strings.event.BukkitMessageDeletionEvent;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.user.StringsUser;

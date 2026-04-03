@@ -1,43 +1,29 @@
 package com.pedestriamc.strings.api.event.moderation;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
+import com.pedestriamc.strings.api.event.strings.StringsEvent;
+import com.pedestriamc.strings.api.user.StringsUser;
 import org.jetbrains.annotations.ApiStatus.Internal;
-import org.jetbrains.annotations.NotNull;
 
 
 @SuppressWarnings("unused")
-public final class PlayerSpamEvent extends Event {
+public final class PlayerSpamEvent implements StringsEvent {
 
-    public static final HandlerList HANDLER_LIST = new HandlerList();
-
-    private final Player player;
-    private final AsyncPlayerChatEvent event;
+    private final StringsUser player;
+    private final ChannelChatEvent event;
 
     @Internal
-    public PlayerSpamEvent(Player player, AsyncPlayerChatEvent event) {
+    public PlayerSpamEvent(StringsUser player, ChannelChatEvent event) {
         this.player = player;
         this.event = event;
     }
 
-    public Player getPlayer() {
+    public StringsUser getPlayer() {
         return player;
     }
 
-    public AsyncPlayerChatEvent getChatEvent() {
+    public ChannelChatEvent getChatEvent() {
         return event;
-    }
-
-
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return HANDLER_LIST;
-    }
-
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
     }
 
 }

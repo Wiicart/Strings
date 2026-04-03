@@ -1,9 +1,8 @@
 package com.pedestriamc.strings.api.event.moderation;
 
+import com.pedestriamc.strings.api.event.strings.StringsEvent;
 import com.pedestriamc.strings.api.moderation.StringsModeration;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.PlayerEvent;
+import com.pedestriamc.strings.api.user.StringsUser;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,28 +13,19 @@ import java.util.Map;
 /**
  * Called when {@link StringsModeration} filters the text on a sign
  */
-public final class SignTextFilterEvent extends PlayerEvent {
+public final class SignTextFilterEvent implements StringsEvent {
 
-    public static final HandlerList HANDLER_LIST = new HandlerList();
-
-    private final SignChangeEvent original;
+    private final StringsUser player;
     private final List<Map.Entry<String, String>> lines;
 
     @Internal
-    public SignTextFilterEvent(@NotNull SignChangeEvent original, List<Map.Entry<String, String>> lines) {
-        super(original.getPlayer());
-        this.original = original;
+    public SignTextFilterEvent(@NotNull StringsUser player, List<Map.Entry<String, String>> lines) {
+        this.player = player;
         this.lines = lines;
     }
 
-    /**
-     * Provides the original {@link SignChangeEvent} that was triggered
-     * when the Player started changing the sign's text.
-     * @return A pre-existing Event
-     */
-    @NotNull
-    public SignChangeEvent originalEvent() {
-        return original;
+    public StringsUser getPlayer() {
+        return player;
     }
 
     /**
@@ -47,14 +37,5 @@ public final class SignTextFilterEvent extends PlayerEvent {
     @NotNull
     public List<Map.Entry<String, String>> lines() {
         return lines;
-    }
-
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return HANDLER_LIST;
-    }
-
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
     }
 }

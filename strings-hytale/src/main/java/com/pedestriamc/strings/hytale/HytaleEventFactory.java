@@ -2,7 +2,7 @@ package com.pedestriamc.strings.hytale;
 
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.event.DirectMessageEvent;
-import com.pedestriamc.strings.api.event.StringsChatEvent;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.event.moderation.MessageDeletionEvent;
 import com.pedestriamc.strings.api.event.strings.user.ActiveChannelUpdateEvent;
 import com.pedestriamc.strings.api.event.strings.user.ChannelJoinEvent;
@@ -20,7 +20,7 @@ import java.util.Set;
 public class HytaleEventFactory implements EventFactory {
 
     @Override
-    public @NotNull StringsChatEvent chatEvent(boolean async, boolean cancellable, @NotNull StringsUser sender, @NotNull String message, @NotNull Set<StringsUser> recipients, @NotNull Channel channel, @Nullable SignedMessage signedMessage) {
+    public @NotNull ChannelChatEvent chatEvent(boolean async, boolean cancellable, @NotNull StringsUser sender, @NotNull String message, @NotNull Set<StringsUser> recipients, @NotNull Channel channel, @Nullable SignedMessage signedMessage) {
         return null;
     }
 

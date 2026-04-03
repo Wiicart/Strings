@@ -3,7 +3,7 @@ package com.pedestriamc.strings.common.channel.base;
 import com.pedestriamc.strings.common.chat.MessageProcessor;
 import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
-import com.pedestriamc.strings.api.event.StringsChatEvent;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.platform.PlatformAdapter;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.user.StringsUser;
@@ -92,7 +92,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
     private void sendEventMessage(@NotNull StringsUser user, @NotNull String message, @NotNull String template, @NotNull Set<StringsUser> recipients) {
-        StringsChatEvent event = strings.eventFactory().chatEvent(
+        ChannelChatEvent event = strings.eventFactory().chatEvent(
                 false,
                 true,
                 user,

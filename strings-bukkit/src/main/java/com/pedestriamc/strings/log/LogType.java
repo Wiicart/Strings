@@ -1,7 +1,5 @@
 package com.pedestriamc.strings.log;
 
-import org.bukkit.event.Listener;
-
 import java.io.File;
 import java.util.List;
 import java.util.function.Function;
@@ -17,7 +15,7 @@ final class LogType {
     private boolean enabled;
     private final String path;
     private final String configKey;
-    private final Function<LogManager, Listener> function;
+    private final Function<LogManager, Object> function;
 
     /**
      * LogType for when signs are placed.
@@ -50,13 +48,13 @@ final class LogType {
      */
     static final List<LogType> TYPES = List.of(SIGN, DIRECT_MESSAGE, CHAT, COMMAND, FILTER);
 
-    private LogType(String path, String configKey, Function<LogManager, Listener> function) {
+    private LogType(String path, String configKey, Function<LogManager, Object> function) {
         this.path = path;
         this.configKey = configKey;
         this.function = function;
     }
 
-    Listener createListener(LogManager manager) {
+    Object createListener(LogManager manager) {
         return function.apply(manager);
     }
 
