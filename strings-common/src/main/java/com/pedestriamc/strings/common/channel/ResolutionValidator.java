@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 public class ResolutionValidator<L extends Locality<?>> {
 
     private static final String STATUS_PLACEHOLDER = "{STATUS}";
-    private static final String OK = "No issues found.";
     private static final String ERR = "Potential issues found.";
     private static final String LOCALITY_ERR = "[!] Can't guarantee channel resolution in world: %s\n";
 
@@ -50,7 +49,11 @@ public class ResolutionValidator<L extends Locality<?>> {
         }
 
         String message = builder.toString();
-        return message.replace(STATUS_PLACEHOLDER, issueFound ? ERR : OK);
+        if (issueFound) {
+            return message.replace(STATUS_PLACEHOLDER, ERR);
+        } else {
+            return "";
+        }
     }
 
     @Nullable

@@ -68,6 +68,10 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 
@@ -232,6 +236,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.seeseemelk</groupId>
+            <scope>test</scope>
             <artifactId>MockBukkit-v1.20</artifactId>
             <version>3.93.2</version>
         </dependency>

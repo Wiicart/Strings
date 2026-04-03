@@ -29,6 +29,7 @@ public class BukkitChannelChatEvent implements ChannelChatEvent {
     ) {
         this.sender = sender;
         this.recipients = recipients;
+        this.message = message;
         this.channel = channel;
         signedMessage = null;
     }
@@ -43,6 +44,7 @@ public class BukkitChannelChatEvent implements ChannelChatEvent {
             SignedMessage signedMessage
     ) {
         this.sender = sender;
+        this.message = message;
         this.recipients = recipients;
         this.channel = channel;
         this.signedMessage = signedMessage;
