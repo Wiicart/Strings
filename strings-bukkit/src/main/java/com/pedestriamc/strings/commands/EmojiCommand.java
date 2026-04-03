@@ -4,7 +4,7 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.EmojiManager;
-import com.pedestriamc.strings.configuration.Configuration;
+import com.pedestriamc.strings.bukkit.Configuration;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -27,7 +27,7 @@ public class EmojiCommand extends AbstractCommand implements CartCommandExecutor
     public EmojiCommand(@NotNull Strings strings) {
         super(strings);
 
-        Configuration config = strings.getSettings();
+        Configuration config = strings.settings();
         if (config.get(Option.Bool.ENABLE_EMOJI_REPLACEMENT)) {
             message = loadMessage(strings);
         } else {
@@ -49,12 +49,12 @@ public class EmojiCommand extends AbstractCommand implements CartCommandExecutor
 
     @NotNull
     private Component loadMessage(@NotNull Strings strings) {
-        Configuration config = strings.getSettings();
+        Configuration config = strings.settings();
 
-        Component emojis = config.getAsComponent(Option.Text.EMOJI_COMMAND_HEADER)
+        Component emojis = config.getComponent(Option.Text.EMOJI_COMMAND_HEADER)
                 .append(Component.text(" "));
 
-        EmojiManager manager = strings.getEmojiManager();
+        EmojiManager manager = strings.emojiManager();
         Map<String, String> map = manager.mappings();
         List<String> textured = config.get(Option.StringList.TEXTURED_EMOJIS);
 
@@ -69,7 +69,7 @@ public class EmojiCommand extends AbstractCommand implements CartCommandExecutor
             }
         }
 
-        return emojis.append(Component.newline()).append(config.getAsComponent(Option.Text.EMOJI_COMMAND_FOOTER));
+        return emojis.append(Component.newline()).append(config.getComponent(Option.Text.EMOJI_COMMAND_FOOTER));
     }
 
     @NotNull

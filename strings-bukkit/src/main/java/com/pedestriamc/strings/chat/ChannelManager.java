@@ -5,8 +5,8 @@ import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.settings.Option;
-import com.pedestriamc.common.channel.AbstractChannelLoader;
-import com.pedestriamc.common.channel.ResolutionValidator;
+import com.pedestriamc.strings.common.channel.AbstractChannelLoader;
+import com.pedestriamc.strings.common.channel.ResolutionValidator;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -34,8 +34,8 @@ public final class ChannelManager extends AbstractChannelLoader {
 
     public void loadChannels() {
         ChannelFileReader.loadChannels(strings, config, this);
-        if (strings.getSettings().get(Option.Bool.ENABLE_RESOLUTION_VALIDATION)) {
-            Set<Locality<World>> localities = strings.getLocalityManager().convertToLocalities(Bukkit.getWorlds());
+        if (strings.settings().get(Option.Bool.ENABLE_RESOLUTION_VALIDATION)) {
+            Set<Locality<World>> localities = strings.localityManager().convertToLocalities(Bukkit.getWorlds());
             ResolutionValidator<Locality<World>> validator = new ResolutionValidator<>(this, localities);
             strings.info(validator.generateReport());
         }

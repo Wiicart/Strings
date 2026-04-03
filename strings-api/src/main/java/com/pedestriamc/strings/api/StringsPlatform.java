@@ -3,7 +3,7 @@ package com.pedestriamc.strings.api;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.channel.local.LocalityManager;
 import com.pedestriamc.strings.api.command.Source;
-import com.pedestriamc.strings.api.event.strings.EventDispatcher;
+import com.pedestriamc.strings.api.event.strings.EventManager;
 import com.pedestriamc.strings.api.files.FileManager;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.platform.EventFactory;
@@ -24,23 +24,25 @@ public interface StringsPlatform {
 
     @NotNull UserManager users();
 
-    @NotNull Settings getSettings();
+    @NotNull Settings settings();
 
     @NotNull FileManager files();
 
     @NotNull Source serverSource();
 
-    @NotNull EventDispatcher getEventDispatcher();
+    @NotNull EventManager eventManager();
 
-    @NotNull EventFactory getEventFactory();
+    @NotNull EventFactory eventFactory();
 
-    @NotNull EmojiManager getEmojiManager();
+    @NotNull EmojiManager emojiManager();
 
-    @NotNull LocalityManager<?> getLocalityManager();
+    @NotNull LocalityManager<?> localityManager();
 
-    @NotNull Messenger getMessenger();
+    @NotNull Messenger messenger();
 
     void async(@NotNull Runnable runnable);
+
+    void sync(@NotNull Runnable runnable);
 
     void info(@NotNull String message);
 

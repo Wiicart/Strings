@@ -2,7 +2,7 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.impl.BukkitMessenger;
+import com.pedestriamc.strings.bukkit.BukkitMessenger;
 import com.pedestriamc.strings.user.util.UserUtil;
 import net.wiicart.commands.permission.Permissions;
 import org.bukkit.command.Command;
@@ -23,7 +23,7 @@ public final class MentionCommand implements CommandExecutor {
     private final UserUtil userUtil;
 
     public MentionCommand(Strings strings) {
-        messenger = strings.getMessenger();
+        messenger = strings.messenger();
         userUtil = strings.users();
     }
 
@@ -43,7 +43,7 @@ public final class MentionCommand implements CommandExecutor {
 
         // Handle no args -> toggle on or off based on current status
         if(args.length == 0) {
-            if(user.isMentionsEnabled()) {
+            if(user.hasMentionsEnabled()) {
                 disable(player, user);
             } else {
                 enable(player, user);

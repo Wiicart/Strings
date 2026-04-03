@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.listener;
 
-import com.pedestriamc.strings.channel.SocialSpyChannel;
-import com.pedestriamc.strings.api.event.moderation.PlayerDirectMessageEvent;
+import com.pedestriamc.strings.common.channel.impl.SocialSpyChannel;
+import com.pedestriamc.strings.event.BukkitDirectMessageEvent;
 import com.pedestriamc.strings.Strings;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,7 +18,7 @@ public class DirectMessageListener implements Listener {
     }
 
     @EventHandler
-    void onEvent(@NotNull PlayerDirectMessageEvent event) {
+    void onEvent(@NotNull BukkitDirectMessageEvent event) {
         socialSpy.sendOutMessage(
                 event.getSender(),
                 event.getRecipient(),

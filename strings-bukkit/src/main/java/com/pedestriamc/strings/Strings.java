@@ -1,28 +1,28 @@
 package com.pedestriamc.strings;
 
-import com.pedestriamc.common.event.StringsEventDispatcher;
+import com.pedestriamc.strings.common.CommonStrings;
+import com.pedestriamc.strings.common.event.StringsEventManager;
 import com.pedestriamc.strings.api.APIRegistrar;
-import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.data.BuildableRegistrar;
 import com.pedestriamc.strings.api.channel.local.LocalityManager;
 import com.pedestriamc.strings.api.event.StringsReloader;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.EmojiManager;
-import com.pedestriamc.common.chat.EmojiProvider;
-import com.pedestriamc.common.external.ModrinthService;
-import com.pedestriamc.strings.impl.BukkitEventFactory;
-import com.pedestriamc.strings.impl.BukkitPlatformAdapter;
-import com.pedestriamc.strings.impl.ServerSource;
-import com.pedestriamc.strings.impl.StringsBukkitEventDispatcher;
-import com.pedestriamc.strings.impl.local.BukkitLocalityManager;
+import com.pedestriamc.strings.common.chat.EmojiProvider;
+import com.pedestriamc.strings.common.external.ModrinthService;
+import com.pedestriamc.strings.common.manager.DirectMessageManager;
+import com.pedestriamc.strings.bukkit.BukkitEventFactory;
+import com.pedestriamc.strings.bukkit.BukkitPlatformAdapter;
+import com.pedestriamc.strings.bukkit.ServerSource;
+import com.pedestriamc.strings.bukkit.StringsBukkitEventManager;
+import com.pedestriamc.strings.bukkit.locality.BukkitLocalityManager;
 import com.pedestriamc.strings.placeholder.StringsPlaceholderExpansion;
 import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.chat.Mentioner;
-import com.pedestriamc.strings.configuration.Configuration;
-import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
-import com.pedestriamc.strings.impl.StringsImpl;
+import com.pedestriamc.strings.bukkit.Configuration;
+import com.pedestriamc.strings.bukkit.StringsImpl;
 import com.pedestriamc.strings.log.LogManager;
-import com.pedestriamc.strings.impl.BukkitMessenger;
+import com.pedestriamc.strings.bukkit.BukkitMessenger;
 import com.pedestriamc.strings.manager.ClassRegistryManager;
 import com.pedestriamc.strings.manager.BukkitFileManager;
 import com.pedestriamc.strings.misc.AutoBroadcasts;
@@ -51,7 +51,7 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.UUID;
 
-public final class Strings extends JavaPlugin implements StringsPlatform {
+public final class Strings extends JavaPlugin implements CommonStrings {
 
     public static final String VERSION = "1.7.0";
     public static final short VERSION_NUM = 7;
@@ -69,7 +69,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
     private UserUtil userUtil;
     private Chat chat = null;
     private ServerMessages serverMessages;
-    private PlayerDirectMessenger playerDirectMessenger;
+    private DirectMessageManager directMessageManager;
     private StringsImpl stringsImpl;
     private Mentioner mentioner;
     private UUID apiUUID;
@@ -82,7 +82,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
     private ModrinthService modrinth;
     private ServerSource serverSource;
     private BukkitPlatformAdapter platformAdapter;
-    private StringsBukkitEventDispatcher eventDispatcher;
+    private StringsBukkitEventManager eventDispatcher;
     private BukkitEventFactory eventFactory;
     private BukkitLocalityManager localityManager;
 
@@ -126,7 +126,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         logOutAll();
         userUtil = null;
         serverMessages = null;
-        playerDirectMessenger = null;
+        directMessageManager = null;
         channelLoader = null;
         mentioner = null;
         logManager = null;
@@ -196,20 +196,20 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
 
     private void instantiateObjects() {
         configClass = new Configuration(this);
-        eventDispatcher = new StringsBukkitEventDispatcher(this);
+        eventDispatcher = new StringsBukkitEventManager(this);
         eventFactory = new BukkitEventFactory();
         localityManager = new BukkitLocalityManager(this);
         platformAdapter = new BukkitPlatformAdapter(this);
         messenger = new BukkitMessenger(fileManager.getMessagesFileConfig());
-        playerDirectMessenger = new PlayerDirectMessenger(this);
+        directMessageManager = new DirectMessageManager(this);
         channelLoader = new ChannelManager(this);
         serverMessages = new ServerMessages(this);
         mentioner = new Mentioner(this);
 
-        if (getSettings().get(Option.Bool.ENABLE_EMOJI_REPLACEMENT)) {
+        if (settings().get(Option.Bool.ENABLE_EMOJI_REPLACEMENT)) {
             emojiManager = new EmojiProvider(this);
         }
-        if (getSettings().get(Option.Bool.ENABLE_EMOJI_RESOURCE_PACK)) {
+        if (settings().get(Option.Bool.ENABLE_EMOJI_RESOURCE_PACK)) {
             modrinth = new ModrinthService(this);
         }
     }
@@ -285,7 +285,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         getServer().getScheduler().runTaskAsynchronously(this, runnable);
     }
 
-    public void sync(Runnable runnable) {
+    public void sync(@NotNull Runnable runnable) {
         getServer().getScheduler().runTask(this, runnable);
     }
 
@@ -339,17 +339,17 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
         return serverMessages;
     }
 
-    public @NotNull PlayerDirectMessenger getPlayerDirectMessenger() {
-        return playerDirectMessenger;
+    public @NotNull DirectMessageManager getDirectMessageManager() {
+        return directMessageManager;
     }
 
-    public @NotNull BukkitMessenger getMessenger() {
+    public @NotNull BukkitMessenger messenger() {
         return messenger;
     }
 
     @Override
     @NotNull
-    public EmojiManager getEmojiManager() {
+    public EmojiManager emojiManager() {
         if (emojiManager == null) {
             emojiManager = new EmojiProvider(this);
         }
@@ -358,7 +358,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
 
     @Override
     @NotNull
-    public LocalityManager<World> getLocalityManager() {
+    public LocalityManager<World> localityManager() {
         return localityManager;
     }
 
@@ -376,7 +376,7 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
 
     @Override
     @NotNull
-    public Configuration getSettings() {
+    public Configuration settings() {
         return configClass;
     }
 
@@ -392,13 +392,13 @@ public final class Strings extends JavaPlugin implements StringsPlatform {
 
     @NotNull
     @Override
-    public StringsEventDispatcher getEventDispatcher() {
+    public StringsEventManager eventManager() {
         return eventDispatcher;
     }
 
     @NotNull
     @Override
-    public BukkitEventFactory getEventFactory() {
+    public BukkitEventFactory eventFactory() {
         return eventFactory;
     }
 

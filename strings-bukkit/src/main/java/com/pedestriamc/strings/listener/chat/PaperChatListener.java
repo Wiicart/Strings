@@ -3,7 +3,7 @@ package com.pedestriamc.strings.listener.chat;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.event.strings.EventDispatcher;
+import com.pedestriamc.strings.api.event.strings.EventManager;
 import com.pedestriamc.strings.api.platform.EventFactory;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.user.StringsUser;
@@ -32,7 +32,7 @@ public class PaperChatListener extends AbstractChatListener {
     private final Strings strings;
     private final RendererProvider provider;
     private final UserUtil userUtil;
-    private final EventDispatcher eventDispatcher;
+    private final EventManager eventDispatcher;
     private final EventFactory factory;
 
     public PaperChatListener(@NotNull Strings strings) {
@@ -40,8 +40,8 @@ public class PaperChatListener extends AbstractChatListener {
         this.strings = strings;
         provider = new RendererProvider(strings);
         userUtil = strings.users();
-        eventDispatcher = strings.getEventDispatcher();
-        factory = strings.getEventFactory();
+        eventDispatcher = strings.eventManager();
+        factory = strings.eventFactory();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -49,9 +49,9 @@ public class PaperChatListener extends AbstractChatListener {
         Player player = event.getPlayer();
         User sender = userUtil.getUser(player);
 
-        Container container = processSymbol(ComponentConverter.toString(event.message()), sender);
-        Channel channel = container.channel();
-        event.message(ComponentConverter.fromString(container.message()));
+        MessageRoute route = processSymbol(ComponentConverter.toString(event.message()), sender);
+        Channel channel = route.channel();
+        event.message(ComponentConverter.fromString(route.message()));
 
         // Resolve Channel if DefaultChannel is returned
         channel = channel.resolve(sender);
@@ -64,17 +64,16 @@ public class PaperChatListener extends AbstractChatListener {
         }
 
         event.viewers().clear();
+        event.viewers().add((Audience) strings.getServer().getConsoleSender());
 
         Set<StringsUser> recipients = channel.getRecipients(sender);
         for (StringsUser recipient : recipients) {
             event.viewers().add((Audience) User.playerOf(recipient));
         }
 
-        event.viewers().add((Audience) strings.getServer().getConsoleSender());
+        event.renderer(provider.renderer(channel, event.signedMessage()));
 
-        event.renderer(provider.createRenderer(channel, event.signedMessage()));
-
-        callEvent(sender, container.message(), recipients, channel, event.signedMessage());
+        callEvent(sender, route.message(), recipients, channel, event.signedMessage());
     }
 
     // Calls a non-cancellable ChannelChatEvent

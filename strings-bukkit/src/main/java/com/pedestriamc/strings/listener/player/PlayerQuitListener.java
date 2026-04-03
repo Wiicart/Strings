@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.listener.player;
 
 import com.pedestriamc.strings.api.settings.Option;
-import com.pedestriamc.strings.configuration.Configuration;
+import com.pedestriamc.strings.bukkit.Configuration;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import com.pedestriamc.strings.misc.ServerMessages;
@@ -22,7 +22,7 @@ public class PlayerQuitListener implements Listener {
         userUtil = strings.users();
         serverMessages = strings.getServerMessages();
 
-        Configuration config = strings.getSettings();
+        Configuration config = strings.settings();
         modifyLeaveMessage = config.get(Option.Bool.USE_CUSTOM_JOIN_LEAVE);
         doQuitMessage = config.get(Option.Bool.ENABLE_JOIN_LEAVE_MESSAGE);
     }

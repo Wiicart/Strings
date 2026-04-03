@@ -1,12 +1,12 @@
 package com.pedestriamc.strings.api.channel.data;
 
+import com.pedestriamc.strings.common.channel.impl.HelpOPChannel;
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.channel.HelpOPChannel;
-import com.pedestriamc.common.channel.impl.StringChannel;
-import com.pedestriamc.common.channel.impl.local.ProximityChannel;
-import com.pedestriamc.common.channel.impl.local.StrictProximityChannel;
-import com.pedestriamc.common.channel.impl.local.StrictWorldChannel;
-import com.pedestriamc.common.channel.impl.local.WorldChannel;
+import com.pedestriamc.strings.common.channel.impl.StringChannel;
+import com.pedestriamc.strings.common.channel.impl.local.ProximityChannel;
+import com.pedestriamc.strings.common.channel.impl.local.StrictProximityChannel;
+import com.pedestriamc.strings.common.channel.impl.local.StrictWorldChannel;
+import com.pedestriamc.strings.common.channel.impl.local.WorldChannel;
 import org.jetbrains.annotations.NotNull;
 
 /**

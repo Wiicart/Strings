@@ -93,7 +93,7 @@ public final class ChannelChatEvent extends AsyncPlayerChatEvent implements Stri
     }
 
     @Override
-    public @NotNull StringsUser getSender() {
+    public StringsUser getSender() {
         return null;
     }
 

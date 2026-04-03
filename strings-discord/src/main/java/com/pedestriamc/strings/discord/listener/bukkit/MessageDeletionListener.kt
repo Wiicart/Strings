@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.discord.listener.bukkit
 
-import com.pedestriamc.strings.api.event.MessageDeletionEvent
+import com.pedestriamc.strings.api.event.BukkitMessageDeletionEvent
 import com.pedestriamc.strings.discord.StringsDiscord
 import com.pedestriamc.strings.discord.manager.DiscordManager
 import org.bukkit.event.EventHandler
@@ -11,7 +11,7 @@ class MessageDeletionListener(strings: StringsDiscord) : Listener {
     val manager: DiscordManager = strings.manager;
 
     @EventHandler
-    fun onEvent(event: MessageDeletionEvent) {
+    fun onEvent(event: BukkitMessageDeletionEvent) {
         manager.deleteMessage(event.message);
     }
 

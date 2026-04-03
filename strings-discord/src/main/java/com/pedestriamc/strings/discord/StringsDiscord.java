@@ -243,7 +243,7 @@ public final class StringsDiscord extends JavaPlugin {
         }
 
         try {
-            Class.forName("com.pedestriamc.strings.api.event.MessageDeletionEvent");
+            Class.forName("com.pedestriamc.strings.api.event.BukkitMessageDeletionEvent");
             registerBukkitListener(new MessageDeletionListener(this));
         } catch(ClassNotFoundException ignored) {}
 

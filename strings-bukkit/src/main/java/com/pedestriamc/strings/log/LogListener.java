@@ -2,7 +2,7 @@ package com.pedestriamc.strings.log;
 
 import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
 import com.pedestriamc.strings.api.event.moderation.PlayerChatFilteredEvent;
-import com.pedestriamc.strings.api.event.moderation.PlayerDirectMessageEvent;
+import com.pedestriamc.strings.event.BukkitDirectMessageEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
@@ -54,7 +54,7 @@ final class LogListener {
         }
 
         @EventHandler
-        void onEvent(@NotNull PlayerDirectMessageEvent event) {
+        void onEvent(@NotNull BukkitDirectMessageEvent event) {
             String log = TEMPLATE
                     .replace("{date}", LocalDateTime.now().toString())
                     .replace("{sender}", event.getSender().getName())

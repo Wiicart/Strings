@@ -165,17 +165,18 @@ enable-mentions: true
 # Players will still need the permission strings.mention.all to use this.
 mention-everyone: true
 
-# Mention Chat Format:
-# NOT IMPLEMENTED YET, WILL BE IMPLEMENTED NEXT UPDATE.
-# MEANWHILE, USE "mention-color"; THIS WILL BE SHOWN TO ALL PLAYERS.
-# How should the text change in chat when a player uses @<username>?
-# NOTE: This will change it for ALL players.
-# The option mention-color represents what it will look like for the mentioned player.
-mention-chat-format: "&7"
-
 # Mention Color:
-# This represents how mentions will be colored in the chat of the mentioned player.
-mention-color: "&e"
+# This represents how mentions will be colored in chat.
+# HEX color code expected.
+mention-color: "#FFFF55"
+
+# Mention Decorations:
+# Applied with the mention color to determine how mentions appear in chat
+mention-decorations:
+  - "italic"
+#  - "bold"
+#  - "underlined"
+#  - "strikethrough"
 
 # Mention Format:
 # This text will show up in the mentioned player's action bar.
@@ -186,8 +187,8 @@ mention-format: "&e%sender% mentioned you."
 # Mention Sound:
 # The sound that is played to mentioned players.
 # Options:
-# https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
-mention-sound: "BLOCK_NOTE_BLOCK_PLING"
+# https://www.digminecraft.com/lists/sound_list_pc.php
+mention-sound: "block.note_block.pling"
 
 # Mention Pitch:
 # Players hear a sound any time they're pinged.

@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.jetbrains.annotations.Unmodifiable;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -286,6 +288,7 @@ public interface Channel extends Comparable<Channel> {
      * Provides a Set of the members of the Channel.
      * @return A populated Set of Players.
      */
+    @Unmodifiable
     Set<StringsUser> getMembers();
 
     /**

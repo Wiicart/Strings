@@ -223,32 +223,32 @@ public sealed interface IChannelBuilder<B extends IChannelBuilder<B>> permits Ab
          * A standard StringChannel.
          * Corresponds to Type.NORMAL
          */
-        NORMAL,
+        NORMAL(false),
         /**
          * A standard WorldChannel.
          * Corresponds to Type.WORLD
          */
-        WORLD,
+        WORLD(true),
         /**
          * A strict WorldChannel.
          * Corresponds to Type.WORLD
          */
-        WORLD_STRICT,
+        WORLD_STRICT(true),
         /**
          * A standard ProximityChannel.
          * Corresponds to Type.PROXIMITY
          */
-        PROXIMITY,
+        PROXIMITY(true),
         /**
          * A strict ProximityChannel.
          * Corresponds to Type.PROXIMITY
          */
-        PROXIMITY_STRICT,
+        PROXIMITY_STRICT(true),
         /**
          * A HelpOPChannel.
          * Corresponds to Type.PROTECTED
          */
-        HELPOP;
+        HELPOP(false);
 
         public static Identifier of(@NotNull String identifier) {
             return switch(identifier.toLowerCase(Locale.ROOT)) {
@@ -259,6 +259,28 @@ public sealed interface IChannelBuilder<B extends IChannelBuilder<B>> permits Ab
                 case "world_strict" -> WORLD_STRICT;
                 case "helpop" -> HELPOP;
                 default -> throw new IllegalArgumentException("Unknown identifier '" + identifier + "'");
+            };
+        }
+
+        private final boolean isLocal;
+
+        Identifier(boolean isLocal) {
+            this.isLocal = isLocal;
+        }
+
+        public boolean isLocal() {
+            return isLocal;
+        }
+
+        @Override
+        public String toString() {
+            return switch(this) {
+                case NORMAL -> "stringchannel";
+                case WORLD -> "world";
+                case WORLD_STRICT -> "world_strict";
+                case PROXIMITY -> "proximity";
+                case PROXIMITY_STRICT -> "proximity_strict";
+                case HELPOP -> "helpop";
             };
         }
     }

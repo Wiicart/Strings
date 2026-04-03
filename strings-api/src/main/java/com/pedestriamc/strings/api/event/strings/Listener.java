@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Methods marked with this annotation are eligible to receive events from the {@link EventDispatcher}.<br/>
+ * Methods marked with this annotation are eligible to receive events from the {@link EventManager}.<br/>
  * Any method that accepts more than one argument will be ignored.
  */
 @Retention(RetentionPolicy.RUNTIME)

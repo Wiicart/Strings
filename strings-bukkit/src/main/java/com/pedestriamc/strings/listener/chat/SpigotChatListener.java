@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.listener.chat;
 
 import com.pedestriamc.strings.api.annotation.Platform;
-import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
+import com.pedestriamc.strings.api.event.StringsChatEvent;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.Strings;
@@ -26,7 +26,7 @@ public class SpigotChatListener extends AbstractChatListener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     void onEvent(AsyncPlayerChatEvent event) {
-        if (event instanceof ChannelChatEvent) {
+        if (event instanceof StringsChatEvent) {
             return;
         } else {
             event.setCancelled(true);
@@ -37,7 +37,7 @@ public class SpigotChatListener extends AbstractChatListener {
 
         User user = userUtil.getUser(playerSender);
 
-        Container container = processSymbol(playerMessage, user);
+        MessageRoute container = processSymbol(playerMessage, user);
         Channel channel = container.channel();
         playerMessage = container.message();
 

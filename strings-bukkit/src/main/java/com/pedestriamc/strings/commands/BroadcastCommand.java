@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
-import com.pedestriamc.strings.configuration.Configuration;
-import com.pedestriamc.strings.impl.BukkitMessenger;
+import com.pedestriamc.strings.bukkit.Configuration;
+import com.pedestriamc.strings.bukkit.BukkitMessenger;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.settings.Option;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -31,16 +31,16 @@ public final class BroadcastCommand implements CommandExecutor {
 
     public BroadcastCommand(@NotNull Strings strings) {
         this.strings = strings;
-        broadcastFormat = strings.getSettings().get(Option.Text.BROADCAST_FORMAT);
+        broadcastFormat = strings.settings().get(Option.Text.BROADCAST_FORMAT);
         usePAPI = strings.isUsingPlaceholderAPI();
-        messenger = strings.getMessenger();
+        messenger = strings.messenger();
         sound = loadSound();
     }
 
     @Nullable
     @SuppressWarnings("PatternValidation")
     private Sound loadSound() {
-        Configuration config = strings.getSettings();
+        Configuration config = strings.settings();
         if (!config.get(Option.Bool.BROADCAST_SOUND_ENABLE)) {
             return null;
         }

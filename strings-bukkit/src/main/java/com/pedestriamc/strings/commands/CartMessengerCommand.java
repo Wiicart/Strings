@@ -2,7 +2,7 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.message.Message;
-import com.pedestriamc.strings.impl.BukkitMessenger;
+import com.pedestriamc.strings.bukkit.BukkitMessenger;
 import net.wiicart.commands.command.CartCommandExecutor;
 import net.wiicart.commands.command.CommandData;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +14,7 @@ public class CartMessengerCommand implements CartCommandExecutor {
     private final Message message;
 
     public CartMessengerCommand(@NotNull Strings strings, @NotNull Message message) {
-        messenger = strings.getMessenger();
+        messenger = strings.messenger();
         this.message = message;
     }
 

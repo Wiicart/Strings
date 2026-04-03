@@ -189,7 +189,7 @@ public interface StringsUser extends Source {
      * Tells if the StringsUser has mentions enabled.
      * @return A boolean if the User has mentions enabled or not.
      */
-    boolean isMentionsEnabled();
+    boolean hasMentionsEnabled();
 
     /**
      * Sets if the StringsUser has mentions enabled.

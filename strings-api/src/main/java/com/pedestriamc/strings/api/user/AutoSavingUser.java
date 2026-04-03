@@ -137,8 +137,8 @@ final class AutoSavingUser implements StringsUser {
     }
 
     @Override
-    public boolean isMentionsEnabled() {
-        return user.isMentionsEnabled();
+    public boolean hasMentionsEnabled() {
+        return user.hasMentionsEnabled();
     }
 
     @Override

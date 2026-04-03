@@ -2,7 +2,7 @@ package com.pedestriamc.strings.listener.player;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.settings.Option;
-import com.pedestriamc.strings.configuration.Configuration;
+import com.pedestriamc.strings.bukkit.Configuration;
 import com.pedestriamc.strings.deathmessages.DeathMessageManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,7 +18,7 @@ public class PlayerDeathListener implements Listener {
     private final boolean useCustomDeathMessages;
 
     public PlayerDeathListener(@NotNull Strings strings) {
-        Configuration settings = strings.getSettings();
+        Configuration settings = strings.settings();
         enableDeathMessages = settings.get(Option.Bool.DEATH_MESSAGES_ENABLE);
         useCustomDeathMessages = settings.get(Option.Bool.DEATH_MESSAGES_USE_CUSTOM);
 

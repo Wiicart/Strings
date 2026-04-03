@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.chat;
 
 import com.google.common.base.Preconditions;
+import com.pedestriamc.strings.common.channel.impl.HelpOPChannel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Membership;
@@ -9,10 +10,8 @@ import com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.channel.local.LocalityManager;
-import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
-import com.pedestriamc.strings.channel.HelpOPChannel;
-import com.pedestriamc.strings.channel.SocialSpyChannel;
+import com.pedestriamc.strings.common.channel.impl.SocialSpyChannel;
 import net.kyori.adventure.key.InvalidKeyException;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -44,7 +43,7 @@ final class ChannelFileReader {
     private ChannelFileReader(@NotNull Strings strings, @NotNull FileConfiguration config, @NotNull ChannelManager manager) {
         this.strings = strings;
         this.manager = manager;
-        this.localityManager = strings.getLocalityManager();
+        this.localityManager = strings.localityManager();
 
         ConfigurationSection channels = config.getConfigurationSection("channels");
         if(channels == null) {
@@ -66,8 +65,7 @@ final class ChannelFileReader {
             registerHelpOp();
         }
 
-        String socialSpyFormat = strings.getSettings().get(Option.Text.SOCIAL_SPY_FORMAT);
-        manager.register(new SocialSpyChannel(strings.getPlayerDirectMessenger(), socialSpyFormat));
+        manager.register(new SocialSpyChannel(strings));
     }
 
     private void read(@NotNull ConfigurationSection channels) {
@@ -238,19 +236,16 @@ final class ChannelFileReader {
                     .build(Identifier.NORMAL)
             );
         } catch(Exception e) {
-            strings.warning("An error occurred while loading global channel fallback");
+            strings.warning("An error occurred while loading global channel fallback.");
             strings.warning(e.getMessage());
         }
     }
 
     private void registerHelpOp() {
-        manager.register(new HelpOPChannel(
-                strings,
+        manager.register(new HelpOPChannel(strings, Channel.builder(
+                "helpop",
                 "&8[&4HelpOP&8] &f{displayname} &7» {message}",
-                false,
-                false,
-                false
-        ));
-
+                Membership.PROTECTED))
+        );
     }
 }
