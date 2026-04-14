@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
  * Implements Adventure's {@link TextColor} for drop-in compatability with Adventure.
  */
 @SuppressWarnings("unused")
+@Deprecated
 public final class StringsTextColor implements Element<TextColor>, TextColor, Serializable {
     /**
      * Represents black.
@@ -135,24 +136,6 @@ public final class StringsTextColor implements Element<TextColor>, TextColor, Se
     @ApiStatus.Internal
     private StringsTextColor(int value) {
         this.value = value & 0xFFFFFF;
-    }
-
-    /**
-     * Provides a StringsTextColor representation of a Bungee {@link net.md_5.bungee.api.ChatColor}.
-     * @param color The Bungee ChatColor
-     * @return The StringsTextColor equivalent.
-     */
-    public static @NotNull StringsTextColor of(@NotNull net.md_5.bungee.api.ChatColor color) {
-        return new StringsTextColor(color);
-    }
-
-    /**
-     * Provides a StringsTextColor representation of a Bukkit {@link org.bukkit.ChatColor}.
-     * @param color The Bukkit ChatColor
-     * @return The StringsTextColor equivalent.
-     */
-    public static @NotNull StringsTextColor of(@NotNull org.bukkit.ChatColor color) {
-        return new StringsTextColor(color);
     }
 
     /**

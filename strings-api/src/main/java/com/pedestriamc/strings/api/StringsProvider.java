@@ -2,9 +2,6 @@ package com.pedestriamc.strings.api;
 
 import com.pedestriamc.strings.api.discord.StringsDiscord;
 import com.pedestriamc.strings.api.moderation.StringsModeration;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import static org.jetbrains.annotations.ApiStatus.*;
@@ -87,10 +84,9 @@ public final class StringsProvider {
      * Registers the StringsAPI implementation
      * @hidden
      * @param api API Implementation
-     * @param plugin Strings plugin
      */
     @Internal
-    static void register(@NotNull final StringsAPI api, final JavaPlugin plugin, final UUID uuid) throws IllegalStateException, SecurityException {
+    static void register(@NotNull final StringsAPI api, final UUID uuid) throws IllegalStateException, SecurityException {
         if(StringsProvider.api != null) {
             throw new IllegalStateException("StringsProvider already initialized.");
         }
@@ -99,8 +95,6 @@ public final class StringsProvider {
         }
         apiUuid = uuid;
         StringsProvider.api = api;
-        Bukkit.getServer().getServicesManager().register(StringsAPI.class, StringsProvider.api, plugin, ServicePriority.Highest);
-        Bukkit.getLogger().info("[Strings] Strings API loaded.");
     }
 
     /**
@@ -111,15 +105,13 @@ public final class StringsProvider {
      */
     @Internal
     static void unregister(final UUID uuid) throws IllegalStateException, SecurityException {
-        if(StringsProvider.api == null) {
+        if (StringsProvider.api == null) {
             throw new IllegalStateException("StringsProvider uninitialized.");
         }
-        if(apiUuid != uuid) {
+        if (apiUuid != uuid) {
             throw new SecurityException("Unregister method called with unauthorized UUID.");
         }
-        Bukkit.getServer().getServicesManager().unregister(StringsAPI.class, StringsProvider.api);
         StringsProvider.api = null;
-        Bukkit.getLogger().info("[Strings] Strings API unloaded.");
     }
 
     @Internal

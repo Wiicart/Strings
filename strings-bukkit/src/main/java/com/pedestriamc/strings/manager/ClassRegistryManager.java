@@ -19,7 +19,7 @@ import com.pedestriamc.strings.commands.MentionCommand;
 import com.pedestriamc.strings.commands.message.ReplyCommand;
 import com.pedestriamc.strings.commands.SocialSpyCommand;
 import com.pedestriamc.strings.commands.channel.ChannelCommand;
-import com.pedestriamc.strings.configuration.Configuration;
+import com.pedestriamc.strings.bukkit.Configuration;
 import com.pedestriamc.strings.listener.chat.PaperChatListener;
 import com.pedestriamc.strings.listener.chat.SpigotChatListener;
 import com.pedestriamc.strings.listener.DirectMessageListener;
@@ -65,7 +65,7 @@ public class ClassRegistryManager {
     }
 
     private void registerCommands() {
-        Configuration config = strings.getSettings();
+        Configuration config = strings.settings();
 
         registerCommand("strings", new StringsCommand(strings), new StringsTabCompleter());
 
@@ -172,7 +172,7 @@ public class ClassRegistryManager {
         registerListener(new PlayerDeathListener(strings));
         registerListener(new PlayerDamageListener(strings));
 
-        if(strings.getSettings().get(Option.Bool.ENABLE_MENTIONS)) {
+        if(strings.settings().get(Option.Bool.ENABLE_MENTIONS)) {
             if(strings.isUsingLuckPerms()) {
                 registerListener(new LuckPermsMentionListener(strings));
             } else {

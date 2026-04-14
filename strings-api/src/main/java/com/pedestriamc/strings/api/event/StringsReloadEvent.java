@@ -1,29 +1,15 @@
 package com.pedestriamc.strings.api.event;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import com.pedestriamc.strings.api.event.strings.StringsEvent;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Called when the Strings plugin reloads.
  */
 @ApiStatus.Internal
-public final class StringsReloadEvent extends Event {
+public final class StringsReloadEvent implements StringsEvent {
 
     @ApiStatus.Internal
     StringsReloadEvent() {}
-
-    private static final HandlerList HANDLER_LIST = new HandlerList();
-
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return HANDLER_LIST;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
-    }
 
 }

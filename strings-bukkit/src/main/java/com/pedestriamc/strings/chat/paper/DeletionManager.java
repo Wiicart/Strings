@@ -1,19 +1,23 @@
 package com.pedestriamc.strings.chat.paper;
 
+import com.pedestriamc.strings.common.util.PermissionChecker;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.annotation.Platform;
-import com.pedestriamc.strings.api.event.MessageDeletionEvent;
+import com.pedestriamc.strings.event.BukkitMessageDeletionEvent;
 import com.pedestriamc.strings.api.settings.Option;
-import com.pedestriamc.strings.configuration.Configuration;
+import com.pedestriamc.strings.api.settings.Settings;
+import com.pedestriamc.strings.api.user.StringsUser;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.wiicart.commands.permission.Permissions;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Class to create Components containing a deletion button as defined in config.yml<br/>
+ * Requires a Paper server.
+ */
 @Platform.Paper
 public class DeletionManager {
 
@@ -23,7 +27,7 @@ public class DeletionManager {
     public DeletionManager(@NotNull Strings strings) {
         this.strings = strings;
 
-        Configuration settings = strings.getSettings();
+        Settings settings = strings.settings();
         String buttonFormat = settings.get(Option.Text.DELETION_BUTTON_FORMAT);
         String buttonHover = settings.get(Option.Text.DELETION_BUTTON_HOVER);
 
@@ -31,7 +35,12 @@ public class DeletionManager {
         deletionButton = component.hoverEvent(MiniMessage.miniMessage().deserialize(buttonHover));
     }
 
-    public Component getDeletionButton(@NotNull SignedMessage message) {
+    /**
+     * Creates a deletion button as defined in configuration files.
+     * @param message The SignedMessage to create a deletion button for.
+     * @return A {@link Component} containing text that when pressed, deletes the original message.
+     */
+    public Component createDeleteButton(@NotNull SignedMessage message) {
         return deletionButton.clickEvent(ClickEvent.callback(
                 audience -> {
                     ((Audience) strings.getServer()).deleteMessage(message);
@@ -40,15 +49,15 @@ public class DeletionManager {
         );
     }
 
-    public boolean hasDeletionPermission(@NotNull Player source, @NotNull Player subject) {
+    public boolean hasDeletionPermission(@NotNull StringsUser source, @NotNull StringsUser subject) {
         if (source.equals(subject)) {
-            return Permissions.anyOfOrAdmin(source,
+            return PermissionChecker.anyOrOp(source,
                     "strings.*",
                     "strings.chat.*",
                     "strings.chat.delete-messages"
             );
         } else {
-            return Permissions.anyOfOrAdmin(subject,
+            return PermissionChecker.anyOrOp(subject,
                     "strings.*",
                     "strings.chat.*",
                     "strings.chat.delete-messages.*",
@@ -61,7 +70,7 @@ public class DeletionManager {
         strings.sync(() -> strings
                 .getServer()
                 .getPluginManager()
-                .callEvent(new MessageDeletionEvent(message))
+                .callEvent(new BukkitMessageDeletionEvent(message))
         );
     }
 }

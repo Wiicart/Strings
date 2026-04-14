@@ -54,7 +54,7 @@ public class StringsCommand extends CommandTree {
                 strings.reload();
                 data.sender().sendMessage(RELOAD_MESSAGE);
             } else {
-                strings.getMessenger().sendMessage(Message.NO_PERMS, data.sender());
+                strings.messenger().sendMessage(Message.NO_PERMS, data.sender());
             }
         }
     }

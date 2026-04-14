@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.pedestriamc.strings</groupId>
+        <artifactId>Strings</artifactId>
+        <version>1.7.0</version>
+    </parent>
+
+    <artifactId>strings-hytale</artifactId>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>hytale-release</id>
+            <url>https://maven.hytale.com/release</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.pedestriamc.strings</groupId>
+            <artifactId>strings-api</artifactId>
+            <version>1.7.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.pedestriamc.strings</groupId>
+            <artifactId>strings-common</artifactId>
+            <version>1.7.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.hypixel.hytale</groupId>
+            <artifactId>Server</artifactId>
+            <scope>provided</scope>
+            <!-- https://maven.hytale.com/release/com/hypixel/hytale/Server/maven-metadata.xml -->
+            <version>2026.02.17-255364b8e</version>
+        </dependency>
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <scope>provided</scope>
+            <artifactId>api</artifactId>
+            <version>5.5</version>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.impl.BukkitMessenger;
+import com.pedestriamc.strings.bukkit.BukkitMessenger;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
@@ -21,7 +21,7 @@ public final class SocialSpyCommand implements CommandExecutor {
     private final Channel channel;
 
     public SocialSpyCommand(@NotNull Strings strings) {
-        messenger = strings.getMessenger();
+        messenger = strings.messenger();
         userUtil = strings.users();
         channel = strings.getChannelLoader().getChannel("socialspy");
     }

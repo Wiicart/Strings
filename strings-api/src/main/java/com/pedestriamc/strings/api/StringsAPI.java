@@ -2,6 +2,7 @@ package com.pedestriamc.strings.api;
 
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.discord.StringsDiscord;
+import com.pedestriamc.strings.api.event.strings.EventManager;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.moderation.StringsModeration;
 import com.pedestriamc.strings.api.settings.Settings;
@@ -86,6 +87,8 @@ public interface StringsAPI {
      * @return A EmojiManager
      */
     @NotNull EmojiManager emojiManager();
+
+    @NotNull EventManager getEventDispatcher();
 
     /**
      * Provides the StringsModeration instance, offering some moderation methods.

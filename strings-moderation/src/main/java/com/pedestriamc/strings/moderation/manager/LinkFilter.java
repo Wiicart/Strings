@@ -3,11 +3,10 @@ package com.pedestriamc.strings.moderation.manager;
 import com.pedestriamc.strings.api.StringsProvider;
 import com.pedestriamc.strings.api.event.moderation.PlayerChatFilteredEvent;
 import com.pedestriamc.strings.api.message.Message;
-import com.pedestriamc.strings.moderation.api.MessageableSender;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.moderation.Option;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -19,11 +18,11 @@ public class LinkFilter {
 
     private static final Pattern PATTERN = Pattern.compile("(?i)\\b((?:https?|ftp)://|www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)");
 
-    private final StringsModeration stringsModeration;
+    private final StringsModeration strings;
     private final List<String> urlWhitelist;
 
     public LinkFilter(@NotNull StringsModeration stringsModeration) {
-        this.stringsModeration = stringsModeration;
+        this.strings = stringsModeration;
         this.urlWhitelist = new ArrayList<>();
         List<?> tempList = stringsModeration.getConfiguration().get(Option.StringList.URL_WHITELIST);
         for(Object obj : tempList) {
@@ -45,7 +44,7 @@ public class LinkFilter {
         return url.toLowerCase();
     }
 
-    public String filter(String msg, Player player) {
+    public String filter(String msg, StringsUser player) {
         boolean urlReplaced = false;
         String original = msg;
         List<String> filteredElements = new ArrayList<>();
@@ -62,16 +61,16 @@ public class LinkFilter {
         msg = msg.trim();
 
         if(urlReplaced) {
-            StringsProvider.get().getMessenger().sendMessage(Message.LINKS_PROHIBITED, new MessageableSender(player));
+            StringsProvider.get().getMessenger().sendMessage(Message.LINKS_PROHIBITED, player);
             String finalMsg = msg;
-            Bukkit.getScheduler().runTask(stringsModeration, () -> {
+            Bukkit.getScheduler().runTask(strings, () -> {
                 PlayerChatFilteredEvent event = new PlayerChatFilteredEvent(
                         player,
                         original,
                         finalMsg,
                         filteredElements
                 );
-                Bukkit.getPluginManager().callEvent(event);
+                strings.eventDispatcher().dispatch(event);
             });
         }
         return msg;

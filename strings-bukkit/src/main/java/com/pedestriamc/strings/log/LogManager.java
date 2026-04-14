@@ -51,8 +51,13 @@ public final class LogManager {
     private void loadTypes(@NotNull FileConfiguration config) {
         for(LogType type : LogType.TYPES) {
             type.setEnabled(config.getBoolean(type.getConfigKey()));
-            if(type.isEnabled()) {
-                register(type.createListener(this));
+            if (type.isEnabled()) {
+                Object listener = type.createListener(this);
+                if (listener instanceof Listener bukkitListener) {
+                    register(bukkitListener);
+                } else {
+                    strings.eventManager().subscribe(listener);
+                }
             }
 
             File file = new File(strings.getDataFolder(), type.getPath());

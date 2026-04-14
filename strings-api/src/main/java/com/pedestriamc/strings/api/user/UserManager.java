@@ -1,20 +1,19 @@
 package com.pedestriamc.strings.api.user;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.util.Set;
+import java.util.Collection;
 import java.util.UUID;
 
 public interface UserManager {
 
     /**
-     * Gets the {@link StringsUser} correlated to the UUID, if online
+     * Gets the {@link StringsUser} correlated to the UUID, if online.
      * @param uuid The UUID of the StringsUser
      * @return A StringsUser
      */
-    @Nullable
+    @NotNull
     StringsUser getUser(@NotNull UUID uuid);
 
     /**
@@ -29,6 +28,6 @@ public interface UserManager {
      */
     @UnmodifiableView
     @NotNull
-    Set<StringsUser> getUsers();
+    Collection<StringsUser> getUsers();
 
 }

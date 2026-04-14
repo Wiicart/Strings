@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.api.settings;
 
 import com.pedestriamc.strings.api.StringsAPI;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -19,5 +20,23 @@ public interface Settings {
      */
     @NotNull
     <E extends Enum<E> & Option.CoreKey<V>, V> V get(@NotNull E key);
+
+    /**
+     * Gets a double configuration value as a float.
+     * @param option The configuration option.
+     * @return A float.
+     */
+    default float getFloat(@NotNull Option.Double option) {
+        return get(option).floatValue();
+    }
+
+    /**
+     * Gets a String as a Kyori Component.
+     * In Hytale environments, an Exception will be thrown.
+     * @param option The configuration option
+     * @return The String as a component
+     * @throws UnsupportedOperationException In Hytale environments.
+     */
+    Component getComponent(@NotNull Option.Text option);
 
 }

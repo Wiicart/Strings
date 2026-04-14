@@ -15,6 +15,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +86,7 @@ public final class YamlUserUtil implements UserUtil {
     public @NotNull User loadUser(UUID uuid) {
         synchronized(config) {
             ConfigurationSection section = config.getConfigurationSection("players." + uuid);
-            if(section == null) {
+            if (section == null) {
                 User user = User.builder(strings, uuid, true).build();
                 addUser(user);
                 return user;
@@ -170,10 +172,7 @@ public final class YamlUserUtil implements UserUtil {
     @Override
     public @NotNull User getUser(@NotNull UUID uuid) {
         User user = map.get(uuid);
-        if (user == null) {
-            return loadUser(uuid);
-        }
-        return user;
+        return user != null ? user: loadUser(uuid);
     }
 
     @Override
@@ -200,9 +199,8 @@ public final class YamlUserUtil implements UserUtil {
     public void addUser(User user) {
         map.put(user.getUniqueId(), user);
         strings.sync(() -> strings
-                .getServer()
-                .getPluginManager()
-                .callEvent(new StringsUserLoadEvent(user))
+                .eventManager()
+                .dispatch(new StringsUserLoadEvent(user))
         );
     }
 
@@ -213,8 +211,8 @@ public final class YamlUserUtil implements UserUtil {
 
     @Contract(" -> new")
     @Override
-    public @NotNull Set<StringsUser> getUsers() {
-        return new HashSet<>(map.values());
+    public @NotNull Collection<StringsUser> getUsers() {
+        return Collections.unmodifiableCollection(map.values());
     }
 
 }

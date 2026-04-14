@@ -298,11 +298,4 @@ abstract sealed class AbstractChannelBuilder<B extends IChannelBuilder<B>> imple
         return null;
     }
 
-    static boolean isLocal(@NotNull Identifier identifier) {
-        return
-                identifier == Identifier.WORLD ||
-                identifier == Identifier.PROXIMITY ||
-                identifier == Identifier.WORLD_STRICT ||
-                identifier == Identifier.PROXIMITY_STRICT;
-    }
 }

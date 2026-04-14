@@ -2,7 +2,7 @@ package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.message.Message;
-import com.pedestriamc.strings.impl.BukkitMessenger;
+import com.pedestriamc.strings.bukkit.BukkitMessenger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,7 +16,7 @@ public final class MessengerCommand implements CommandExecutor {
 
     @Contract(pure = true)
     public MessengerCommand(@NotNull Strings strings, @NotNull Message message) {
-        this.messenger = strings.getMessenger();
+        this.messenger = strings.messenger();
         this.message = message;
     }
 

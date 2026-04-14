@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.impl.BukkitMessenger;
+import com.pedestriamc.strings.bukkit.BukkitMessenger;
 import net.wiicart.commands.permission.Permissions;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -18,7 +18,7 @@ public final class ClearChatCommand implements CommandExecutor {
     private final @NotNull BukkitMessenger messenger;
 
     public ClearChatCommand(@NotNull Strings strings) {
-        messenger = strings.getMessenger();
+        messenger = strings.messenger();
     }
 
     @Override

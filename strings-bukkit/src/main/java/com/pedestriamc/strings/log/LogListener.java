@@ -1,12 +1,11 @@
 package com.pedestriamc.strings.log;
 
-import com.pedestriamc.strings.api.event.channel.ChannelChatEvent;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.event.moderation.PlayerChatFilteredEvent;
-import com.pedestriamc.strings.api.event.moderation.PlayerDirectMessageEvent;
+import com.pedestriamc.strings.event.BukkitDirectMessageEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,7 +53,7 @@ final class LogListener {
         }
 
         @EventHandler
-        void onEvent(@NotNull PlayerDirectMessageEvent event) {
+        void onEvent(@NotNull BukkitDirectMessageEvent event) {
             String log = TEMPLATE
                     .replace("{date}", LocalDateTime.now().toString())
                     .replace("{sender}", event.getSender().getName())
@@ -64,7 +63,7 @@ final class LogListener {
         }
     }
 
-    static final class ChatListener implements Listener {
+    static final class ChatListener {
 
         private static final String TEMPLATE =
                 "[{date}] Player {name} sent a message in channel \"{channel}\": \"{message}\"";
@@ -75,16 +74,14 @@ final class LogListener {
             this.logManager = logManager;
         }
 
-        @EventHandler
-        void onEvent(AsyncPlayerChatEvent event) {
-            if(event instanceof ChannelChatEvent chatEvent) {
-                String log = TEMPLATE
-                        .replace("{date}", LocalDateTime.now().toString())
-                        .replace("{name}", event.getPlayer().getName())
-                        .replace("{channel}", chatEvent.getChannel().getName())
-                        .replace("{message}", event.getMessage());
-                logManager.log(LogType.CHAT, log);
-            }
+        @com.pedestriamc.strings.api.event.strings.Listener
+        void onEvent(ChannelChatEvent event) {
+            String log = TEMPLATE
+                    .replace("{date}", LocalDateTime.now().toString())
+                    .replace("{name}", event.getPlayer().getName())
+                    .replace("{channel}", event.getChannel().getName())
+                    .replace("{message}", event.getMessage());
+            logManager.log(LogType.CHAT, log);
         }
     }
 
@@ -109,7 +106,7 @@ final class LogListener {
         }
     }
 
-    static final class ChatFilterListener implements Listener {
+    static final class ChatFilterListener {
 
         private static final String TEMPLATE =
                 "[{date}] Player {name} had a message filtered. Original: \"{original}\", Filtered: \"{filtered}\"";
@@ -120,7 +117,7 @@ final class LogListener {
             this.logManager = logManager;
         }
 
-        @EventHandler
+        @com.pedestriamc.strings.api.event.strings.Listener
         void onEvent(@NotNull PlayerChatFilteredEvent event) {
             String log = TEMPLATE
                     .replace("{date}", LocalDateTime.now().toString())

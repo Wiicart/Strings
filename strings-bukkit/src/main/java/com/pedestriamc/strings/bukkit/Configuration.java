@@ -1,0 +1,120 @@
+package com.pedestriamc.strings.bukkit;
+
+import com.pedestriamc.strings.Strings;
+import com.pedestriamc.strings.api.settings.Settings;
+import com.pedestriamc.strings.api.settings.Option;
+import com.pedestriamc.strings.api.settings.SettingsRegistry;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiFunction;
+
+public class Configuration implements Settings {
+
+    private final SettingsRegistry registry;
+
+    public Configuration(@NotNull Strings strings) {
+        FileConfiguration config = strings.files().getConfig();
+        registry = new SettingsRegistry(builder -> {
+            builder.putAll(loadValues(config, Option.Bool.class, FileConfiguration::getBoolean))
+                    .putAll(loadValues(config, Option.Double.class, FileConfiguration::getDouble))
+                    .putAll(loadValues(config, Option.StringList.class, FileConfiguration::getStringList))
+                    .putAll(loadValues(config, Option.Text.class, FileConfiguration::getString));
+
+            loadDeathMessageOptions(strings, builder);
+            loadEmojiOptions(strings, builder);
+        });
+    }
+
+    @Override
+    @NotNull
+    public <E extends Enum<E> & Option.CoreKey<V>, V> V get(@NotNull E key) {
+        return registry.get(key);
+    }
+
+    @NotNull
+    public String getColored(@NotNull Option.Text option) {
+        return ChatColor.translateAlternateColorCodes('&', get(option));
+    }
+
+    @NotNull
+    @Override
+    public Component getComponent(@NotNull Option.Text option) {
+        String raw = get(option);
+        raw = ChatColor.translateAlternateColorCodes('&', raw);
+        return MiniMessage.miniMessage().deserialize(raw);
+    }
+
+    @NotNull
+    private <E extends Enum<E> & Option.CoreKey<V>, V> Map<E, V> loadValues(
+            @NotNull FileConfiguration config,
+            @NotNull Class<E> clazz,
+            @NotNull BiFunction<FileConfiguration, String, V> method
+    ) {
+        Map<E, V> map = new HashMap<>();
+        for (E key : clazz.getEnumConstants()) {
+            V val = key.defaultValue();
+            if (config.contains(key.key())) {
+                val = method.apply(config, key.key());
+            }
+            map.put(key, val);
+        }
+
+        return map;
+    }
+
+    private void loadDeathMessageOptions(@NotNull Strings strings, @NotNull SettingsRegistry.Builder builder) {
+        FileConfiguration config = strings.files().getDeathMessagesFileConfig();
+        Map<Option.Bool, Boolean> map = new EnumMap<>(Option.Bool.class);
+
+        map.put(
+                Option.Bool.DEATH_MESSAGES_ENABLE,
+                config.getBoolean("enable", Option.Bool.DEATH_MESSAGES_ENABLE.defaultValue())
+        );
+
+        map.put(
+                Option.Bool.DEATH_MESSAGES_USE_CUSTOM,
+                config.getBoolean("custom", Option.Bool.DEATH_MESSAGES_USE_CUSTOM.defaultValue())
+        );
+
+        builder.putAll(map);
+    }
+
+    private void loadEmojiOptions(@NotNull Strings strings, @NotNull SettingsRegistry.Builder builder) {
+        FileConfiguration config = strings.files().getEmojiFileConfig();
+
+        Map<Option.Bool, Boolean> bools = new HashMap<>();
+        Map<Option.Text, String> texts = new HashMap<>();
+        Map<Option.StringList, List<String>> lists = new HashMap<>();
+
+        Option.Bool replacement = Option.Bool.ENABLE_EMOJI_REPLACEMENT;
+        bools.put(replacement, config.getBoolean(replacement.key(), replacement.defaultValue()));
+
+        Option.Bool usePack = Option.Bool.ENABLE_EMOJI_RESOURCE_PACK;
+        bools.put(usePack, config.getBoolean(usePack.key(), usePack.defaultValue()));
+
+        Option.Text packId = Option.Text.TEXTURES_MODRINTH_ID;
+        texts.put(packId, config.getString(packId.key(), packId.defaultValue()));
+
+        Option.Text header = Option.Text.EMOJI_COMMAND_HEADER;
+        texts.put(header, config.getString(header.key(), header.defaultValue()));
+
+        Option.Text footer = Option.Text.EMOJI_COMMAND_FOOTER;
+        texts.put(footer, config.getString(footer.key(), footer.defaultValue()));
+
+        Option.StringList textured = Option.StringList.TEXTURED_EMOJIS;
+        lists.put(textured, config.getStringList(textured.key()));
+
+        builder.putAll(bools);
+        builder.putAll(texts);
+        builder.putAll(lists);
+    }
+
+}

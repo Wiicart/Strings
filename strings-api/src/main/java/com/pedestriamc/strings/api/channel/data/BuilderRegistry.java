@@ -25,9 +25,9 @@ final class BuilderRegistry {
     }
 
     public static <B> Channel build(@NotNull IChannelBuilder<?> builder, @NotNull IChannelBuilder.Identifier identifier) throws IllegalArgumentException {
-        if(AbstractChannelBuilder.isLocal(identifier)) {
+        if (identifier.isLocal()) {
             if (!(builder instanceof LocalChannelBuilder)) {
-                throw new IllegalArgumentException("Local channels must be built with LocalChannelBuilder");
+                throw new IllegalArgumentException("Local channels must be built with a LocalChannelBuilder");
             } else {
                 try {
                     return LOCAL_BUILD_FUNCTIONS.get(identifier).apply(platform, (LocalChannelBuilder<B>) builder);
@@ -37,7 +37,7 @@ final class BuilderRegistry {
             }
         }
 
-        if(!BUILD_FUNCTIONS.containsKey(identifier)) {
+        if (!BUILD_FUNCTIONS.containsKey(identifier)) {
             throw new IllegalArgumentException("Unknown channel type: " + identifier);
         }
 

@@ -5,6 +5,7 @@ import com.pedestriamc.strings.api.user.StringsUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Set;
 
@@ -43,6 +44,8 @@ public interface LocalChannel<T> extends Channel {
      * Provides a Set of all the Worlds the Channel is used in.
      * @return A populated Set.
      */
+    @NotNull
+    @UnmodifiableView
     Set<? extends Locality<T>> getWorlds();
 
     /**
@@ -69,10 +72,7 @@ public interface LocalChannel<T> extends Channel {
      * @param locality The Locality
      * @return If this Channel contains the World behind the Locality
      */
-    @SuppressWarnings("unchecked")
-    default boolean containsLocality(@NotNull Locality<?> locality) {
-        return containsWorld((T) locality.get());
-    }
+    boolean containsLocality(@NotNull Locality<?> locality);
 
     /**
      * If this is an instance of a {@code ProximityChannel}, this will provide the proximity the Channel is set to.

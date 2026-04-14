@@ -2,7 +2,7 @@ package com.pedestriamc.strings.misc;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.settings.Option;
-import com.pedestriamc.strings.configuration.Configuration;
+import com.pedestriamc.strings.bukkit.Configuration;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -25,7 +25,7 @@ public class ServerMessages {
         userUtil = strings.users();
         usePAPI = strings.isUsingPlaceholderAPI();
 
-        Configuration config = strings.getSettings();
+        Configuration config = strings.settings();
         joinMessageTemplate = config.get(Option.Text.JOIN_MESSAGE);
         leaveMessageTemplate = config.get(Option.Text.LEAVE_MESSAGE);
         motd = config.get(Option.StringList.MOTD);

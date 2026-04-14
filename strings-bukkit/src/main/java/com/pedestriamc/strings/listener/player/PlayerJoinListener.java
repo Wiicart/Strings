@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.listener.player;
 
 import com.pedestriamc.strings.api.settings.Option;
-import com.pedestriamc.strings.configuration.Configuration;
-import com.pedestriamc.strings.external.ModrinthService;
+import com.pedestriamc.strings.bukkit.Configuration;
+import com.pedestriamc.strings.common.external.ModrinthService;
 import com.pedestriamc.strings.user.util.UserUtil;
 import com.pedestriamc.strings.misc.ServerMessages;
 import com.pedestriamc.strings.Strings;
@@ -31,7 +31,7 @@ public class PlayerJoinListener implements Listener {
         serverMessages = strings.getServerMessages();
         modrinth = strings.modrinth();
 
-        Configuration configuration = strings.getSettings();
+        Configuration configuration = strings.settings();
         modifyJoinMessage = configuration.get(Option.Bool.USE_CUSTOM_JOIN_LEAVE);
         doMotd = configuration.get(Option.Bool.ENABLE_MOTD);
         doJoinMessage = configuration.get(Option.Bool.ENABLE_JOIN_LEAVE_MESSAGE);

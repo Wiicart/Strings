@@ -2,6 +2,7 @@ package com.pedestriamc.strings.discord;
 
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
+import com.pedestriamc.strings.api.event.strings.EventManager;
 import com.pedestriamc.strings.discord.command.DiscordCommand;
 import com.pedestriamc.strings.api.discord.Option;
 import com.pedestriamc.strings.discord.configuration.Configuration;
@@ -49,6 +50,7 @@ public final class StringsDiscord extends JavaPlugin {
 
     private Configuration configuration;
     private AvatarProvider avatarProvider;
+    private EventManager eventDispatcher;
 
     static {
         try {
@@ -84,7 +86,8 @@ public final class StringsDiscord extends JavaPlugin {
     public void onEnable() {
         avatarProvider = new AvatarProvider(this);
         checkForStrings();
-        if(jda == null) {
+        eventDispatcher = StringsProvider.get().getEventDispatcher();
+        if (jda == null) {
             getLogger().severe("Failed to connect to Bot, disabling...");
             try {
                 getServer().getPluginManager().disablePlugin(this);
@@ -227,8 +230,9 @@ public final class StringsDiscord extends JavaPlugin {
     private void registerListeners() {
         registerDiscordListener(new MessageListener(this));
 
-        registerBukkitListener(new CraftChatListener(this));
-        registerBukkitListener(new StringsReloadListener(this));
+        eventDispatcher.subscribe(new CraftChatListener(this));
+        eventDispatcher.subscribe(new StringsReloadListener(this));
+        eventDispatcher.subscribe(new MessageDeletionListener(this));
 
         if (configuration.get(Option.Bool.ENABLE_JOIN_LEAVE_MESSAGES)) {
             registerBukkitListener(new PlayerJoinQuitListener(this));
@@ -241,11 +245,6 @@ public final class StringsDiscord extends JavaPlugin {
         if (configuration.get(Option.Bool.ENABLE_ADVANCEMENT_MESSAGES)) {
             registerBukkitListener(new PlayerAdvancementListener(this));
         }
-
-        try {
-            Class.forName("com.pedestriamc.strings.api.event.MessageDeletionEvent");
-            registerBukkitListener(new MessageDeletionListener(this));
-        } catch(ClassNotFoundException ignored) {}
 
     }
 

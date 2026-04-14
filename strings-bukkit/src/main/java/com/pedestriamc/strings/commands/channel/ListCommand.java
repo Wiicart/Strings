@@ -6,7 +6,7 @@ import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.message.MessageContext;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.commands.AbstractCommand;
-import com.pedestriamc.strings.impl.MessageableAdapter;
+import com.pedestriamc.strings.bukkit.MessageableAdapter;
 import net.wiicart.commands.command.CartCommandExecutor;
 import net.wiicart.commands.command.CommandData;
 import org.bukkit.command.CommandSender;

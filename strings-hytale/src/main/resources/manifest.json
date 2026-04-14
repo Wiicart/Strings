@@ -1,0 +1,13 @@
+{
+  "Group": "pedestria",
+  "Name": "Strings",
+  "Version": "1.7.0",
+  "Main": "com.pedestriamc.strings.Strings",
+  "Description": "Chat formatting & channel plugin.",
+  "Authors": ["wiicart"],
+  "Website": "https://wiicart.net/strings",
+  "ServerVersion": "1.0.0",
+  "Dependencies": [],
+  "OptionalDependencies": ["luckperms"],
+  "DisabledByDefault": false
+}

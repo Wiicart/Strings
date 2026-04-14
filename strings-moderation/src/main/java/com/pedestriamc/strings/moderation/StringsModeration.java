@@ -1,16 +1,18 @@
 package com.pedestriamc.strings.moderation;
 
+import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
+import com.pedestriamc.strings.api.event.strings.EventManager;
 import com.pedestriamc.strings.moderation.impl.Registrar;
 import com.pedestriamc.strings.moderation.configuration.Configuration;
 import com.pedestriamc.strings.moderation.impl.StringsModerationImpl;
+import com.pedestriamc.strings.moderation.listener.ChatListener;
 import com.pedestriamc.strings.moderation.listener.ReloadListener;
 import com.pedestriamc.strings.moderation.listener.SignChangeListener;
 import com.pedestriamc.strings.moderation.manager.ChatFilter;
 import com.pedestriamc.strings.moderation.manager.CooldownManager;
 import com.pedestriamc.strings.moderation.manager.LinkFilter;
 import com.pedestriamc.strings.moderation.manager.RepetitionManager;
-import com.pedestriamc.strings.moderation.listener.ChatListener;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -24,6 +26,7 @@ public final class StringsModeration extends JavaPlugin {
     private LinkFilter linkFilter;
     private RepetitionManager repetitionManager;
     private Configuration config;
+    private EventManager eventManager;
 
     @Override
     public void onEnable() {
@@ -42,6 +45,7 @@ public final class StringsModeration extends JavaPlugin {
         }
 
         config = new Configuration(plugin);
+        eventManager = StringsProvider.get().getEventDispatcher();
 
         instantiate();
         registerAPI();
@@ -76,8 +80,8 @@ public final class StringsModeration extends JavaPlugin {
         cooldownManager = new CooldownManager(this);
         linkFilter = new LinkFilter(this);
         repetitionManager = new RepetitionManager(this);
-        registerListener(new ChatListener(this));
-        registerListener(new ReloadListener(this));
+        eventManager.subscribe(new ChatListener(this));
+        eventManager.subscribe(new ReloadListener(this));
         registerListener(new SignChangeListener(this));
     }
 
@@ -111,6 +115,14 @@ public final class StringsModeration extends JavaPlugin {
 
     public Configuration getConfiguration() {
         return config;
+    }
+
+    public StringsAPI api() {
+        return StringsProvider.get();
+    }
+
+    public EventManager eventDispatcher() {
+        return eventManager;
     }
 
     /**

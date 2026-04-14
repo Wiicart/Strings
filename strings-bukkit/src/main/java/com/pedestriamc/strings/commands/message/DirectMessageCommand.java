@@ -1,7 +1,9 @@
 package com.pedestriamc.strings.commands.message;
 
-import com.pedestriamc.strings.directmessage.PlayerDirectMessenger;
-import com.pedestriamc.strings.impl.BukkitMessenger;
+import com.pedestriamc.strings.api.user.StringsUser;
+import com.pedestriamc.strings.api.user.UserManager;
+import com.pedestriamc.strings.common.manager.DirectMessageManager;
+import com.pedestriamc.strings.bukkit.BukkitMessenger;
 import com.pedestriamc.strings.Strings;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -14,17 +16,19 @@ import static com.pedestriamc.strings.api.message.Message.*;
 
 public final class DirectMessageCommand implements CommandExecutor {
 
-    private final PlayerDirectMessenger playerDirectMessenger;
+    private final DirectMessageManager manager;
     private final BukkitMessenger messenger;
+    private final UserManager userManager;
 
     public DirectMessageCommand(@NotNull Strings strings) {
-        this.playerDirectMessenger = strings.getPlayerDirectMessenger();
-        this.messenger = strings.getMessenger();
+        manager = strings.getDirectMessageManager();
+        messenger = strings.messenger();
+        userManager = strings.users();
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if(!(sender instanceof Player)) {
+        if(!(sender instanceof Player player)) {
             sender.sendMessage("[Strings] This command can only be used by players!");
             return true;
         }
@@ -56,7 +60,9 @@ public final class DirectMessageCommand implements CommandExecutor {
             stringBuilder.append(" ");
         }
 
-        playerDirectMessenger.sendMessage((Player) sender, recipient, stringBuilder.toString());
+        StringsUser senderUser = userManager.getUser(player.getUniqueId());
+        StringsUser recipientUser = userManager.getUser(recipient.getUniqueId());
+        manager.sendMessage(senderUser, recipientUser, stringBuilder.toString());
 
         return true;
     }

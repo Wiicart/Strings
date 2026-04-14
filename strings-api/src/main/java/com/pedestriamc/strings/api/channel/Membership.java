@@ -11,7 +11,7 @@ public enum Membership {
      */
     DEFAULT,
     /**
-     * Channels with this {@code Membership} are not open to players by default and require permissions to join.
+     * Channels with this {@code Membership} are not open to players by default and require permission to join.
      * If a Player is still eligible for this Channel, it's possible to be selected by the {@code DefaultChannel}.
      */
     PERMISSION,

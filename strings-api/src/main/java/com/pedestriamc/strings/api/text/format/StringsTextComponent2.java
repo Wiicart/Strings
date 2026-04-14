@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.util.List;
 import java.util.stream.Stream;
 
+@Deprecated
 final class StringsTextComponent2 extends StringsTextComponent {
 
     private final TextComponent backer;

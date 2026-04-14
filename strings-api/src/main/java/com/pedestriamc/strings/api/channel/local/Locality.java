@@ -1,41 +1,18 @@
 package com.pedestriamc.strings.api.channel.local;
 
+import com.pedestriamc.strings.api.user.StringsUser;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Platform independent World wrapper.
+ * Implementing classes should override {@link Object#equals(Object)}
+ * such that it returns true if the backing object is the same.
  * @param <T> The World class on the current platform, such as <code>org.bukkit.World</code>
  */
 public interface Locality<T> {
-
-    /**
-     * Converts a World to a Locality
-     * @param w The world
-     * @return The world wrapped as a <code>Locality</code>
-     * @param <W> The World class
-     */
-    static <W> @NotNull Locality<W> of(W w, String name) {
-        return new LocalityImpl<>(w, name);
-    }
-
-    /**
-     * Converts a Set of Worlds to a Set of Localities
-     * @param worlds The original Set
-     * @return The Set converted to Localities
-     * @param <W> The World class
-     */
-    static <W> @NotNull Set<Locality<W>> convertToLocalities(@NotNull Collection<W> worlds) {
-        Set<Locality<W>> result = new HashSet<>();
-        for (W world : worlds) {
-            result.add(of(world, "unknown"));
-        }
-
-        return result;
-    }
 
     /**
      * Converts a Set of Localities to a Set of Worlds
@@ -56,8 +33,28 @@ public interface Locality<T> {
      * Provides the platform-specific World implementation
      * @return The platform-specific Object
      */
-    @NotNull T get();
+    @NotNull
+    T get();
 
-    @NotNull String getName();
+    /**
+     * Provides the name of the Locality
+     * @return A String
+     */
+    @NotNull
+    String getName();
+
+    /**
+     * Tells if this Locality contains a User
+     * @param user The User to check
+     * @return True if this Locality contains the User
+     */
+    boolean contains(@NotNull StringsUser user);
+
+    /**
+     * Provides a Set of all the Users in this world
+     * @return A Set
+     */
+    @NotNull
+    Set<StringsUser> getUsers();
 
 }

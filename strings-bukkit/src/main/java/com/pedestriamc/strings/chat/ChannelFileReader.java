@@ -1,6 +1,7 @@
 package com.pedestriamc.strings.chat;
 
 import com.google.common.base.Preconditions;
+import com.pedestriamc.strings.common.channel.impl.HelpOPChannel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Membership;
@@ -8,10 +9,9 @@ import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
 import com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
-import com.pedestriamc.strings.api.settings.Option;
+import com.pedestriamc.strings.api.channel.local.LocalityManager;
 import com.pedestriamc.strings.api.text.format.StringsTextColor;
-import com.pedestriamc.strings.channel.HelpOPChannel;
-import com.pedestriamc.strings.channel.SocialSpyChannel;
+import com.pedestriamc.strings.common.channel.impl.SocialSpyChannel;
 import net.kyori.adventure.key.InvalidKeyException;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -29,11 +29,13 @@ import java.util.Set;
 final class ChannelFileReader {
     
     private static final Set<Identifier> LOCAL_TYPES = Set.of(
-            Identifier.WORLD, Identifier.WORLD_STRICT, Identifier.PROXIMITY, Identifier.PROXIMITY_STRICT
+            Identifier.WORLD, Identifier.WORLD_STRICT, Identifier.PROXIMITY,
+            Identifier.PROXIMITY_STRICT, Identifier.HORIZONTAL_PROXIMITY, Identifier.HORIZONTAL_PROXIMITY_STRICT
     );
 
-    private final @NotNull Strings strings;
-    private final @NotNull ChannelManager manager;
+    private final Strings strings;
+    private final ChannelManager manager;
+    private final LocalityManager<World> localityManager;
 
     static void loadChannels(@NotNull Strings strings, @NotNull FileConfiguration config, @NotNull ChannelManager manager) {
         new ChannelFileReader(strings, config, manager);
@@ -42,10 +44,11 @@ final class ChannelFileReader {
     private ChannelFileReader(@NotNull Strings strings, @NotNull FileConfiguration config, @NotNull ChannelManager manager) {
         this.strings = strings;
         this.manager = manager;
+        this.localityManager = strings.localityManager();
 
         ConfigurationSection channels = config.getConfigurationSection("channels");
-        if(channels == null) {
-            strings.warning("No Channels defined in channels.yml, disabling plugin.");
+        if (channels == null) {
+            strings.severe("No Channels defined in channels.yml, disabling plugin.");
             strings.getServer().getPluginManager().disablePlugin(strings);
             return;
         }
@@ -63,8 +66,7 @@ final class ChannelFileReader {
             registerHelpOp();
         }
 
-        String socialSpyFormat = strings.getSettings().get(Option.Text.SOCIAL_SPY_FORMAT);
-        manager.register(new SocialSpyChannel(strings.getPlayerDirectMessenger(), socialSpyFormat));
+        manager.register(new SocialSpyChannel(strings));
     }
 
     private void read(@NotNull ConfigurationSection channels) {
@@ -151,7 +153,8 @@ final class ChannelFileReader {
     }
 
     private boolean isProximity(@NotNull Identifier identifier) {
-        return identifier == Identifier.PROXIMITY || identifier == Identifier.PROXIMITY_STRICT;
+        return identifier == Identifier.PROXIMITY || identifier == Identifier.PROXIMITY_STRICT
+                || identifier == Identifier.HORIZONTAL_PROXIMITY || identifier == Identifier.HORIZONTAL_PROXIMITY_STRICT;
     }
 
     private double getDistance(@NotNull ConfigurationSection section) {
@@ -164,21 +167,17 @@ final class ChannelFileReader {
 
     private @NotNull Set<Locality<World>> loadWorlds(@NotNull ConfigurationSection section) {
         Set<Locality<World>> worlds = new HashSet<>();
+        List<String> list = section.getStringList("worlds");
+
         String legacyWorldName = section.getString("world");
         if (legacyWorldName != null) {
-            World world = Bukkit.getWorld(legacyWorldName);
-            if (world != null) {
-                worlds.add(Locality.of(world, legacyWorldName));
-            } else {
-                strings.warning("Unknown world '" + legacyWorldName + "' defined, skipping...");
-            }
+            list.add(legacyWorldName);
         }
 
-        List<String> list = section.getStringList("worlds");
         for (String str : list) {
             World world = Bukkit.getWorld(str);
             if (world != null) {
-                worlds.add(Locality.of(world, str));
+                worlds.add(localityManager.get(world));
             } else {
                 strings.warning("Unknown world '" + str + "' defined, skipping...");
             }
@@ -239,19 +238,16 @@ final class ChannelFileReader {
                     .build(Identifier.NORMAL)
             );
         } catch(Exception e) {
-            strings.warning("An error occurred while loading global channel fallback");
+            strings.warning("An error occurred while loading global channel fallback.");
             strings.warning(e.getMessage());
         }
     }
 
     private void registerHelpOp() {
-        manager.register(new HelpOPChannel(
-                strings,
+        manager.register(new HelpOPChannel(strings, Channel.builder(
+                "helpop",
                 "&8[&4HelpOP&8] &f{displayname} &7» {message}",
-                false,
-                false,
-                false
-        ));
-
+                Membership.PROTECTED))
+        );
     }
 }

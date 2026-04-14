@@ -9,6 +9,7 @@ channels:
   global:
     # The format messages should be posted as in the channel.
     # Valid placeholders:
+    # {username} - player name
     # {displayname} - player display name
     # {prefix} - player prefix
     # {suffix} - player suffix
@@ -19,7 +20,6 @@ channels:
     # Should an event be called when players send a message?
     # This allows other plugins to receive the message and modify it.
     # It's recommended to keep this on unless you want no other plugins to receive or modify chat.
-    # BUG: This will be fixed, but currently if events are not called, cool downs will not work.
     call-event: true
 
     # Should chat be filtered for profanity?
@@ -39,8 +39,9 @@ channels:
     # Channel Type
     # Options:
     # - stringchannel - a server wide channel, messages are sent to every player that is a member.
-    # - proximity - as the name says, proximity
     # - world - a channel that only works for one world
+    # - horizontal_proximity - proximity based solely on x/z distance, NOT height.
+    # - proximity - *3D* proximity, taking into account height.
     # Global MUST be a stringchannel.
     type: stringchannel
 
@@ -149,7 +150,7 @@ channels:
   #  block-urls: false
   #  cooldown: false
   #  distance: 30
-  #  type: proximity
+  #  type: horizontal_proximity
   #  membership: default
   #  worlds:
   #    - "world2"

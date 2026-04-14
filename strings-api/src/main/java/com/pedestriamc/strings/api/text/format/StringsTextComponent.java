@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
+@Deprecated
 public sealed class StringsTextComponent implements TextComponent, Element<TextComponent> permits StringsTextComponent2 {
 
     private final @NotNull String content;

@@ -5,13 +5,13 @@ import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
+import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.MessageUtilities;
 import com.pedestriamc.strings.chat.Mentioner;
-import com.pedestriamc.strings.configuration.Configuration;
+import com.pedestriamc.strings.bukkit.Configuration;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import io.papermc.paper.chat.ChatRenderer;
-import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.Component;
@@ -39,7 +39,7 @@ public class RendererProvider {
         deletionManager = new DeletionManager(strings);
         mentioner = strings.getMentioner();
 
-        Configuration config = strings.getSettings();
+        Configuration config = strings.settings();
         mentionsEnabled = config.get(Option.Bool.ENABLE_MENTIONS);
         processingMessagePlaceholders = config.get(Option.Bool.PROCESS_PLACEHOLDERS) && strings.isUsingPlaceholderAPI();
         parsingMessageChatColors = config.get(Option.Bool.PROCESS_CHATCOLOR);
@@ -47,12 +47,12 @@ public class RendererProvider {
     }
 
     @NotNull
-    public ChatRenderer createRenderer(@NotNull Channel channel, @NotNull SignedMessage signedMessage) {
+    public ChatRenderer renderer(@NotNull Channel channel, @NotNull SignedMessage signedMessage) {
         return new ChannelChatRenderer(channel, signedMessage);
     }
 
 
-    class ChannelChatRenderer implements ChatRenderer {
+    private final class ChannelChatRenderer implements ChatRenderer {
 
         private final Channel channel;
         private final SignedMessage signedMessage;
@@ -66,20 +66,20 @@ public class RendererProvider {
         @NotNull
         public Component render(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {
             User user = userUtil.getUser(source);
-            Component component;
 
-            component = generateBase(channel, user);
+            Component component;
+            component = generateTemplate(channel, user);
             component = insertMessage(component, message, channel, user);
 
-            if (shouldAppendDeleteButton(channel, source, viewer) && signedMessage.canDelete()) {
-                component = component.append(deletionManager.getDeletionButton(signedMessage));
+            if (shouldAppendDeleteButton(channel, user, viewer) && signedMessage.canDelete()) {
+                component = component.append(deletionManager.createDeleteButton(signedMessage));
             }
 
             return component;
         }
 
         @NotNull
-        private Component generateBase(@NotNull Channel channel, @NotNull User source) {
+        private Component generateTemplate(@NotNull Channel channel, @NotNull User source) {
             String base = channel.getFormat();
 
             base = base
@@ -134,7 +134,7 @@ public class RendererProvider {
         @NotNull
         private String setPlaceholderAPIPlaceholders(@NotNull Player sender, @NotNull String str) {
             try {
-                return PlaceholderAPI.setPlaceholders(sender, str);
+                return me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(sender, str);
             } catch (NoClassDefFoundError e) {
                 strings.getLogger().warning("Failed to set placeholders for message from " + sender.getName() + ".");
                 return str;
@@ -143,7 +143,7 @@ public class RendererProvider {
 
         private Component setEmojisIfAllowed(@NotNull Player sender, @NotNull Component input) {
             if (emojisEnabled && Permissions.anyOfOrAdmin(sender, "strings.*", "strings.chat.*", "strings.chat.emojis")) {
-                return strings.getEmojiManager().applyEmojis(input);
+                return strings.emojiManager().applyEmojis(input);
             }
             return input;
         }
@@ -158,10 +158,10 @@ public class RendererProvider {
                     Permissions.anyOfOrAdmin(user, "strings.*", "strings.chat.*", "strings.chat.colormsg");
         }
 
-        private boolean shouldAppendDeleteButton(@NotNull Channel channel, @NotNull Player source, @NotNull Audience viewer) {
+        private boolean shouldAppendDeleteButton(@NotNull Channel channel, @NotNull StringsUser source, @NotNull Audience viewer) {
             return channel.allowsMessageDeletion() &&
                     viewer instanceof Player p &&
-                    deletionManager.hasDeletionPermission(source, p);
+                    deletionManager.hasDeletionPermission(source, userUtil.getUser(p));
         }
     }
 }

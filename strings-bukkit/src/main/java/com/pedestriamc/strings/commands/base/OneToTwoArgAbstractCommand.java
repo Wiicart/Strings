@@ -1,12 +1,12 @@
 package com.pedestriamc.strings.commands.base;
 
+import com.pedestriamc.strings.common.channel.impl.HelpOPChannel;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.channel.HelpOPChannel;
 import com.pedestriamc.strings.commands.AbstractCommand;
 import com.pedestriamc.strings.user.User;
 import net.wiicart.commands.permission.Permissions;

@@ -20,8 +20,10 @@ public class PlayerDamageListener implements Listener {
     @EventHandler
     void onEvent(@NotNull EntityDamageEvent event) {
         Entity damaged = event.getEntity();
-        if (damaged instanceof Player player) {
-            userUtil.getUser(player).pushDamageEvent(event);
+        if (damaged instanceof Player player && !player.hasMetadata("NPC")) { // Avoid issues with Citizens
+            try {
+                userUtil.getUser(player).pushDamageEvent(event);
+            } catch (Exception ignored) {}
         }
     }
 

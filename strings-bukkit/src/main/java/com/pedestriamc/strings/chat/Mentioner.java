@@ -3,7 +3,7 @@ package com.pedestriamc.strings.chat;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.settings.Option;
-import com.pedestriamc.strings.configuration.Configuration;
+import com.pedestriamc.strings.bukkit.Configuration;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import net.md_5.bungee.api.ChatColor;
@@ -31,7 +31,7 @@ public final class Mentioner {
     public Mentioner(@NotNull Strings strings) {
         this.userUtil = strings.users();
 
-        Configuration config = strings.getSettings();
+        Configuration config = strings.settings();
         pitch = config.getFloat(Option.Double.MENTION_PITCH);
         volume = config.getFloat(Option.Double.MENTION_VOLUME);
         format = config.getColored(Option.Text.MENTION_TEXT_ACTION_BAR);
@@ -50,7 +50,7 @@ public final class Mentioner {
     }
 
     public void mention(@NotNull Player player, @NotNull Player sender) {
-        if(!userUtil.getUser(player).isMentionsEnabled()) {
+        if(!userUtil.getUser(player).hasMentionsEnabled()) {
             return;
         }
         String str = format;
@@ -63,7 +63,7 @@ public final class Mentioner {
     }
 
     public void mention(@NotNull Set<Player> group, @NotNull Player sender) {
-        group.removeIf(p -> !userUtil.getUser(p).isMentionsEnabled());
+        group.removeIf(p -> !userUtil.getUser(p).hasMentionsEnabled());
 
         String str = format;
         str = str.replace("%sender%", sender.getName());
@@ -98,7 +98,7 @@ public final class Mentioner {
             }
 
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (userUtil.getUser(p).isMentionsEnabled() && segment.contains(p.getName())) {
+                if (userUtil.getUser(p).hasMentionsEnabled() && segment.contains(p.getName())) {
                     String original = "@" + p.getName();
                     String replacement = mentionColor + "@" + p.getName() + ChatColor.RESET + chatColor;
                     segment = segment.replace(original, replacement);
