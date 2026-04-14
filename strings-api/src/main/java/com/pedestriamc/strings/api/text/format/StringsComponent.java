@@ -18,7 +18,7 @@ import java.util.WeakHashMap;
 /**
  * Immutable simple Component wrapper that makes converting to a String easier.
  */
-@SuppressWarnings("unused")
+@Deprecated
 public final class StringsComponent implements ComponentLike {
 
     private static final Set<StringsComponent> instances = Collections

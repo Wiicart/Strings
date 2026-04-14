@@ -51,7 +51,8 @@ public interface Channel extends Comparable<Channel> {
 
     /**
      * Sends a message from a player to the channel.
-     * On Paper servers, this is only called if {@link Channel#callsEvents()} is false.<br/>
+     * On Paper servers, this is only called if {@link Channel#callsEvents()} is false.
+     * <br/>
      * For custom implementations, ensure {@link Channel#getFormat()}, {@link Channel#getRecipients(StringsUser)}, etc.
      * behave as intended, to ensure consistent behavior if this method is not invoked.
      *
@@ -95,8 +96,8 @@ public interface Channel extends Comparable<Channel> {
      */
     Set<StringsUser> getPlayersInScope();
 
-    /**
-     * Broadcasts a message to a Channel.
+     /**
+     * Broadcasts a message to the Channel.
      * Broadcast recipients are determined using {@link Channel#getPlayersInScope()}
      *
      * @param message The broadcast message.
@@ -267,7 +268,9 @@ public interface Channel extends Comparable<Channel> {
     void setAllowMessageDeletion(boolean allowMessageDeletion);
 
     /**
-     * For internal usage - use {@link StringsUser#joinChannel(Channel)} instead.
+     * For internal usage only.
+     * <br/>
+     * Use {@link StringsUser#joinChannel(Channel)} instead.
      * Adds a User to the channel.
      *
      * @param user The User to be added.
@@ -276,7 +279,9 @@ public interface Channel extends Comparable<Channel> {
     void addMember(@NotNull StringsUser user);
 
     /**
-     * For internal usage - use {@link StringsUser#leaveChannel(Channel)} instead.
+     * For internal usage only.
+     * <br/>
+     * Use {@link StringsUser#leaveChannel(Channel)} instead.
      * Removes a player from the Channel.
      *
      * @param user The user to be removed.
@@ -305,8 +310,8 @@ public interface Channel extends Comparable<Channel> {
     Map<String, Object> getData();
 
     /**
-     * Provides the Channel's default {@link Membership} enum.
-     * @return The Channel's Membership enum.
+     * Provides the Channel's {@link Membership} mode.
+     * @return The Channel's Membership mode.
      */
     Membership getMembership();
 
@@ -318,7 +323,7 @@ public interface Channel extends Comparable<Channel> {
     int getPriority();
 
     /**
-     * Returns if a player has permission to use the Channel.
+     * Checks if a player has permission to use this Channel.
      * @param user The player to check
      * @return If the player has permission
      */

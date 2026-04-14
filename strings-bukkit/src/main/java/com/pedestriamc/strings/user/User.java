@@ -15,7 +15,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
@@ -124,6 +123,7 @@ public final class User extends AbstractUser implements Permissible {
             // Relying on audience unreliable for releases.
             player.sendMessage(ComponentConverter.toString(message));
         }
+
     }
 
     @NotNull
@@ -180,10 +180,7 @@ public final class User extends AbstractUser implements Permissible {
 
     @Override
     public @NotNull String getDisplayName() {
-        if (displayName == null || displayName.isEmpty()) {
-            return player.getDisplayName();
-        }
-        return color(displayName);
+        return player.getDisplayName();
     }
 
     @Override
@@ -266,6 +263,21 @@ public final class User extends AbstractUser implements Permissible {
     }
 
     @Override
+    public double getX() {
+        return player.getLocation().getX();
+    }
+
+    @Override
+    public double getY() {
+        return player.getLocation().getY();
+    }
+
+    @Override
+    public double getZ() {
+        return player.getLocation().getZ();
+    }
+
+    @Override
     public boolean hasPermission(@NotNull Permission perm) {
         return player().hasPermission(perm);
     }
@@ -323,23 +335,6 @@ public final class User extends AbstractUser implements Permissible {
     @Contract("_ -> new")
     private @NotNull String color(String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
-    }
-
-    private void callEvent(@NotNull Event event) {
-        strings.sync(
-                () -> strings
-                .getServer()
-                .getPluginManager()
-                .callEvent(event)
-        );
-    }
-
-    @Override
-    public boolean equals(@Nullable Object object) {
-        if (object instanceof User u) {
-            return getUniqueId().equals(u.getUniqueId());
-        }
-        return false;
     }
 
 }

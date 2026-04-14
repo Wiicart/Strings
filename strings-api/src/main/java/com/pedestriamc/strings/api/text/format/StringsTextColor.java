@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
  * Implements Adventure's {@link TextColor} for drop-in compatability with Adventure.
  */
 @SuppressWarnings("unused")
+@Deprecated
 public final class StringsTextColor implements Element<TextColor>, TextColor, Serializable {
     /**
      * Represents black.

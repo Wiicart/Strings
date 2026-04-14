@@ -39,8 +39,9 @@ channels:
     # Channel Type
     # Options:
     # - stringchannel - a server wide channel, messages are sent to every player that is a member.
-    # - proximity - as the name says, proximity
     # - world - a channel that only works for one world
+    # - horizontal_proximity - proximity based solely on x/z distance, NOT height.
+    # - proximity - *3D* proximity, taking into account height.
     # Global MUST be a stringchannel.
     type: stringchannel
 
@@ -149,7 +150,7 @@ channels:
   #  block-urls: false
   #  cooldown: false
   #  distance: 30
-  #  type: proximity
+  #  type: horizontal_proximity
   #  membership: default
   #  worlds:
   #    - "world2"

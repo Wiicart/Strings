@@ -221,32 +221,42 @@ public sealed interface IChannelBuilder<B extends IChannelBuilder<B>> permits Ab
     enum Identifier {
         /**
          * A standard StringChannel.
-         * Corresponds to Type.NORMAL
+         * Corresponds to <code>Type.NORMAL</code>
          */
         NORMAL(false),
         /**
          * A standard WorldChannel.
-         * Corresponds to Type.WORLD
+         * Corresponds to <code>Type.WORLD</code>
          */
         WORLD(true),
         /**
          * A strict WorldChannel.
-         * Corresponds to Type.WORLD
+         * Corresponds to <code>Type.WORLD</code>
          */
         WORLD_STRICT(true),
         /**
          * A standard ProximityChannel.
-         * Corresponds to Type.PROXIMITY
+         * Corresponds to <code>Type.PROXIMITY</code>
          */
         PROXIMITY(true),
         /**
          * A strict ProximityChannel.
-         * Corresponds to Type.PROXIMITY
+         * Corresponds to <code>Type.PROXIMITY</code>
          */
         PROXIMITY_STRICT(true),
         /**
+         * A standard ProximityChannel, using horizontal distance.
+         * Corresponds to <code>Type.PROXIMITY</code>
+         */
+        HORIZONTAL_PROXIMITY(true),
+        /**
+         * A strict ProximityChannel, using horizontal distance.
+         * Corresponds to <code>Type.PROXIMITY</code>
+         */
+        HORIZONTAL_PROXIMITY_STRICT(true),
+        /**
          * A HelpOPChannel.
-         * Corresponds to Type.PROTECTED
+         * Corresponds to <code>Type.PROTECTED</code>
          */
         HELPOP(false);
 
@@ -258,6 +268,8 @@ public sealed interface IChannelBuilder<B extends IChannelBuilder<B>> permits Ab
                 case "world" -> WORLD;
                 case "world_strict" -> WORLD_STRICT;
                 case "helpop" -> HELPOP;
+                case "horizontal_proximity" -> HORIZONTAL_PROXIMITY;
+                case "horizontal_proximity_strict" -> HORIZONTAL_PROXIMITY_STRICT;
                 default -> throw new IllegalArgumentException("Unknown identifier '" + identifier + "'");
             };
         }
@@ -280,6 +292,8 @@ public sealed interface IChannelBuilder<B extends IChannelBuilder<B>> permits Ab
                 case WORLD_STRICT -> "world_strict";
                 case PROXIMITY -> "proximity";
                 case PROXIMITY_STRICT -> "proximity_strict";
+                case HORIZONTAL_PROXIMITY ->  "horizontal_proximity";
+                case HORIZONTAL_PROXIMITY_STRICT -> "horizontal_proximity_strict";
                 case HELPOP -> "helpop";
             };
         }

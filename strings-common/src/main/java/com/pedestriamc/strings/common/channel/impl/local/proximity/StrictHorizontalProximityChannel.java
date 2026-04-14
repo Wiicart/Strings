@@ -1,29 +1,29 @@
-package com.pedestriamc.strings.common.channel.impl.local;
+package com.pedestriamc.strings.common.channel.impl.local.proximity;
 
-import com.pedestriamc.strings.common.channel.base.AbstractLocalChannel;
 import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.user.StringsUser;
+import com.pedestriamc.strings.common.channel.base.AbstractLocalChannel;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.jetbrains.annotations.Unmodifiable;
 
-import static com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import static com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
 
 /**
  * A ProximityChannel that only sends messages to players close enough to the sender.
  * Members are not sent the message by default; to moderate, this Channel can be monitored.
  */
-public class StrictProximityChannel<T> extends AbstractLocalChannel<T> {
+public class StrictHorizontalProximityChannel<T> extends AbstractLocalChannel<T> {
 
-    public static final Identifier IDENTIFIER = Identifier.PROXIMITY_STRICT;
+    public static final Identifier IDENTIFIER = Identifier.HORIZONTAL_PROXIMITY_STRICT;
 
     private double distance;
 
@@ -31,18 +31,18 @@ public class StrictProximityChannel<T> extends AbstractLocalChannel<T> {
     @Range(from = 0, to = Integer.MAX_VALUE)
     private double distanceSquared;
 
-    public StrictProximityChannel(@NotNull StringsPlatform strings, @NotNull LocalChannelBuilder<T> data) {
+    public StrictHorizontalProximityChannel(@NotNull StringsPlatform strings, @NotNull LocalChannelBuilder<T> data) {
         super(strings, data);
         setProximity(data.getDistance());
     }
 
     @Override
     public @NotNull Set<StringsUser> getRecipients(@NotNull StringsUser sender) {
-        HashSet<StringsUser> recipients = new HashSet<>(getMonitors());
+        Set<StringsUser> recipients = new HashSet<>(getMonitors());
 
         Locality<?> senderWorld = sender.getLocality();
         for (StringsUser user : senderWorld.getUsers()) {
-            if (sender.distanceSquared(user) < distanceSquared) {
+            if (sender.horizontalDistanceSquared(user) < distanceSquared) {
                 recipients.add(user);
             }
         }

@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * Represents a style/color RESET, like Bukkit/Bungee's ChatColor.RESET
  */
 @ApiStatus.Internal
+@Deprecated
 final class StringsTextReset implements Element<Component> {
 
     // The sole instance of this class, for use in StringsTextDecoration

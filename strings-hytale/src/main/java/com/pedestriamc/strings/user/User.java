@@ -1,6 +1,5 @@
 package com.pedestriamc.strings.user;
 
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -88,6 +87,21 @@ public class User extends AbstractUser {
     public Locality<?> getLocality() {
         World world = strings.universe().getWorld(player.getUuid());
         return strings.localityManager().get(world);
+    }
+
+    @Override
+    public double getX() {
+        return 0;
+    }
+
+    @Override
+    public double getY() {
+        return 0;
+    }
+
+    @Override
+    public double getZ() {
+        return 0;
     }
 
     @Override

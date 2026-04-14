@@ -6,7 +6,7 @@ import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.common.channel.impl.local.proximity.StrictProximityChannel;
+import com.pedestriamc.strings.common.channel.impl.local.proximity.StrictHorizontalProximityChannel;
 import com.pedestriamc.strings.common.mock.MockLocality;
 import com.pedestriamc.strings.common.mock.environment.Environment;
 import org.junit.jupiter.api.Disabled;
@@ -19,11 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class StrictProximityChannelTest extends AbstractProximityChannelTest {
+class StrictHorizontalProximityChannelTest extends AbstractHorizontalProximityChannelTest {
 
     @Override
     LocalChannel<?> buildLocalChannel(StringsPlatform strings, LocalChannelBuilder<?> builder) {
-        return new StrictProximityChannel<>(strings, builder);
+        return new StrictHorizontalProximityChannel<>(strings, builder);
     }
 
     @Override
@@ -35,7 +35,7 @@ class StrictProximityChannelTest extends AbstractProximityChannelTest {
                 Set.of(new MockLocality())
         );
 
-        return new StrictProximityChannel<>(strings, builder);
+        return new StrictHorizontalProximityChannel<>(strings, builder);
     }
 
     @Test
@@ -58,7 +58,7 @@ class StrictProximityChannelTest extends AbstractProximityChannelTest {
                 .withUsers(member)
                 .build();
 
-        StrictProximityChannel<?> channel = new StrictProximityChannel<>(strings, builder);
+        StrictHorizontalProximityChannel<?> channel = new StrictHorizontalProximityChannel<>(strings, builder);
         channel.addMember(member);
         when(member.getActiveChannel()).thenReturn(channel);
         when(member.getChannels()).thenReturn(Set.of(channel));
@@ -88,7 +88,7 @@ class StrictProximityChannelTest extends AbstractProximityChannelTest {
                 .withUsers(member, sender)
                 .build();
 
-        StrictProximityChannel<?> channel = new StrictProximityChannel<>(strings, builder);
+        StrictHorizontalProximityChannel<?> channel = new StrictHorizontalProximityChannel<>(strings, builder);
         channel.addMember(member);
 
         assertEquals(Set.of(sender), channel.getRecipients(sender));

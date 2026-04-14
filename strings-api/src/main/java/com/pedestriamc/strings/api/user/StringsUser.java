@@ -324,16 +324,51 @@ public interface StringsUser extends Source {
     boolean isOperator();
 
     /**
-     * Gets the distance squared between two users.<br/>
-     * If the Users are in different worlds, {@link Double#MAX_VALUE} will be returned.
+     * Gets the 3D distance squared between two users.<br/>
+     * If the Users are in different localities, {@link Double#MAX_VALUE} will be returned.
      * @param user The user to compare distance to.
      * @return The distance squared. or {@link Double#MAX_VALUE}
      */
     double distanceSquared(@NotNull StringsUser user);
 
     /**
+     * Provides the horizontal distance squared between two users, disregarding the y-axis.
+     * If the Users are in different localities, {@link Double#MAX_VALUE} will be returned.
+     * @param user The user to compare horizontal distance to.
+     * @return The horizontal distance squared between the users.
+     */
+    default double horizontalDistanceSquared(@NotNull StringsUser user) {
+        if (!this.getLocality().equals(user.getLocality())) {
+            return Double.MAX_VALUE;
+        }
+
+        double dx = this.getX() - user.getX();
+        double dz = this.getZ() - user.getZ();
+
+        return (dx * dx + dz * dz);
+    }
+
+    /**
      * Provides the {@link Locality} the User is currently in.
      * @return The current Locality.
      */
     Locality<?> getLocality();
+
+    /**
+     * Provides the x-coordinate of this User.
+     * @return The current x-coordinate.
+     */
+    double getX();
+
+    /**
+     * Provides the y-coordinate of this User.
+     * @return The current y-coordinate.
+     */
+    double getY();
+
+    /**
+     * Provides the z-coordinate of this User.
+     * @return The current z-coordinate.
+     */
+    double getZ();
 }

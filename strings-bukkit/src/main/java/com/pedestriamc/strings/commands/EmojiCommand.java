@@ -5,6 +5,7 @@ import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.EmojiManager;
 import com.pedestriamc.strings.bukkit.Configuration;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -41,9 +42,14 @@ public class EmojiCommand extends AbstractCommand implements CartCommandExecutor
         if (!hasPermission(sender)) {
             sendMessage(Message.NO_PERMS, sender);
         } else {
-            strings().adventure()
-                    .sender(sender)
-                    .sendMessage(message);
+            // BukkitAudiences not always reliable in new releases, directly send when possible
+            if (strings().isPaper()) {
+                ((Audience) sender).sendMessage(message);
+            } else {
+                strings().adventure()
+                        .sender(sender)
+                        .sendMessage(message);
+            }
         }
     }
 

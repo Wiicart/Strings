@@ -16,6 +16,7 @@ import com.pedestriamc.strings.bukkit.BukkitPlatformAdapter;
 import com.pedestriamc.strings.bukkit.ServerSource;
 import com.pedestriamc.strings.bukkit.StringsBukkitEventManager;
 import com.pedestriamc.strings.bukkit.locality.BukkitLocalityManager;
+import com.pedestriamc.strings.misc.Analytics;
 import com.pedestriamc.strings.placeholder.StringsPlaceholderExpansion;
 import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.chat.Mentioner;
@@ -85,6 +86,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     private StringsBukkitEventManager eventDispatcher;
     private BukkitEventFactory eventFactory;
     private BukkitLocalityManager localityManager;
+    private Analytics analytics;
 
     public Strings() {
         super();
@@ -96,6 +98,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
 
         fileManager = new BukkitFileManager(this);
         info("FileManager loaded.");
+
         userUtil = new YamlUserUtil(this);
         info("UserUtil loaded.");
 
@@ -131,6 +134,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         mentioner = null;
         logManager = null;
         fileManager = null;
+        analytics = null;
 
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
@@ -158,6 +162,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
 
     private void loadMetrics() {
         Metrics metrics = new Metrics(this, METRICS_ID);
+        analytics = new Analytics(this);
         metrics.addCustomChart(new SimplePie("distributor", () -> DISTRIBUTOR));
         metrics.addCustomChart(new SimplePie(
                 "using_stringsapi",
@@ -171,6 +176,18 @@ public final class Strings extends JavaPlugin implements CommonStrings {
                 "using_stringsdiscord",
                 () -> String.valueOf(getServer().getPluginManager().getPlugin("StringsDiscord") != null)
         ));
+        metrics.addCustomChart(new SimplePie(
+                "using_local_channels",
+                () -> String.valueOf(analytics.isUsingLocalChannels()))
+        );
+        metrics.addCustomChart(new SimplePie(
+                "using_world_channels",
+                () -> String.valueOf(analytics.isUsingWorldChannels()))
+        );
+        metrics.addCustomChart(new SimplePie(
+                "using_proximity_channels",
+                () -> String.valueOf(analytics.isUsingProximityChannels()))
+        );
     }
 
     private void logOutAll() {
@@ -421,5 +438,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     public void warning(@NotNull Object message) {
         warning(message.toString());
     }
+
+    public void severe(@NotNull String message) { getLogger().severe(message); }
 
 }

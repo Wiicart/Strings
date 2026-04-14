@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.common.channel.impl.local;
+package com.pedestriamc.strings.common.channel.impl.local.world;
 
 import com.pedestriamc.strings.common.channel.base.AbstractLocalChannel;
 import com.pedestriamc.strings.api.StringsPlatform;
@@ -27,7 +27,7 @@ public class WorldChannel<T> extends AbstractLocalChannel<T> {
 
     @Override
     public @NotNull Set<StringsUser> getRecipients(@NotNull StringsUser sender) {
-        HashSet<StringsUser> recipients = new HashSet<>(getMembers());
+        Set<StringsUser> recipients = new HashSet<>(getMembers());
         recipients.addAll(getMonitors());
 
         for (Locality<T> locality : getWorlds()) {

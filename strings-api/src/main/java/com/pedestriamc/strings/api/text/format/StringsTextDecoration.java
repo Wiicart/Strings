@@ -18,6 +18,7 @@ import java.util.Map;
  * Use {@link #toAdventure()} to get the Adventure TextDecoration.
  */
 @SuppressWarnings("unused")
+@Deprecated
 public enum StringsTextDecoration implements Element<TextDecoration> {
     /**
      * Represents bold.

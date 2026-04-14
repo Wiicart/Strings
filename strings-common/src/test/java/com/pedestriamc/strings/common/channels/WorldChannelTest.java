@@ -5,7 +5,7 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
-import com.pedestriamc.strings.common.channel.impl.local.WorldChannel;
+import com.pedestriamc.strings.common.channel.impl.local.world.WorldChannel;
 import com.pedestriamc.strings.common.mock.MockLocality;
 
 import java.util.Set;

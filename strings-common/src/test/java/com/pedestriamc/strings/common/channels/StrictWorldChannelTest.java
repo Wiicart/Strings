@@ -6,7 +6,7 @@ import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.common.channel.impl.local.StrictWorldChannel;
+import com.pedestriamc.strings.common.channel.impl.local.world.StrictWorldChannel;
 import com.pedestriamc.strings.common.mock.MockLocality;
 import com.pedestriamc.strings.common.mock.environment.Environment;
 import org.junit.jupiter.api.Disabled;

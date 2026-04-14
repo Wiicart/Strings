@@ -50,6 +50,7 @@
                                 <goal>shade</goal>
                             </goals>
                             <configuration>
+                                <minimizeJar>true</minimizeJar>
                                 <createDependencyReducedPom>false</createDependencyReducedPom>
                                 <relocations>
                                     <relocation>
@@ -79,10 +80,6 @@
                                     <relocation>
                                         <pattern>org.apache.commons.codec</pattern>
                                         <shadedPattern>com.pedestriamc.strings.libs.commons.codec</shadedPattern>
-                                    </relocation>
-                                    <relocation>
-                                        <pattern>net.kyori</pattern>
-                                        <shadedPattern>com.pedestriamc.strings.libs.kyori</shadedPattern>
                                     </relocation>
                                     <relocation>
                                         <pattern>com.google.gson</pattern>

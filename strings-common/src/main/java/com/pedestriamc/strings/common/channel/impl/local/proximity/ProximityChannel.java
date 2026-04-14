@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.common.channel.impl.local;
+package com.pedestriamc.strings.common.channel.impl.local.proximity;
 
 import com.pedestriamc.strings.common.channel.base.AbstractLocalChannel;
 import com.pedestriamc.strings.api.StringsPlatform;

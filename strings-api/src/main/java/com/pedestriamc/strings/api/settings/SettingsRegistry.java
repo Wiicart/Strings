@@ -47,7 +47,7 @@ public final class SettingsRegistry {
      * Used to construct a SettingsRegistry.
      * Null keys and values are not permitted.
      */
-    public static sealed class Builder {
+    public static final class Builder {
 
         private final Map<Class<?>, EnumMap<? extends Key<?>, ?>> master = new HashMap<>();
 
@@ -71,7 +71,7 @@ public final class SettingsRegistry {
          * @param <V> The value type
          */
         @SuppressWarnings("unchecked")
-        public <E extends Enum<E> & Key<V>, V> Map<E, V> computeMapIfAbsent(Class<E> clazz) {
+        private <E extends Enum<E> & Key<V>, V> Map<E, V> computeMapIfAbsent(Class<E> clazz) {
             return (Map<E, V>) this.master.computeIfAbsent(clazz, v -> new EnumMap<>(clazz));
         }
 
@@ -143,8 +143,4 @@ public final class SettingsRegistry {
         }
     }
 
-    @Deprecated
-    public static final class RegistryBuilder extends Builder {
-
-    }
 }

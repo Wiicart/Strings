@@ -29,7 +29,8 @@ import java.util.Set;
 final class ChannelFileReader {
     
     private static final Set<Identifier> LOCAL_TYPES = Set.of(
-            Identifier.WORLD, Identifier.WORLD_STRICT, Identifier.PROXIMITY, Identifier.PROXIMITY_STRICT
+            Identifier.WORLD, Identifier.WORLD_STRICT, Identifier.PROXIMITY,
+            Identifier.PROXIMITY_STRICT, Identifier.HORIZONTAL_PROXIMITY, Identifier.HORIZONTAL_PROXIMITY_STRICT
     );
 
     private final Strings strings;
@@ -46,8 +47,8 @@ final class ChannelFileReader {
         this.localityManager = strings.localityManager();
 
         ConfigurationSection channels = config.getConfigurationSection("channels");
-        if(channels == null) {
-            strings.warning("No Channels defined in channels.yml, disabling plugin.");
+        if (channels == null) {
+            strings.severe("No Channels defined in channels.yml, disabling plugin.");
             strings.getServer().getPluginManager().disablePlugin(strings);
             return;
         }
@@ -152,7 +153,8 @@ final class ChannelFileReader {
     }
 
     private boolean isProximity(@NotNull Identifier identifier) {
-        return identifier == Identifier.PROXIMITY || identifier == Identifier.PROXIMITY_STRICT;
+        return identifier == Identifier.PROXIMITY || identifier == Identifier.PROXIMITY_STRICT
+                || identifier == Identifier.HORIZONTAL_PROXIMITY || identifier == Identifier.HORIZONTAL_PROXIMITY_STRICT;
     }
 
     private double getDistance(@NotNull ConfigurationSection section) {

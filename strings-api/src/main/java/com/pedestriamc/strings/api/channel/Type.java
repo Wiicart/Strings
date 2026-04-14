@@ -4,7 +4,7 @@ import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.api.user.StringsUser;
 
 /**
- * Represents all {@link Channel} types.
+ * Represents all {@link Channel} types, signifying Channel behavior.
  */
 public enum Type {
     /**
@@ -16,11 +16,11 @@ public enum Type {
      */
     NORMAL(),
     /**
-     * Represents all types of {@code ProximityChannel}, which are instances of {@link LocalChannel}
+     * Represents all {@code ProximityChannel} implementations, which are instances of {@link LocalChannel}
      */
     PROXIMITY(),
     /**
-     * Represents all types of {@code WorldChannel}, which are instances of {@link LocalChannel}
+     * Represents all {@code WorldChannel} implementations, which are instances of {@link LocalChannel}
      */
     WORLD(),
     /**

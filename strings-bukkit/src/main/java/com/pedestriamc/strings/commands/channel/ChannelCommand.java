@@ -14,6 +14,7 @@ public class ChannelCommand extends CommandTree {
                     ListCommand command = new ListCommand(strings);
                     builder.getWorkbench().store("list", () -> command);
                     builder.executes(new RootCommand(strings, command));
+                    builder.withAliases("set");
                 })
                 .withChild("list", b -> b.executes("list"))
                 .withChild("join", b -> {

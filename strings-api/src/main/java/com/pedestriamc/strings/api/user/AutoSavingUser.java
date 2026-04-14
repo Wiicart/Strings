@@ -269,6 +269,21 @@ final class AutoSavingUser implements StringsUser {
     }
 
     @Override
+    public double getX() {
+        return user.getX();
+    }
+
+    @Override
+    public double getY() {
+        return user.getY();
+    }
+
+    @Override
+    public double getZ() {
+        return user.getZ();
+    }
+
+    @Override
     public void sendMessage(@NotNull String message) {
         user.sendMessage(message);
     }
