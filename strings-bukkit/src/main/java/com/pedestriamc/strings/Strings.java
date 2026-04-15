@@ -439,6 +439,8 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         warning(message.toString());
     }
 
-    public void severe(@NotNull String message) { getLogger().severe(message); }
+    public void severe(@NotNull String message) {
+        getLogger().severe(message);
+    }
 
 }

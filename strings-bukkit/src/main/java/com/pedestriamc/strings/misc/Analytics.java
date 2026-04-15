@@ -6,44 +6,53 @@ import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Set;
+
 /**
  * Class with methods for simplifying bStats analytics.
  */
 public class Analytics {
 
-    private final Strings strings;
+    private boolean isUsingLocalChannels = false;
+
+    private boolean isUsingProximityChannels = false;
+
+    private boolean isUsingWorldChannels = false;
+
 
     public Analytics(@NotNull Strings strings) {
-        this.strings = strings;
+        Set<Channel> channels = strings.getChannelLoader().getChannels();
+
+        for (Channel channel : channels) {
+            if (channel instanceof LocalChannel<?>) {
+                isUsingLocalChannels = true;
+                break;
+            }
+        }
+
+        for (Channel channel : channels) {
+            if (channel.getType() == Type.PROXIMITY) {
+                isUsingProximityChannels = true;
+                break;
+            }
+        }
+
+        for (Channel channel : channels) {
+            if (channel.getType() == Type.WORLD) {
+                isUsingWorldChannels = true;
+            }
+        }
     }
 
     public boolean isUsingLocalChannels() {
-        for (Channel channel : strings.getChannelLoader().getChannels()) {
-            if (channel instanceof LocalChannel<?>) {
-                return true;
-            }
-        }
-
-        return false;
+        return isUsingLocalChannels;
     }
 
     public boolean isUsingProximityChannels() {
-        for (Channel channel : strings.getChannelLoader().getChannels()) {
-            if (channel.getType() == Type.PROXIMITY) {
-                 return true;
-            }
-        }
-
-        return false;
+        return isUsingProximityChannels;
     }
 
     public boolean isUsingWorldChannels() {
-        for (Channel channel : strings.getChannelLoader().getChannels()) {
-            if (channel.getType() == Type.WORLD) {
-                return true;
-            }
-        }
-
-        return false;
+        return isUsingWorldChannels;
     }
 }
