@@ -23,21 +23,21 @@ class UnmuteCommand extends OneToTwoArgAbstractCommand implements CartCommandExe
         CommandSender sender = data.sender();
         String[] args = data.args();
 
-        if(checkArgCountAndNotify(sender, args.length)) {
+        if (checkArgCountAndNotify(sender, args.length)) {
             return;
         }
 
         Channel channel = getChannel(sender, args[0]);
-        if(channel == null) {
+        if (channel == null) {
             return;
         }
 
         User target = getTarget(sender, args);
-        if(target == null) {
+        if (target == null) {
             return;
         }
 
-        if(isNotMuted(sender, target, channel)) {
+        if (isNotMuted(sender, target, channel)) {
             return;
         }
 
