@@ -34,6 +34,11 @@ class BroadcastCommand extends OneToTwoArgAbstractCommand implements CartCommand
             return;
         }
 
+        // Standard getChannel checks do not include the default channel
+        if (isDefaultChannel(sender, channel)) {
+            return;
+        }
+
         if (doesNotHaveBroadcastPermission(sender, channel)) {
             return;
         }

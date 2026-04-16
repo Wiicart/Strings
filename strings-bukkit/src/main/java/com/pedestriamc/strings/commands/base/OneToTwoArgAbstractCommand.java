@@ -36,13 +36,24 @@ public abstract class OneToTwoArgAbstractCommand extends AbstractCommand {
             return null;
         }
 
-        if(channel.getType() == Type.PROTECTED || (channel instanceof HelpOPChannel)) {
+        if (channel.getType() == Type.PROTECTED || (channel instanceof HelpOPChannel)) {
             sendMessage(PROTECTED_CHANNEL_UNSUPPORTED_OPERATION, sender);
             return null;
         }
 
         return channel;
     }
+
+    // Checks if this chanel is the default channel and returns true if it is, telling the user the command is unsupported.
+    protected boolean isDefaultChannel(@NotNull CommandSender sender, @NotNull Channel channel) {
+        boolean isDefault = channel.getType() == Type.DEFAULT;
+        if (isDefault) {
+            sendMessage(PROTECTED_CHANNEL_UNSUPPORTED_OPERATION, sender);
+        }
+
+        return isDefault;
+    }
+
 
     protected @Nullable Channel getChannelAndCheckAllows(@NotNull CommandSender sender, @NotNull String channelName) {
         Channel channel = getChannel(sender, channelName);
