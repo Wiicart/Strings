@@ -4,16 +4,17 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Set;
 
 /**
- * A Channel interface for {@code WorldChannel} and {@code ProximityChannel}.
- * This interface provides methods unique to these classes.
- * {@link #getProximity()} and {@link #setProximity(double)} are only supported by {@code ProximityChannel} instances.
- * To check this, you can call {@link #getType()} before calling these methods.
+ * Universal methods for LocalChannels.
+ * LocalChannels are defined within a specific scope of one or more {@link Locality}(s).
+ * @param <T> The platform "locality" (world) type.
+ * @see ProximityChannel
+ * @see WorldChannel
+ * @see Locality
  */
 @SuppressWarnings("unused")
 public interface LocalChannel<T> extends Channel {
@@ -49,9 +50,8 @@ public interface LocalChannel<T> extends Channel {
     Set<? extends Locality<T>> getWorlds();
 
     /**
-     * Sets the Worlds this LocalChannel contains.
-     * Channel implementations use a copy of the provided Set,
-     * so updates made to the provided Set after invocation will not be reflected.
+     * Updates the worlds within the scope of this channel.
+     * Channels will use a copy of this set, so any changes made within the provided Set may not be reflected.
      *
      * @param worlds The Set of Worlds the Channel should contain.
      */
@@ -75,20 +75,10 @@ public interface LocalChannel<T> extends Channel {
     boolean containsLocality(@NotNull Locality<?> locality);
 
     /**
-     * If this is an instance of a {@code ProximityChannel}, this will provide the proximity the Channel is set to.
-     * Check if this is an instance of ProximityChannel with {@link LocalChannel#getType()}
-     * @return A double of the proximity (max distance for players to receive a message).
-     * @throws UnsupportedOperationException If this is an instance of a {@code WorldChannel}, this exception will be thrown.
-     * Before calling, check {@link LocalChannel#getType()}
+     * Tells if this channel is {@code strict}.<br/>
+     * Strict LocalChannel variants give no special treatment to channel members,
+     * as standard local channels do.
+     * @return If this channel is strict.
      */
-    @Range(from = -1, to = Integer.MAX_VALUE)
-    double getProximity() throws UnsupportedOperationException;
-
-    /**
-     * Sets the Proximity of the Channel if it's an instance of {@code ProximityChannel}.
-     * Check if this is an instance of {@code ProximityChannel} with {@link LocalChannel#getType()}
-     * @param proximity The proximity to set the Channel to
-     * @throws UnsupportedOperationException If the Channel is not an instance of {@code ProximityChannel}
-     */
-    void setProximity(@Range(from = -1, to = Integer.MAX_VALUE) double proximity) throws UnsupportedOperationException;
+    boolean isStrict();
 }

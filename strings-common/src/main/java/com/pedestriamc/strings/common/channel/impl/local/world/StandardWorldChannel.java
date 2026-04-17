@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.common.channel.impl.local.world;
 
+import com.pedestriamc.strings.api.channel.local.WorldChannel;
 import com.pedestriamc.strings.common.channel.base.AbstractLocalChannel;
 import com.pedestriamc.strings.api.StringsPlatform;
-import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.user.StringsUser;
@@ -17,11 +17,11 @@ import java.util.Set;
  * Channel implementation that focuses on one or more Worlds(s) on the server.
  * Expected to be used with the DefaultChannel
  */
-public class WorldChannel<T> extends AbstractLocalChannel<T> {
+public class StandardWorldChannel<T> extends AbstractLocalChannel<T> implements WorldChannel<T> {
 
     public static final Identifier IDENTIFIER = Identifier.WORLD;
 
-    public WorldChannel(StringsPlatform strings, LocalChannelBuilder<T> builder) {
+    public StandardWorldChannel(StringsPlatform strings, LocalChannelBuilder<T> builder) {
         super(strings, builder);
     }
 
@@ -46,21 +46,8 @@ public class WorldChannel<T> extends AbstractLocalChannel<T> {
     }
 
     @Override
-    public @NotNull Type getType() {
-        return Type.WORLD;
+    public boolean isStrict() {
+        return false;
     }
-
-    // N/A to this implementation, UnsupportedOperationException always thrown.
-    @Override
-    public double getProximity() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("getProximity() called on WorldChannel instance, which is unsupported.");
-    }
-
-    // N/A to this implementation, UnsupportedOperationException always thrown.
-    @Override
-    public void setProximity(double proximity) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("setProximity() called on WorldChannel instance, which is unsupported.");
-    }
-
 }
 

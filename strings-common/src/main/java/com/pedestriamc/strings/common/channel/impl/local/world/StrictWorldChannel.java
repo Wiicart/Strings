@@ -1,20 +1,17 @@
 package com.pedestriamc.strings.common.channel.impl.local.world;
 
+import com.pedestriamc.strings.api.channel.local.WorldChannel;
 import com.pedestriamc.strings.common.channel.base.AbstractLocalChannel;
 import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.user.StringsUser;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 
 import static com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,7 +19,7 @@ import java.util.Set;
  * Players must either be in the scope (one of the Worlds of the Channel)
  * or be a monitor to be eligible via {@link Channel#allows(StringsUser)}
  */
-public class StrictWorldChannel<T> extends AbstractLocalChannel<T> {
+public class StrictWorldChannel<T> extends AbstractLocalChannel<T> implements WorldChannel<T> {
 
     public static final Identifier IDENTIFIER = Identifier.WORLD_STRICT;
 
@@ -54,24 +51,8 @@ public class StrictWorldChannel<T> extends AbstractLocalChannel<T> {
     }
 
     @Override
-    public @NotNull Type getType() {
-        return Type.WORLD;
+    public boolean isStrict() {
+        return true;
     }
 
-    @Contract(" -> new")
-    private @NotNull @Unmodifiable Map<String, String> getPlaceholders() {
-        return Map.of("{channel}", getName());
-    }
-
-    // N/A to this implementation, UnsupportedOperationException always thrown.
-    @Override
-    public double getProximity() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("getProximity() called on WorldChannel instance, which is unsupported.");
-    }
-
-    // N/A to this implementation, UnsupportedOperationException always thrown.
-    @Override
-    public void setProximity(double proximity) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("setProximity() called on WorldChannel instance, which is unsupported.");
-    }
 }

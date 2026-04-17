@@ -5,7 +5,7 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
-import com.pedestriamc.strings.common.channel.impl.local.proximity.ProximityChannel;
+import com.pedestriamc.strings.common.channel.impl.local.proximity.SphericalProximityChannel;
 import com.pedestriamc.strings.common.mock.MockLocality;
 
 import java.util.Set;
@@ -14,7 +14,7 @@ class ProximityChannelTest extends AbstractProximityChannelTest {
 
     @Override
     LocalChannel<?> buildLocalChannel(StringsPlatform strings, LocalChannelBuilder<?> builder) {
-        return new ProximityChannel<>(strings, builder);
+        return new SphericalProximityChannel<>(strings, builder);
     }
 
     @Override
@@ -26,6 +26,6 @@ class ProximityChannelTest extends AbstractProximityChannelTest {
                 Set.of(new MockLocality())
         );
 
-        return new ProximityChannel<>(strings, builder);
+        return new SphericalProximityChannel<>(strings, builder);
     }
 }

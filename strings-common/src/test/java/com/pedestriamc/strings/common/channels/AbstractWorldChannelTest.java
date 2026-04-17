@@ -5,7 +5,7 @@ import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.common.channel.impl.local.world.WorldChannel;
+import com.pedestriamc.strings.common.channel.impl.local.world.StandardWorldChannel;
 import com.pedestriamc.strings.common.mock.MockLocality;
 import com.pedestriamc.strings.common.mock.environment.Environment;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests for {@link WorldChannel}
+ * Tests for {@link StandardWorldChannel}
  */
 abstract class AbstractWorldChannelTest extends AbstractChannelTest {
 
@@ -121,7 +121,7 @@ abstract class AbstractWorldChannelTest extends AbstractChannelTest {
     }
 
     /**
-     * Tests {@link WorldChannel} recipient resolution.
+     * Tests {@link StandardWorldChannel} recipient resolution.
      * Users 1 and 2 are in locality A, while User 3 is in locality B.
      */
     @Test

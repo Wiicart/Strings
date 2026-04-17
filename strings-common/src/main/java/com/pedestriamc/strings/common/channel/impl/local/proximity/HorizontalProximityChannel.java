@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.common.channel.impl.local.proximity;
 
+import com.pedestriamc.strings.api.channel.local.ProximityChannel;
 import com.pedestriamc.strings.common.channel.base.AbstractLocalChannel;
 import com.pedestriamc.strings.api.StringsPlatform;
-import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.user.StringsUser;
@@ -20,7 +20,7 @@ import java.util.Set;
  * Worlds this Channel is effective in must be defined.
  * Expected to be used with the DefaultChannel
  */
-public class HorizontalProximityChannel<T> extends AbstractLocalChannel<T> {
+public class HorizontalProximityChannel<T> extends AbstractLocalChannel<T> implements ProximityChannel<T> {
 
     public static final Identifier IDENTIFIER = Identifier.HORIZONTAL_PROXIMITY;
 
@@ -65,11 +65,6 @@ public class HorizontalProximityChannel<T> extends AbstractLocalChannel<T> {
     }
 
     @Override
-    public @NotNull Type getType() {
-        return Type.PROXIMITY;
-    }
-
-    @Override
     public Map<String, Object> getData() {
         Map<String, Object> map = super.getData();
         map.put("distance", String.valueOf(distance));
@@ -87,4 +82,13 @@ public class HorizontalProximityChannel<T> extends AbstractLocalChannel<T> {
         distanceSquared = distance * distance;
     }
 
+    @Override
+    public @NotNull Proximity proximityType() {
+        return Proximity.HORIZONTAL;
+    }
+
+    @Override
+    public boolean isStrict() {
+        return false;
+    }
 }

@@ -1,15 +1,13 @@
 package com.pedestriamc.strings.common.channel.impl.local.proximity;
 
+import com.pedestriamc.strings.api.channel.local.ProximityChannel;
 import com.pedestriamc.strings.common.channel.base.AbstractLocalChannel;
 import com.pedestriamc.strings.api.StringsPlatform;
-import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.user.StringsUser;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
-import org.jetbrains.annotations.Unmodifiable;
 
 import static com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
 
@@ -21,7 +19,7 @@ import java.util.Set;
  * A ProximityChannel that only sends messages to players close enough to the sender.
  * Members are not sent the message by default; to moderate, this Channel can be monitored.
  */
-public class StrictProximityChannel<T> extends AbstractLocalChannel<T> {
+public class StrictSphericalProximityChannel<T> extends AbstractLocalChannel<T> implements ProximityChannel<T> {
 
     public static final Identifier IDENTIFIER = Identifier.PROXIMITY_STRICT;
 
@@ -31,7 +29,7 @@ public class StrictProximityChannel<T> extends AbstractLocalChannel<T> {
     @Range(from = 0, to = Integer.MAX_VALUE)
     private double distanceSquared;
 
-    public StrictProximityChannel(@NotNull StringsPlatform strings, @NotNull LocalChannelBuilder<T> data) {
+    public StrictSphericalProximityChannel(@NotNull StringsPlatform strings, @NotNull LocalChannelBuilder<T> data) {
         super(strings, data);
         setProximity(data.getDistance());
     }
@@ -63,24 +61,33 @@ public class StrictProximityChannel<T> extends AbstractLocalChannel<T> {
         return containsInScope(user) && super.allows(user);
     }
 
-    @Override
-    public @NotNull Type getType() {
-        return Type.PROXIMITY;
-    }
 
-    @Contract(" -> new")
-    private @NotNull @Unmodifiable Map<String, String> getPlaceholders() {
-        return Map.of("{channel}", getName());
-    }
-
+    @Range(from = -1, to = Integer.MAX_VALUE)
     @Override
-    public @Range(from = -1, to = Integer.MAX_VALUE) double getProximity() throws UnsupportedOperationException {
+    public double getProximity() {
         return distance;
     }
 
     @Override
-    public void setProximity(@Range(from = -1, to = Integer.MAX_VALUE) double proximity) throws UnsupportedOperationException {
+    public void setProximity(@Range(from = -1, to = Integer.MAX_VALUE) double proximity) {
         distance = proximity;
         distanceSquared = proximity * proximity;
+    }
+
+    @Override
+    public @NotNull Proximity proximityType() {
+        return Proximity.HORIZONTAL;
+    }
+
+    @Override
+    public Map<String, Object> getData() {
+        Map<String, Object> map = super.getData();
+        map.put("distance", String.valueOf(distance));
+        return map;
+    }
+
+    @Override
+    public boolean isStrict() {
+        return true;
     }
 }

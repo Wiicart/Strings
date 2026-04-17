@@ -2,9 +2,9 @@ package com.pedestriamc.strings.chat.channel;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.Channel;
-import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.api.channel.local.Locality;
+import com.pedestriamc.strings.api.channel.local.ProximityChannel;
 import com.pedestriamc.strings.common.channel.AbstractChannelLoader;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,9 +43,8 @@ public class ChannelManager extends AbstractChannelLoader {
                     .map(Locality::getName)
                     .toList();
 
-            Type type = channel.getType();
-            if (type == Type.PROXIMITY) {
-                entry.proximity = ((LocalChannel<?>) channel).getProximity();
+            if (channel instanceof ProximityChannel<?> proximity) {
+                entry.proximity = proximity.getProximity();
             }
         }
 

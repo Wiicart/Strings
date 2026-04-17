@@ -6,7 +6,7 @@ import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.LocalChannel;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.common.channel.impl.local.proximity.StrictProximityChannel;
+import com.pedestriamc.strings.common.channel.impl.local.proximity.StrictSphericalProximityChannel;
 import com.pedestriamc.strings.common.mock.MockLocality;
 import com.pedestriamc.strings.common.mock.environment.Environment;
 import org.junit.jupiter.api.Disabled;
@@ -23,7 +23,7 @@ class StrictProximityChannelTest extends AbstractProximityChannelTest {
 
     @Override
     LocalChannel<?> buildLocalChannel(StringsPlatform strings, LocalChannelBuilder<?> builder) {
-        return new StrictProximityChannel<>(strings, builder);
+        return new StrictSphericalProximityChannel<>(strings, builder);
     }
 
     @Override
@@ -35,7 +35,7 @@ class StrictProximityChannelTest extends AbstractProximityChannelTest {
                 Set.of(new MockLocality())
         );
 
-        return new StrictProximityChannel<>(strings, builder);
+        return new StrictSphericalProximityChannel<>(strings, builder);
     }
 
     @Test
@@ -58,7 +58,7 @@ class StrictProximityChannelTest extends AbstractProximityChannelTest {
                 .withUsers(member)
                 .build();
 
-        StrictProximityChannel<?> channel = new StrictProximityChannel<>(strings, builder);
+        StrictSphericalProximityChannel<?> channel = new StrictSphericalProximityChannel<>(strings, builder);
         channel.addMember(member);
         when(member.getActiveChannel()).thenReturn(channel);
         when(member.getChannels()).thenReturn(Set.of(channel));
@@ -88,7 +88,7 @@ class StrictProximityChannelTest extends AbstractProximityChannelTest {
                 .withUsers(member, sender)
                 .build();
 
-        StrictProximityChannel<?> channel = new StrictProximityChannel<>(strings, builder);
+        StrictSphericalProximityChannel<?> channel = new StrictSphericalProximityChannel<>(strings, builder);
         channel.addMember(member);
 
         assertEquals(Set.of(sender), channel.getRecipients(sender));

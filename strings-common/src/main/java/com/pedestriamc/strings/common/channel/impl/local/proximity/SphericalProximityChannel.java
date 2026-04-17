@@ -1,8 +1,8 @@
 package com.pedestriamc.strings.common.channel.impl.local.proximity;
 
+import com.pedestriamc.strings.api.channel.local.ProximityChannel;
 import com.pedestriamc.strings.common.channel.base.AbstractLocalChannel;
 import com.pedestriamc.strings.api.StringsPlatform;
-import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.user.StringsUser;
@@ -20,17 +20,16 @@ import java.util.Set;
  * Worlds this Channel is effective in must be defined.
  * Expected to be used with the DefaultChannel
  */
-public class ProximityChannel<T> extends AbstractLocalChannel<T> {
+public class SphericalProximityChannel<T> extends AbstractLocalChannel<T> implements ProximityChannel<T> {
 
     public static final Identifier IDENTIFIER = Identifier.PROXIMITY;
 
     @Range(from = -1, to = Integer.MAX_VALUE)
     private double distance;
 
-    // for more efficient calculations.
     private double distanceSquared;
 
-    public ProximityChannel(StringsPlatform strings, LocalChannelBuilder<T> builder) {
+    public SphericalProximityChannel(StringsPlatform strings, LocalChannelBuilder<T> builder) {
         super(strings, builder);
         distance = builder.getDistance();
         distanceSquared = distance * distance;
@@ -65,18 +64,6 @@ public class ProximityChannel<T> extends AbstractLocalChannel<T> {
     }
 
     @Override
-    public @NotNull Type getType() {
-        return Type.PROXIMITY;
-    }
-
-    @Override
-    public Map<String, Object> getData() {
-        Map<String, Object> map = super.getData();
-        map.put("distance", String.valueOf(distance));
-        return map;
-    }
-
-    @Override
     public double getProximity() {
         return distance;
     }
@@ -87,4 +74,20 @@ public class ProximityChannel<T> extends AbstractLocalChannel<T> {
         distanceSquared = distance * distance;
     }
 
+    @Override
+    public @NotNull Proximity proximityType() {
+        return Proximity.SPHERICAL;
+    }
+
+    @Override
+    public Map<String, Object> getData() {
+        Map<String, Object> map = super.getData();
+        map.put("distance", String.valueOf(distance));
+        return map;
+    }
+
+    @Override
+    public boolean isStrict() {
+        return false;
+    }
 }
