@@ -46,25 +46,16 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Registers CommandExecutors and Listeners
  */
-public class ClassRegistryManager {
+public class ClassRegistrar {
 
     private final Strings strings;
 
-    private ClassRegistryManager(Strings strings) {
+    public ClassRegistrar(Strings strings) {
         this.strings = strings;
     }
 
-    /**
-     * Registers CommandExecutors and Listeners
-     * @param strings Strings instance
-     */
-    public static void register(Strings strings) {
-        ClassRegistryManager manager = new ClassRegistryManager(strings);
-        manager.registerCommands();
-        manager.registerListeners();
-    }
 
-    private void registerCommands() {
+    public void registerCommands() {
         Configuration config = strings.settings();
 
         registerCommand("strings", new StringsCommand(strings), new StringsTabCompleter());
@@ -95,7 +86,7 @@ public class ClassRegistryManager {
         registerCommand("mention", mentionCommand, mentionCommandTabCompleter);
         registerCommand("mentions", mentionCommand, mentionCommandTabCompleter);
 
-        if(config.get(Option.Bool.ENABLE_DIRECT_MESSAGES)) {
+        if (config.get(Option.Bool.ENABLE_DIRECT_MESSAGES)) {
             DirectMessageCommand directMessageCommand = new DirectMessageCommand(strings);
             MessageTabCompleter messageTabCompleter = new MessageTabCompleter();
             registerCommand("msg", directMessageCommand, messageTabCompleter);
@@ -129,7 +120,7 @@ public class ClassRegistryManager {
                     null
             );
         } else {
-            if(!config.get(Option.Bool.DISABLE_HELPOP_COMMAND)) {
+            if (!config.get(Option.Bool.DISABLE_HELPOP_COMMAND)) {
                 registerCommand(
                         "helpop",
                         new MessengerCommand(strings, Message.HELPOP_DISABLED), null
@@ -147,11 +138,12 @@ public class ClassRegistryManager {
 
     private void registerCommand(@NotNull String commandName, @NotNull CommandExecutor executor, @Nullable TabCompleter tabCompleter) {
         var command = strings.getCommand(commandName);
-        if(command == null) {
+        if (command == null) {
             return;
         }
+
         command.setExecutor(executor);
-        if(tabCompleter != null) {
+        if (tabCompleter != null) {
             command.setTabCompleter(tabCompleter);
         }
     }
@@ -159,8 +151,8 @@ public class ClassRegistryManager {
     /**
      * Registers Listeners for Strings.
      */
-    private void registerListeners() {
-        if(strings.isPaper()) {
+    public void registerListeners() {
+        if (strings.isPaper()) {
             registerListener(new PaperChatListener(strings));
         } else {
             registerListener(new SpigotChatListener(strings));
@@ -172,8 +164,8 @@ public class ClassRegistryManager {
         registerListener(new PlayerDeathListener(strings));
         registerListener(new PlayerDamageListener(strings));
 
-        if(strings.settings().get(Option.Bool.ENABLE_MENTIONS)) {
-            if(strings.isUsingLuckPerms()) {
+        if (strings.settings().get(Option.Bool.ENABLE_MENTIONS)) {
+            if (strings.isUsingLuckPerms()) {
                 registerListener(new LuckPermsMentionListener(strings));
             } else {
                 registerListener(new MentionListener(strings));

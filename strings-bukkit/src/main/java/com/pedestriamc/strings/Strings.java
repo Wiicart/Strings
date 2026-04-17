@@ -24,7 +24,7 @@ import com.pedestriamc.strings.bukkit.Configuration;
 import com.pedestriamc.strings.bukkit.StringsImpl;
 import com.pedestriamc.strings.log.LogManager;
 import com.pedestriamc.strings.bukkit.BukkitMessenger;
-import com.pedestriamc.strings.manager.ClassRegistryManager;
+import com.pedestriamc.strings.manager.ClassRegistrar;
 import com.pedestriamc.strings.manager.BukkitFileManager;
 import com.pedestriamc.strings.misc.AutoBroadcasts;
 import com.pedestriamc.strings.misc.ServerMessages;
@@ -115,7 +115,11 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         logManager = new LogManager(this);
         this.setupVault();
         channelLoader.loadChannels();
-        ClassRegistryManager.register(this);
+
+        ClassRegistrar registry = new ClassRegistrar(this);
+        registry.registerCommands();
+        registry.registerListeners();
+
         checkIfReload();
         checkForUpdate();
         instantiateObjectsTwo();
