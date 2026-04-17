@@ -33,6 +33,9 @@ bringing lots of customizability to your Minecraft server's chat.
 - Moderation 
 - Mentions
 - Discord Support
+- Emojis
+- Customizable Death Messages
+- Message Deletion
 
 And much more!
 
