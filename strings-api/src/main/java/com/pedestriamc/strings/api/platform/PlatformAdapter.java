@@ -1,6 +1,5 @@
 package com.pedestriamc.strings.api.platform;
 
-import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.user.StringsUser;
 import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.ApiStatus.Internal;
@@ -27,7 +26,9 @@ public interface PlatformAdapter {
         return getOnlineUsers().stream()
                 .filter(user -> user.getName().equalsIgnoreCase(name))
                 .toList()
-                .getFirst();
+                .stream()
+                .findFirst()
+                .orElse(null);
     }
 
     String colorHex(@NotNull String input);
@@ -39,9 +40,6 @@ public interface PlatformAdapter {
     String stripBukkitColor(@NotNull String input);
 
     String applyPlaceholders(@NotNull StringsUser source, @NotNull String input);
-
-    // Ideally move over to common module, does not need to be platform-specific
-    String processMentions(@NotNull StringsUser sender, @NotNull Channel channel, @NotNull String str);
 
     String setPlaceholders(@NotNull StringsUser user, @NotNull String input);
 

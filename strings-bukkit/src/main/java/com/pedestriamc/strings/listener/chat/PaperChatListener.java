@@ -8,6 +8,7 @@ import com.pedestriamc.strings.api.platform.EventFactory;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.paper.RendererProvider;
+import com.pedestriamc.strings.chat.paper.RendererProvider.ChannelChatRenderer;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -58,8 +59,8 @@ public class PaperChatListener extends AbstractChatListener {
 
         // Let the Channel process the message independently if the Channel does not allow Events being called.
         if (!channel.callsEvents()) {
-            channel.sendMessage(sender, ComponentConverter.toString(event.message()));
             event.setCancelled(true);
+            channel.sendMessage(sender, ComponentConverter.toString(event.message()));
             return;
         }
 
@@ -71,9 +72,13 @@ public class PaperChatListener extends AbstractChatListener {
             event.viewers().add((Audience) User.playerOf(recipient));
         }
 
-        event.renderer(provider.renderer(channel, event.signedMessage()));
+
+        ChannelChatRenderer renderer = provider.renderer(event, channel, event.signedMessage(), recipients);
+        event.renderer(renderer);
 
         callEvent(sender, route.message(), recipients, channel, event.signedMessage());
+
+        strings.mentioner().mention(renderer.mentionedPlayers(), sender);
     }
 
     // Calls a non-cancellable ChannelChatEvent

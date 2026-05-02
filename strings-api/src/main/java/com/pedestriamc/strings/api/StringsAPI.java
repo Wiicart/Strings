@@ -3,6 +3,7 @@ package com.pedestriamc.strings.api;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.discord.StringsDiscord;
 import com.pedestriamc.strings.api.event.strings.EventManager;
+import com.pedestriamc.strings.api.managers.Mentioner;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.moderation.StringsModeration;
 import com.pedestriamc.strings.api.settings.Settings;
@@ -53,22 +54,31 @@ public interface StringsAPI {
     boolean isPaper();
 
     /**
+     * Deprecated, use {@link StringsAPI#getMentioner()} instead.<br/>
      * Mentions a Player.
      * Uses the format found in the Strings config.yml
      * @param subject The StringsUser object of the player to be mentioned.
      * @param sender The StringsUser object of the sender of the mention.
      */
+    @Deprecated(forRemoval = true)
     void mention(@NotNull StringsUser subject, @NotNull StringsUser sender);
 
     /**
+     * Deprecated, use {@link StringsAPI#getMentioner()} instead.<br/>
      * Mentions a Player.
      * Sends a message to the Player's action bar, and plays the mention Sound.
      *
      * @param user The Player to mention
      * @param message The message to display in the Player's actionbar.
      */
+    @Deprecated(forRemoval = true)
     void sendMention(@NotNull StringsUser user, @NotNull String message);
 
+    /**
+     * Provides the {@link Mentioner} instance.
+     * @return The Mentioner.
+     */
+    @NotNull Mentioner getMentioner();
     /**
      * Provides the {@link Messenger} instance
      * @return The Strings Messenger instance

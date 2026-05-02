@@ -3,21 +3,24 @@ package com.pedestriamc.strings.chat.paper;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.managers.Mentioner;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.MessageUtilities;
-import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.bukkit.Configuration;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import io.papermc.paper.chat.ChatRenderer;
+import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.Component;
 import net.wiicart.commands.permission.Permissions;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
 
 @Platform.Paper
 public class RendererProvider {
@@ -37,7 +40,7 @@ public class RendererProvider {
         this.strings = strings;
         userUtil = strings.users();
         deletionManager = new DeletionManager(strings);
-        mentioner = strings.getMentioner();
+        mentioner = strings.mentioner();
 
         Configuration config = strings.settings();
         mentionsEnabled = config.get(Option.Bool.ENABLE_MENTIONS);
@@ -47,54 +50,80 @@ public class RendererProvider {
     }
 
     @NotNull
-    public ChatRenderer renderer(@NotNull Channel channel, @NotNull SignedMessage signedMessage) {
-        return new ChannelChatRenderer(channel, signedMessage);
+    public ChannelChatRenderer renderer(
+            @NotNull AsyncChatEvent event,
+            @NotNull Channel channel,
+            @NotNull SignedMessage signedMessage,
+            @NotNull Set<StringsUser> recipients
+    ) {
+        return new ChannelChatRenderer(event, channel, signedMessage, recipients);
     }
 
 
-    private final class ChannelChatRenderer implements ChatRenderer {
+    public final class ChannelChatRenderer implements ChatRenderer {
 
         private final Channel channel;
         private final SignedMessage signedMessage;
+        private final StringsUser sender;
+        private Mentioner.ChatProcessor mentionProcessor;
+        private Component base;
 
-        ChannelChatRenderer(@NotNull Channel channel, @NotNull SignedMessage signedMessage) {
+        ChannelChatRenderer(
+                @NotNull AsyncChatEvent event,
+                @NotNull Channel channel,
+                @NotNull SignedMessage signedMessage,
+                @NotNull Set<StringsUser> recipients
+        ) {
             this.channel = channel;
             this.signedMessage = signedMessage;
+            sender = userUtil.getUser(event.getPlayer());
+
+            base = generateTemplate(channel, (User) sender);
+            base = insertMessage(base, event.message(), channel, (User) sender);
+
+            if (mentionsEnabled) {
+                mentionProcessor = mentioner.processor(sender, base, recipients);
+            }
         }
 
         @Override
         @NotNull
         public Component render(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {
-            User user = userUtil.getUser(source);
-
-            Component component;
-            component = generateTemplate(channel, user);
-            component = insertMessage(component, message, channel, user);
-
-            if (shouldAppendDeleteButton(channel, user, viewer) && signedMessage.canDelete()) {
-                component = component.append(deletionManager.createDeleteButton(signedMessage));
+            Component result = base;
+            if (!(viewer instanceof Player player)) {
+                return result;
             }
 
-            return component;
+            StringsUser recipient = userUtil.getUser(player);
+
+            if (mentionsEnabled) {
+                result = mentionProcessor.processMentions(recipient);
+            }
+
+            if (shouldAppendDeleteButton(channel, sender, recipient) && signedMessage.canDelete()) {
+                result = result.append(deletionManager.createDeleteButton(signedMessage));
+            }
+
+            return result;
         }
 
         @NotNull
         private Component generateTemplate(@NotNull Channel channel, @NotNull User source) {
-            String base = channel.getFormat();
+            String baseString = channel.getFormat();
 
-            base = base
+            baseString = baseString
                     .replace("{prefix}", source.getPrefix())
                     .replace("{suffix}", source.getSuffix())
                     .replace("{displayname}", source.getDisplayName());
 
             if (strings.isUsingPlaceholderAPI()) {
-                base = setPlaceholderAPIPlaceholders(source.player(), base);
+                baseString = setPlaceholderAPIPlaceholders(source.player(), baseString);
             }
 
-            base = MessageUtilities.colorHex(base);
-            base = MessageUtilities.translateColorCodes(base);
+            baseString = MessageUtilities.colorHex(baseString);
+            baseString = MessageUtilities.translateColorCodes(baseString);
 
-            return ComponentConverter.fromString(base);
+            return ComponentConverter.fromString(baseString);
         }
 
         @NotNull
@@ -112,10 +141,6 @@ public class RendererProvider {
                 msg = MessageUtilities.translateColorCodes(msg);
             }
 
-            if (mentionsEnabled && Mentioner.hasMentionPermission(player)) {
-                msg = mentioner.processMentions(player, channel, msg);
-            }
-
             String string = source.getChatColor() + msg;
             Component messageComponent = ComponentConverter.fromString(string);
 
@@ -129,6 +154,10 @@ public class RendererProvider {
             );
 
             return finalComponent;
+        }
+
+        public Set<StringsUser> mentionedPlayers() {
+            return mentionProcessor.mentionedUsers();
         }
 
         @NotNull
@@ -158,10 +187,9 @@ public class RendererProvider {
                     Permissions.anyOfOrAdmin(user, "strings.*", "strings.chat.*", "strings.chat.colormsg");
         }
 
-        private boolean shouldAppendDeleteButton(@NotNull Channel channel, @NotNull StringsUser source, @NotNull Audience viewer) {
+        private boolean shouldAppendDeleteButton(@NotNull Channel channel, @NotNull StringsUser sender, @NotNull StringsUser viewer) {
             return channel.allowsMessageDeletion() &&
-                    viewer instanceof Player p &&
-                    deletionManager.hasDeletionPermission(source, userUtil.getUser(p));
+                    deletionManager.hasDeletionPermission(sender, viewer);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.common.chat;
 
+import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.common.util.PermissionChecker;
 import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.Channel;
@@ -71,7 +72,7 @@ public class MessageProcessor {
         }
 
         if (shouldHandleMentions(sender)) {
-            message = adapter.processMentions(sender, channel, message);
+            message = ComponentConverter.toString(strings.mentioner().processMentions(sender, ComponentConverter.fromString(message)));
         }
 
         return message;

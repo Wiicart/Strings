@@ -3,7 +3,6 @@ package com.pedestriamc.strings.config;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.settings.SettingsRegistry;
@@ -34,13 +33,11 @@ public class Configuration implements Settings {
 
 
     SettingsRegistry build() {
-        return new SettingsRegistry(builder -> {
+        return new SettingsRegistry(builder ->
             builder.putAll(Map.of(
                     Option.Bool.USE_PAPI, usePlaceholderAPI
-            ));
-
-
-        });
+            ))
+        );
     }
 
     @Override
@@ -49,7 +46,7 @@ public class Configuration implements Settings {
     }
 
     @Override
-    public Component getComponent(Option.@NotNull Text option) {
+    public @NotNull Component getComponent(Option.@NotNull Text option) {
         throw new UnsupportedOperationException("Components not supported in Hytale.");
     }
 

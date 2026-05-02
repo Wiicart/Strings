@@ -37,6 +37,7 @@ public interface Settings {
      * @return The String as a component
      * @throws UnsupportedOperationException In Hytale environments.
      */
+    @NotNull
     Component getComponent(@NotNull Option.Text option);
 
 }

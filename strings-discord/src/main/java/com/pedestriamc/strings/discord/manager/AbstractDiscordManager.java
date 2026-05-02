@@ -213,7 +213,7 @@ abstract class AbstractDiscordManager implements DiscordManager {
             StringsAPI api = StringsProvider.get();
             for (Player player : Bukkit.getOnlinePlayers()) {
                 StringsUser target = api.getUser(player.getUniqueId());
-                if(string.contains("@" + player.getName()) && target != null) {
+                if (string.contains("@" + player.getName()) && target != null) {
                     String mention = discordToGameMentionFormat.
                             replace("{username}", sender.getUser().getName())
                             .replace("{nickname}", sender.getEffectiveName());

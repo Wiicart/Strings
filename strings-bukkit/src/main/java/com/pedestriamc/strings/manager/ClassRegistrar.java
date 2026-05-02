@@ -27,8 +27,6 @@ import com.pedestriamc.strings.listener.player.PlayerDamageListener;
 import com.pedestriamc.strings.listener.player.PlayerDeathListener;
 import com.pedestriamc.strings.listener.player.PlayerJoinListener;
 import com.pedestriamc.strings.listener.player.PlayerQuitListener;
-import com.pedestriamc.strings.listener.mention.LuckPermsMentionListener;
-import com.pedestriamc.strings.listener.mention.MentionListener;
 import com.pedestriamc.strings.tabcompleters.ChannelTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ChatColorTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ClearChatTabCompleter;
@@ -163,14 +161,6 @@ public class ClassRegistrar {
         registerListener(new DirectMessageListener(strings));
         registerListener(new PlayerDeathListener(strings));
         registerListener(new PlayerDamageListener(strings));
-
-        if (strings.settings().get(Option.Bool.ENABLE_MENTIONS)) {
-            if (strings.isUsingLuckPerms()) {
-                registerListener(new LuckPermsMentionListener(strings));
-            } else {
-                registerListener(new MentionListener(strings));
-            }
-        }
     }
 
     private void registerListener(Listener listener) {

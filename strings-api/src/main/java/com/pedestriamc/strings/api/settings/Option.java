@@ -66,9 +66,10 @@ public final class Option {
         JOIN_MESSAGE("join-message", "&8[&a+&8] &f{username} &7has joined the server."),
         LEAVE_MESSAGE("leave-message", "&8[&4-&8] &f{username} &7has left the server."),
         BROADCAST_FORMAT("broadcast-format", "&8[&3Broadcast&8] &f"),
-        MENTION_IN_CHAT_FORMAT("mention-chat-format", "&7"),
+        @Deprecated MENTION_IN_CHAT_FORMAT("mention-chat-format", "&7"),
+        MENTION_COLOR_OTHER("mention-color-other", "#aaaaaa"),
         MENTION_COLOR("mention-color", "#FFFF55"),
-        MENTION_TEXT_ACTION_BAR("mention-format","&e%sender% mentioned you."),
+        MENTION_TEXT_ACTION_BAR("mention-format","<yellow>%sender% mentioned you.</yellow>"),
         MENTION_SOUND("mention-sound", "block.note_block.pling"),
         DELETION_BUTTON_FORMAT("deletion-button", "<dark_gray>[<red>×</red>]</dark_gray>"),
         DELETION_BUTTON_HOVER("deletion-hover", "<red>Click to delete the message.</red>"),
@@ -131,6 +132,7 @@ public final class Option {
 
     public enum StringList implements CoreKey<List<String>> {
         MENTION_TEXT_DECORATIONS("mention-decorations", List.of("italic")),
+        MENTION_TEXT_DECORATIONS_OTHER("mention-decorations-other", List.of("italic")),
         MOTD("motd", List.of("&fWelcome to the server, {username}!", "&fHave fun!")),
         @From(path = "emojis/emoji-config.yml")
         TEXTURED_EMOJIS("textured-list", List.of());

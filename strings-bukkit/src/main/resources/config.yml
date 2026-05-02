@@ -178,11 +178,24 @@ mention-decorations:
 #  - "underlined"
 #  - "strikethrough"
 
+# Mention Color if not mentioned
+# Legitimate mentions that are not mentioning this player will appear this color.
+mention-color-other: "#aaaaaa"
+
+# Mention Decorations if not mentioned:
+# Legitimate mentions that are not mentioning this player will have these styles.
+mention-decorations-other:
+  - "italic"
+#  - "bold"
+#  - "underlined"
+#  - "strikethrough"
+
 # Mention Format:
 # This text will show up in the mentioned player's action bar.
+# (!) Uses MiniMessage
 # Available Placeholders:
 # - %sender% - who mentioned you?
-mention-format: "&e%sender% mentioned you."
+mention-format: "<yellow>%sender% mentioned you.</yellow>"
 
 # Mention Sound:
 # The sound that is played to mentioned players.

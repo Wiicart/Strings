@@ -6,6 +6,7 @@ import com.pedestriamc.strings.api.channel.local.LocalityManager;
 import com.pedestriamc.strings.api.command.Source;
 import com.pedestriamc.strings.api.event.strings.EventManager;
 import com.pedestriamc.strings.api.files.FileManager;
+import com.pedestriamc.strings.api.managers.Mentioner;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.platform.EventFactory;
 import com.pedestriamc.strings.api.platform.PlatformAdapter;
@@ -39,6 +40,7 @@ public class Environment implements StringsPlatform {
     private final EmojiManager emojiManager;
     private final LocalityManager<?> localityManager;
     private final Messenger messenger;
+    private final Mentioner mentioner;
 
     Environment(EnvironmentBuilder builder) {
         settings = MockSettings.SETTINGS;
@@ -56,6 +58,7 @@ public class Environment implements StringsPlatform {
         emojiManager = mock(EmojiManager.class);
         localityManager = mock(LocalityManager.class);
         messenger = mock(Messenger.class);
+        mentioner = mock(Mentioner.class);
     }
 
     @Override
@@ -111,6 +114,11 @@ public class Environment implements StringsPlatform {
     @Override
     public @NotNull Messenger messenger() {
         return messenger;
+    }
+
+    @Override
+    public @NotNull Mentioner mentioner() {
+        return mentioner;
     }
 
     @Override

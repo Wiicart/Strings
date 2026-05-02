@@ -138,6 +138,9 @@ public final class User extends AbstractUser implements Permissible {
 
     @Override
     public @NotNull Audience audience() {
+        if (player instanceof Audience a) {
+            return a;
+        }
         return strings.adventure().player(player());
     }
 
@@ -154,7 +157,7 @@ public final class User extends AbstractUser implements Permissible {
     @NotNull
     @Override
     public String getChatColor() {
-        return color(getChatColorComponent().toString());
+        return bukkitColor(getChatColorComponent().toString());
     }
 
     /**
@@ -195,12 +198,12 @@ public final class User extends AbstractUser implements Permissible {
     @Override
     public @NotNull String getPrefix() {
         if (strings.isUsingVault()) {
-            return color(strings.getVaultChat().getPlayerPrefix(player));
+            return bukkitColor(strings.getVaultChat().getPlayerPrefix(player));
         } else {
             if (prefix == null || prefix.isEmpty()) {
                 return "";
             }
-            return color(prefix);
+            return bukkitColor(prefix);
         }
     }
 
@@ -216,12 +219,12 @@ public final class User extends AbstractUser implements Permissible {
     @Override
     public @NotNull String getSuffix() {
         if (strings.isUsingVault()) {
-            return color(strings.getVaultChat().getPlayerSuffix(player));
+            return bukkitColor(strings.getVaultChat().getPlayerSuffix(player));
         } else {
             if (suffix == null || suffix.isEmpty()) {
                 return "";
             }
-            return color(suffix);
+            return bukkitColor(suffix);
         }
     }
 
@@ -332,8 +335,22 @@ public final class User extends AbstractUser implements Permissible {
         player.setOp(value);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof User u) {
+            return this.getUniqueId().equals(u.getUniqueId());
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getUniqueId().hashCode();
+    }
+
     @Contract("_ -> new")
-    private @NotNull String color(String string) {
+    private @NotNull String bukkitColor(String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 

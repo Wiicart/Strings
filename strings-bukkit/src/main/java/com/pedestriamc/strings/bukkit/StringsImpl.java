@@ -4,11 +4,12 @@ import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.channel.ChannelLoader;
 import com.pedestriamc.strings.api.*;
 import com.pedestriamc.strings.api.event.strings.EventManager;
+import com.pedestriamc.strings.api.managers.Mentioner;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.text.EmojiManager;
+import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,7 @@ public final class StringsImpl implements StringsAPI {
 
     public StringsImpl(@NotNull Strings strings) {
         this.strings = strings;
-        mentioner = strings.getMentioner();
+        mentioner = strings.mentioner();
         userUtil = strings.users();
     }
 
@@ -48,13 +49,20 @@ public final class StringsImpl implements StringsAPI {
     }
 
     @Override
+    @Deprecated
     public void mention(@NotNull StringsUser subject, @NotNull StringsUser sender) {
-        mentioner.mention(User.playerOf(subject), User.playerOf(sender));
+        getMentioner().mention(subject, sender);
     }
 
     @Override
-    public void sendMention(@NotNull StringsUser subject, @NotNull String message) {
-        mentioner.sendMention(User.playerOf(subject), message);
+    @Deprecated
+    public void sendMention(@NotNull StringsUser user, @NotNull String message) {
+        user.audience().sendActionBar(ComponentConverter.fromString(message));
+    }
+
+    @Override
+    public @NotNull Mentioner getMentioner() {
+        return mentioner;
     }
 
     @Override

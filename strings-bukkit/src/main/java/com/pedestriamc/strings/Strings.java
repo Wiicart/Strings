@@ -1,6 +1,8 @@
 package com.pedestriamc.strings;
 
+import com.pedestriamc.strings.api.managers.Mentioner;
 import com.pedestriamc.strings.common.CommonStrings;
+import com.pedestriamc.strings.common.chat.StringsMentioner;
 import com.pedestriamc.strings.common.event.StringsEventManager;
 import com.pedestriamc.strings.api.APIRegistrar;
 import com.pedestriamc.strings.api.channel.data.BuildableRegistrar;
@@ -19,7 +21,6 @@ import com.pedestriamc.strings.bukkit.locality.BukkitLocalityManager;
 import com.pedestriamc.strings.misc.Analytics;
 import com.pedestriamc.strings.placeholder.StringsPlaceholderExpansion;
 import com.pedestriamc.strings.chat.ChannelManager;
-import com.pedestriamc.strings.chat.Mentioner;
 import com.pedestriamc.strings.bukkit.Configuration;
 import com.pedestriamc.strings.bukkit.StringsImpl;
 import com.pedestriamc.strings.log.LogManager;
@@ -225,7 +226,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         directMessageManager = new DirectMessageManager(this);
         channelLoader = new ChannelManager(this);
         serverMessages = new ServerMessages(this);
-        mentioner = new Mentioner(this);
+        mentioner = new StringsMentioner(this);
 
         if (settings().get(Option.Bool.ENABLE_EMOJI_REPLACEMENT)) {
             emojiManager = new EmojiProvider(this);
@@ -302,10 +303,12 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         }
     }
 
+    @Override
     public void async(@NotNull Runnable runnable) {
         getServer().getScheduler().runTaskAsynchronously(this, runnable);
     }
 
+    @Override
     public void sync(@NotNull Runnable runnable) {
         getServer().getScheduler().runTask(this, runnable);
     }
@@ -320,10 +323,12 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         return string;
     }
 
+    @Override
     public @NotNull BukkitFileManager files() {
         return fileManager;
     }
 
+    @Override
     public @NotNull UserUtil users() {
         return userUtil;
     }
@@ -332,6 +337,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         return chat;
     }
 
+    @Override
     public boolean isUsingPlaceholderAPI() {
         return usingPlaceholderAPI;
     }
@@ -348,10 +354,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         return isPaper;
     }
 
-    public @NotNull Mentioner getMentioner() {
-        return mentioner;
-    }
-
+    @Override
     public @NotNull ChannelManager getChannelLoader() {
         return channelLoader;
     }
@@ -360,12 +363,19 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         return serverMessages;
     }
 
+    @Override
     public @NotNull DirectMessageManager getDirectMessageManager() {
         return directMessageManager;
     }
 
+    @Override
     public @NotNull BukkitMessenger messenger() {
         return messenger;
+    }
+
+    @Override
+    public @NotNull Mentioner mentioner() {
+        return mentioner;
     }
 
     @Override

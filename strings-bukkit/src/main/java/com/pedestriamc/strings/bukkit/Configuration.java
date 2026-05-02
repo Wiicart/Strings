@@ -49,6 +49,7 @@ public class Configuration implements Settings {
     public Component getComponent(@NotNull Option.Text option) {
         String raw = get(option);
         raw = ChatColor.translateAlternateColorCodes('&', raw);
+        raw = ChatColor.stripColor(raw);
         return MiniMessage.miniMessage().deserialize(raw);
     }
 

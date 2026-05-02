@@ -1,7 +1,6 @@
 package com.pedestriamc.strings.bukkit;
 
 import com.pedestriamc.strings.Strings;
-import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.platform.PlatformAdapter;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.MessageUtilities;
@@ -68,11 +67,6 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
         } catch (NoClassDefFoundError e) {
             return input;
         }
-    }
-
-    @Override
-    public String processMentions(@NotNull StringsUser sender, @NotNull Channel channel, @NotNull String str) {
-        return strings.getMentioner().processMentions(User.playerOf(sender), channel, str);
     }
 
     @Override

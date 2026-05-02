@@ -19,7 +19,7 @@ public class MockSettings implements Settings {
     }
 
     @Override
-    public Component getComponent(Option.@NotNull Text option) {
+    public @NotNull Component getComponent(Option.@NotNull Text option) {
         return Component.text(option.defaultValue());
     }
 }

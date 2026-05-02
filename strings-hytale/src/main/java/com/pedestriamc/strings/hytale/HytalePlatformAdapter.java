@@ -55,11 +55,6 @@ public class HytalePlatformAdapter implements PlatformAdapter {
     }
 
     @Override
-    public String processMentions(@NotNull StringsUser sender, @NotNull Channel channel, @NotNull String str) {
-        return "";
-    }
-
-    @Override
     public String setPlaceholders(@NotNull StringsUser user, @NotNull String input) {
         return "";
     }

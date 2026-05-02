@@ -35,6 +35,10 @@ public interface StringsUser extends Source {
         return new AutoSavingUser(user);
     }
 
+    /**
+     * Provides an auto-saving view of this User.
+     * @return An auto-saving view of this.
+     */
     default StringsUser autoSaving() {
         return autoSaving(this);
     }

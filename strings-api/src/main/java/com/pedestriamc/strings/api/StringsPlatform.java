@@ -5,6 +5,7 @@ import com.pedestriamc.strings.api.channel.local.LocalityManager;
 import com.pedestriamc.strings.api.command.Source;
 import com.pedestriamc.strings.api.event.strings.EventManager;
 import com.pedestriamc.strings.api.files.FileManager;
+import com.pedestriamc.strings.api.managers.Mentioner;
 import com.pedestriamc.strings.api.message.Messenger;
 import com.pedestriamc.strings.api.platform.EventFactory;
 import com.pedestriamc.strings.api.platform.PlatformAdapter;
@@ -39,6 +40,8 @@ public interface StringsPlatform {
     @NotNull LocalityManager<?> localityManager();
 
     @NotNull Messenger messenger();
+
+    @NotNull Mentioner mentioner();
 
     void async(@NotNull Runnable runnable);
 
