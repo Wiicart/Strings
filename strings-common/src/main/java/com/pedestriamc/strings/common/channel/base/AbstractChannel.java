@@ -96,7 +96,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
                 false,
                 true,
                 user,
-                message,
+                ComponentConverter.fromString(message),
                 recipients,
                 this,
                 null

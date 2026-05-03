@@ -19,6 +19,12 @@ public interface EventManager {
     void unsubscribe(@NotNull Object... listeners);
 
     /**
+     * Unregisters all listeners registered by this plugin, by checking against ClassLoaders.
+     * @param plugin The plugin or an object created by the plugin.
+     */
+    void unsubscribeAll(@NotNull Object plugin);
+
+    /**
      * Dispatches a {@link StringsEvent}
      * @param event The event to dispatch
      */

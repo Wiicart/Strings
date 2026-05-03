@@ -36,8 +36,12 @@ public class RepetitionManager {
         enabled = config.get(Option.Bool.FORBID_REPETITION);
         ignoreSpaces = config.get(Option.Bool.IGNORE_SPACES_FOR_REPETITION);
 
-        String cooldownString = config.get(Option.Text.COOLDOWN_DURATION);
-        cooldownLength = StringsModeration.calculateTicks(cooldownString);
+        String cooldownString = config.get(Option.Text.REPETITION_COOLDOWN);
+        if (cooldownString.equals("-1")) {
+            cooldownLength = -1;
+        } else {
+            cooldownLength = StringsModeration.calculateTicks(cooldownString);
+        }
     }
 
     public void setPreviousMessage(StringsUser user, String message) {
@@ -46,20 +50,25 @@ public class RepetitionManager {
     }
 
     public boolean isRepeating(StringsUser user, String message) {
-        if(!enabled) {
+        if (!enabled) {
             return false;
         }
+
+        message = message.strip();
 
         PreviousMessage prev = map.get(user);
-        if(prev == null || prev.getPrevious() == null) {
+        if (prev == null || prev.getPrevious() == null) {
             return false;
         }
 
-        if(ignoreSpaces) {
+        String previousMessage = prev.getPrevious();
+
+        if (ignoreSpaces) {
             message = message.replace(" ", "");
+            previousMessage = previousMessage.replace(" ", "");
         }
 
-        return prev.getPrevious().equals(message);
+        return previousMessage.equals(message);
     }
 
     public void logOut(StringsUser user) {
@@ -93,9 +102,9 @@ public class RepetitionManager {
          * @param cooldown The tick length of the timer for cooldown.
          */
         public void setPrevious(@NotNull String previous, long cooldown) {
-            String previousMessage = previous.strip().trim();
+            String previousMessage = previous.strip();
             this.previous = previousMessage;
-            if(cooldown > -1) {
+            if (cooldown > -1) {
                 Bukkit.getScheduler().runTaskLater(stringsModeration, () -> removeIfCurrent(previousMessage), cooldown);
             }
         }
@@ -110,7 +119,7 @@ public class RepetitionManager {
          */
         public void removeIfCurrent(String message) {
             String prev = getPrevious();
-            if(prev != null && prev.equals(message)) {
+            if (prev != null && prev.equals(message)) {
                 previous = null;
             }
         }

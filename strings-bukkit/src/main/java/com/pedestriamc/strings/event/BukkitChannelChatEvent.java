@@ -2,8 +2,10 @@ package com.pedestriamc.strings.event;
 
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.event.ChannelChatEvent;
+import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.user.StringsUser;
 import net.kyori.adventure.chat.SignedMessage;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -16,14 +18,14 @@ public class BukkitChannelChatEvent implements ChannelChatEvent {
     private final Channel channel;
     private final SignedMessage signedMessage;
 
-    private String message;
+    private Component message;
     private boolean isCancelled = false;
 
     public BukkitChannelChatEvent(
             boolean async,
             boolean cancellable,
             @NotNull StringsUser sender,
-            @NotNull String message,
+            @NotNull Component message,
             @NotNull Set<StringsUser> recipients,
             @NotNull Channel channel
     ) {
@@ -38,7 +40,7 @@ public class BukkitChannelChatEvent implements ChannelChatEvent {
             boolean async,
             boolean cancellable,
             @NotNull StringsUser sender,
-            @NotNull String message,
+            @NotNull Component message,
             @NotNull Set<StringsUser> recipients,
             @NotNull Channel channel,
             SignedMessage signedMessage
@@ -70,11 +72,21 @@ public class BukkitChannelChatEvent implements ChannelChatEvent {
 
     @Override
     public @NotNull String getMessage() {
-        return message;
+        return ComponentConverter.toString(message);
     }
 
     @Override
     public void setMessage(@NotNull String message) {
+        this.message = ComponentConverter.fromString(message);
+    }
+
+    @Override
+    public @NotNull Component message() {
+        return message;
+    }
+
+    @Override
+    public void setMessage(@NotNull Component message) {
         this.message = message;
     }
 

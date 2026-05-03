@@ -3,7 +3,7 @@ package com.pedestriamc.strings;
 import com.pedestriamc.strings.api.managers.Mentioner;
 import com.pedestriamc.strings.common.CommonStrings;
 import com.pedestriamc.strings.common.chat.StringsMentioner;
-import com.pedestriamc.strings.common.event.StringsEventManager;
+import com.pedestriamc.strings.common.manager.StringsEventManager;
 import com.pedestriamc.strings.api.APIRegistrar;
 import com.pedestriamc.strings.api.channel.data.BuildableRegistrar;
 import com.pedestriamc.strings.api.channel.local.LocalityManager;
@@ -55,10 +55,13 @@ import java.util.UUID;
 
 public final class Strings extends JavaPlugin implements CommonStrings {
 
-    public static final String VERSION = "1.7.0";
-    public static final short VERSION_NUM = 7;
+    public static final String VERSION = "1.7.1";
+    public static final short VERSION_NUM = 8;
     public static final int METRICS_ID = 22597;
-    public static final String DISTRIBUTOR = "github";
+    public static final String DISTRIBUTOR = "modrinth";
+
+    // Not reliant on config, so maintaining through reloads as not to break listeners
+    private final StringsBukkitEventManager eventDispatcher = new StringsBukkitEventManager(this);
 
     private boolean usingPlaceholderAPI = false;
     private boolean isPaper = false;
@@ -84,7 +87,6 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     private ModrinthService modrinth;
     private ServerSource serverSource;
     private BukkitPlatformAdapter platformAdapter;
-    private StringsBukkitEventManager eventDispatcher;
     private BukkitEventFactory eventFactory;
     private BukkitLocalityManager localityManager;
     private Analytics analytics;
@@ -141,6 +143,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         fileManager = null;
         analytics = null;
 
+        eventDispatcher.unsubscribeAll(this);
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
         stringsImpl = null;
@@ -218,7 +221,6 @@ public final class Strings extends JavaPlugin implements CommonStrings {
 
     private void instantiateObjects() {
         configClass = new Configuration(this);
-        eventDispatcher = new StringsBukkitEventManager(this);
         eventFactory = new BukkitEventFactory();
         localityManager = new BukkitLocalityManager(this);
         platformAdapter = new BukkitPlatformAdapter(this);

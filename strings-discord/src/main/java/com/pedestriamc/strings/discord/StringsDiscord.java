@@ -122,6 +122,7 @@ public final class StringsDiscord extends JavaPlugin {
         manager = null;
         configuration = null;
 
+        eventDispatcher.unsubscribeAll(this);
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
         getLogger().info("Disabled.");

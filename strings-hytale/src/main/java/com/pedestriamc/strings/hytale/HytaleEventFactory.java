@@ -12,6 +12,7 @@ import com.pedestriamc.strings.api.event.strings.user.ChannelUnmonitorEvent;
 import com.pedestriamc.strings.api.platform.EventFactory;
 import com.pedestriamc.strings.api.user.StringsUser;
 import net.kyori.adventure.chat.SignedMessage;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,7 +21,7 @@ import java.util.Set;
 public class HytaleEventFactory implements EventFactory {
 
     @Override
-    public @NotNull ChannelChatEvent chatEvent(boolean async, boolean cancellable, @NotNull StringsUser sender, @NotNull String message, @NotNull Set<StringsUser> recipients, @NotNull Channel channel, @Nullable SignedMessage signedMessage) {
+    public @NotNull ChannelChatEvent chatEvent(boolean async, boolean cancellable, @NotNull StringsUser sender, @NotNull Component message, @NotNull Set<StringsUser> recipients, @NotNull Channel channel, @Nullable SignedMessage signedMessage) {
         return null;
     }
 

@@ -1,6 +1,6 @@
 package com.pedestriamc.strings.bukkit;
 
-import com.pedestriamc.strings.common.event.StringsEventManager;
+import com.pedestriamc.strings.common.manager.StringsEventManager;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.event.strings.StringsEvent;
 import org.bukkit.event.Event;
@@ -21,8 +21,9 @@ public class StringsBukkitEventManager extends StringsEventManager {
             if (event instanceof Event bukkitEvent) {
                 strings.getServer().getPluginManager().callEvent(bukkitEvent);
             }
-            super.dispatch(event);
         });
+
+        super.dispatch(event);
     }
 
 }

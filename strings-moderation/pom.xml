@@ -7,11 +7,11 @@
   <parent>
     <artifactId>Strings</artifactId>
     <groupId>com.pedestriamc.strings</groupId>
-    <version>1.7.0</version>
+    <version>1.7.1</version>
   </parent>
 
   <artifactId>strings-moderation</artifactId>
-  <version>1.7.0</version>
+  <version>1.7.1</version>
   <packaging>jar</packaging>
 
   <name>strings-moderation</name>
@@ -38,18 +38,7 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.5.3</version>
         <configuration>
-          <filters>
-            <filter>
-              <artifact>org.apache.commons:*</artifact>
-              <includes>
-                <include>org/apache/commons/lang3/StringUtils.class</include>
-              </includes>
-              <excludes>
-                <exclude>**</exclude>
-              </excludes>
-            </filter>
-          </filters>
-          <minimizeJar>true</minimizeJar>
+          <minimizeJar>false</minimizeJar>
           <createDependencyReducedPom>true</createDependencyReducedPom>
         </configuration>
         <executions>
@@ -85,7 +74,7 @@
     <dependency>
       <groupId>com.pedestriamc.strings</groupId>
       <artifactId>strings-api</artifactId>
-      <version>1.7.0</version>
+      <version>1.7.1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -98,13 +87,13 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.17.0</version>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
       <version>1.14.0</version>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.jetbrains</groupId>

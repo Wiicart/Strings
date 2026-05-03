@@ -7,11 +7,10 @@
     <parent>
         <artifactId>Strings</artifactId>
         <groupId>com.pedestriamc.strings</groupId>
-        <version>1.7.0</version>
+        <version>1.7.1</version>
     </parent>
 
     <artifactId>strings-api</artifactId>
-    <version>1.7.0</version>
 
     <name>Strings API</name>
     <description>Public API for the Strings chat plugin</description>
@@ -62,20 +61,6 @@
                         <id>attach-sources</id>
                         <goals>
                             <goal>jar-no-fork</goal> <!-- jar -->
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.2.4</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
                         </goals>
                     </execution>
                 </executions>

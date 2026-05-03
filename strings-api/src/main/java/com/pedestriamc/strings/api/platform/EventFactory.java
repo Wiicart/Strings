@@ -12,6 +12,7 @@ import com.pedestriamc.strings.api.event.strings.user.ChannelMonitorEvent;
 import com.pedestriamc.strings.api.event.strings.user.ChannelUnmonitorEvent;
 import com.pedestriamc.strings.api.user.StringsUser;
 import net.kyori.adventure.chat.SignedMessage;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +43,7 @@ public interface EventFactory {
             boolean async,
             boolean cancellable,
             @NotNull StringsUser sender,
-            @NotNull String message,
+            @NotNull Component message,
             @NotNull Set<StringsUser> recipients,
             @NotNull Channel channel,
             @Nullable SignedMessage signedMessage

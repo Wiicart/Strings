@@ -40,6 +40,7 @@ public class Analytics {
         for (Channel channel : channels) {
             if (channel.getType() == Type.WORLD) {
                 isUsingWorldChannels = true;
+                break;
             }
         }
     }

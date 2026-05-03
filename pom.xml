@@ -6,7 +6,7 @@
 
     <groupId>com.pedestriamc.strings</groupId>
     <artifactId>Strings</artifactId>
-    <version>1.7.0</version>
+    <version>1.7.1</version>
     <packaging>pom</packaging>
 
     <name>Strings</name>
@@ -52,6 +52,20 @@
                             <configuration>
                                 <minimizeJar>true</minimizeJar>
                                 <createDependencyReducedPom>false</createDependencyReducedPom>
+                                <filters>
+                                    <filter>
+                                        <artifact>com.pedestriamc.strings:strings-api</artifact>
+                                        <includes>
+                                            <include>**</include>
+                                        </includes>
+                                    </filter>
+                                    <filter>
+                                        <artifact>com.pedestriamc.strings:strings-common</artifact>
+                                        <includes>
+                                            <include>**</include>
+                                        </includes>
+                                    </filter>
+                                </filters>
                                 <relocations>
                                     <relocation>
                                         <pattern>org.bstats</pattern>

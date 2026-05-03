@@ -3,6 +3,7 @@ package com.pedestriamc.strings.listener.chat;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.annotation.Platform;
 import com.pedestriamc.strings.api.channel.Channel;
+import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.event.strings.EventManager;
 import com.pedestriamc.strings.api.platform.EventFactory;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
@@ -14,6 +15,7 @@ import com.pedestriamc.strings.user.util.UserUtil;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.chat.SignedMessage;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -72,28 +74,34 @@ public class PaperChatListener extends AbstractChatListener {
             event.viewers().add((Audience) User.playerOf(recipient));
         }
 
+        ChannelChatEvent chatEvent = callEvent(sender, event.message(), recipients, channel, event.signedMessage());
+        event.message(chatEvent.message());
+
+        if (chatEvent.isCancelled()) {
+            event.setCancelled(true);
+            return;
+        }
 
         ChannelChatRenderer renderer = provider.renderer(event, channel, event.signedMessage(), recipients);
         event.renderer(renderer);
 
-        callEvent(sender, route.message(), recipients, channel, event.signedMessage());
-
         strings.mentioner().mention(renderer.mentionedPlayers(), sender);
     }
 
-    // Calls a non-cancellable ChannelChatEvent
-    private void callEvent(StringsUser sender, String message, Set<StringsUser> players, Channel channel, SignedMessage signedMessage) {
-        eventDispatcher.dispatch(
-                factory.chatEvent(
-                        false,
-                        false,
-                        sender,
-                        message,
-                        players,
-                        channel,
-                        signedMessage
-                )
+    private ChannelChatEvent callEvent(StringsUser sender, Component message, Set<StringsUser> players, Channel channel, SignedMessage signedMessage) {
+        ChannelChatEvent event = factory.chatEvent(
+                false,
+                true,
+                sender,
+                message,
+                players,
+                channel,
+                signedMessage
         );
+
+        eventDispatcher.dispatch(event);
+
+        return event;
     }
 
 }

@@ -20,6 +20,8 @@ channels:
     # Should an event be called when players send a message?
     # This allows other plugins to receive the message and modify it.
     # It's recommended to keep this on unless you want no other plugins to receive or modify chat.
+    # If disabling AND USING DiscordSRV:
+    # Go into DiscordSRV's config and set UseModernPaperChatEvent: true
     call-event: true
 
     # Should chat be filtered for profanity?

@@ -61,6 +61,8 @@ public final class StringsModeration extends JavaPlugin {
         cooldownManager = null;
         linkFilter = null;
         repetitionManager = null;
+
+        eventManager.unsubscribeAll(this);
         HandlerList.unregisterAll(this);
         getServer().getScheduler().cancelTasks(this);
         try {

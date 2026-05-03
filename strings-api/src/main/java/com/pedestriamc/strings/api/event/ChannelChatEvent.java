@@ -4,6 +4,7 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.event.strings.StringsEvent;
 import com.pedestriamc.strings.api.user.StringsUser;
 import net.kyori.adventure.chat.SignedMessage;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -44,18 +45,35 @@ public interface ChannelChatEvent extends StringsEvent {
     }
 
     /**
+     * Deprecated - use {@link ChannelChatEvent#message()}.
      * Provides the text of the message being set.
      * This may include color codes.
      * @return A String
      */
     @NotNull
+    @Deprecated
     String getMessage();
 
     /**
+     * Deprecated - {@link ChannelChatEvent#setMessage(Component)}.
      * Allows updating the message.
      * @param message The new message
      */
+    @Deprecated
     void setMessage(@NotNull String message);
+
+    /**
+     * Provides the sender's message.
+     * @return The message.
+     */
+    @NotNull
+    Component message();
+
+    /**
+     * Updates the message.
+     * @param message The new message.
+     */
+    void setMessage(@NotNull Component message);
 
     /**
      * Provides the SignedMessage correlated with the message, if one exists.

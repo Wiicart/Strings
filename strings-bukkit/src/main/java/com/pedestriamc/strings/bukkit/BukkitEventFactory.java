@@ -17,6 +17,7 @@ import com.pedestriamc.strings.common.event.events.UserChannelUnmonitorEvent;
 import com.pedestriamc.strings.event.BukkitChannelChatEvent;
 import com.pedestriamc.strings.event.BukkitDirectMessageEvent;
 import net.kyori.adventure.chat.SignedMessage;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +35,7 @@ public class BukkitEventFactory implements EventFactory {
             boolean async,
             boolean cancellable,
             @NotNull StringsUser sender,
-            @NotNull String message,
+            @NotNull Component message,
             @NotNull Set<StringsUser> recipients,
             @NotNull Channel channel,
             @Nullable SignedMessage signedMessage

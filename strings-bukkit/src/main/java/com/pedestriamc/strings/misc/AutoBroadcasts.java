@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-//todo convert to minimessage
 public final class AutoBroadcasts {
 
     private final Strings strings;

@@ -59,21 +59,22 @@ public class ChatListener {
         }
 
 
-        if(noPermOrAdmin(player, "strings.chat.bypassrepetition") && repetitionManager.isRepeating(player, message)) {
+        boolean isRepeating = repetitionManager.isRepeating(player, message);
+        if (noPermOrAdmin(player, "strings.chat.bypassrepetition") && isRepeating) {
             event.setCancelled(true);
             messenger.sendMessage(Message.NO_REPETITION, player);
             return;
         }
 
-        if(noPermOrAdmin(player, "strings.chat.filterbypass")) {
+        if (noPermOrAdmin(player, "strings.chat.filterbypass")) {
             String original = message;
             if(channel.isUrlFiltering()) {
                 message = linkFilter.filter(event.getMessage(), player);
             }
 
-            if(channel.isProfanityFiltering()) {
+            if (channel.isProfanityFiltering()) {
                 ChatFilter.FilteredChat filtered = chatFilter.filter(message);
-                if(!filtered.message().equals(message)) {
+                if (!filtered.message().equals(message)) {
                     messenger.sendMessage(Message.BANNED_WORD, player);
                     strings.synchronous(() -> {
                         PlayerChatFilteredEvent filterEvent = new PlayerChatFilteredEvent(
@@ -89,7 +90,7 @@ public class ChatListener {
             }
         }
 
-        repetitionManager.setPreviousMessage(player, event.getMessage());
+        repetitionManager.setPreviousMessage(player, message);
         cooldownManager.startCooldown(player);
         event.setMessage(message);
     }

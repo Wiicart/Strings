@@ -19,7 +19,7 @@ import com.pedestriamc.strings.api.user.UserManager;
 import com.pedestriamc.strings.chat.channel.ChannelManager;
 import com.pedestriamc.strings.chat.channel.ChannelStore;
 import com.pedestriamc.strings.common.CommonStrings;
-import com.pedestriamc.strings.common.event.StringsEventManager;
+import com.pedestriamc.strings.common.manager.StringsEventManager;
 import com.pedestriamc.strings.common.manager.DirectMessageManager;
 import com.pedestriamc.strings.hytale.HytalePlatformAdapter;
 import com.pedestriamc.strings.hytale.locality.HytaleLocalityManager;

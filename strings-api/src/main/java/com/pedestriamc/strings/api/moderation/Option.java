@@ -17,7 +17,8 @@ public final class Option {
     public interface ModerationKey<T> extends Key<T> {}
 
     public enum Text implements ModerationKey<String> {
-        COOLDOWN_DURATION("cooldown-time", "1m");
+        COOLDOWN_DURATION("cooldown-time", "1m"),
+        REPETITION_COOLDOWN("repetition-cooldown", "-1");
 
         private final String key;
         private final String defaultValue;
