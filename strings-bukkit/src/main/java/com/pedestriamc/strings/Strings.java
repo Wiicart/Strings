@@ -1,6 +1,7 @@
 package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.api.managers.Mentioner;
+import com.pedestriamc.strings.bukkit.AudienceGetter;
 import com.pedestriamc.strings.common.CommonStrings;
 import com.pedestriamc.strings.common.chat.StringsMentioner;
 import com.pedestriamc.strings.common.manager.StringsEventManager;
@@ -58,7 +59,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     public static final String VERSION = "1.7.1";
     public static final short VERSION_NUM = 8;
     public static final int METRICS_ID = 22597;
-    public static final String DISTRIBUTOR = "github";
+    public static final String DISTRIBUTOR = "spigot";
 
     // Not reliant on config, so maintaining through reloads as not to break listeners
     private final StringsBukkitEventManager eventDispatcher = new StringsBukkitEventManager(this);
@@ -90,6 +91,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     private BukkitEventFactory eventFactory;
     private BukkitLocalityManager localityManager;
     private Analytics analytics;
+    private AudienceGetter audienceGetter;
 
     public Strings() {
         super();
@@ -229,6 +231,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         channelLoader = new ChannelManager(this);
         serverMessages = new ServerMessages(this);
         mentioner = new StringsMentioner(this);
+        audienceGetter = new AudienceGetter(this);
 
         if (settings().get(Option.Bool.ENABLE_EMOJI_REPLACEMENT)) {
             emojiManager = new EmojiProvider(this);
@@ -352,6 +355,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         return usingLuckPerms;
     }
 
+    @Override
     public boolean isPaper() {
         return isPaper;
     }
@@ -433,6 +437,11 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     @Override
     public BukkitEventFactory eventFactory() {
         return eventFactory;
+    }
+
+    @Override
+    public @NotNull AudienceGetter audiences() {
+        return audienceGetter;
     }
 
     @Override

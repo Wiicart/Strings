@@ -15,6 +15,7 @@ import com.pedestriamc.strings.api.platform.EventFactory;
 import com.pedestriamc.strings.api.platform.PlatformAdapter;
 import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.text.EmojiManager;
+import com.pedestriamc.strings.api.text.StringsAudienceProvider;
 import com.pedestriamc.strings.api.user.UserManager;
 import com.pedestriamc.strings.chat.channel.ChannelManager;
 import com.pedestriamc.strings.chat.channel.ChannelStore;
@@ -121,6 +122,11 @@ public class Strings extends JavaPlugin implements CommonStrings {
     }
 
     @Override
+    public @NotNull StringsAudienceProvider audiences() {
+        return null;
+    }
+
+    @Override
     public void async(@NotNull Runnable runnable) {
         CompletableFuture.runAsync(runnable);
     }
@@ -142,6 +148,11 @@ public class Strings extends JavaPlugin implements CommonStrings {
 
     @Override
     public boolean isUsingPlaceholderAPI() {
+        return false;
+    }
+
+    @Override
+    public boolean isPaper() {
         return false;
     }
 

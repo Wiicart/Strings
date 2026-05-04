@@ -11,6 +11,7 @@ import com.pedestriamc.strings.api.platform.EventFactory;
 import com.pedestriamc.strings.api.platform.PlatformAdapter;
 import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.text.EmojiManager;
+import com.pedestriamc.strings.api.text.StringsAudienceProvider;
 import com.pedestriamc.strings.api.user.UserManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,6 +44,8 @@ public interface StringsPlatform {
 
     @NotNull Mentioner mentioner();
 
+    @NotNull StringsAudienceProvider audiences();
+
     void async(@NotNull Runnable runnable);
 
     void sync(@NotNull Runnable runnable);
@@ -52,5 +55,7 @@ public interface StringsPlatform {
     void warning(@NotNull String message);
 
     boolean isUsingPlaceholderAPI();
+
+    boolean isPaper();
 
 }

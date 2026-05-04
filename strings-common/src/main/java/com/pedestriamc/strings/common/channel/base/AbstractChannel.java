@@ -370,6 +370,10 @@ public abstract class AbstractChannel implements Channel, Monitorable {
                 .map(StringsUser::audience)
                 .collect(Collectors.toSet());
 
+        if (strings.isPaper()) {
+            set.add(strings.audiences().console());
+        }
+
         return Audience.audience(set);
     }
 

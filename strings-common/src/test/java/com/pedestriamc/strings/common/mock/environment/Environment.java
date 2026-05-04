@@ -12,6 +12,7 @@ import com.pedestriamc.strings.api.platform.EventFactory;
 import com.pedestriamc.strings.api.platform.PlatformAdapter;
 import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.text.EmojiManager;
+import com.pedestriamc.strings.api.text.StringsAudienceProvider;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.user.UserManager;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +42,7 @@ public class Environment implements StringsPlatform {
     private final LocalityManager<?> localityManager;
     private final Messenger messenger;
     private final Mentioner mentioner;
+    private final StringsAudienceProvider audienceProvider;
 
     Environment(EnvironmentBuilder builder) {
         settings = MockSettings.SETTINGS;
@@ -59,6 +61,7 @@ public class Environment implements StringsPlatform {
         localityManager = mock(LocalityManager.class);
         messenger = mock(Messenger.class);
         mentioner = mock(Mentioner.class);
+        audienceProvider = mock(StringsAudienceProvider.class);
     }
 
     @Override
@@ -122,6 +125,11 @@ public class Environment implements StringsPlatform {
     }
 
     @Override
+    public @NotNull StringsAudienceProvider audiences() {
+        return audienceProvider;
+    }
+
+    @Override
     public void async(@NotNull Runnable runnable) {
         runnable.run();
     }
@@ -143,6 +151,11 @@ public class Environment implements StringsPlatform {
 
     @Override
     public boolean isUsingPlaceholderAPI() {
+        return false;
+    }
+
+    @Override
+    public boolean isPaper() {
         return false;
     }
 

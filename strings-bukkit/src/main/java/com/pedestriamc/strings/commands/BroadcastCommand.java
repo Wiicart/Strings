@@ -79,7 +79,8 @@ public final class BroadcastCommand implements CommandExecutor {
         String broadcast = builder.toString();
         broadcast = ChatColor.translateAlternateColorCodes('&', broadcast);
 
-        Audience audience = strings.adventure().all();
+        Audience audience = strings.audiences().all();
+
         audience.sendMessage(ComponentConverter.fromString(broadcast));
         if (sound != null) {
             audience.playSound(sound);
