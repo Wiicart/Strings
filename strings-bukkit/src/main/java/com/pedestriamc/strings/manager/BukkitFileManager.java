@@ -43,6 +43,7 @@ public final class BukkitFileManager implements FileManager {
         updateConfigs();
         strings.reloadConfig();
         setupCustomConfigs();
+        updateChannelsConfig();
     }
 
     private void setupCustomConfigs() {
@@ -80,7 +81,7 @@ public final class BukkitFileManager implements FileManager {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void createIfDoesNotExist(@NotNull File file, @NotNull String resourcePath) {
-        if(!file.exists()) {
+        if (!file.exists()) {
             file.getParentFile().mkdirs();
             strings.saveResource(resourcePath, false);
         }
@@ -105,6 +106,19 @@ public final class BukkitFileManager implements FileManager {
                 ConfigUpdater.update(strings, resourceName, file);
             } catch(IOException e) {
                 strings.warning("Failed to update file " + resourceName + ".\n" + e.getMessage());
+            }
+        }
+    }
+
+    private void updateChannelsConfig() {
+        FileConfiguration channelsConfig = getChannelsFileConfig();
+        if (!channelsConfig.isSet("mini-message")) {
+            channelsConfig.set("mini-message", false);
+
+            try {
+                channelsFileConfig.save(channelsFile);
+            } catch(IOException e) {
+                strings.warning("Failed to update channels file: " + e.getMessage());
             }
         }
     }

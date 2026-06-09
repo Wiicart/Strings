@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.common.channel.base;
 
+import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.common.chat.MessageProcessor;
 import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
@@ -14,6 +15,7 @@ import com.pedestriamc.strings.api.user.UserManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -308,11 +310,19 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     @Override
     public void broadcast(@NotNull String message) {
-        String finalString = getBroadcastFormat().replace(MESSAGE_PLACEHOLDER, message);
-        finalString = adapter.translateBukkitColor(finalString);
+        boolean useMiniMessage = strings.settings().get(Option.Bool.CHANNELS_USE_MINI_MESSAGE_FORMATTING);
+        String raw = getBroadcastFormat().replace(MESSAGE_PLACEHOLDER, message);
+
+        Component broadcast;
+        if (useMiniMessage) {
+            broadcast = MiniMessage.miniMessage().deserialize(raw);
+        } else {
+            raw = adapter.translateBukkitColor(raw);
+            broadcast = ComponentConverter.fromString(raw);
+        }
 
         Audience recipients = getPlayersInScopeAsAudience();
-        recipients.sendMessage(ComponentConverter.fromString(finalString));
+        recipients.sendMessage(broadcast);
         Sound sound = getBroadcastSound();
         if (sound != null) {
             recipients.playSound(sound);

@@ -1,7 +1,7 @@
 package com.pedestriamc.strings.commands;
 
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
-import com.pedestriamc.strings.bukkit.Configuration;
+import com.pedestriamc.strings.manager.Configuration;
 import com.pedestriamc.strings.bukkit.BukkitMessenger;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.settings.Option;

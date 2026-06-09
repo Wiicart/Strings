@@ -2,7 +2,7 @@ package com.pedestriamc.strings.misc;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.settings.Option;
-import com.pedestriamc.strings.bukkit.Configuration;
+import com.pedestriamc.strings.manager.Configuration;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;

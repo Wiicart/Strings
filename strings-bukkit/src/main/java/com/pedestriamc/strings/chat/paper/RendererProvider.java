@@ -8,7 +8,7 @@ import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.chat.MessageUtilities;
-import com.pedestriamc.strings.bukkit.Configuration;
+import com.pedestriamc.strings.manager.Configuration;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import io.papermc.paper.chat.ChatRenderer;
@@ -16,6 +16,7 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.wiicart.commands.permission.Permissions;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +36,7 @@ public class RendererProvider {
     private final boolean parsingMessageChatColors;
     private final boolean mentionsEnabled;
     private final boolean emojisEnabled;
+    private final boolean parseUsingMiniMessage;
 
     public RendererProvider(@NotNull Strings strings) {
         this.strings = strings;
@@ -47,6 +49,7 @@ public class RendererProvider {
         processingMessagePlaceholders = config.get(Option.Bool.PROCESS_PLACEHOLDERS) && strings.isUsingPlaceholderAPI();
         parsingMessageChatColors = config.get(Option.Bool.PROCESS_CHATCOLOR);
         emojisEnabled = config.get(Option.Bool.ENABLE_EMOJI_REPLACEMENT);
+        parseUsingMiniMessage = config.get(Option.Bool.CHANNELS_USE_MINI_MESSAGE_FORMATTING);
     }
 
     @NotNull
@@ -109,21 +112,34 @@ public class RendererProvider {
 
         @NotNull
         private Component generateTemplate(@NotNull Channel channel, @NotNull User source) {
-            String baseString = channel.getFormat();
-
-            baseString = baseString
-                    .replace("{prefix}", source.getPrefix())
-                    .replace("{suffix}", source.getSuffix())
-                    .replace("{displayname}", source.getDisplayName());
+            String raw = channel.getFormat();
+            raw = raw.replace("{username}", source.getName());
+            raw = raw.replace("{uuid}", source.getUniqueId().toString());
 
             if (strings.isUsingPlaceholderAPI()) {
-                baseString = setPlaceholderAPIPlaceholders(source.player(), baseString);
+                raw = setPlaceholderAPIPlaceholders(source.player(), raw);
             }
 
-            baseString = MessageUtilities.colorHex(baseString);
-            baseString = MessageUtilities.translateColorCodes(baseString);
+            Component format;
+            if (parseUsingMiniMessage) {
+                format = MiniMessage.miniMessage().deserialize(raw);
+            } else {
+                raw = MessageUtilities.colorHex(raw);
+                raw = MessageUtilities.translateColorCodes(raw);
+                format = ComponentConverter.fromString(raw);
+            }
 
-            return ComponentConverter.fromString(baseString);
+            format = format.replaceText(b -> b
+                    .matchLiteral("{prefix}")
+                    .replacement(ComponentConverter.fromString(source.getPrefix())));
+            format = format.replaceText(b -> b
+                    .matchLiteral("{suffix}")
+                    .replacement(ComponentConverter.fromString(source.getSuffix())));
+            format = format.replaceText(b -> b
+                    .matchLiteral("{displayname}")
+                    .replacement(ComponentConverter.fromString(source.getDisplayName())));
+
+            return format;
         }
 
         @NotNull

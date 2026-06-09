@@ -5,6 +5,15 @@
 # The channels a player is a member of are stored in users.yml, if none of those channels exist,
 # the player will join the channel "default" which will determine what channel to send the message to.
 
+# If enabled, all formatting in this file will be parsed via MiniMessage.
+# MiniMessage offers much more extensive formatting and options like player heads.
+# MiniMessage Docs: https://docs.papermc.io/adventure/minimessage/format/#head
+# MiniMessage Renderer: https://webui.advntr.dev/
+# IMPORTANT: If enabled, you must update all formatting in this file to use MiniMessage!
+# Legacy formatting will NOT work.
+# THIS IS ONLY SUPPORTED ON PAPER!
+mini-message: true
+
 channels:
   global:
     # The format messages should be posted as in the channel.
@@ -15,7 +24,7 @@ channels:
     # {suffix} - player suffix
     # {message} - the player's message
     # (!) NOTE: Compatible with PlaceholderAPI placeholders
-    format: "{prefix}{displayname}{suffix} &7» &f{message}"
+    format: "<head:{username}> {prefix}<white>{displayname}<white>{suffix} <gray>» <white>{message}"
 
     # Should an event be called when players send a message?
     # This allows other plugins to receive the message and modify it.
@@ -78,7 +87,7 @@ channels:
     # When a message is broadcast using the /broadcast command, what should the format be?
     # Valid placeholders:
     # {message} - the message being broadcast
-    broadcast-format: "&8[&2Global&8] &f{message}"
+    broadcast-format: "<dark_gray>[<dark_green>Global</dark_green>]</dark_gray> <white>{message}"
 
     # Broadcast Sound
     # What sound should be played when a message is broadcast?
@@ -96,7 +105,7 @@ channels:
 
   # Staff channel, which by default will not call events, to hide messages from external plugin interference.
   staff:
-    format: "&8[&cStaff&8] &f{prefix}{displayname}{suffix} &7» &c{message}"
+    format: "<dark_gray>[<red>Staff</red>]</dark_gray> <white>{prefix}{displayname}{suffix} <gray>» <white>{message}"
     call-event: false
     filter-profanity: false
     block-urls: false
@@ -105,14 +114,14 @@ channels:
     membership: permission
     message-deletion: false
     symbol: "$"
-    broadcast-format: "&8[&cStaff&8] &f{message}"
+    broadcast-format: "<dark_gray>[<red>Staff</red>]</dark_gray> <white>{message}"
 
   # Help OP channel.
   # This channel does not behave like a normal channel, as membership of the channel and
   # sending messages in the channel is different.  Typical channel commands will not work with this channel,
   # everything that can be done with this channel should be done with the /helpop command.
   helpop:
-    format: "&8[&4HelpOP&8] &f{displayname} &7» &c{message}"
+    format: "<dark_gray>[<dark_red>HelpOP</dark_red>]</dark_gray> <white>{username} <gray>» <white>{message}"
     call-event: false
     filter-profanity: false
     block-urls: false
@@ -131,7 +140,7 @@ channels:
   # of channel are only sent to players within the specified distance.
 
   #world2:
-  #  format: "{prefix}{displayname}{suffix} &7» &f{message}"
+  #  format: "<dark_gray>[<yellow>World2</yellow>]</dark_gray> {prefix}{displayname}{suffix} <gray>» <white>{message}"
   #  call-event: true
   #  filter-profanity: false
   #  block-urls: false
@@ -143,10 +152,10 @@ channels:
   #  message-deletion: false
   #  priority: 10
   #  symbol: "^"
-  #  broadcast-format: "&8[&3World2&8] &f{message}"
+  #  broadcast-format: "<dark_gray>[<yellow>World2</yellow>]</dark_gray> <white>{message}"
 
   #proximity:
-  #  format: "&8[&cProximity&8] &f{prefix}{displayname}{suffix} &7» &f{message}"
+  #  format: "<dark_gray>[<red>Proximity</red>]</dark_gray> <white>{prefix}{displayname}{suffix} <gray>» <white>{message}"
   #  call-event: true
   #  filter-profanity: false
   #  block-urls: false
@@ -159,7 +168,7 @@ channels:
   #  priority: 11
   #  message-deletion: false
   #  symbol: "!"
-  #  broadcast-format: "&8[&cProximity&8] &f{message}"
+  #  broadcast-format: "<dark_gray>[<red>Proximity</red>]</dark_gray> <white>{message}"
 
   # SocialSpy also runs on a type of channel, and customizations for it are found in config.yml
   # Just as the HelpOP channel, it does not behave like a normal channel,

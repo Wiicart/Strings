@@ -36,7 +36,9 @@ public final class Option {
         @From(path = "emojis/emoji-config.yml")
         ENABLE_EMOJI_REPLACEMENT("replacement", true),
         @From(path = "emojis/emoji-config.yml")
-        ENABLE_EMOJI_RESOURCE_PACK("resource-pack", true);
+        ENABLE_EMOJI_RESOURCE_PACK("resource-pack", true),
+        @From(path = "channels.yml")
+        CHANNELS_USE_MINI_MESSAGE_FORMATTING("mini-message", true);
 
         final String key;
         final boolean defaultValue;

@@ -19,7 +19,6 @@ import com.pedestriamc.strings.commands.MentionCommand;
 import com.pedestriamc.strings.commands.message.ReplyCommand;
 import com.pedestriamc.strings.commands.SocialSpyCommand;
 import com.pedestriamc.strings.commands.channel.ChannelCommand;
-import com.pedestriamc.strings.bukkit.Configuration;
 import com.pedestriamc.strings.listener.chat.PaperChatListener;
 import com.pedestriamc.strings.listener.chat.SpigotChatListener;
 import com.pedestriamc.strings.listener.DirectMessageListener;

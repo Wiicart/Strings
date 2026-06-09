@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.bukkit;
+package com.pedestriamc.strings.manager;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.settings.Settings;
@@ -89,29 +89,33 @@ public class Configuration implements Settings {
     }
 
     private void loadEmojiOptions(@NotNull Strings strings, @NotNull SettingsRegistry.Builder builder) {
-        FileConfiguration config = strings.files().getEmojiFileConfig();
+        FileConfiguration emojiConfig = strings.files().getEmojiFileConfig();
+        FileConfiguration channelsFile = strings.files().getChannelsFileConfig();
 
         Map<Option.Bool, Boolean> bools = new HashMap<>();
         Map<Option.Text, String> texts = new HashMap<>();
         Map<Option.StringList, List<String>> lists = new HashMap<>();
 
         Option.Bool replacement = Option.Bool.ENABLE_EMOJI_REPLACEMENT;
-        bools.put(replacement, config.getBoolean(replacement.key(), replacement.defaultValue()));
+        bools.put(replacement, emojiConfig.getBoolean(replacement.key(), replacement.defaultValue()));
 
         Option.Bool usePack = Option.Bool.ENABLE_EMOJI_RESOURCE_PACK;
-        bools.put(usePack, config.getBoolean(usePack.key(), usePack.defaultValue()));
+        bools.put(usePack, emojiConfig.getBoolean(usePack.key(), usePack.defaultValue()));
+
+        Option.Bool channelMiniParsing = Option.Bool.CHANNELS_USE_MINI_MESSAGE_FORMATTING;
+        bools.put(channelMiniParsing, channelsFile.getBoolean(channelMiniParsing.key(), false));
 
         Option.Text packId = Option.Text.TEXTURES_MODRINTH_ID;
-        texts.put(packId, config.getString(packId.key(), packId.defaultValue()));
+        texts.put(packId, emojiConfig.getString(packId.key(), packId.defaultValue()));
 
         Option.Text header = Option.Text.EMOJI_COMMAND_HEADER;
-        texts.put(header, config.getString(header.key(), header.defaultValue()));
+        texts.put(header, emojiConfig.getString(header.key(), header.defaultValue()));
 
         Option.Text footer = Option.Text.EMOJI_COMMAND_FOOTER;
-        texts.put(footer, config.getString(footer.key(), footer.defaultValue()));
+        texts.put(footer, emojiConfig.getString(footer.key(), footer.defaultValue()));
 
         Option.StringList textured = Option.StringList.TEXTURED_EMOJIS;
-        lists.put(textured, config.getStringList(textured.key()));
+        lists.put(textured, emojiConfig.getStringList(textured.key()));
 
         builder.putAll(bools);
         builder.putAll(texts);

@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.pedestriamc.strings</groupId>
         <artifactId>Strings</artifactId>
-        <version>1.7.1</version>
+        <version>1.7.2</version>
     </parent>
 
     <artifactId>strings-common</artifactId>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.pedestriamc.strings</groupId>
             <artifactId>strings-api</artifactId>
-            <version>1.7.1</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -91,6 +91,18 @@
             <artifactId>api</artifactId>
             <version>5.4</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-api</artifactId>
+            <version>4.17.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <version>4.17.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
