@@ -19,6 +19,7 @@ import com.pedestriamc.strings.bukkit.BukkitPlatformAdapter;
 import com.pedestriamc.strings.bukkit.ServerSource;
 import com.pedestriamc.strings.bukkit.StringsBukkitEventManager;
 import com.pedestriamc.strings.bukkit.locality.BukkitLocalityManager;
+import com.pedestriamc.strings.integration.Integrations;
 import com.pedestriamc.strings.misc.Analytics;
 import com.pedestriamc.strings.placeholder.StringsPlaceholderExpansion;
 import com.pedestriamc.strings.chat.ChannelManager;
@@ -92,6 +93,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     private BukkitLocalityManager localityManager;
     private Analytics analytics;
     private AudienceGetter audienceGetter;
+    private Integrations integrations;
 
     public Strings() {
         super();
@@ -150,7 +152,10 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         getServer().getScheduler().cancelTasks(this);
         stringsImpl = null;
 
-        if(this.adventure != null) {
+        integrations.disableAll();
+        integrations = null;
+
+        if (this.adventure != null) {
             this.adventure.close();
             this.adventure = null;
         }
@@ -246,6 +251,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
      */
     private void instantiateObjectsTwo() {
         new AutoBroadcasts(this);
+        integrations = new Integrations(this);
     }
 
     private void setupVault() {

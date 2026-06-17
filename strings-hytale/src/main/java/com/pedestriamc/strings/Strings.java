@@ -44,7 +44,6 @@ public class Strings extends JavaPlugin implements CommonStrings {
     public Strings(@NotNull JavaPluginInit init) {
         super(init);
 
-
         userManager = new StringsUserManager(this);
         platformAdapter = new HytalePlatformAdapter(this);
         //universe().getEventRegistry().register()

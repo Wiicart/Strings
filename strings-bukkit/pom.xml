@@ -103,6 +103,10 @@
             <id>kyori</id>
             <url>https://repo.kyori.net/repository/public/</url>
         </repository>
+        <repository>
+            <id>Scarsz-Nexus</id>
+            <url>https://nexus.scarsz.me/content/groups/public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -240,6 +244,12 @@
             <scope>test</scope>
             <artifactId>MockBukkit-v1.20</artifactId>
             <version>3.93.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.discordsrv</groupId>
+            <artifactId>discordsrv</artifactId>
+            <version>1.28.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
