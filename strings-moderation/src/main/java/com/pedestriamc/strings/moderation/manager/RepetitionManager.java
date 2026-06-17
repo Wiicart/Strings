@@ -29,7 +29,7 @@ public class RepetitionManager {
         this.stringsModeration = strings;
         map = new HashMap<>();
         loadOptions(strings.getConfiguration());
-        strings.registerListener(new PlayerQuitListener(this));
+        strings.api().getEventDispatcher().subscribe(new PlayerQuitListener(this));
     }
 
     private void loadOptions(@NotNull Configuration config) {

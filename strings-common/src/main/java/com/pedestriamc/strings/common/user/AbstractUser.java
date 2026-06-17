@@ -9,7 +9,6 @@ import com.pedestriamc.strings.api.text.format.StringsComponent;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
-import net.kyori.adventure.text.format.Style;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

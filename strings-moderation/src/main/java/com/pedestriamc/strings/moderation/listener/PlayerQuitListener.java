@@ -1,13 +1,11 @@
 package com.pedestriamc.strings.moderation.listener;
 
-import com.pedestriamc.strings.api.StringsProvider;
+import com.pedestriamc.strings.api.event.server.PlayerQuitEvent;
+import com.pedestriamc.strings.api.event.strings.Listener;
 import com.pedestriamc.strings.moderation.manager.RepetitionManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class PlayerQuitListener implements Listener {
+public class PlayerQuitListener {
 
     private final RepetitionManager manager;
 
@@ -15,10 +13,10 @@ public class PlayerQuitListener implements Listener {
         this.manager = manager;
     }
 
-    @EventHandler
+    @Listener
     public void onEvent(@NotNull PlayerQuitEvent event) {
         try {
-            manager.logOut(StringsProvider.get().getUser(event.getPlayer().getUniqueId()));
+            manager.logOut(event.getPlayer());
         } catch(Exception ignored) {}
     }
 }

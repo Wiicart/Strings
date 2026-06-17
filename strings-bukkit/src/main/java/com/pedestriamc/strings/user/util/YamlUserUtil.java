@@ -172,7 +172,12 @@ public final class YamlUserUtil implements UserUtil {
     @Override
     public @NotNull User getUser(@NotNull UUID uuid) {
         User user = map.get(uuid);
-        return user != null ? user: loadUser(uuid);
+        if (user == null) {
+            strings.warning("User not loaded from UUID " + uuid);
+            return loadUser(uuid);
+        }
+
+        return user;
     }
 
     @Override

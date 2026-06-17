@@ -1,3 +1,4 @@
+# Strings Discord has been discontinued. DiscordSRV support has been implemented to Strings.
 ![banner](https://cdn.modrinth.com/data/cached_images/a8a22692f6bbd15d3bb12969826334e8796cf7f4.png)
 # StringsDiscord
 Brings Discord-Minecraft chat integration, specifically tailored for the Strings plugin
