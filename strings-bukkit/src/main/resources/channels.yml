@@ -1,3 +1,4 @@
+#file: noinspection StructuralWrap
 # Strings - Channels
 
 # All channels are defined in this channel, and information about them is stored here.
@@ -23,6 +24,7 @@ channels:
     # {prefix} - player prefix
     # {suffix} - player suffix
     # {message} - the player's message
+    # {message-raw} - the player's raw message. Use this for click commands through MiniMessage, etc.
     # (!) NOTE: Compatible with PlaceholderAPI placeholders
     format: "<head:{username}> {prefix}<white>{displayname}<white>{suffix} <gray>» <white>{message}"
 

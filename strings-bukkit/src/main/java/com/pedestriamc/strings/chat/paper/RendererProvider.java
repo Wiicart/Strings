@@ -16,6 +16,7 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.wiicart.commands.permission.Permissions;
 import org.bukkit.entity.Player;
@@ -81,7 +82,7 @@ public class RendererProvider {
             this.signedMessage = signedMessage;
             sender = userUtil.getUser(event.getPlayer());
 
-            base = generateTemplate(channel, (User) sender);
+            base = generateTemplate(channel, (User) sender, event.message());
             base = insertMessage(base, event.message(), channel, (User) sender);
 
             if (mentionsEnabled) {
@@ -111,10 +112,13 @@ public class RendererProvider {
         }
 
         @NotNull
-        private Component generateTemplate(@NotNull Channel channel, @NotNull User source) {
+        private Component generateTemplate(@NotNull Channel channel, @NotNull User source, Component message) {
             String raw = channel.getFormat();
+            Component messageRaw = message.style(Style.empty());
+
             raw = raw.replace("{username}", source.getName());
             raw = raw.replace("{uuid}", source.getUniqueId().toString());
+            raw = raw.replace("{message-raw}", ComponentConverter.toString(messageRaw));
 
             if (strings.isUsingPlaceholderAPI()) {
                 raw = setPlaceholderAPIPlaceholders(source.player(), raw);
@@ -138,6 +142,7 @@ public class RendererProvider {
             format = format.replaceText(b -> b
                     .matchLiteral("{displayname}")
                     .replacement(ComponentConverter.fromString(source.getDisplayName())));
+
 
             return format;
         }
