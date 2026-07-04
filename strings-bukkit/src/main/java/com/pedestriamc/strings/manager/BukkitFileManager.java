@@ -55,7 +55,6 @@ public final class BukkitFileManager implements FileManager {
         File deathMessagesFile = new File(strings.getDataFolder(), "death-messages.yml");
         File logsFile = new File(strings.getDataFolder(), "logs.yml");
         File moderationFile = new File(strings.getDataFolder(), "moderation.yml");
-        File discordFile = new File(strings.getDataFolder(), "discord.yml");
         File emojiFile = new File(strings.getDataFolder(), "emojis/emoji-config.yml");
 
         createIfDoesNotExist(broadcastsFile, "broadcasts.yml");
@@ -66,7 +65,6 @@ public final class BukkitFileManager implements FileManager {
         createIfDoesNotExist(deathMessagesFile, "death-messages.yml");
         createIfDoesNotExist(logsFile, "logs.yml");
         createIfDoesNotExist(moderationFile, "moderation.yml");
-        createIfDoesNotExist(discordFile, "discord.yml");
         createIfDoesNotExist(emojiFile, "emojis/emoji-config.yml");
 
         broadcastsFileConfig = YamlConfiguration.loadConfiguration(broadcastsFile);

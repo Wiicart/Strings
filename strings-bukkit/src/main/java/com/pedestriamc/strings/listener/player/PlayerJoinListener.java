@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.listener.player;
 
+import com.pedestriamc.strings.api.event.strings.EventManager;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.manager.Configuration;
 import com.pedestriamc.strings.common.external.ModrinthService;
@@ -20,38 +21,49 @@ public class PlayerJoinListener implements Listener {
     private final UserUtil userUtil;
     private final ServerMessages serverMessages;
     private final ModrinthService modrinth;
+    private final EventManager eventManager;
 
     private final boolean modifyJoinMessage;
     private final boolean doMotd;
     private final boolean doJoinMessage;
+    private final boolean doFirstJoinMessage;
 
     public PlayerJoinListener(@NotNull Strings strings) {
         this.strings = strings;
         userUtil = strings.users();
         serverMessages = strings.getServerMessages();
         modrinth = strings.modrinth();
+        eventManager = strings.eventManager();
 
         Configuration configuration = strings.settings();
         modifyJoinMessage = configuration.get(Option.Bool.USE_CUSTOM_JOIN_LEAVE);
         doMotd = configuration.get(Option.Bool.ENABLE_MOTD);
         doJoinMessage = configuration.get(Option.Bool.ENABLE_JOIN_LEAVE_MESSAGE);
+        doFirstJoinMessage = configuration.get(Option.Bool.ENABLE_FIRST_JOIN_MESSAGE);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     void onEvent(@NotNull PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        userUtil.loadUserAsync(player.getUniqueId());
-
-        if (!doJoinMessage) {
-            event.setJoinMessage(null);
-        } else if(modifyJoinMessage) {
-            event.setJoinMessage(serverMessages.joinMessage(player));
-        }
-
         applyPackIfEnabled(player);
+        userUtil.loadUserAsync(player.getUniqueId()).thenAccept(user -> {
+            eventManager.dispatch(new com.pedestriamc.strings.api.event.server.PlayerJoinEvent(user));
 
-        if (doMotd) {
-            serverMessages.sendMOTD(player);
+            if (doFirstJoinMessage && user.isNew()) {
+                strings.getServer().broadcastMessage(serverMessages.firstJoinMessage(user));
+            }
+
+            if (doMotd) {
+                serverMessages.sendMOTD(user);
+            }
+
+            if (doJoinMessage && modifyJoinMessage) {
+                strings.getServer().broadcastMessage(serverMessages.joinMessage(user));
+            }
+        });
+
+        if (!doJoinMessage || modifyJoinMessage) {
+            event.setJoinMessage(null);
         }
     }
 

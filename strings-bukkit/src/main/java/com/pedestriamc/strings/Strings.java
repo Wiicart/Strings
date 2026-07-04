@@ -20,8 +20,9 @@ import com.pedestriamc.strings.bukkit.ServerSource;
 import com.pedestriamc.strings.bukkit.StringsBukkitEventManager;
 import com.pedestriamc.strings.bukkit.locality.BukkitLocalityManager;
 import com.pedestriamc.strings.integration.Integrations;
+import com.pedestriamc.strings.integration.placeholderapi.PlaceholderAPISetter;
 import com.pedestriamc.strings.misc.Analytics;
-import com.pedestriamc.strings.placeholder.StringsPlaceholderExpansion;
+import com.pedestriamc.strings.integration.placeholderapi.StringsPlaceholderExpansion;
 import com.pedestriamc.strings.chat.ChannelManager;
 import com.pedestriamc.strings.manager.Configuration;
 import com.pedestriamc.strings.bukkit.StringsImpl;
@@ -94,6 +95,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     private Analytics analytics;
     private AudienceGetter audienceGetter;
     private Integrations integrations;
+    private PlaceholderAPISetter placeholderAPISetter;
 
     public Strings() {
         super();
@@ -231,6 +233,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         eventFactory = new BukkitEventFactory();
         localityManager = new BukkitLocalityManager(this);
         platformAdapter = new BukkitPlatformAdapter(this);
+        placeholderAPISetter = new PlaceholderAPISetter(this);
         messenger = new BukkitMessenger(fileManager.getMessagesFileConfig());
         directMessageManager = new DirectMessageManager(this);
         channelLoader = new ChannelManager(this);
@@ -448,6 +451,10 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     @Override
     public @NotNull AudienceGetter audiences() {
         return audienceGetter;
+    }
+
+    public PlaceholderAPISetter placeholderAPI() {
+        return placeholderAPISetter;
     }
 
     @Override

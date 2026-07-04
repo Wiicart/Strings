@@ -6,8 +6,7 @@
 #|  ███████║   ██║   ██║  ██║ ██║ ██║ ╚████║╚██████╔╝███████║ |
 #|  ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═╝ ╚═╝  ╚═══╝ ╚═════╝ ╚══════╝ |
 #|                     Strings - Chat Plugin                  |
-#|                         by: wiicart                        |
-#|                       pedestriamc.com                      |
+#|                     strings.pedestria.com                  |
 #+------------------------------------------------------------+
 
 # NOTE: More configuration options are available in:
@@ -115,6 +114,19 @@ join-message: "&8[&a+&8] &f{username} &7has joined the server."
 # {suffix}
 # Any PlaceholderAPI placeholders
 leave-message: "&8[&4-&8] &f{username} &7has left the server."
+
+# Enable first time join messages?
+enable-first-join-message: false
+
+# First time join message.
+# Option enable-first-join-message must be true.
+# Placeholder list:
+# {displayname}
+# {username}
+# {prefix}
+# {suffix}
+# Any PlaceholderAPI placeholders.
+first-join-message: "&a{username} has joined the server for the first time!"
 
 # Send users a MOTD when they join the server?
 enable-motd: false

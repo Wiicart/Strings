@@ -2,10 +2,10 @@ package com.pedestriamc.strings.misc;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.settings.Option;
+import com.pedestriamc.strings.api.user.StringsUser;
+import com.pedestriamc.strings.integration.placeholderapi.PlaceholderAPISetter;
 import com.pedestriamc.strings.manager.Configuration;
 import com.pedestriamc.strings.user.User;
-import com.pedestriamc.strings.user.util.UserUtil;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -15,61 +15,58 @@ import java.util.List;
 
 public class ServerMessages {
 
-    private final UserUtil userUtil;
+    private final PlaceholderAPISetter placeholderAPI;
+
     private final String joinMessageTemplate;
     private final String leaveMessageTemplate;
+    private final String firstJoinMessageTemplate;
     private final List<String> motd;
-    private final boolean usePAPI;
 
     public ServerMessages(@NotNull Strings strings) {
-        userUtil = strings.users();
-        usePAPI = strings.isUsingPlaceholderAPI();
+        placeholderAPI = strings.placeholderAPI();
 
         Configuration config = strings.settings();
         joinMessageTemplate = config.get(Option.Text.JOIN_MESSAGE);
         leaveMessageTemplate = config.get(Option.Text.LEAVE_MESSAGE);
+        firstJoinMessageTemplate = config.get(Option.Text.FIRST_JOIN_MESSAGE);
         motd = config.get(Option.StringList.MOTD);
+
     }
 
-    public String joinMessage(Player player) {
-        String message = joinMessageTemplate;
-        User user = userUtil.getUser(player);
-        if(usePAPI) {
-            message = PlaceholderAPI.setPlaceholders(player, message);
-        }
-        message = applyPlaceholders(message, user);
-        return ChatColor.translateAlternateColorCodes('&', message);
+    @NotNull
+    public String joinMessage(@NotNull StringsUser user) {
+        return color(applyPlaceholders(joinMessageTemplate, user));
     }
 
-    public String leaveMessage(Player player) {
-        String message = leaveMessageTemplate;
-        User user = userUtil.getUser(player);
-        if(usePAPI) {
-            message = PlaceholderAPI.setPlaceholders(player, message);
-        }
-        message = applyPlaceholders(message, user);
-        return ChatColor.translateAlternateColorCodes('&',message);
+    @NotNull
+    public String leaveMessage(@NotNull StringsUser user) {
+        return color(applyPlaceholders(leaveMessageTemplate, user));
     }
 
-    public void sendMOTD(Player player) {
+    @NotNull
+    public String firstJoinMessage(@NotNull StringsUser user) {
+        return color(applyPlaceholders(firstJoinMessageTemplate, user));
+    }
+
+    public void sendMOTD(@NotNull StringsUser user) {
         ArrayList<String> playerMOTD = new ArrayList<>(motd);
-        User user = userUtil.getUser(player);
-        for(String message: playerMOTD) {
-            message = applyPlaceholders(message, user);
-            if(usePAPI) {
-                message = PlaceholderAPI.setPlaceholders(player, message);
-            }
-            message = ChatColor.translateAlternateColorCodes('&', message);
-            player.sendMessage(message);
+        for (String message: playerMOTD) {
+            user.sendMessage(color(applyPlaceholders(message, user)));
         }
     }
 
-    private @NotNull String applyPlaceholders(@NotNull String message, User user) {
-        Player player = user.player();
+    @NotNull
+    private String applyPlaceholders(@NotNull String message, StringsUser user) {
+        Player player = ((User) user).player();
+        message = placeholderAPI.setPlaceholders(player, message);
         return message
                 .replace("{displayname}", player.getDisplayName())
                 .replace("{username}", player.getName())
                 .replace("{prefix}", user.getPrefix())
                 .replace("{suffix}", user.getSuffix());
+    }
+
+    private String color(@NotNull String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 }

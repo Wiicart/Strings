@@ -89,6 +89,7 @@ public final class YamlUserUtil implements UserUtil {
             if (section == null) {
                 User user = User.builder(strings, uuid, true).build();
                 addUser(user);
+                saveUser(user);
                 return user;
             }
 

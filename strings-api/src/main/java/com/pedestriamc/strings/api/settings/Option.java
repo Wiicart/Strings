@@ -27,6 +27,7 @@ public final class Option {
         DISABLE_HELPOP_COMMAND("other-helpop", false),
         ENABLE_DIRECT_MESSAGES("msg-enabled", true),
         ENABLE_RESOLUTION_VALIDATION("resolution-validation", true),
+        ENABLE_FIRST_JOIN_MESSAGE("enable-first-join-message", false),
         @From(path = "death-messages.yml")
         DEATH_MESSAGES_ENABLE("enable", true),
         @From(path = "death-messages.yml")
@@ -77,6 +78,7 @@ public final class Option {
         DELETION_BUTTON_HOVER("deletion-hover", "<red>Click to delete the message.</red>"),
         RULES_MESSAGE("rules-message", "<b>Rules\n - Example Rule"),
         BROADCAST_SOUND_NAME("broadcast-sound.name", "block.note_block.bell"),
+        FIRST_JOIN_MESSAGE("first-join-message", "&a{username} has joined the server for the first time!"),
         @From(path = "emojis/emoji-config.yml")
         TEXTURES_MODRINTH_ID("pack-id", "mh6HfOTP"),
         @From(path = "emojis/emoji-config.yml")

@@ -1,4 +1,4 @@
-package com.pedestriamc.strings.placeholder;
+package com.pedestriamc.strings.integration.placeholderapi;
 
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.user.StringsUser;

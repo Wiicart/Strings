@@ -1,5 +1,6 @@
 package com.pedestriamc.strings.listener.player;
 
+import com.pedestriamc.strings.api.event.strings.EventManager;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.manager.Configuration;
 import com.pedestriamc.strings.user.User;
@@ -14,12 +15,15 @@ import org.jetbrains.annotations.NotNull;
 public class PlayerQuitListener implements Listener {
 
     private final UserUtil userUtil;
-    private final boolean modifyLeaveMessage;
+    private final EventManager eventManager;
     private final ServerMessages serverMessages;
+
+    private final boolean modifyLeaveMessage;
     private final boolean doQuitMessage;
 
     public PlayerQuitListener(@NotNull Strings strings) {
         userUtil = strings.users();
+        eventManager = strings.eventManager();
         serverMessages = strings.getServerMessages();
 
         Configuration config = strings.settings();
@@ -30,11 +34,12 @@ public class PlayerQuitListener implements Listener {
     @EventHandler
     void onEvent(@NotNull PlayerQuitEvent event) {
         User user = userUtil.getUser(event.getPlayer());
+        eventManager.dispatch(new com.pedestriamc.strings.api.event.server.PlayerQuitEvent(user));
 
-        if(!doQuitMessage) {
+        if (!doQuitMessage) {
             event.setQuitMessage(null);
-        } else if(modifyLeaveMessage) {
-            event.setQuitMessage(serverMessages.leaveMessage(event.getPlayer()));
+        } else if (modifyLeaveMessage) {
+            event.setQuitMessage(serverMessages.leaveMessage(user));
         }
 
         userUtil.removeUser(user.getUniqueId());

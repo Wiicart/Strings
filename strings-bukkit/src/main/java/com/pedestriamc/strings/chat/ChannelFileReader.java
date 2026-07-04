@@ -70,9 +70,9 @@ final class ChannelFileReader {
     }
 
     private void read(@NotNull ConfigurationSection channels) {
-        for(String name : channels.getKeys(false)) {
+        for (String name : channels.getKeys(false)) {
             ConfigurationSection section = channels.getConfigurationSection(name);
-            if(section != null) {
+            if (section != null) {
                 strings.info("Loading channel '" + name + "'");
                 try {
                     loadChannel(name, section);
