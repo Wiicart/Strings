@@ -24,6 +24,7 @@ public class EmojiCommand extends AbstractCommand implements CartCommandExecutor
     private static final Component FALLBACK = Component.text("Emojis disabled.", NamedTextColor.RED);
 
     private final Component message;
+    private final Component credits;
 
     public EmojiCommand(@NotNull Strings strings) {
         super(strings);
@@ -31,8 +32,10 @@ public class EmojiCommand extends AbstractCommand implements CartCommandExecutor
         Configuration config = strings.settings();
         if (config.get(Option.Bool.ENABLE_EMOJI_REPLACEMENT)) {
             message = loadMessage(strings);
+            credits = config.getComponent(Option.Text.EMOJI_CREDITS);
         } else {
             message = FALLBACK;
+            credits = FALLBACK;
         }
     }
 
@@ -42,13 +45,18 @@ public class EmojiCommand extends AbstractCommand implements CartCommandExecutor
         if (!hasPermission(sender)) {
             sendMessage(Message.NO_PERMS, sender);
         } else {
+            Component result = message;
+            if (data.args().length == 1 && data.args()[0].equalsIgnoreCase("credits")) {
+                result = credits;
+            }
+
             // BukkitAudiences not always reliable in new releases, directly send when possible
             if (strings().isPaper()) {
-                ((Audience) sender).sendMessage(message);
+                ((Audience) sender).sendMessage(result);
             } else {
                 strings().adventure()
                         .sender(sender)
-                        .sendMessage(message);
+                        .sendMessage(result);
             }
         }
     }

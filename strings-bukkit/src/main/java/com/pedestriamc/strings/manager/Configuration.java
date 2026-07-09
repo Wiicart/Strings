@@ -114,6 +114,9 @@ public class Configuration implements Settings {
         Option.Text footer = Option.Text.EMOJI_COMMAND_FOOTER;
         texts.put(footer, emojiConfig.getString(footer.key(), footer.defaultValue()));
 
+        Option.Text credits = Option.Text.EMOJI_CREDITS;
+        texts.put(credits, emojiConfig.getString(credits.key(), credits.defaultValue()));
+
         Option.StringList textured = Option.StringList.TEXTURED_EMOJIS;
         lists.put(textured, emojiConfig.getStringList(textured.key()));
 

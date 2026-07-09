@@ -84,7 +84,9 @@ public final class Option {
         @From(path = "emojis/emoji-config.yml")
         EMOJI_COMMAND_HEADER("command-header", "<dark_gray><st>+-----------</st>[<yellow>Emoji Menu</yellow>]<st>-----------+</st></dark_gray>"),
         @From(path = "emojis/emoji-config.yml")
-        EMOJI_COMMAND_FOOTER("command-footer", "Textures from the <click:open_url:'https://modrinth.com/resourcepack/allure-emoji-pack'><aqua>Allure Emoji Pack</aqua></click>");
+        EMOJI_COMMAND_FOOTER("command-footer", "<white>Textures from the</white> <click:open_url:'https://modrinth.com/resourcepack/pixel-twemoji-18x'><aqua>Pixel Twemoji 18x</aqua></click> pack"),
+        @From(path = "emojis/emoji-config.yml")
+        EMOJI_CREDITS("emoji-credits", "Graphics based on Twemoji, Copyright (c) 2018 Twitter, Inc and other contributors.<br>Pixel art and resource pack adaptation, Copyright (c) 2020 AmberW.<br>Both licensed under <click:open_url:'https://creativecommons.org/licenses/by/4.0/'><aqua>CC BY 4.0</aqua></click>.");
 
         final String key;
         final String defaultValue;
