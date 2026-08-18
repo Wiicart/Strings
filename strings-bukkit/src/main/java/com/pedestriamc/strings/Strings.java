@@ -28,6 +28,8 @@ import com.pedestriamc.strings.manager.Configuration;
 import com.pedestriamc.strings.bukkit.StringsImpl;
 import com.pedestriamc.strings.log.LogManager;
 import com.pedestriamc.strings.bukkit.BukkitMessenger;
+import com.pedestriamc.strings.bukkit.scheduler.SchedulerAdapter;
+import com.pedestriamc.strings.bukkit.scheduler.SchedulerAdapters;
 import com.pedestriamc.strings.manager.ClassRegistrar;
 import com.pedestriamc.strings.manager.BukkitFileManager;
 import com.pedestriamc.strings.misc.AutoBroadcasts;
@@ -37,6 +39,10 @@ import com.pedestriamc.strings.user.util.UserUtil;
 import com.pedestriamc.strings.user.util.YamlUserUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.chat.Chat;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
@@ -96,6 +102,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     private AudienceGetter audienceGetter;
     private Integrations integrations;
     private PlaceholderAPISetter placeholderAPISetter;
+    private SchedulerAdapter scheduler;
 
     public Strings() {
         super();
@@ -104,6 +111,8 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     @Override
     public void onLoad() {
         info("Loading...");
+
+        scheduler = SchedulerAdapters.create(this);
 
         fileManager = new BukkitFileManager(this);
         info("FileManager loaded.");
@@ -151,7 +160,9 @@ public final class Strings extends JavaPlugin implements CommonStrings {
 
         eventDispatcher.unsubscribeAll(this);
         HandlerList.unregisterAll(this);
-        getServer().getScheduler().cancelTasks(this);
+        if (scheduler != null) {
+            scheduler.cancel(this);
+        }
         stringsImpl = null;
 
         integrations.disableAll();
@@ -234,7 +245,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         localityManager = new BukkitLocalityManager(this);
         platformAdapter = new BukkitPlatformAdapter(this);
         placeholderAPISetter = new PlaceholderAPISetter(this);
-        messenger = new BukkitMessenger(fileManager.getMessagesFileConfig());
+        messenger = new BukkitMessenger(this, fileManager.getMessagesFileConfig());
         directMessageManager = new DirectMessageManager(this);
         channelLoader = new ChannelManager(this);
         serverMessages = new ServerMessages(this);
@@ -278,7 +289,10 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         Collection<? extends Player> players = getServer().getOnlinePlayers();
         if(!players.isEmpty()) {
             for(Player p : players) {
-                userUtil.loadUser(p.getUniqueId());
+                // Reload can be issued from a global region thread while the
+                // player belongs to another region. User construction reads
+                // Player state, so perform it on the player's entity context.
+                forEntity(this, p, () -> userUtil.loadUser(p.getUniqueId()));
             }
         }
     }
@@ -290,21 +304,28 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     }
 
     private void checkForUpdate() {
-        try {
-            HttpsURLConnection connection = (HttpsURLConnection) URI.create("https://www.wiicart.net/strings/version.txt").toURL().openConnection();
-            connection.setRequestMethod("GET");
-            String raw = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
-            short latest = Short.parseShort(raw);
-            if(latest > VERSION_NUM) {
-                getServer().getLogger().info("+------------[Strings]------------+");
-                getServer().getLogger().info("|    A new update is available!   |");
-                getServer().getLogger().info("|          Download at:           |");
-                getServer().getLogger().info("|   https://wiicart.net/strings   |");
-                getServer().getLogger().info("+---------------------------------+");
+        // Network I/O must not run on Folia's global region thread. In
+        // particular, a slow remote endpoint otherwise stalls all global work
+        // long enough to trip the region watchdog during /strings reload.
+        async(() -> {
+            try {
+                HttpsURLConnection connection = (HttpsURLConnection) URI.create("https://www.wiicart.net/strings/version.txt").toURL().openConnection();
+                connection.setRequestMethod("GET");
+                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(5000);
+                String raw = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
+                short latest = Short.parseShort(raw);
+                if(latest > VERSION_NUM) {
+                    getServer().getLogger().info("+------------[Strings]------------+");
+                    getServer().getLogger().info("|    A new update is available!   |");
+                    getServer().getLogger().info("|          Download at:           |");
+                    getServer().getLogger().info("|   https://wiicart.net/strings   |");
+                    getServer().getLogger().info("+---------------------------------+");
+                }
+            } catch(IOException | NumberFormatException ignored) {
+                warning("Unable to check for updates.");
             }
-        } catch(IOException a) {
-            warning("Unable to check for updates.");
-        }
+        });
     }
 
     private void registerAPI() {
@@ -319,12 +340,89 @@ public final class Strings extends JavaPlugin implements CommonStrings {
 
     @Override
     public void async(@NotNull Runnable runnable) {
-        getServer().getScheduler().runTaskAsynchronously(this, runnable);
+        scheduler.async(this, runnable);
     }
 
     @Override
     public void sync(@NotNull Runnable runnable) {
-        getServer().getScheduler().runTask(this, runnable);
+        scheduler.global(this, runnable);
+    }
+
+    @Override
+    public void sync(@NotNull com.pedestriamc.strings.api.user.StringsUser user,
+                     @NotNull Runnable runnable) {
+        forUser(this, user, runnable);
+    }
+
+    /**
+     * Uses Bukkit's public action-bar method instead of Adventure platform's
+     * version-sensitive CraftBukkit packet reflection.
+     */
+    @Override
+    public void sendActionBar(@NotNull com.pedestriamc.strings.api.user.StringsUser user,
+                              @NotNull Component message) {
+        User bukkitUser = User.of(user);
+        String legacy = LegacyComponentSerializer.legacySection().serialize(message);
+        forEntity(this, bukkitUser.player(), () -> bukkitUser.player().spigot().sendMessage(
+                ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(legacy)
+        ));
+    }
+
+    public void sync(@NotNull org.bukkit.plugin.Plugin owner, @NotNull Runnable runnable) {
+        scheduler.global(owner, runnable);
+    }
+
+    public void later(@NotNull org.bukkit.plugin.Plugin owner, @NotNull Runnable runnable, long delayTicks) {
+        scheduler.globalLater(owner, runnable, delayTicks);
+    }
+
+    public void repeat(@NotNull org.bukkit.plugin.Plugin owner, @NotNull Runnable runnable,
+                       long initialDelayTicks, long periodTicks) {
+        scheduler.globalRepeating(owner, runnable, initialDelayTicks, periodTicks);
+    }
+
+    public void forEntity(@NotNull org.bukkit.plugin.Plugin owner,
+                          @NotNull org.bukkit.entity.Entity entity,
+                          @NotNull Runnable runnable) {
+        scheduler.entity(owner, entity, runnable);
+    }
+
+    public void forEntityLater(@NotNull org.bukkit.plugin.Plugin owner,
+                               @NotNull org.bukkit.entity.Entity entity,
+                               @NotNull Runnable runnable, long delayTicks) {
+        scheduler.entityLater(owner, entity, runnable, delayTicks);
+    }
+
+    public void forUser(@NotNull org.bukkit.plugin.Plugin owner,
+                        @NotNull com.pedestriamc.strings.api.user.StringsUser user,
+                        @NotNull Runnable runnable) {
+        Player player = com.pedestriamc.strings.user.User.playerOf(user);
+        if (player != null) {
+            forEntity(owner, player, runnable);
+        }
+    }
+
+    public void forUserLater(@NotNull org.bukkit.plugin.Plugin owner,
+                             @NotNull com.pedestriamc.strings.api.user.StringsUser user,
+                             @NotNull Runnable runnable, long delayTicks) {
+        Player player = com.pedestriamc.strings.user.User.playerOf(user);
+        if (player != null) {
+            forEntityLater(owner, player, runnable, delayTicks);
+        }
+    }
+
+    public void at(@NotNull org.bukkit.plugin.Plugin owner,
+                   @NotNull org.bukkit.Location location,
+                   @NotNull Runnable runnable) {
+        scheduler.region(owner, location, runnable);
+    }
+
+    public boolean isRegionAware() {
+        return scheduler.regionAware();
+    }
+
+    public void cancelTasks(@NotNull org.bukkit.plugin.Plugin owner) {
+        scheduler.cancel(owner);
     }
 
     @NotNull

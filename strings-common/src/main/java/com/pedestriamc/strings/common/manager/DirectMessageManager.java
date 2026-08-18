@@ -15,7 +15,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 public class DirectMessageManager {
 
@@ -67,16 +69,35 @@ public class DirectMessageManager {
             }
 
             String finalMessage = event.getMessage();
-            String outgoing = generateOutgoingString(sender, recipient, finalMessage);
-            String receiving = generateReceivingString(sender, recipient, finalMessage);
+            // PlaceholderAPI integrations may read Player state. Evaluate each
+            // variant on the corresponding entity scheduler, then continue the
+            // delivery once both values are ready.
+            CompletableFuture<String> outgoing = onUser(sender,
+                    () -> generateOutgoingString(sender, recipient, finalMessage));
+            CompletableFuture<String> receiving = onUser(recipient,
+                    () -> generateReceivingString(sender, recipient, finalMessage));
 
-            sender.sendMessage(outgoing);
-            if (!recipient.isIgnoring(sender)) {
-                recipient.sendMessage(receiving);
-            }
-
-            replyMap.put(sender.getUniqueId(), recipient.getUniqueId());
+            outgoing.thenCombine(receiving, (out, in) -> new String[]{out, in})
+                    .thenAccept(messages -> {
+                        sender.sendMessage(messages[0]);
+                        if (!recipient.isIgnoring(sender)) {
+                            recipient.sendMessage(messages[1]);
+                        }
+                        replyMap.put(sender.getUniqueId(), recipient.getUniqueId());
+                    });
         });
+    }
+
+    private CompletableFuture<String> onUser(@NotNull StringsUser user, @NotNull Supplier<String> work) {
+        CompletableFuture<String> future = new CompletableFuture<>();
+        strings.sync(user, () -> {
+            try {
+                future.complete(work.get());
+            } catch (Throwable throwable) {
+                future.completeExceptionally(throwable);
+            }
+        });
+        return future;
     }
 
     private String generateOutgoingString(StringsUser sender, StringsUser recipient, String message) {

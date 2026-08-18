@@ -15,20 +15,23 @@ import java.util.stream.Collectors;
 public class ResourcePackManagerImpl implements ResourcePackManager {
 
     private final Set<Supplier<ResourcePack>> packs = new HashSet<>();
+    private final Strings strings;
 
     public ResourcePackManagerImpl(@NotNull Strings strings) {
-
+        this.strings = strings;
     }
 
     public void requestApplication(@NotNull Player player) {
-        for (ResourcePack pack : getPacks()) {
-            byte[] hash = pack.hash();
-            if (hash != null) {
-                player.setResourcePack(pack.url(), hash);
-            } else {
-                player.setResourcePack(pack.url());
+        strings.forEntity(strings, player, () -> {
+            for (ResourcePack pack : getPacks()) {
+                byte[] hash = pack.hash();
+                if (hash != null) {
+                    player.setResourcePack(pack.url(), hash);
+                } else {
+                    player.setResourcePack(pack.url());
+                }
             }
-        }
+        });
     }
 
     @Override

@@ -15,12 +15,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
 
 /**
@@ -70,10 +71,10 @@ public abstract class AbstractUser implements StringsUser {
         this.activeChannel = builder.getActiveChannel() != null ? builder.getActiveChannel() : channelLoader.getDefaultChannel();
         this.mentionsEnabled = builder.isMentionsEnabled();
         this.msgEnabled = builder.isMsgEnabled();
-        this.channels = Objects.requireNonNullElseGet(builder.getChannels(), HashSet::new);
-        this.monitored = Objects.requireNonNullElseGet(builder.getMonitoredChannels(), HashSet::new);
-        this.ignored = Objects.requireNonNullElseGet(builder.getIgnores(), HashSet::new);
-        this.mutes = Objects.requireNonNullElseGet(builder.getMutes(), HashSet::new);
+        this.channels = Objects.requireNonNullElseGet(builder.getChannels(), ConcurrentHashMap::newKeySet);
+        this.monitored = Objects.requireNonNullElseGet(builder.getMonitoredChannels(), ConcurrentHashMap::newKeySet);
+        this.ignored = Objects.requireNonNullElseGet(builder.getIgnores(), ConcurrentHashMap::newKeySet);
+        this.mutes = Objects.requireNonNullElseGet(builder.getMutes(), ConcurrentHashMap::newKeySet);
         this.discordId = builder.getDiscordId();
         this.chatColor = StringsComponent.fromString(Objects.requireNonNullElse(builder.getChatColor(), ""));
 

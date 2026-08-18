@@ -21,6 +21,7 @@
   </properties>
 
   <build>
+    <finalName>strings-moderation</finalName>
     <defaultGoal>clean package</defaultGoal>
     <plugins>
       <plugin>
@@ -73,6 +74,12 @@
     <dependency>
       <groupId>com.pedestriamc.strings</groupId>
       <artifactId>strings-api</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.pedestriamc.strings</groupId>
+      <artifactId>strings-bukkit</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>

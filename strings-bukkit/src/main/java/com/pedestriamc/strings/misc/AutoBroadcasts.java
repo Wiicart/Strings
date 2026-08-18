@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ public final class AutoBroadcasts {
 
     private final Strings strings;
     private final FileConfiguration config;
-    private final BukkitScheduler scheduler = Bukkit.getScheduler();
     private final ArrayList<String[]> broadcastList = new ArrayList<>();
     private int pos;
     private long interval;
@@ -39,7 +37,7 @@ public final class AutoBroadcasts {
     }
 
     private void schedule() {
-        scheduler.runTaskTimer(strings, this::broadcastMessage, 20L, interval);
+        strings.repeat(strings, this::broadcastMessage, 20L, interval);
     }
 
     private void broadcastMessage() {

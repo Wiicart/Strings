@@ -6,7 +6,6 @@ import com.pedestriamc.strings.api.message.Message;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.api.moderation.Option;
 import com.pedestriamc.strings.moderation.StringsModeration;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class LinkFilter {
         if(urlReplaced) {
             StringsProvider.get().getMessenger().sendMessage(Message.LINKS_PROHIBITED, player);
             String finalMsg = msg;
-            Bukkit.getScheduler().runTask(strings, () -> {
+            strings.synchronous(() -> {
                 PlayerChatFilteredEvent event = new PlayerChatFilteredEvent(
                         player,
                         original,

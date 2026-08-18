@@ -57,11 +57,12 @@ public class ServerMessages {
 
     @NotNull
     private String applyPlaceholders(@NotNull String message, StringsUser user) {
-        Player player = ((User) user).player();
+        User bukkitUser = (User) user;
+        Player player = bukkitUser.player();
         message = placeholderAPI.setPlaceholders(player, message);
         return message
-                .replace("{displayname}", player.getDisplayName())
-                .replace("{username}", player.getName())
+                .replace("{displayname}", user.getDisplayName())
+                .replace("{username}", user.getName())
                 .replace("{prefix}", user.getPrefix())
                 .replace("{suffix}", user.getSuffix());
     }

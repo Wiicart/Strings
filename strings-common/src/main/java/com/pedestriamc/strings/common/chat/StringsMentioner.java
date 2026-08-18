@@ -42,6 +42,7 @@ public class StringsMentioner implements Mentioner {
     private final Style neutralMentionStyle;
 
     private final PlatformAdapter adapter;
+    private final StringsPlatform strings;
     private final Component actionBarFormat;
     private final Component atEveryone;
     private final @Nullable Sound sound;
@@ -68,6 +69,7 @@ public class StringsMentioner implements Mentioner {
     }
 
     public StringsMentioner(@NotNull StringsPlatform strings) {
+        this.strings = strings;
         adapter = strings.getAdapter();
 
         Settings settings = strings.settings();
@@ -168,12 +170,12 @@ public class StringsMentioner implements Mentioner {
     }
 
     private void sendActionBarAndSound(@NotNull StringsUser recipient, @NotNull Component message) {
-        Audience audience = recipient.audience();
-        audience.sendActionBar(message);
-
-        if (sound != null) {
-            audience.playSound(sound);
-        }
+        strings.sync(recipient, () -> {
+            strings.sendActionBar(recipient, message);
+            if (sound != null) {
+                recipient.audience().playSound(sound);
+            }
+        });
     }
 
     @Override

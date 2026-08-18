@@ -5,11 +5,10 @@ import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.moderation.configuration.Configuration;
 import com.pedestriamc.strings.moderation.StringsModeration;
 import com.pedestriamc.strings.moderation.listener.PlayerQuitListener;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RepetitionManager {
 
@@ -27,7 +26,7 @@ public class RepetitionManager {
 
     public RepetitionManager(@NotNull StringsModeration strings) {
         this.stringsModeration = strings;
-        map = new HashMap<>();
+        map = new ConcurrentHashMap<>();
         loadOptions(strings.getConfiguration());
         strings.api().getEventDispatcher().subscribe(new PlayerQuitListener(this));
     }
@@ -105,7 +104,7 @@ public class RepetitionManager {
             String previousMessage = previous.strip();
             this.previous = previousMessage;
             if (cooldown > -1) {
-                Bukkit.getScheduler().runTaskLater(stringsModeration, () -> removeIfCurrent(previousMessage), cooldown);
+                stringsModeration.scheduleLater(() -> removeIfCurrent(previousMessage), cooldown);
             }
         }
 

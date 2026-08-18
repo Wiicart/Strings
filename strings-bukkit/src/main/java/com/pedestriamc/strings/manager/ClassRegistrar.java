@@ -26,6 +26,7 @@ import com.pedestriamc.strings.listener.player.PlayerDamageListener;
 import com.pedestriamc.strings.listener.player.PlayerDeathListener;
 import com.pedestriamc.strings.listener.player.PlayerJoinListener;
 import com.pedestriamc.strings.listener.player.PlayerQuitListener;
+import com.pedestriamc.strings.listener.player.PlayerMoveListener;
 import com.pedestriamc.strings.tabcompleters.ChannelTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ChatColorTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ClearChatTabCompleter;
@@ -59,8 +60,8 @@ public class ClassRegistrar {
 
         registerCommand("emoji", new EmojiCommand(strings), null);
 
-        registerCommand("ignore", new IgnoreCommand(strings), new IgnoreTabCompleter());
-        registerCommand("unignore", new UnIgnoreCommand(strings), new IgnoreTabCompleter());
+        registerCommand("ignore", new IgnoreCommand(strings), new IgnoreTabCompleter(strings));
+        registerCommand("unignore", new UnIgnoreCommand(strings), new IgnoreTabCompleter(strings));
 
         BroadcastCommand broadcastCommand = new BroadcastCommand(strings);
         registerCommand("broadcast", broadcastCommand, null);
@@ -85,7 +86,7 @@ public class ClassRegistrar {
 
         if (config.get(Option.Bool.ENABLE_DIRECT_MESSAGES)) {
             DirectMessageCommand directMessageCommand = new DirectMessageCommand(strings);
-            MessageTabCompleter messageTabCompleter = new MessageTabCompleter();
+            MessageTabCompleter messageTabCompleter = new MessageTabCompleter(strings);
             registerCommand("msg", directMessageCommand, messageTabCompleter);
             registerCommand("message", directMessageCommand, messageTabCompleter);
 
@@ -98,7 +99,7 @@ public class ClassRegistrar {
             tryOrLog(() -> registerCommand(
                     "chatcolor",
                     new ChatColorCommand(strings),
-                    new ChatColorTabCompleter())
+                    new ChatColorTabCompleter(strings))
             );
         }
 
@@ -157,6 +158,7 @@ public class ClassRegistrar {
 
         registerListener(new PlayerJoinListener(strings));
         registerListener(new PlayerQuitListener(strings));
+        registerListener(new PlayerMoveListener(strings));
         registerListener(new DirectMessageListener(strings));
         registerListener(new PlayerDeathListener(strings));
         registerListener(new PlayerDamageListener(strings));

@@ -16,8 +16,10 @@ import static com.pedestriamc.strings.api.message.Message.*;
 public final class ClearChatCommand implements CommandExecutor {
 
     private final @NotNull BukkitMessenger messenger;
+    private final @NotNull Strings strings;
 
     public ClearChatCommand(@NotNull Strings strings) {
+        this.strings = strings;
         messenger = strings.messenger();
     }
 
@@ -59,8 +61,9 @@ public final class ClearChatCommand implements CommandExecutor {
     }
 
     private void clearChatAll() {
-        for(Player p : Bukkit.getOnlinePlayers()) {
-            p.sendMessage(StringUtils.repeat(" \n",100));
+        String message = StringUtils.repeat(" \n", 100);
+        for (com.pedestriamc.strings.api.user.StringsUser user : strings.users().getUsers()) {
+            strings.sync(user, () -> user.sendMessage(message));
         }
     }
 

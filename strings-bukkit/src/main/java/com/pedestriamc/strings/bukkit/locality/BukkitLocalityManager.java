@@ -5,14 +5,14 @@ import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.channel.local.LocalityManager;
 import org.bukkit.World;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BukkitLocalityManager implements LocalityManager<World> {
 
     private final Strings strings;
 
-    private final Map<World, Locality<World>> map = new HashMap<>();
+    private final Map<World, Locality<World>> map = new ConcurrentHashMap<>();
 
     public BukkitLocalityManager(Strings strings) {
         this.strings = strings;

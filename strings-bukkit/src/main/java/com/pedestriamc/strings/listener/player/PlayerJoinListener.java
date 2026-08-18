@@ -49,8 +49,12 @@ public class PlayerJoinListener implements Listener {
         userUtil.loadUserAsync(player.getUniqueId()).thenAccept(user -> {
             eventManager.dispatch(new com.pedestriamc.strings.api.event.server.PlayerJoinEvent(user));
 
+            // Template and PlaceholderAPI evaluation can read Player state, so
+            // keep it on this player's entity thread. Only the server-wide
+            // broadcast itself is handed to the global scheduler.
             if (doFirstJoinMessage && user.isNew()) {
-                strings.getServer().broadcastMessage(serverMessages.firstJoinMessage(user));
+                String message = serverMessages.firstJoinMessage(user);
+                strings.sync(() -> strings.getServer().broadcastMessage(message));
             }
 
             if (doMotd) {
@@ -58,7 +62,8 @@ public class PlayerJoinListener implements Listener {
             }
 
             if (doJoinMessage && modifyJoinMessage) {
-                strings.getServer().broadcastMessage(serverMessages.joinMessage(user));
+                String message = serverMessages.joinMessage(user);
+                strings.sync(() -> strings.getServer().broadcastMessage(message));
             }
         });
 
@@ -74,7 +79,7 @@ public class PlayerJoinListener implements Listener {
 
         try {
             modrinth.getPack().thenAccept(pack ->
-                    strings.sync(() -> player.setResourcePack(
+                    strings.forEntity(strings, player, () -> player.setResourcePack(
                             pack.url(),
                             pack.hash(),
                             "Please enable the Emoji resource pack"

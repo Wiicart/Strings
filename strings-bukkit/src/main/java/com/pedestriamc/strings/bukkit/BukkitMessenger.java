@@ -22,8 +22,14 @@ public final class BukkitMessenger implements Messenger {
 
     private final EnumMap<Message, Object> enumMap = new EnumMap<>(Message.class);
     private final String prefix;
+    private final com.pedestriamc.strings.Strings strings;
 
     public BukkitMessenger(FileConfiguration config) {
+        this(null, config);
+    }
+
+    public BukkitMessenger(com.pedestriamc.strings.Strings strings, FileConfiguration config) {
+        this.strings = strings;
         for (Message msg : Message.values()) {
             String key = msg.getKey();
             try {
@@ -41,11 +47,11 @@ public final class BukkitMessenger implements Messenger {
 
 
     public void sendMessage(Message message, CommandSender recipient) {
-        sendMessage(message, MessageableAdapter.of(recipient));
+        sendMessage(message, strings == null ? MessageableAdapter.of(recipient) : MessageableAdapter.of(recipient, strings));
     }
 
     public void sendMessage(Message message, Map<String, String> placeholders, CommandSender recipient) {
-        sendMessage(message, MessageableAdapter.of(recipient), placeholders);
+        sendMessage(message, strings == null ? MessageableAdapter.of(recipient) : MessageableAdapter.of(recipient, strings), placeholders);
     }
 
     @Override

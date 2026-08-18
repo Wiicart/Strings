@@ -4,11 +4,10 @@ import com.pedestriamc.strings.api.moderation.Option;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.moderation.configuration.Configuration;
 import com.pedestriamc.strings.moderation.StringsModeration;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CooldownManager {
 
@@ -16,13 +15,11 @@ public class CooldownManager {
 
     private final Set<StringsUser> cooldowns;
     private long cooldownLength;
-    private final BukkitScheduler scheduler;
 
     public CooldownManager(@NotNull StringsModeration strings) {
         this.stringsModeration = strings;
-        cooldowns = new HashSet<>();
+        cooldowns = ConcurrentHashMap.newKeySet();
         loadOptions(strings);
-        scheduler = strings.getServer().getScheduler();
     }
 
     private void loadOptions(@NotNull StringsModeration strings) {
@@ -38,7 +35,7 @@ public class CooldownManager {
 
     public void startCooldown(StringsUser user) {
         cooldowns.add(user);
-        scheduler.runTaskLater(stringsModeration, () -> cooldowns.remove(user), cooldownLength);
+        stringsModeration.scheduleLater(() -> cooldowns.remove(user), cooldownLength);
     }
 
     public boolean isOnCooldown(StringsUser user) {

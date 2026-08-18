@@ -1,12 +1,18 @@
 package com.pedestriamc.strings.tabcompleters;
 
+import com.pedestriamc.strings.Strings;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class ChatColorTabCompleter extends AbstractTabCompleter {
+
+    public ChatColorTabCompleter(@NotNull Strings strings) {
+        super(strings);
+    }
 
     private static final List<String> COLORS = List.of(
             "black", "darkblue", "darkgreen", "darkaqua",

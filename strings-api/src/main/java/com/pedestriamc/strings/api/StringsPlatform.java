@@ -13,6 +13,7 @@ import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.text.EmojiManager;
 import com.pedestriamc.strings.api.text.StringsAudienceProvider;
 import com.pedestriamc.strings.api.user.UserManager;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
 import static org.jetbrains.annotations.ApiStatus.Internal;
@@ -49,6 +50,18 @@ public interface StringsPlatform {
     void async(@NotNull Runnable runnable);
 
     void sync(@NotNull Runnable runnable);
+
+    /** Executes work on the entity context of a user where the platform has one. */
+    default void sync(@NotNull com.pedestriamc.strings.api.user.StringsUser user,
+                      @NotNull Runnable runnable) {
+        sync(runnable);
+    }
+
+    /** Sends an action bar through the platform-supported player API. */
+    default void sendActionBar(@NotNull com.pedestriamc.strings.api.user.StringsUser user,
+                               @NotNull Component message) {
+        sync(user, () -> user.audience().sendActionBar(message));
+    }
 
     void info(@NotNull String message);
 

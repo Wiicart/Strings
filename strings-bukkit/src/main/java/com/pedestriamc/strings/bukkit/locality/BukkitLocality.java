@@ -37,9 +37,8 @@ class BukkitLocality implements Locality<World> {
 
     @Override
     public @NotNull Set<StringsUser> getUsers() {
-        return world.getPlayers().stream()
-                .filter(player -> strings.getServer().getOnlinePlayers().contains(player))
-                .map(player -> strings.users().getUser(player))
+        return strings.users().getUsers().stream()
+                .filter(user -> user.getLocality().equals(this))
                 .collect(Collectors.toSet());
     }
 

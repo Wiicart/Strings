@@ -4,5 +4,6 @@ version: '1.7.1'
 author: wiicart
 description: "Moderation expansion for Strings"
 api-version: '1.16'
+folia-supported: true
 depend:
   - Strings

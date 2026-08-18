@@ -31,6 +31,7 @@ public class ChannelTabCompleter extends AbstractTabCompleter {
     private final UserUtil userUtil;
 
     public ChannelTabCompleter(@NotNull Strings strings) {
+        super(strings);
         channelLoader = strings.getChannelLoader();
         userUtil = strings.users();
     }

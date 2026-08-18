@@ -10,6 +10,7 @@ import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.user.User;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -68,8 +69,21 @@ public final class YamlUserUtil implements UserUtil {
         CompletableFuture<User> future = new CompletableFuture<>();
         strings.async(() -> {
             try {
-                User user = loadUser(uuid);
-                future.complete(user);
+                // User construction reads Player state (location, display name and
+                // Vault data), so the complete load must run on the player's
+                // entity scheduler on Folia.
+                Player player = Bukkit.getPlayer(uuid);
+                if (player == null) {
+                    future.completeExceptionally(new IllegalStateException("Player is no longer online: " + uuid));
+                    return;
+                }
+                strings.forEntity(strings, player, () -> {
+                    try {
+                        future.complete(loadUser(uuid));
+                    } catch (Exception e) {
+                        future.completeExceptionally(e);
+                    }
+                });
             } catch(Exception e) {
                 future.completeExceptionally(e);
             }

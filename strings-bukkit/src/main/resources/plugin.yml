@@ -2,6 +2,7 @@ name: Strings
 version: '1.7.2'
 main: com.pedestriamc.strings.Strings
 api-version: 1.16
+folia-supported: true
 prefix: Strings
 author: wiicart
 description: "A chat plugin."

@@ -30,6 +30,7 @@
     </dependencyManagement>
 
     <build>
+        <finalName>Strings</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

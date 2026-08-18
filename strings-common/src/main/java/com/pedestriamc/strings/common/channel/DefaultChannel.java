@@ -11,8 +11,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -26,7 +26,7 @@ class DefaultChannel extends ProtectedChannel {
             .text("[Strings] You aren't a member of any channels.  Please contact a server operator for help.")
             .color(NamedTextColor.RED);
 
-    private final Set<StringsUser> members = new HashSet<>();
+    private final Set<StringsUser> members = ConcurrentHashMap.newKeySet();
     private final ChannelLoader loader;
 
     DefaultChannel(@NotNull ChannelLoader loader) {

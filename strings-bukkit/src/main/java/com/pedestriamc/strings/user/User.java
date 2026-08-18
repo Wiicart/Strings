@@ -46,6 +46,11 @@ public final class User extends AbstractUser implements Permissible {
     private @Nullable String suffix;
     private @Nullable String displayName;
 
+    private volatile World worldSnapshot;
+    private volatile double xSnapshot;
+    private volatile double ySnapshot;
+    private volatile double zSnapshot;
+
     BoundedLinkedBuffer<EntityDamageEvent> previousDamage = new BoundedLinkedBuffer<>(2);
 
     public static User of(@NotNull StringsUser user) {
@@ -79,7 +84,12 @@ public final class User extends AbstractUser implements Permissible {
         this.name = player.getName();
         this.prefix = Objects.requireNonNullElse(builder.getPrefix(), "");
         this.suffix = Objects.requireNonNullElse(builder.getSuffix(), "");
-        this.displayName = Objects.requireNonNullElse(builder.getDisplayName(), "");
+        this.displayName = Objects.requireNonNullElse(builder.getDisplayName(), player.getDisplayName());
+        if (strings.isUsingVault()) {
+            this.prefix = Objects.requireNonNullElse(strings.getVaultChat().getPlayerPrefix(player), this.prefix);
+            this.suffix = Objects.requireNonNullElse(strings.getVaultChat().getPlayerSuffix(player), this.suffix);
+        }
+        updatePositionSnapshot();
     }
 
     @NotNull
@@ -112,18 +122,12 @@ public final class User extends AbstractUser implements Permissible {
      */
     @Override
     public void sendMessage(@NotNull String message) {
-        player().sendMessage(message);
+        strings.forEntity(strings, player, () -> player.sendMessage(message));
     }
 
     @Override
     public void sendMessage(@NotNull Component message) {
-        if (player instanceof Audience a) {
-            a.sendMessage(message);
-        } else {
-            // Relying on audience unreliable for releases.
-            player.sendMessage(ComponentConverter.toString(message));
-        }
-
+        strings.forEntity(strings, player, () -> audience.sendMessage(message));
     }
 
     @NotNull
@@ -133,15 +137,12 @@ public final class User extends AbstractUser implements Permissible {
 
     @NotNull
     public World getWorld() {
-        return player.getWorld();
+        return worldSnapshot;
     }
 
     @Override
     public @NotNull Audience audience() {
-        if (player instanceof Audience a) {
-            return a;
-        }
-        return strings.adventure().player(player());
+        return audience;
     }
 
     @Override
@@ -178,12 +179,12 @@ public final class User extends AbstractUser implements Permissible {
     @Override
     public void setDisplayName(@NotNull String displayName) {
         this.displayName = displayName;
-        this.player.setDisplayName(displayName);
+        strings.forEntity(strings, player, () -> player.setDisplayName(displayName));
     }
 
     @Override
     public @NotNull String getDisplayName() {
-        return player.getDisplayName();
+        return displayName;
     }
 
     @Override
@@ -191,14 +192,14 @@ public final class User extends AbstractUser implements Permissible {
         Objects.requireNonNull(prefix);
         this.prefix = prefix;
         if (strings.isUsingVault()) {
-            strings.getVaultChat().setPlayerPrefix(player, prefix);
+            strings.forEntity(strings, player, () -> strings.getVaultChat().setPlayerPrefix(player, prefix));
         }
     }
 
     @Override
     public @NotNull String getPrefix() {
         if (strings.isUsingVault()) {
-            return bukkitColor(strings.getVaultChat().getPlayerPrefix(player));
+            return bukkitColor(Objects.requireNonNullElse(prefix, ""));
         } else {
             if (prefix == null || prefix.isEmpty()) {
                 return "";
@@ -212,14 +213,14 @@ public final class User extends AbstractUser implements Permissible {
         Objects.requireNonNull(suffix);
         this.suffix = suffix;
         if (strings.isUsingVault()) {
-            strings.getVaultChat().setPlayerSuffix(player, suffix);
+            strings.forEntity(strings, player, () -> strings.getVaultChat().setPlayerSuffix(player, suffix));
         }
     }
 
     @Override
     public @NotNull String getSuffix() {
         if (strings.isUsingVault()) {
-            return bukkitColor(strings.getVaultChat().getPlayerSuffix(player));
+            return bukkitColor(Objects.requireNonNullElse(suffix, ""));
         } else {
             if (suffix == null || suffix.isEmpty()) {
                 return "";
@@ -254,30 +255,43 @@ public final class User extends AbstractUser implements Permissible {
             return Double.MAX_VALUE;
         }
 
-        Location thisLocation = player().getLocation();
-        Location otherLocation = playerOf(user).getLocation();
-
-        return thisLocation.distanceSquared(otherLocation);
+        double dx = getX() - user.getX();
+        double dy = getY() - user.getY();
+        double dz = getZ() - user.getZ();
+        return dx * dx + dy * dy + dz * dz;
     }
 
     @Override
     public Locality<?> getLocality() {
-        return strings.localityManager().get(player.getWorld());
+        return strings.localityManager().get(worldSnapshot);
     }
 
     @Override
     public double getX() {
-        return player.getLocation().getX();
+        return xSnapshot;
     }
 
     @Override
     public double getY() {
-        return player.getLocation().getY();
+        return ySnapshot;
     }
 
     @Override
     public double getZ() {
-        return player.getLocation().getZ();
+        return zSnapshot;
+    }
+
+    /** Updates the position view used by cross-region calculations. */
+    public void updatePositionSnapshot() {
+        updatePositionSnapshot(player.getLocation());
+    }
+
+    /** Updates the position view from an already thread-safe event location. */
+    public void updatePositionSnapshot(@NotNull Location location) {
+        worldSnapshot = location.getWorld();
+        xSnapshot = location.getX();
+        ySnapshot = location.getY();
+        zSnapshot = location.getZ();
     }
 
     @Override

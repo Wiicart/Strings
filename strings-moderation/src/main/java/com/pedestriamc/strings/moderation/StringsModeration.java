@@ -2,6 +2,7 @@ package com.pedestriamc.strings.moderation;
 
 import com.pedestriamc.strings.api.StringsAPI;
 import com.pedestriamc.strings.api.StringsProvider;
+import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.event.strings.EventManager;
 import com.pedestriamc.strings.moderation.impl.Registrar;
 import com.pedestriamc.strings.moderation.configuration.Configuration;
@@ -17,6 +18,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 public final class StringsModeration extends JavaPlugin {
@@ -27,6 +29,7 @@ public final class StringsModeration extends JavaPlugin {
     private RepetitionManager repetitionManager;
     private Configuration config;
     private EventManager eventManager;
+    private Strings core;
 
     @Override
     public void onEnable() {
@@ -38,11 +41,12 @@ public final class StringsModeration extends JavaPlugin {
         }
 
         Plugin plugin = getServer().getPluginManager().getPlugin("Strings");
-        if (plugin == null) {
+        if (!(plugin instanceof Strings strings)) {
             getLogger().warning("Failed to get Strings config file, disabling.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        core = strings;
 
         config = new Configuration(plugin);
         eventManager = StringsProvider.get().getEventDispatcher();
@@ -64,7 +68,9 @@ public final class StringsModeration extends JavaPlugin {
 
         eventManager.unsubscribeAll(this);
         HandlerList.unregisterAll(this);
-        getServer().getScheduler().cancelTasks(this);
+        if (core != null) {
+            core.cancelTasks(this);
+        }
         try {
             Registrar.unregister(this);
         } catch(Exception ignored) {}
@@ -155,7 +161,20 @@ public final class StringsModeration extends JavaPlugin {
     }
 
     public void synchronous(@NotNull Runnable runnable) {
-        getServer().getScheduler().runTask(this, runnable);
+        core.sync(this, runnable);
+    }
+
+    public void scheduleLater(@NotNull Runnable runnable, long delayTicks) {
+        core.later(this, runnable, delayTicks);
+    }
+
+    public void scheduleRepeating(@NotNull Runnable runnable, long initialDelayTicks, long periodTicks) {
+        core.repeat(this, runnable, initialDelayTicks, periodTicks);
+    }
+
+    public void scheduleForUser(@NotNull com.pedestriamc.strings.api.user.StringsUser user,
+                                @NotNull Runnable runnable, long delayTicks) {
+        core.forUserLater(this, user, runnable, delayTicks);
     }
 
 }

@@ -19,11 +19,12 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public abstract class AbstractChannel implements Channel, Monitorable {
@@ -56,8 +57,8 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     private final int priority;
 
-    private final Set<StringsUser> monitors = new HashSet<>();
-    private final Set<StringsUser> members = new HashSet<>();
+    private final Set<StringsUser> monitors = ConcurrentHashMap.newKeySet();
+    private final Set<StringsUser> members = ConcurrentHashMap.newKeySet();
 
     protected AbstractChannel(@NotNull StringsPlatform strings, @NotNull IChannelBuilder<?> data) {
         this.strings = strings;
@@ -300,12 +301,8 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     @Override
     public void broadcast(@NotNull Component message) {
-        Audience recipients = getPlayersInScopeAsAudience();
-        recipients.sendMessage(message);
         Sound sound = getBroadcastSound();
-        if (sound != null) {
-            recipients.playSound(sound);
-        }
+        sendToScope(message, sound);
     }
 
     @Override
@@ -321,22 +318,39 @@ public abstract class AbstractChannel implements Channel, Monitorable {
             broadcast = ComponentConverter.fromString(raw);
         }
 
-        Audience recipients = getPlayersInScopeAsAudience();
-        recipients.sendMessage(broadcast);
         Sound sound = getBroadcastSound();
-        if (sound != null) {
-            recipients.playSound(sound);
-        }
+        sendToScope(broadcast, sound);
     }
 
     @Override
     public void broadcastPlain(@NotNull String message) {
-        getPlayersInScopeAsAudience().sendMessage(ComponentConverter.fromString(message));
+        sendToScope(ComponentConverter.fromString(message), null);
     }
 
     @Override
     public void broadcastPlain(@NotNull Component message) {
-        getPlayersInScopeAsAudience().sendMessage(message);
+        sendToScope(message, null);
+    }
+
+    private void sendToScope(@NotNull Component message, @Nullable Sound sound) {
+        for (StringsUser recipient : getPlayersInScope()) {
+            strings.sync(recipient, () -> {
+                Audience audience = recipient.audience();
+                audience.sendMessage(message);
+                if (sound != null) {
+                    audience.playSound(sound);
+                }
+            });
+        }
+        if (strings.isPaper()) {
+            strings.sync(() -> {
+                Audience console = strings.audiences().console();
+                console.sendMessage(message);
+                if (sound != null) {
+                    console.playSound(sound);
+                }
+            });
+        }
     }
 
     @Override
@@ -392,4 +406,3 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     }
 
 }
-

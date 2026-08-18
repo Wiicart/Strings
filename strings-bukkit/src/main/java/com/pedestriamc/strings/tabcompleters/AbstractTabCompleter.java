@@ -1,8 +1,7 @@
 package com.pedestriamc.strings.tabcompleters;
 
-import org.bukkit.Bukkit;
+import com.pedestriamc.strings.Strings;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,18 +18,28 @@ abstract class AbstractTabCompleter implements TabCompleter {
 
     static final @NotNull List<String> EMPTY = List.of();
 
+    private final Strings strings;
+
+    AbstractTabCompleter() {
+        this.strings = null;
+    }
+
+    AbstractTabCompleter(@NotNull Strings strings) {
+        this.strings = strings;
+    }
+
     /**
      * Provides a List of all Player names.
      *
      * @return A populated List<String>
      */
     final @NotNull List<String> getPlayerNames() {
-        Collection<? extends Player> players = Bukkit.getOnlinePlayers();
-        List<String> list = new ArrayList<>(players.size());
-        for(Player p : players) {
-            list.add(p.getName());
+        if (strings != null) {
+            List<String> list = new ArrayList<>(strings.users().getUsers().size());
+            strings.users().getUsers().forEach(user -> list.add(user.getName()));
+            return list;
         }
-        return list;
+        return List.of();
     }
 
     /**

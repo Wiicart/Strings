@@ -1,14 +1,13 @@
 package com.pedestriamc.strings.moderation.mute;
 
 import com.pedestriamc.strings.moderation.StringsModeration;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.ZonedDateTime;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
@@ -21,7 +20,7 @@ public class MuteManager {
 
     public MuteManager(StringsModeration plugin) {
         this.plugin = plugin;
-        mutes = new HashSet<>();
+        mutes = ConcurrentHashMap.newKeySet();
         schedule();
     }
 
@@ -50,7 +49,7 @@ public class MuteManager {
     }
 
     public Set<Mute> getMutes() {
-        return new HashSet<>(mutes);
+        return Set.copyOf(mutes);
     }
 
     private void write() {
@@ -63,7 +62,7 @@ public class MuteManager {
 
 
     private void schedule() {
-        Bukkit.getScheduler().runTaskTimer(plugin, this::checkMutes, 0L, 1200L);
+        plugin.scheduleRepeating(this::checkMutes, 0L, 1200L);
     }
 
     private void checkMutes() {

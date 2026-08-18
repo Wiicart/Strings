@@ -9,15 +9,15 @@ import com.pedestriamc.strings.common.channel.base.ProtectedChannel;
 import com.pedestriamc.strings.common.manager.DirectMessageManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SocialSpyChannel extends ProtectedChannel {
 
     private String format;
 
     private final DirectMessageManager manager;
-    private final HashSet<StringsUser> spiesList;
+    private final Set<StringsUser> spiesList;
     private final PlatformAdapter adapter;
 
     public SocialSpyChannel(@NotNull CommonStrings strings) {
@@ -25,7 +25,7 @@ public class SocialSpyChannel extends ProtectedChannel {
         format = strings.settings().get(Option.Text.SOCIAL_SPY_FORMAT);
         manager = strings.getDirectMessageManager();
         adapter = strings.getAdapter();
-        this.spiesList = new HashSet<>();
+        this.spiesList = ConcurrentHashMap.newKeySet();
     }
 
     /**
