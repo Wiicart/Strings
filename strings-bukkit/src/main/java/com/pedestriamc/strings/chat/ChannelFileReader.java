@@ -10,11 +10,11 @@ import com.pedestriamc.strings.api.channel.data.IChannelBuilder.Identifier;
 import com.pedestriamc.strings.api.channel.data.LocalChannelBuilder;
 import com.pedestriamc.strings.api.channel.local.Locality;
 import com.pedestriamc.strings.api.channel.local.LocalityManager;
-import com.pedestriamc.strings.api.text.format.StringsTextColor;
 import com.pedestriamc.strings.common.channel.impl.SocialSpyChannel;
 import net.kyori.adventure.key.InvalidKeyException;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -58,11 +58,11 @@ final class ChannelFileReader {
     }
 
     private void registerDefaults() {
-        if(manager.getChannel("global") == null) {
+        if (manager.getChannel("global") == null) {
             registerGlobal();
         }
 
-        if(manager.getChannel("helpop") == null) {
+        if (manager.getChannel("helpop") == null) {
             registerHelpOp();
         }
 
@@ -112,14 +112,15 @@ final class ChannelFileReader {
         }
 
         builder
-                .setDefaultColor(section.getString("default-color", StringsTextColor.WHITE.toString()))
+                .setDefaultColor(section.getString("default-color", ChatColor.WHITE.toString()))
+                .setCallEvent(section.getBoolean("call-event", true))
                 .setDoCooldown(section.getBoolean("cooldown", false))
                 .setDoProfanityFilter(section.getBoolean("filter-profanity", false))
                 .setDoUrlFilter(section.getBoolean("block-urls", false))
-                .setCallEvent(section.getBoolean("call-event", true))
                 .setAllowMessageDeletion(section.getBoolean("message-deletion", false))
                 .setPriority(section.getInt("priority", -1))
                 .setBroadcastFormat(section.getString("broadcast-format", "&8[&cBroadcast&8] &f{message}"));
+
         loadBroadcastSound(builder, section);
 
         Channel channel = builder.build(identifier);

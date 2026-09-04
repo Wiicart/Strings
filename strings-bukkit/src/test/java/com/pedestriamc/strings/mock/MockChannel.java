@@ -5,6 +5,9 @@ import com.pedestriamc.strings.api.channel.Type;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.common.channel.base.ProtectedChannel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
+
+import java.util.Map;
 
 @SuppressWarnings("unused")
 public class MockChannel extends ProtectedChannel {
@@ -12,6 +15,11 @@ public class MockChannel extends ProtectedChannel {
     @Override
     public void sendMessage(@NotNull StringsUser user, @NotNull String message) {
         System.out.println("<" + user.getName() + "> " + message);
+    }
+
+    @Override
+    public @NotNull @Unmodifiable Map<String, String> getGroupFormats() {
+        return Map.of();
     }
 
     public MockChannel(String name) {

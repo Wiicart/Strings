@@ -77,7 +77,7 @@ public class BukkitChannelChatEvent implements ChannelChatEvent {
 
     @Override
     public void setMessage(@NotNull String message) {
-        this.message = ComponentConverter.fromString(message);
+        this.message = ComponentConverter.toComponent(message);
     }
 
     @Override

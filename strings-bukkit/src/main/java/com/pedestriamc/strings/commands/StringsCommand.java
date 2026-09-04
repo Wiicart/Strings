@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class StringsCommand extends CommandTree {
 
     private static final String VERSION_MESSAGE = StringsTextColor.DARK_GRAY + "[" +
-            StringsTextColor.DARK_AQUA + "Strings" + StringsTextColor.DARK_GRAY + "] " +
+            StringsTextColor.AQUA + "Strings" + StringsTextColor.DARK_GRAY + "] " +
             StringsTextColor.WHITE + "Running strings version " + StringsTextColor.GREEN + Strings.VERSION;
 
     private static final String RELOAD_MESSAGE = StringsTextColor.DARK_GRAY + "[" +

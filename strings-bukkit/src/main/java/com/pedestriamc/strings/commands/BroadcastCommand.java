@@ -81,7 +81,7 @@ public final class BroadcastCommand implements CommandExecutor {
 
         Audience audience = strings.audiences().all();
 
-        audience.sendMessage(ComponentConverter.fromString(broadcast));
+        audience.sendMessage(ComponentConverter.toComponent(broadcast));
         if (sound != null) {
             audience.playSound(sound);
         }

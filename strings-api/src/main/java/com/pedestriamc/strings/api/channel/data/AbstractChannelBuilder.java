@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.jetbrains.annotations.ApiStatus.Internal;
@@ -30,6 +32,7 @@ abstract sealed class AbstractChannelBuilder<B extends IChannelBuilder<B>> imple
     // Nullable fields, default values should be provided where necessary if null.
     private @Nullable String defaultColor;
     private @Nullable String broadcastFormat;
+    private @Nullable Map<String, String> groupFormats;
 
     // May remain null after Channel construction
     private @Nullable Sound broadcastSound = null;
@@ -119,6 +122,11 @@ abstract sealed class AbstractChannelBuilder<B extends IChannelBuilder<B>> imple
         return format;
     }
 
+    @Override
+    public @NotNull Map<String, String> getGroupFormats() {
+        return groupFormats != null ? groupFormats : Collections.emptyMap();
+    }
+
     /**
      * Sets the format of this Channel. See channels.yml for placeholders.
      * @param format A String representation of the format.
@@ -128,6 +136,12 @@ abstract sealed class AbstractChannelBuilder<B extends IChannelBuilder<B>> imple
     public @NotNull B setFormat(@NotNull String format) {
         Preconditions.checkNotNull(format, "Format cannot be null");
         this.format = format;
+        return (B) this;
+    }
+
+    @Override
+    public @NotNull B setGroupFormats(@NotNull Map<String, String> groupFormats) {
+        this.groupFormats = groupFormats;
         return (B) this;
     }
 

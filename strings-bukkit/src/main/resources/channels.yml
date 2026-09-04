@@ -27,6 +27,13 @@ channels:
     # (!) NOTE: Compatible with PlaceholderAPI placeholders
     format: "<head:{username}> {prefix}<white>{displayname}<white>{suffix} <gray>» <white>{message}"
 
+    # Group formatting for this channel (optional)
+    # Group names are case-sensitive and must be identical to groups in your permissions plugin (e.g. LuckPerms)
+    # The same placeholders as the default format apply.
+    group-formats:
+      # A custom format for the "owner" group.
+      owner: "<head:{username}> <yellow><bold>OWNER</bold></yellow><white>{displayname}<white>{suffix} <gray>» <white>{message}"
+
     # Should an event be called when players send a message?
     # This allows other plugins to receive the message and modify it.
     # It's recommended to keep this on unless you want no other plugins to receive or modify chat.

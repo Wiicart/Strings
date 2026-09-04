@@ -81,13 +81,13 @@ public class DirectMessageManager {
 
     private String generateOutgoingString(StringsUser sender, StringsUser recipient, String message) {
         String outgoing = applyStringsPlaceholders(sender, recipient, outgoingFormat, message);
-        outgoing = adapter.applyPlaceholders(recipient, outgoing);
+        outgoing = adapter.setPlaceholders(recipient, outgoing);
         return adapter.translateBukkitColor(outgoing);
     }
 
     private String generateReceivingString(StringsUser sender, StringsUser recipient, String message) {
         String receiving = applyStringsPlaceholders(sender, recipient, receivingFormat, message);
-        receiving = adapter.applyPlaceholders(sender, receiving);
+        receiving = adapter.setPlaceholders(sender, receiving);
         return adapter.translateBukkitColor(receiving);
     }
 

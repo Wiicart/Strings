@@ -1,20 +1,22 @@
-package com.pedestriamc.strings.common.chat;
+package com.pedestriamc.strings.common.chat.messages.dispatch;
 
-import com.pedestriamc.strings.api.text.format.ComponentConverter;
-import com.pedestriamc.strings.common.util.PermissionChecker;
 import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.platform.PlatformAdapter;
 import com.pedestriamc.strings.api.settings.Option;
 import com.pedestriamc.strings.api.settings.Settings;
+import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.user.StringsUser;
+import com.pedestriamc.strings.common.util.PermissionChecker;
 import org.jetbrains.annotations.NotNull;
 
-// Designed under bukkit assumptions, likely need to move to a more adventure-based system eventually
-public class MessageProcessor {
+import java.util.Set;
 
-    private final StringsPlatform strings;
-    private final Channel channel;
+/**
+ * Message dispatcher based on Bukkit color codes, not supporting any adventure systems.
+ */
+public class LegacyMessageDispatcher extends AbstractMessageDispatcher {
+
     private final PlatformAdapter adapter;
 
     private final boolean usingPlaceholderAPI;
@@ -23,9 +25,9 @@ public class MessageProcessor {
     private final boolean emojisEnabled;
     private final boolean mentionsEnabled;
 
-    public MessageProcessor(@NotNull StringsPlatform strings, @NotNull Channel channel) {
-        this.strings = strings;
-        this.channel = channel;
+    public LegacyMessageDispatcher(@NotNull StringsPlatform strings, @NotNull Channel channel) {
+        super(strings, channel);
+
         adapter = strings.getAdapter();
         usingPlaceholderAPI = strings.isUsingPlaceholderAPI();
 
@@ -36,10 +38,26 @@ public class MessageProcessor {
         mentionsEnabled = settings.get(Option.Bool.ENABLE_MENTIONS);
     }
 
+    @Override
+    void dispatchMessageToPlayers(@NotNull StringsUser sender, @NotNull String message, @NotNull Set<StringsUser> recipients) {
+        String fullMessage = generateTemplate(sender);
+        fullMessage = fullMessage.replace("{message}", processMessage(sender, message));
+
+        for (StringsUser recipient : recipients) {
+            recipient.sendMessage(fullMessage);
+        }
+
+        if (!recipients.contains(sender)) {
+            sender.sendMessage(fullMessage);
+        }
+
+        adapter.print(adapter.stripBukkitColor(fullMessage));
+    }
+
     @SuppressWarnings("deprecation")
     public String generateTemplate(@NotNull StringsUser sender) {
-        String template = channel.getFormat();
-        String chatColor = sender.getChatColor().isBlank() ? channel.getDefaultColor() : sender.getChatColor();
+        String template = channel().getGroupFormat(sender.getPrimaryGroup());
+        String chatColor = sender.getChatColor().isBlank() ? channel().getDefaultColor() : sender.getChatColor();
         template = template
                 .replace("{prefix}", sender.getPrefix())
                 .replace("{suffix}", sender.getSuffix())
@@ -48,7 +66,7 @@ public class MessageProcessor {
                 .replace("{message}", chatColor + "{message}");
 
         if (usingPlaceholderAPI) {
-            template = adapter.applyPlaceholders(sender, template);
+            template = adapter.setPlaceholders(sender, template);
         }
 
         template = adapter.translateBukkitColor(template);
@@ -59,7 +77,7 @@ public class MessageProcessor {
 
     public String processMessage(@NotNull StringsUser sender, @NotNull String message) {
         if (shouldApplyPlaceholders(sender)) {
-            message = adapter.applyPlaceholders(sender, message);
+            message = adapter.setPlaceholders(sender, message);
         }
 
         if (shouldColorMessage(sender)) {
@@ -68,11 +86,11 @@ public class MessageProcessor {
         }
 
         if (shouldApplyEmojis(sender)) {
-            message = strings.emojiManager().applyEmojis(message);
+            message = strings().emojiManager().applyEmojis(message);
         }
 
         if (shouldHandleMentions(sender)) {
-            message = ComponentConverter.toString(strings.mentioner().processMentions(sender, ComponentConverter.fromString(message)));
+            message = ComponentConverter.toString(strings().mentioner().processMentions(sender, ComponentConverter.toComponent(message)));
         }
 
         return message;

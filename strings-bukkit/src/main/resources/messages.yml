@@ -2,7 +2,7 @@
 # Bukkit chat colors may be used
 
 # Plugin prefix:
-prefix: "&8[&3Strings&8] &f"
+prefix: "&8[&bStrings&8] &f"
 
 # Sent when a player has no permission:
 no-perms: "&fYou don't have permission!"
@@ -11,7 +11,7 @@ no-perms: "&fYou don't have permission!"
 chat-cleared: "&fChat cleared."
 
 # Message sent when a player clears all players' chats:
-chat-cleared-all: "&fAll player's chats cleared."
+chat-cleared-all: "&fChat cleared for all players."
 
 # Too many arguments in command message:
 too-many-args: "&fToo many arguments!"
@@ -54,7 +54,7 @@ invalid-use-channel: "&fInvalid usage of command! Type &7/channel help &ffor inf
 
 # Channel active:
 # Placeholder: {channel}
-channel-active: "&fChannel &7{channel} &fset to your active channel."
+channel-active: "&fYour active channel has been set to &7{channel}&f."
 
 # Already active:
 # Placeholder: {channel}

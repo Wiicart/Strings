@@ -30,6 +30,7 @@ public class EmojiProvider implements EmojiManager {
         map = loadMap();
     }
 
+    @Override
     @NotNull
     public String applyEmojis(@NotNull String input) {
         Matcher matcher = EMOJI_PATTERN.matcher(input);
@@ -40,7 +41,9 @@ public class EmojiProvider implements EmojiManager {
     }
 
 
-    public @NotNull Component applyEmojis(@NotNull Component input) {
+    @Override
+    @NotNull
+    public Component applyEmojis(@NotNull Component input) {
         return input.replaceText(config -> config
                 .match(EMOJI_PATTERN)
                 .replacement((result, builder) -> Component.text(
@@ -53,7 +56,9 @@ public class EmojiProvider implements EmojiManager {
     }
 
     @Override
-    public @Unmodifiable @NotNull Map<String, String> mappings() {
+    @Unmodifiable
+    @NotNull
+    public Map<String, String> mappings() {
         return map;
     }
 

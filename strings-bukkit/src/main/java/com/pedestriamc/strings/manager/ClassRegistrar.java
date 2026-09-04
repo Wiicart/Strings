@@ -29,6 +29,7 @@ import com.pedestriamc.strings.listener.player.PlayerQuitListener;
 import com.pedestriamc.strings.tabcompleters.ChannelTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ChatColorTabCompleter;
 import com.pedestriamc.strings.tabcompleters.ClearChatTabCompleter;
+import com.pedestriamc.strings.tabcompleters.EmojiTabCompleter;
 import com.pedestriamc.strings.tabcompleters.IgnoreTabCompleter;
 import com.pedestriamc.strings.tabcompleters.MentionCommandTabCompleter;
 import com.pedestriamc.strings.tabcompleters.MessageTabCompleter;
@@ -57,7 +58,7 @@ public class ClassRegistrar {
 
         registerCommand("strings", new StringsCommand(strings), new StringsTabCompleter());
 
-        registerCommand("emoji", new EmojiCommand(strings), null);
+        registerCommand("emoji", new EmojiCommand(strings), new EmojiTabCompleter());
 
         registerCommand("ignore", new IgnoreCommand(strings), new IgnoreTabCompleter());
         registerCommand("unignore", new UnIgnoreCommand(strings), new IgnoreTabCompleter());

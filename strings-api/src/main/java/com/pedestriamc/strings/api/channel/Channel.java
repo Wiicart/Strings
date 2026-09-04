@@ -153,6 +153,24 @@ public interface Channel extends Comparable<Channel> {
     @NotNull String getFormat();
 
     /**
+     * Provides the format for a specific group.
+     * Falls back to {@link Channel#getFormat()} if no specific format is present.
+     *
+     * @param groupName The case-sensitive group name.
+     * @return The group format, or the default format if not available.
+     */
+    default @NotNull String getGroupFormat(@NotNull String groupName) {
+        return getGroupFormats().getOrDefault(groupName, getFormat());
+    }
+
+    /**
+     * Provides a map of all defined group formats for the channel.
+     *
+     * @return An Unmodifiable Map of group name to format.
+     */
+    @NotNull @Unmodifiable Map<String, String> getGroupFormats();
+
+    /**
      * Provides the formatting for broadcasts in the Channel.
      *
      * @return A String of the broadcast format.

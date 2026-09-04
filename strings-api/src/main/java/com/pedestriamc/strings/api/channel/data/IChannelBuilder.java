@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.Locale;
+import java.util.Map;
 
 import static org.jetbrains.annotations.ApiStatus.Internal;
 
@@ -65,12 +66,21 @@ public sealed interface IChannelBuilder<B extends IChannelBuilder<B>> permits Ab
     B setDefaultColor(@NotNull String defaultColor);
 
     /**
-     * Provides the Channel's format when messages are sent in chat.
+     * Provides the Channel's default format when messages are sent in chat.
      * @return A String containing the format.
      */
     @Internal
     @NotNull
     String getFormat();
+
+    /**
+     * Provides the Channel's group format mappings.
+     * @return A Map.
+     */
+    @Internal
+    @NotNull
+    Map<String, String> getGroupFormats();
+
 
     /**
      * Sets the format of this Channel. See channels.yml for placeholders.
@@ -79,6 +89,14 @@ public sealed interface IChannelBuilder<B extends IChannelBuilder<B>> permits Ab
      */
     @NotNull
     B setFormat(@NotNull String format);
+
+    /**
+     * Sets the group formats of this Channel.
+     * @param groupFormats A Map with the group formats for this channel in group name to format form.
+     * @return this
+     */
+    @NotNull
+    B setGroupFormats(@NotNull Map<String, String> groupFormats);
 
     /**
      * Provides the Membership

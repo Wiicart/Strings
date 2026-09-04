@@ -57,7 +57,7 @@ public final class StringsImpl implements StringsAPI {
     @Override
     @Deprecated
     public void sendMention(@NotNull StringsUser user, @NotNull String message) {
-        user.audience().sendActionBar(ComponentConverter.fromString(message));
+        user.audience().sendActionBar(ComponentConverter.toComponent(message));
     }
 
     @Override

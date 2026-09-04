@@ -187,6 +187,14 @@ public final class User extends AbstractUser implements Permissible {
     }
 
     @Override
+    public @NotNull String getPrimaryGroup() {
+        if (strings.isUsingVault()) {
+            return strings.getVaultChat().getPrimaryGroup(player);
+        }
+        return "default";
+    }
+
+    @Override
     public void setPrefix(@NotNull String prefix) {
         Objects.requireNonNull(prefix);
         this.prefix = prefix;

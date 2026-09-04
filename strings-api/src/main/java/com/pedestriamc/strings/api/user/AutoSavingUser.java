@@ -96,6 +96,11 @@ final class AutoSavingUser implements StringsUser {
     }
 
     @Override
+    public @NotNull String getPrimaryGroup() {
+        return user.getPrimaryGroup();
+    }
+
+    @Override
     public void setDisplayName(@NotNull String displayName) {
         user.setDisplayName(displayName);
         save();

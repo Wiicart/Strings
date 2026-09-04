@@ -1,0 +1,5 @@
+type: helpop
+format:
+  default: "<dark_gray>[<dark_red>HelpOP</dark_red>]</dark_gray> <white>{username} <gray>» <white>{message}"
+call-event: false
+membership: protected

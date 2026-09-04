@@ -1,0 +1,6 @@
+type: stringchannel
+format:
+  default: "<dark_gray>[<red>Staff</red>]</dark_gray> <white>{prefix}{displayname}{suffix} <gray>» <white>{message}"
+call-event: false
+membership: permission
+broadcast-format: "<dark_gray>[<red>Staff</red>]</dark_gray> <white>{message}"

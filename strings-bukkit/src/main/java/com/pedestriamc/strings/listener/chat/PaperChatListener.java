@@ -8,8 +8,8 @@ import com.pedestriamc.strings.api.event.strings.EventManager;
 import com.pedestriamc.strings.api.platform.EventFactory;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.user.StringsUser;
-import com.pedestriamc.strings.chat.paper.RendererProvider;
-import com.pedestriamc.strings.chat.paper.RendererProvider.ChannelChatRenderer;
+import com.pedestriamc.strings.chat.paper.RendererFactory;
+import com.pedestriamc.strings.chat.paper.RendererFactory.ChannelChatRenderer;
 import com.pedestriamc.strings.user.User;
 import com.pedestriamc.strings.user.util.UserUtil;
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -33,7 +33,7 @@ import java.util.Set;
 public class PaperChatListener extends AbstractChatListener {
 
     private final Strings strings;
-    private final RendererProvider provider;
+    private final RendererFactory rendererFactory;
     private final UserUtil userUtil;
     private final EventManager eventDispatcher;
     private final EventFactory factory;
@@ -41,7 +41,7 @@ public class PaperChatListener extends AbstractChatListener {
     public PaperChatListener(@NotNull Strings strings) {
         super(strings);
         this.strings = strings;
-        provider = new RendererProvider(strings);
+        rendererFactory = new RendererFactory(strings);
         userUtil = strings.users();
         eventDispatcher = strings.eventManager();
         factory = strings.eventFactory();
@@ -54,7 +54,7 @@ public class PaperChatListener extends AbstractChatListener {
 
         MessageRoute route = processSymbol(ComponentConverter.toString(event.message()), sender);
         Channel channel = route.channel();
-        event.message(ComponentConverter.fromString(route.message()));
+        event.message(ComponentConverter.toComponent(route.message()));
 
         // Resolve Channel if DefaultChannel is returned
         channel = channel.resolve(sender);
@@ -82,7 +82,7 @@ public class PaperChatListener extends AbstractChatListener {
             return;
         }
 
-        ChannelChatRenderer renderer = provider.renderer(event, channel, event.signedMessage(), recipients);
+        ChannelChatRenderer renderer = rendererFactory.createRenderer(event, channel, event.signedMessage(), recipients);
         event.renderer(renderer);
 
         strings.mentioner().mention(renderer.mentionedPlayers(), sender);

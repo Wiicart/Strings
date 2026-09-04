@@ -61,15 +61,6 @@ public class BukkitPlatformAdapter implements PlatformAdapter {
     }
 
     @Override
-    public String applyPlaceholders(@NotNull StringsUser source, @NotNull String input) {
-        try {
-            return PlaceholderAPI.setPlaceholders(User.playerOf(source), input);
-        } catch (NoClassDefFoundError e) {
-            return input;
-        }
-    }
-
-    @Override
     public String setPlaceholders(@NotNull StringsUser user, @NotNull String input) {
         if (strings.isUsingPlaceholderAPI()) {
             return PlaceholderAPI.setPlaceholders(User.playerOf(user), input);

@@ -3,6 +3,8 @@ package com.pedestriamc.strings.integration.placeholderapi;
 import com.pedestriamc.strings.Strings;
 import com.pedestriamc.strings.api.user.StringsUser;
 import com.pedestriamc.strings.user.User;
+import me.clip.placeholderapi.PAPIComponents;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +29,7 @@ public class PlaceholderAPISetter {
     public String setPlaceholders(@NotNull Player player, @NotNull String message) {
         if (enabled) {
             try {
-                return me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, message);
+                return PlaceholderAPI.setPlaceholders(player, message);
             } catch(Exception ignored) {}
         }
         return message;
@@ -40,7 +42,7 @@ public class PlaceholderAPISetter {
     public Component setPlaceholders(@NotNull Player player, @NotNull Component message) {
         if (enabled) {
             try {
-                return me.clip.placeholderapi.PAPIComponents.setPlaceholders(player, message);
+                return PAPIComponents.setPlaceholders(player, message);
             } catch(Exception ignored) {}
         }
         return message;

@@ -134,6 +134,13 @@ public interface StringsUser extends Source {
     String getDisplayName();
 
     /**
+     * Provides the name of the user's primary group.
+     * @return The name of the user's primary group, otherwise "default"
+     */
+    @NotNull
+    String getPrimaryGroup();
+
+    /**
      * Sets the StringsUser's display name.
      * @param displayName The new display name.
      */

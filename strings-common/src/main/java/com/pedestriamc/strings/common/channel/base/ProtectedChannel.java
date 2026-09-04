@@ -9,6 +9,7 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Collections;
 import java.util.Map;
@@ -104,6 +105,11 @@ public abstract class ProtectedChannel implements Channel {
 
     @Override
     public @NotNull String getFormat() {
+        throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
+    }
+
+    @Override
+    public @NotNull @Unmodifiable Map<String, String> getGroupFormats() {
         throw new ChannelUnsupportedOperationException(UNIMPLEMENTED_MESSAGE, this);
     }
 

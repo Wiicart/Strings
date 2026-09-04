@@ -1,10 +1,9 @@
 package com.pedestriamc.strings.common.channel.base;
 
 import com.pedestriamc.strings.api.settings.Option;
-import com.pedestriamc.strings.common.chat.MessageProcessor;
+import com.pedestriamc.strings.api.settings.Settings;
 import com.pedestriamc.strings.api.StringsPlatform;
 import com.pedestriamc.strings.api.channel.data.IChannelBuilder;
-import com.pedestriamc.strings.api.event.ChannelChatEvent;
 import com.pedestriamc.strings.api.platform.PlatformAdapter;
 import com.pedestriamc.strings.api.text.format.ComponentConverter;
 import com.pedestriamc.strings.api.user.StringsUser;
@@ -12,12 +11,16 @@ import com.pedestriamc.strings.api.channel.Channel;
 import com.pedestriamc.strings.api.channel.Monitorable;
 import com.pedestriamc.strings.api.channel.Membership;
 import com.pedestriamc.strings.api.user.UserManager;
+import com.pedestriamc.strings.common.chat.messages.dispatch.AdventureMessageDispatcher;
+import com.pedestriamc.strings.common.chat.messages.dispatch.LegacyMessageDispatcher;
+import com.pedestriamc.strings.common.chat.messages.dispatch.MessageDispatcher;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -30,7 +33,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     private final StringsPlatform strings;
     private final PlatformAdapter adapter;
-    private final MessageProcessor messageProcessor;
+    private final MessageDispatcher messageDispatcher;
 
     protected static final String CHANNEL_PERMISSION = "strings.channels.";
     protected static final String MESSAGE_PLACEHOLDER = "{message}";
@@ -40,7 +43,9 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     private String name;
     private String defaultColor;
-    private String format;
+
+    private String defaultFormat;
+    private final Map<String, String> formats;
 
     private final String broadcastFormat;
     private final Membership membership;
@@ -62,11 +67,11 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     protected AbstractChannel(@NotNull StringsPlatform strings, @NotNull IChannelBuilder<?> data) {
         this.strings = strings;
         adapter = strings.getAdapter();
-        messageProcessor = new MessageProcessor(strings, this);
         userManager = strings.users();
         name = data.getName();
         defaultColor = data.getDefaultColor();
-        format = data.getFormat();
+        defaultFormat = data.getFormat();
+        formats = Map.copyOf(data.getGroupFormats());
         broadcastFormat = data.getBroadcastFormat();
         membership = data.getMembership();
         doCooldown = data.isDoCooldown();
@@ -79,50 +84,21 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
         String permission = CHANNEL_PERMISSION + getName();
         adapter.addPermission(permission, permission + ".broadcast");
+
+        Settings settings = strings.settings();
+
+        MessageDispatcher dispatcher;
+        if (settings.get(Option.Bool.CHANNELS_USE_MINI_MESSAGE_FORMATTING)) {
+            dispatcher = new AdventureMessageDispatcher(strings, this);
+        } else {
+            dispatcher = new LegacyMessageDispatcher(strings, this);
+        }
+        messageDispatcher = dispatcher;
     }
 
     @Override
     public void sendMessage(@NotNull StringsUser user, @NotNull String message) {
-        Set<StringsUser> recipients = getRecipients(user);
-        String template = messageProcessor.generateTemplate(user);
-
-        if (callsEvents()) {
-            sendEventMessage(user, message, template, recipients);
-        } else {
-            sendNonEventMessage(user, message, template, recipients);
-        }
-    }
-
-    private void sendEventMessage(@NotNull StringsUser user, @NotNull String message, @NotNull String template, @NotNull Set<StringsUser> recipients) {
-        ChannelChatEvent event = strings.eventFactory().chatEvent(
-                false,
-                true,
-                user,
-                ComponentConverter.fromString(message),
-                recipients,
-                this,
-                null
-        );
-
-        strings.eventManager().dispatch(event);
-        if (!event.isCancelled()) {
-            sendNonEventMessage(user, event.getMessage(), template, event.getMessageRecipients());
-        }
-    }
-
-    private void sendNonEventMessage(@NotNull StringsUser user, @NotNull String message, @NotNull String template, @NotNull Set<StringsUser> recipients) {
-        message = messageProcessor.processMessage(user, message);
-        String completeMessage = template.replace(MESSAGE_PLACEHOLDER, message);
-        // Not using components, components showed stripped color observed on 26.1
-        for (StringsUser recipient : recipients) {
-            recipient.sendMessage(completeMessage);
-        }
-
-        if (!recipients.contains(user)) {
-           user.sendMessage(completeMessage);
-        }
-
-        adapter.print(adapter.stripBukkitColor(completeMessage));
+        messageDispatcher.dispatch(user, message);
     }
 
     /**
@@ -284,7 +260,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
     @Override
     public void setFormat(@NotNull String format) {
         Objects.requireNonNull(format);
-        this.format = format;
+        this.defaultFormat = format;
     }
 
     @Override
@@ -318,7 +294,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
             broadcast = MiniMessage.miniMessage().deserialize(raw);
         } else {
             raw = adapter.translateBukkitColor(raw);
-            broadcast = ComponentConverter.fromString(raw);
+            broadcast = ComponentConverter.toComponent(raw);
         }
 
         Audience recipients = getPlayersInScopeAsAudience();
@@ -331,7 +307,7 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     @Override
     public void broadcastPlain(@NotNull String message) {
-        getPlayersInScopeAsAudience().sendMessage(ComponentConverter.fromString(message));
+        getPlayersInScopeAsAudience().sendMessage(ComponentConverter.toComponent(message));
     }
 
     @Override
@@ -356,7 +332,12 @@ public abstract class AbstractChannel implements Channel, Monitorable {
 
     @Override
     public @NotNull String getFormat() {
-        return format;
+        return defaultFormat;
+    }
+
+    @Override
+    public @NotNull @Unmodifiable Map<String, String> getGroupFormats() {
+        return formats;
     }
 
     @Override

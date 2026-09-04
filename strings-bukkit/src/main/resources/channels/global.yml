@@ -1,0 +1,85 @@
+# +---------------- REQUIRED SETTINGS ----------------+
+
+# Sets what type of channel this is.
+# A stringchannel is a basic chat channel.
+# Other channel types: https://github.com/wiicart/strings/wiki/Local-Channels
+type: stringchannel
+
+# Sets the channel's format for chatting.
+# Supports custom formatting for groups by adding an entry with the same name as a group.
+# Supports MiniMessage unless disabled. https://webui.advntr.dev/
+format:
+  default: "<head:{username}> {prefix}<white>{displayname}<white>{suffix} <gray>» <white>{message}"
+#  owner: "<head:{username}> <red>OWNER</red> <white>{displayname} <gray>» <white>{message}"
+
+# +---------------- OPTIONAL SETTINGS ----------------+
+# All settings from this point out are OPTIONAL.
+
+# Sets the channel's membership mode.
+# Membership types:
+# - default (all players may use the channel)
+# - permission (only players with strings.channels.<channel-name> may use the channel)
+# Details: https://github.com/wiicart/strings/wiki/Channels#membership
+# (default: default)
+membership: default
+
+# Sets the channel's priority.
+# If a player hasn't set their active channel to a specific channel,
+# a channel is chosen from all channels they're eligible to chat in (requires default membership).
+# A channel with a higher priority number will be chosen first for the player.
+# (default: 1)
+priority: 1
+
+# Sets if plugins are able to see that a person sent a message in this channel.
+# For example, for a staff chat, you may want this disabled so DiscordSRV doesn't see the messages.
+# (default: true)
+call-event: true
+
+# Sets if players should be allowed to delete their own messages in this channel.
+# If enabled, players with permission will have a delete button at the end of their messages.
+# (default: false)
+message-deletion: false
+
+# Sets a symbol where if a player's message starts with the symbol, it will be sent to this channel.
+# (Requires that the player is eligible to send messages in this channel)
+# (default: none)
+symbol: ""
+
+# +----------- STRINGS MODERATION SETTINGS -----------+
+# All options in this section require the StringsModeration expansion to use.
+
+# Enables profanity filtering.
+# See moderation.yml
+# (default: false)
+filter-profanity: false
+
+# Enables url blocking in messages.
+# See moderation.yml
+# (default: false)
+block-urls: false
+
+# Enables a message cooldown.
+# See moderation.yml
+cooldown: false
+
+# +---------------- BROADCAST SETTINGS ----------------+
+# Sets the channels' broadcast format
+# (defaults to the standard /broadcast format)
+broadcast-format: "<dark_gray>[<dark_green>Global</dark_green>]</dark_gray> <white>{message}"
+
+# Sets the sound played when a message is broadcast to this channel.
+# (default shown below)
+broadcast-sound:
+  # Should a sound be played when a message is broadcast?
+  # (default: true)
+  enabled: true
+  # Sets what sound is played.
+  # List of sounds: https://www.digminecraft.com/lists/sound_list_pc.php
+  # (default: block.note_block.bell)
+  sound: block.note_block.bell
+  # The Sound pitch (float)
+  # (default: 0.5)
+  pitch: 0.5
+  # The sound volume (float)
+  # (default: 1.0)
+  volume: 1.0

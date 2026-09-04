@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Map;
+import java.util.Set;
 
 public interface EmojiManager {
 
@@ -31,5 +32,11 @@ public interface EmojiManager {
     @Unmodifiable
     @NotNull
     Map<String, String> mappings();
+
+    @Unmodifiable
+    @NotNull
+    default Set<String> getCodes() {
+        return mappings().keySet();
+    }
 
 }

@@ -39,8 +39,6 @@ public interface PlatformAdapter {
     // Only has effect on Bukkit based platforms
     String stripBukkitColor(@NotNull String input);
 
-    String applyPlaceholders(@NotNull StringsUser source, @NotNull String input);
-
     String setPlaceholders(@NotNull StringsUser user, @NotNull String input);
 
     // First checks for Bukkit/Bungee color codes if on Bukkit derivatives, then resorts to HEX.

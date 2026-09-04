@@ -2,6 +2,7 @@ package com.pedestriamc.strings;
 
 import com.pedestriamc.strings.api.managers.Mentioner;
 import com.pedestriamc.strings.bukkit.AudienceGetter;
+import com.pedestriamc.strings.chat.ChatSuggestionManager;
 import com.pedestriamc.strings.common.CommonStrings;
 import com.pedestriamc.strings.common.chat.StringsMentioner;
 import com.pedestriamc.strings.common.manager.StringsEventManager;
@@ -20,6 +21,7 @@ import com.pedestriamc.strings.bukkit.ServerSource;
 import com.pedestriamc.strings.bukkit.StringsBukkitEventManager;
 import com.pedestriamc.strings.bukkit.locality.BukkitLocalityManager;
 import com.pedestriamc.strings.integration.Integrations;
+import com.pedestriamc.strings.integration.miniplaceholders.MiniPlaceholdersSetter;
 import com.pedestriamc.strings.integration.placeholderapi.PlaceholderAPISetter;
 import com.pedestriamc.strings.misc.Analytics;
 import com.pedestriamc.strings.integration.placeholderapi.StringsPlaceholderExpansion;
@@ -58,8 +60,8 @@ import java.util.UUID;
 
 public final class Strings extends JavaPlugin implements CommonStrings {
 
-    public static final String VERSION = "1.7.2";
-    public static final short VERSION_NUM = 9;
+    public static final String VERSION = "1.8";
+    public static final short VERSION_NUM = 10;
     public static final int METRICS_ID = 22597;
     public static final String DISTRIBUTOR = "spigot";
 
@@ -96,6 +98,9 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     private AudienceGetter audienceGetter;
     private Integrations integrations;
     private PlaceholderAPISetter placeholderAPISetter;
+    private MiniPlaceholdersSetter miniPlaceholdersSetter;
+    @SuppressWarnings("unused")
+    private ChatSuggestionManager chatSuggestionManager;
 
     public Strings() {
         super();
@@ -148,6 +153,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         logManager = null;
         fileManager = null;
         analytics = null;
+        chatSuggestionManager = null;
 
         eventDispatcher.unsubscribeAll(this);
         HandlerList.unregisterAll(this);
@@ -255,6 +261,11 @@ public final class Strings extends JavaPlugin implements CommonStrings {
     private void instantiateObjectsTwo() {
         new AutoBroadcasts(this);
         integrations = new Integrations(this);
+
+        if (isPaper) {
+            chatSuggestionManager = new ChatSuggestionManager(this);
+            miniPlaceholdersSetter = new MiniPlaceholdersSetter(this);
+        }
     }
 
     private void setupVault() {
@@ -455,6 +466,10 @@ public final class Strings extends JavaPlugin implements CommonStrings {
 
     public PlaceholderAPISetter placeholderAPI() {
         return placeholderAPISetter;
+    }
+
+    public MiniPlaceholdersSetter miniPlaceholders() {
+        return miniPlaceholdersSetter;
     }
 
     @Override
