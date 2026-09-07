@@ -21,9 +21,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 final class ChannelFileReader {
@@ -122,6 +124,7 @@ final class ChannelFileReader {
                 .setBroadcastFormat(section.getString("broadcast-format", "&8[&cBroadcast&8] &f{message}"));
 
         loadBroadcastSound(builder, section);
+        loadGroupFormats(builder, section);
 
         Channel channel = builder.build(identifier);
         manager.register(channel);
@@ -220,6 +223,23 @@ final class ChannelFileReader {
                 strings.getLogger().warning(e.getMessage());
             }
         }
+    }
+
+    private void loadGroupFormats(@NotNull IChannelBuilder<?> builder, @NotNull ConfigurationSection section) {
+        ConfigurationSection groupFormats = section.getConfigurationSection("group-formats");
+        if (groupFormats == null) {
+            return;
+        }
+
+        Map<String, String> groups = new HashMap<>();
+        for (String group : groupFormats.getKeys(false)) {
+            String format = groupFormats.getString(group);
+            if (format != null) {
+                groups.put(group.toLowerCase(Locale.ROOT), format);
+            }
+        }
+
+        builder.setGroupFormats(groups);
     }
 
     private boolean isLocal(@NotNull Identifier identifier) {

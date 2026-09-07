@@ -61,9 +61,9 @@ import java.util.UUID;
 public final class Strings extends JavaPlugin implements CommonStrings {
 
     public static final String VERSION = "1.8";
-    public static final short VERSION_NUM = 10;
+    public static final short VERSION_NUM = 8;
     public static final int METRICS_ID = 22597;
-    public static final String DISTRIBUTOR = "spigot";
+    public static final String DISTRIBUTOR = "github";
 
     // Not reliant on config, so maintaining through reloads as not to break listeners
     private final StringsBukkitEventManager eventDispatcher = new StringsBukkitEventManager(this);
@@ -302,7 +302,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
 
     private void checkForUpdate() {
         try {
-            HttpsURLConnection connection = (HttpsURLConnection) URI.create("https://www.wiicart.net/strings/version.txt").toURL().openConnection();
+            HttpsURLConnection connection = (HttpsURLConnection) URI.create("https://strings.pedestria.com/version.txt").toURL().openConnection();
             connection.setRequestMethod("GET");
             String raw = new BufferedReader(new InputStreamReader(connection.getInputStream())).readLine();
             short latest = Short.parseShort(raw);
@@ -310,7 +310,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
                 getServer().getLogger().info("+------------[Strings]------------+");
                 getServer().getLogger().info("|    A new update is available!   |");
                 getServer().getLogger().info("|          Download at:           |");
-                getServer().getLogger().info("|   https://wiicart.net/strings   |");
+                getServer().getLogger().info("|  https://strings.pedestria.com  |");
                 getServer().getLogger().info("+---------------------------------+");
             }
         } catch(IOException a) {

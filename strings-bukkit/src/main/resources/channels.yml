@@ -32,7 +32,7 @@ channels:
     # The same placeholders as the default format apply.
     group-formats:
       # A custom format for the "owner" group.
-      owner: "<head:{username}> <yellow><bold>OWNER</bold></yellow><white>{displayname}<white>{suffix} <gray>» <white>{message}"
+      owner: "<head:{username}> <yellow><bold>OWNER</bold> </yellow><white>{displayname}<white>{suffix} <gray>» <white>{message}"
 
     # Should an event be called when players send a message?
     # This allows other plugins to receive the message and modify it.
