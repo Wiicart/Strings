@@ -135,7 +135,7 @@ public final class Strings extends JavaPlugin implements CommonStrings {
         registry.registerListeners();
 
         checkIfReload();
-        checkForUpdate();
+        async(this::checkForUpdate);
         instantiateObjectsTwo();
         registerPlaceholders();
         loadMetrics();
