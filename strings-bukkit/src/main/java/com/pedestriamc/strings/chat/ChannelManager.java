@@ -37,7 +37,11 @@ public final class ChannelManager extends AbstractChannelLoader {
         if (strings.settings().get(Option.Bool.ENABLE_RESOLUTION_VALIDATION)) {
             Set<Locality<World>> localities = strings.localityManager().convertToLocalities(Bukkit.getWorlds());
             ResolutionValidator<Locality<World>> validator = new ResolutionValidator<>(this, localities);
-            strings.info(validator.generateReport());
+
+            String validation = validator.generateReport();
+            if (!validation.isEmpty()) {
+                strings.info(validation);
+            }
         }
     }
 
