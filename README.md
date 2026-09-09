@@ -19,23 +19,102 @@ bringing lots of customizability to your Minecraft server's chat.
 
 **Features include:**
 
-- Extensive Customizability
-- Public Developer API
-- Channels
-- Chat Formatting
-- Chat Color
-- Staff Chat
-- HelpOP
-- Auto Broadcasts
-- Direct Messaging
-- Vault Support
-- PlaceholderAPI Support
-- Moderation 
-- Mentions
-- Discord Support
-- Emojis
-- Customizable Death Messages
-- Message Deletion
+<table>
+  <tr>
+    <td>
+      <h3>Channels</h3>
+      Strings is centered around an advanced
+      channel system with various channel types,
+      settings, permissions, and more.
+      Channel types include <em>world-specific</em> channels,
+      and <em>proximity-based</em> channels.
+    </td>
+    <td><img alt="channel demo" src="https://cdn.modrinth.com/data/cached_images/74ea078ab2aa35b51b34447e18af85c29e30e287.gif"></img></td>
+  </tr>
+  <tr>
+    <td>
+      <h3>Formatting</h3>
+      Each channel can be formatted, with support for MiniMessage!
+      Group formatting is also supported.
+    </td>
+    <td>
+      <img src="https://cdn.modrinth.com/data/cached_images/46f732932137b4628976ae81f1723acc16a6c3d6.png"></img>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="https://cdn.modrinth.com/data/cached_images/6cbb398e0864538796c5586469eb3f844e44e9e8.png"></img>
+    </td>
+  <td>
+    <h3>Mentions</h3>
+    Strings' permission based mention system can play sounds to players,
+send messages in the action bar, and color the mention based off whether the recipient is being mentioned or not.
+  </td>
+  </tr>
+  <tr>
+    <td>
+      <img alt="emoji demo" src="https://www.pedestria.com/img/strings/emoji-demo-2.gif"></img>
+  <span><em>*Textures from Pixel Twemoji 18x</em></span>
+    </td>
+      <td>
+      <h3>Emojis</h3>
+      The <code>/emoji</code> lets players easily use
+      emojis in chat!
+      Discord style codes such as <code>:smile:</code> are supported.
+      Strings can also have players apply resource packs like <a href="https://modrinth.com/resourcepack/pixel-twemoji-18x">Pixel Twemoji 18x</a> for better emojis.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h3>Broadcasts</h3>
+      Strings improves manual broadcasts,
+      and also can send out scheduled automated broadcasts.
+    </td>
+    <td>
+      <img src="https://cdn.modrinth.com/data/cached_images/32232e4d2f5b1678e6c00891fbe61db6a3d82f1e.png"></img>
+    </td>
+  </tr>
+  <tr>
+      <td>
+      <h3>Message Deletion</h3>
+      Message deletion can be enabled,
+      where players will have a button to
+      the side of their message to delete it.
+    </td>
+    <td>
+            <img alt="emoji demo" src="https://www.pedestria.com/img/strings/message-deletion-demo.gif"></img>
+  </tr>
+  <tr>
+    <td>
+      <img src="https://cdn.modrinth.com/data/cached_images/d63f75ca180e49957410eeef0154fe9aa713153d.png"></img>
+    </td>
+      <td>
+      <h3>Customizable Join/Leave Messages</h3>
+      If enabled, Strings can let you customize
+      player join and leave messages.
+      You can also disable these messages altogether.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="https://cdn.modrinth.com/data/cached_images/25eecfde237d927c8db67ae3403ba2482c5e64c0_0.webp"></img>
+    </td>
+  <td>
+    <h3>LuckPerms & Vault Support</h3>
+    Strings seamlessly integrates with LuckPerms
+    and any other plugin that supports Vault for prefixes and suffixes.
+  </td>
+  </tr>
+  <tr>
+    <td>
+      <h3>MiniMessage & Player Head Support</h3>
+      MiniMessage makes all kinds of chat formatting possible in Strings, including putting player heads in chat!
+    </td>
+    <td>
+      <img src="https://cdn.modrinth.com/data/cached_images/3e9eed7bb512364026808173b2cd8aae14008913.png"></img>
+    </td>
+  </tr>
+</table>
 
 And much more!
 
