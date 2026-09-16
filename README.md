@@ -207,7 +207,7 @@ Integrations with Strings can be made with the StringsAPI.
     <dependency>
         <groupId>com.pedestriamc.strings</groupId>
         <artifactId>strings-api</artifactId>
-        <version>1.7.0</version>
+        <version>1.8.0</version>
     </dependency>
 </dependencies>
 ```
