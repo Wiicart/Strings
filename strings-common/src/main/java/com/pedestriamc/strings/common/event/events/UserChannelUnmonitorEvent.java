@@ -5,7 +5,7 @@ import com.pedestriamc.strings.api.event.strings.user.ChannelUnmonitorEvent;
 import com.pedestriamc.strings.api.user.StringsUser;
 import org.jetbrains.annotations.NotNull;
 
-public class UserChannelUnmonitorEvent extends UserChannelEvent implements ChannelUnmonitorEvent{
+public class UserChannelUnmonitorEvent extends AbstractUserChannelEvent implements ChannelUnmonitorEvent{
 
     public UserChannelUnmonitorEvent(@NotNull Channel channel, @NotNull StringsUser user) {
         super(channel, user);

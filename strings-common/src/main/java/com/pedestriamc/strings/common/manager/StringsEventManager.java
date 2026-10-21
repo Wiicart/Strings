@@ -83,7 +83,7 @@ public class StringsEventManager implements EventManager {
                     } catch (Exception e) {
                         strings.warning(String.format("Failed to pass event to listener: %s", object.getClass().getName()));
 
-                        String message = e.getMessage();
+                        String message = e.getCause().getMessage();
                         if (message != null) {
                             strings.warning(message);
                         }

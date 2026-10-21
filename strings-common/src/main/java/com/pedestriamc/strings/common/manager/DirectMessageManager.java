@@ -67,8 +67,8 @@ public class DirectMessageManager {
             }
 
             String finalMessage = event.getMessage();
-            String outgoing = generateOutgoingString(sender, recipient, finalMessage);
-            String receiving = generateReceivingString(sender, recipient, finalMessage);
+            String outgoing = generatePlayerView(sender, recipient, outgoingFormat, finalMessage);
+            String receiving = generatePlayerView(sender, recipient, receivingFormat, finalMessage);
 
             sender.sendMessage(outgoing);
             if (!recipient.isIgnoring(sender)) {
@@ -79,19 +79,20 @@ public class DirectMessageManager {
         });
     }
 
-    private String generateOutgoingString(StringsUser sender, StringsUser recipient, String message) {
-        String outgoing = applyStringsPlaceholders(sender, recipient, outgoingFormat, message);
-        outgoing = adapter.setPlaceholders(recipient, outgoing);
-        return adapter.translateBukkitColor(outgoing);
+    private String generatePlayerView(
+            @NotNull StringsUser sender,
+            @NotNull StringsUser recipient,
+            @NotNull String format,
+            @NotNull String playerMessage
+    ) {
+        String playerView = adapter.setPlaceholders(recipient, format);
+        playerView = applyStringsPlaceholders(sender, recipient, playerView);
+        playerView = adapter.translateBukkitColor(playerView);
+        playerView = playerView.replace("{message}", playerMessage);
+        return playerView;
     }
 
-    private String generateReceivingString(StringsUser sender, StringsUser recipient, String message) {
-        String receiving = applyStringsPlaceholders(sender, recipient, receivingFormat, message);
-        receiving = adapter.setPlaceholders(sender, receiving);
-        return adapter.translateBukkitColor(receiving);
-    }
-
-    public String applyStringsPlaceholders(StringsUser sender, StringsUser recipient, String format, String message) {
+    public String applyStringsPlaceholders(StringsUser sender, StringsUser recipient, String format) {
         return format
                 .replace("{sender_username}", sender.getName())
                 .replace("{sender_displayname}", sender.getDisplayName())
@@ -100,8 +101,7 @@ public class DirectMessageManager {
                 .replace("{recipient_username}", recipient.getName())
                 .replace("{recipient_displayname}", recipient.getDisplayName())
                 .replace("{recipient_prefix}", recipient.getPrefix())
-                .replace("{recipient_suffix}", recipient.getSuffix())
-                .replace("{message}", message);
+                .replace("{recipient_suffix}", recipient.getSuffix());
     }
 
 }

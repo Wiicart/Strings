@@ -35,7 +35,9 @@ public class SocialSpyChannel extends ProtectedChannel {
      * @param message The message sent
      */
     public void sendOutMessage(StringsUser sender, StringsUser recipient, String message) {
-        broadcast(manager.applyStringsPlaceholders(sender, recipient, format, message));
+        String result = manager.applyStringsPlaceholders(sender, recipient, format);
+        result = result.replace("{message}", message);
+        broadcast(result);
     }
 
     @Override

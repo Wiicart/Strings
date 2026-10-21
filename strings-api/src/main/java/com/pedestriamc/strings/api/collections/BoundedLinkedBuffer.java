@@ -143,7 +143,13 @@ public class BoundedLinkedBuffer<T> implements Collection<T> {
     @Override
     @SuppressWarnings("unchecked")
     public <V> V @NotNull [] toArray(V @NotNull [] a) {
-        return (V[]) new Object[0];
+        Node<T> current = head;
+        int pos = 0;
+        while (current.next != null) {
+            a[pos++] = (V) current.get();
+        }
+
+        return a;
     }
 
     @Override

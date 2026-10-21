@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -63,15 +64,21 @@ public abstract class AbstractChannelLoader implements ChannelLoader {
         for (StringsUser user : channel.getMembers()) {
             if (user.getActiveChannel().equals(channel)) {
                 user.setActiveChannel(defaultChannel);
-                user.leaveChannel(channel);
-                strings.users().saveUser(user);
+            }
+
+            user.leaveChannel(channel);
+            strings.users().saveUser(user);
+        }
+
+        Set<String> matchingSymbols = new HashSet<>();
+        for (Map.Entry<String, Channel> entry : symbols.entrySet()) {
+            if (entry.getValue().equals(channel)) {
+                matchingSymbols.add(entry.getKey());
             }
         }
 
-        for (Map.Entry<String, Channel> entry : symbols.entrySet()) {
-            if (entry.getValue().equals(channel)) {
-                symbols.remove(entry.getKey());
-            }
+        for (String symbol : matchingSymbols) {
+            symbols.remove(symbol);
         }
 
         prioritySet.remove(channel);
